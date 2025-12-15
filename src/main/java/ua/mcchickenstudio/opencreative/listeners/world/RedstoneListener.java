@@ -38,6 +38,10 @@ public final class RedstoneListener implements Listener {
 
     @EventHandler
     public void onBlockRedstone(BlockRedstoneEvent event) {
+        if (isDevPlanet(event.getBlock().getWorld())) {
+            event.setNewCurrent(event.getOldCurrent());
+            return;
+        }
         Location location = event.getBlock().getLocation();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(location.getWorld());
         if (planet != null) {

@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.utils.world;
 
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -29,6 +28,8 @@ import org.bukkit.entity.*;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
@@ -127,6 +128,62 @@ public final class WorldUtils {
         return world.getName()
                 .replace(Bukkit.getServer().getWorldContainer() + "/","")
                 .replace("planets/planet","");
+    }
+
+    /**
+     * Rounds location numbers: x, y, z, yaw, pitch.
+     * @param location location to round.
+     * @return location with rounded coordinates.
+     */
+    public static @NotNull Location roundLocation(@NotNull Location location) {
+        double x = Math.round(location.getX() * 100.0) / 100.0;
+        double y = Math.round(location.getY() * 100.0) / 100.0;
+        double z = Math.round(location.getZ() * 100.0) / 100.0;
+        float yaw = (float) (Math.round(location.getYaw() * 100.0) / 100.0);
+        float pitch = (float) (Math.round(location.getPitch() * 100.0) / 100.0);
+        location.set(x, y, z);
+        location.setYaw(yaw);
+        location.setPitch(pitch);
+        return location;
+    }
+
+    /**
+     * Converts text coordinate to numeric double.
+     * <p>
+     * If it starts with ~ symbol, it will add specified value
+     * to default value.
+     * <p>
+     * If it fails to get number from text, it will return
+     * default value.
+     * @param text text with number to convert.
+     * @param defaultValue default value.
+     * @return coordinate double value.
+     */
+    public static double fromTextToCoordinate(@NotNull String text, double defaultValue) {
+        try {
+            if (text.startsWith("~")) {
+                return text.equals("~") ? defaultValue : defaultValue + Double.parseDouble(text.substring(1));
+            } else {
+                return Double.parseDouble(text);
+            }
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Converts location to map with x, y, z, yaw, pitch values.
+     * @param location location to convert to map.
+     * @return map with x, y, z, yaw, pitch values.
+     */
+    public static @NotNull Map<String, Double> fromLocationToMap(@NotNull Location location) {
+        Map<String, Double> map = new HashMap<>();
+        map.put("x", location.getX());
+        map.put("y", location.getY());
+        map.put("z", location.getZ());
+        map.put("yaw", (double) location.getYaw());
+        map.put("pitch", (double) location.getPitch());
+        return map;
     }
 
     /**

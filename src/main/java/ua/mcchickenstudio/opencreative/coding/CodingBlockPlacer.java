@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDebugTorch;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
@@ -220,6 +221,9 @@ public class CodingBlockPlacer {
                 setSignLine(signLocation,3, type.name().toLowerCase());
             }
         }
+        if (data.getBoolean("debug", false)) {
+            placeDebugTorch(location.getBlock().getRelative(BlockFace.WEST).getLocation());
+        }
     }
 
     /**
@@ -251,7 +255,8 @@ public class CodingBlockPlacer {
      * @param type type of action.
      */
     private void buildContainerBlock(@NotNull Location location, @NotNull ConfigurationSection data,
-                                     @NotNull ActionType type) {
+                                     @Nullable ActionType type) {
+        if (type == null) return;
         ConfigurationSection arguments = data.getConfigurationSection("arguments");
         if (arguments != null && type.isChestRequired()) {
             Block containerBlock = location.getBlock().getRelative(BlockFace.UP);

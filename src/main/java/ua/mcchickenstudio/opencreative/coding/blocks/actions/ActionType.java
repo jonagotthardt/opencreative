@@ -272,7 +272,8 @@ public enum ActionType {
     CONTROL_WAIT(                    ActionCategory.CONTROL_ACTION, MenusCategory.LINES, WaitAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     CONTROL_LAUNCH_CYCLES(           ActionCategory.CONTROL_ACTION, MenusCategory.LINES, LaunchCyclesAction.class, Material.OXIDIZED_COPPER, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
     CONTROL_STOP_CYCLES(             ActionCategory.CONTROL_ACTION, MenusCategory.LINES, StopCyclesAction.class, Material.WEATHERED_CUT_COPPER_STAIRS, new ArgumentSlot("names", ValueType.TEXT, (byte) 27)),
-    CONTROL_CLEAR_LOCAL_VARIABLES(   ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, ClearLocalVariablesAction.class, Material.MAGMA_CREAM),
+    CONTROL_CLEAR_LOCAL_VARIABLES(   ActionCategory.CONTROL_ACTION, MenusCategory.LINES, ClearLocalVariablesAction.class, Material.SLIME_BALL),
+    CONTROL_CLEAR_GLOBAL_VARIABLES(  ActionCategory.CONTROL_ACTION, MenusCategory.LINES, ClearGlobalVariablesAction.class, Material.MAGMA_CREAM),
 
     CONTROL_CANCEL_EVENT(            ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, CancelEventAction.class, Material.BARRIER),
     CONTROL_UNCANCEL_EVENT(          ActionCategory.CONTROL_ACTION, MenusCategory.EVENTS, UncancelEventAction.class, Material.STRUCTURE_VOID),

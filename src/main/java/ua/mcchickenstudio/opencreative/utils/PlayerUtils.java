@@ -24,6 +24,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.packs.ResourcePack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -184,8 +185,7 @@ public final class PlayerUtils {
      * @param player specified player to teleport.
      **/
     public static void teleportToLobby(Player player) {
-        World lobbyWorld = getLobbyWorld();
-        Location location = lobbyWorld != null ? lobbyWorld.getSpawnLocation() : player.getLocation();
+        Location location = getLobbyLocation();
         player.eject();
         if (player.isDead()) {
             player.setRespawnLocation(location);
@@ -219,6 +219,26 @@ public final class PlayerUtils {
             spawnWorld = "world";
         }
         return Bukkit.getWorld(spawnWorld);
+    }
+
+    /**
+     * Returns a spawn location in lobby world, where players
+     * will be connected to on server join.
+     * @return spawn location in lobby world.
+     */
+    public static Location getLobbyLocation() {
+        World world = getLobbyWorld();
+        ConfigurationSection data = OpenCreative.getPlugin().getConfig().getConfigurationSection("lobby.spawn");
+        if (data == null) {
+            return world.getSpawnLocation();
+        }
+        Location location = world.getSpawnLocation();
+        double x = data.getDouble("x", location.getX());
+        double y = data.getDouble("y", location.getX());
+        double z = data.getDouble("z", location.getX());
+        float yaw = (float) data.getDouble("yaw", location.getYaw());
+        float pitch = (float) data.getDouble("pitch", location.getPitch());
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     /**

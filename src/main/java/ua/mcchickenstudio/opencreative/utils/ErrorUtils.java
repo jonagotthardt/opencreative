@@ -607,6 +607,7 @@ public final class ErrorUtils {
      */
     public static void sendCodingDebugExecutor(Executor executor) {
         Planet planet = executor.getPlanet();
+        if (!executor.isDebug()) return;
         if (planet == null || !planet.isDebug()) return;
         for (Player player : planet.getPlayers()) {
             player.sendMessage(getLocaleMessage("coding-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
@@ -621,6 +622,7 @@ public final class ErrorUtils {
      */
     public static void sendCodingDebugAction(Action action) {
         if (action.getExecutor() == null) return;
+        if (!action.getExecutor().isDebug()) return;
         Planet planet = action.getExecutor().getPlanet();
         if (planet == null || !planet.isDebug()) return;
         List<Argument> arguments = action.getArgumentsList();

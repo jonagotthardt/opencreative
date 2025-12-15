@@ -279,9 +279,14 @@ public class Executors {
             } else {
                 executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class).newInstance(planet,coords[0],coords[1],coords[2]);
             }
+            if (executor == null) return null;
             List<Action> allActionsList = createActionList(executor, path + ".actions",config);
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
+            }
+            boolean debug = config.getBoolean(path + ".debug", false);
+            if (debug) {
+                executor.setDebug(debug);
             }
         } catch (Exception ignored) {}
         return executor;

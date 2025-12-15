@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.8.1 - Well, it's possible.
+# OpenCreative+ 5.9.0 - Well, it's possible.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -59,6 +59,7 @@
 #  /stopsound [Player] - Stops sounds.                            (for world owners, world developers or builders) (opencreative.stop-sound.bypass)
 #
 #  /creative - Opens menu of plugin info.                                                   Permission nodes
+#    /creative setspawn - Sets new spawn location in lobby world.                           (opencreative.setspawn)
 #    /creative reload - Reloads config.                                                     (opencreative.reload)
 #    /creative resetlocale - Removes current localization files and replaces with default.  (opencreative.resetlocale)
 #    /creative ignoremessage [Path] - Saves message from resetting locale in the future.    (opencreative.resetlocale.add-ignored)
@@ -139,8 +140,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.8.1
-last-world-id: 0
+version: 5.9.0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
 lobby:
@@ -158,6 +158,12 @@ lobby:
   disallow-world-edit: true        # To bypass with true, add permission: opencreative.lobby.world-edit.bypass
   disable-explosions: true # If true, any explosion in lobby will be cancelled.
   clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
+  #spawn: # You can set spawn location with /oc setspawn command.
+  #  x: 1
+  #  y: 60
+  #  z: 3
+  #  yaw: 20   # Horizontal camera rotation
+  #  pitch: 25 # Vertical camera rotation
 
 recommended-worlds: # List of featured worlds in /games, type world's numeric IDs here.
   - 1 # To add world to recommendations, use /oc recommend ID
@@ -321,7 +327,7 @@ groups:
   # like world size, world limits, worlds amount.
   #
   default: # default - by default for any player, no permissions required
-    cooldowns:
+    cooldowns: # In seconds
       generic-command: 5 # /play, /build, /games
       advertisement: 120 # /ad
       creative-chat: 10 # /cc
@@ -625,6 +631,7 @@ items:
     22: "method"
     23: "launch-method-action"
     24: "selection-action"
+    26: "debug-torch"
     27: "lines-controller"
     28: "event-entity"
     29: "entity-condition"
@@ -653,6 +660,7 @@ items:
     22: "method"
     23: "launch-method-action"
     24: "selection-action"
+    26: "debug-torch"
     27: "lines-controller"
     28: "event-entity"
     29: "entity-condition"
@@ -704,3 +712,10 @@ maintenance: false
 # Not useful, if you're not developing OC+.
 #
 debug: false
+#
+# The most recent world's ID. It's used
+# to create a new world by adding 1
+# to current value.
+#
+last-world-id: 0 # Not
+

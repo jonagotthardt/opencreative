@@ -25,7 +25,6 @@ import org.bukkit.inventory.meta.BookMeta;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
-import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
@@ -56,7 +55,8 @@ import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.getUUIDFromText;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
 
 /**
  * <h1>CreativeCommand</h1>
@@ -151,9 +151,7 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                 }
-                case "groups" -> {
-                    handleGroupsCommand(sender, args);
-                }
+                case "groups" -> handleGroupsCommand(sender, args);
                 case "register" -> {
                     if (!sender.hasPermission("opencreative.world.register")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -634,7 +632,7 @@ public class CreativeCommand extends CommandHandler {
                         if (PlayerUtils.enableSpying(player)) {
                             sender.sendMessage(getLocaleMessage("creative.spy.enabled"));
                         } else {
-                            sender.sendMessage(getLocaleMessage("creative.spy.already-anabled"));
+                            sender.sendMessage(getLocaleMessage("creative.spy.already-enabled"));
                         }
                     }
                 }
@@ -701,13 +699,77 @@ public class CreativeCommand extends CommandHandler {
                     try {
                         times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
                     } catch (Exception ignored) {}
-                    int seconds = 20;
+                    int seconds = 5;
                     if (args.length >= 3) {
                         try {
                             seconds =  Math.clamp(Integer.parseInt(args[2]), 1, 10);
                         } catch (Exception ignored) {}
                     }
+                    sender.sendMessage(getLocaleMessage("creative.fireworks")
+                            .replace("%amount%", String.valueOf(times))
+                            .replace("%cooldown%", String.valueOf(seconds)));
                     WorldUtils.summonFireworks(times, seconds * 20);
+                }
+                case "setspawn" -> {
+                    if (!sender.hasPermission("opencreative.set-spawn")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length == 1) {
+                        if (player == null) {
+                            sender.sendMessage(getLocaleMessage("too-few-args"));
+                            return;
+                        }
+                        if (isPlanet(player.getWorld())) {
+                            sender.sendMessage(getLocaleMessage("only-in-lobby"));
+                            return;
+                        }
+                        Location location = roundLocation(player.getLocation());
+                        OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
+                        if (!player.getWorld().equals(getLobbyWorld())) {
+                            OpenCreative.getPlugin().getConfig().set("lobby.world", player.getWorld().getName());
+                        }
+                        sender.sendMessage(getLocaleMessage("creative.set-spawn")
+                                .replace("%x%", String.valueOf(location.getX()))
+                                .replace("%y%", String.valueOf(location.getY()))
+                                .replace("%z%", String.valueOf(location.getZ()))
+                                .replace("%yaw%", String.valueOf(location.getYaw()))
+                                .replace("%pitch%", String.valueOf(location.getPitch())));
+                        OpenCreative.getPlugin().saveConfig();
+                        OpenCreative.getPlugin().reloadConfig();
+                        return;
+                    } else if (args.length < 4) {
+                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                        return;
+                    }
+                    // /oc setspawn x y z
+                    Location location = getLobbyLocation();
+                    double x = fromTextToCoordinate(args[1], location.getX());
+                    double y = fromTextToCoordinate(args[2], location.getY());
+                    double z = fromTextToCoordinate(args[3], location.getZ());
+                    float yaw = location.getYaw();
+                    float pitch = location.getPitch();
+                    if (args.length >= 6) {
+                        try {
+                            yaw = (float) fromTextToCoordinate(args[4], location.getYaw());
+                        } catch (NumberFormatException ignored) {}
+                        try {
+                            pitch = (float) fromTextToCoordinate(args[5], location.getPitch());
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    location.set(x, y, z);
+                    location.setYaw(yaw);
+                    location.setPitch(pitch);
+                    roundLocation(location);
+                    sender.sendMessage(getLocaleMessage("creative.set-spawn")
+                            .replace("%x%", String.valueOf(location.getX()))
+                            .replace("%y%", String.valueOf(location.getY()))
+                            .replace("%z%", String.valueOf(location.getZ()))
+                            .replace("%yaw%", String.valueOf(location.getYaw()))
+                            .replace("%pitch%", String.valueOf(location.getPitch())));
+                    OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
+                    OpenCreative.getPlugin().saveConfig();
+                    OpenCreative.getPlugin().reloadConfig();
                 }
                 case "items" -> {
                     if (player == null) {
@@ -1074,7 +1136,7 @@ public class CreativeCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("no-perms"));
             return;
         }
-        if (args.length == 2) {
+        if (args.length <= 2) {
             sender.sendMessage(getLocaleMessage("too-few-args"));
             return;
         }
@@ -1094,7 +1156,8 @@ public class CreativeCommand extends CommandHandler {
                 if (args[3].equalsIgnoreCase("limit")) {
                     LimitType type = LimitType.getByPath(args[4]);
                     if (type == null) {
-                        sender.sendMessage("Unknown limit type: " + args[4]);
+                        sender.sendMessage(getLocaleMessage("creative.groups.wrong-limit")
+                                .replace("%limit%", args[4]));
                         return;
                     }
                     int value = 0;
@@ -1102,14 +1165,19 @@ public class CreativeCommand extends CommandHandler {
                         value = Integer.parseInt(args[5]);
                     } catch (Exception ignored) {}
                     if (OpenCreative.getSettings().getGroups().setLimit(groupName, type, value)) {
-                        sender.sendMessage("Changed " + type.getPath() +  " limit for group " + groupName + " to: " + value);
+                        sender.sendMessage(getLocaleMessage("creative.groups.set-limit")
+                                .replace("%value%", String.valueOf(value))
+                                .replace("%type%", type.getPath())
+                                .replace("%group%", groupName));
                     } else {
-                        sender.sendMessage("Unknown group: " + groupName);
+                        sender.sendMessage(getLocaleMessage("creative.groups.not-found")
+                                .replace("%group%", groupName));
                     }
                 } else if (args[3].equalsIgnoreCase("modifier")) {
                     LimitType type = LimitType.getByPath(args[4]);
                     if (type == null) {
-                        sender.sendMessage("Unknown limit modifier: " + args[4]);
+                        sender.sendMessage(getLocaleMessage("creative.groups.wrong-limit")
+                                .replace("%limit%", args[4]));
                         return;
                     }
                     int value = 0;
@@ -1117,9 +1185,13 @@ public class CreativeCommand extends CommandHandler {
                         value = Integer.parseInt(args[5]);
                     } catch (Exception ignored) {}
                     if (OpenCreative.getSettings().getGroups().setLimitModifier(groupName, type, value)) {
-                        sender.sendMessage("Changed " + type.getPath() +  " modifier for group " + groupName + " to: " + value);
+                        sender.sendMessage(getLocaleMessage("creative.groups.set-modifier")
+                                .replace("%value%", String.valueOf(value))
+                                .replace("%type%", type.getPath())
+                                .replace("%group%", groupName));
                     } else {
-                        sender.sendMessage("Unknown group: " + groupName);
+                        sender.sendMessage(getLocaleMessage("creative.groups.not-found")
+                                .replace("%group%", groupName));
                     }
                 }
 
@@ -1131,9 +1203,11 @@ public class CreativeCommand extends CommandHandler {
                     return;
                 }
                 if (OpenCreative.getSettings().getGroups().deleteGroup(groupName)) {
-                    sender.sendMessage("Removed group " + groupName);
+                    sender.sendMessage(getLocaleMessage("creative.groups.removed")
+                            .replace("%group%", groupName));
                 } else {
-                    sender.sendMessage("Unknown group: " + groupName);
+                    sender.sendMessage(getLocaleMessage("creative.groups.not-found")
+                            .replace("%group%", groupName));
                 }
             }
             // /oc groups info name
@@ -1144,27 +1218,34 @@ public class CreativeCommand extends CommandHandler {
                 }
                 Group group = OpenCreative.getSettings().getGroups().getGroupOrNull(groupName);
                 if (group == null) {
-                    sender.sendMessage("Unknown group: " + groupName);
+                    sender.sendMessage(getLocaleMessage("creative.groups.not-found")
+                            .replace("%group%", groupName));
                     return;
                 }
-                sender.sendMessage("--- Group: " + group.getName());
-                sender.sendMessage("Cooldowns: ");
-                sender.sendMessage("  Generic Commands: " + group.getGenericCommandCooldown());
-                sender.sendMessage("  World Chat: " + group.getChatCooldown());
-                sender.sendMessage("  Creative Chat: " + group.getCreativeChatCooldown());
-                sender.sendMessage("  World Advertisement: " + group.getAdvertisementCooldown());
-                sender.sendMessage("  Blocks Duplication: " + group.getBlocksDuplicationCooldown());
-                sender.sendMessage("  Modules Manipulation: " + group.getModuleManipulationCooldown());
-                sender.sendMessage("Limits: ");
+                sender.sendMessage(getLocaleMessage("creative.groups.info.beginning")
+                        .replace("%group%", groupName));
+                sender.sendMessage(getLocaleMessage("creative.groups.info.cooldowns")
+                        .replace("%generic%", String.valueOf(group.getGenericCommandCooldown()))
+                        .replace("%chat%", String.valueOf(group.getChatCooldown()))
+                        .replace("%creative-chat%", String.valueOf(group.getCreativeChatCooldown()))
+                        .replace("%advertisement%", String.valueOf(group.getAdvertisementCooldown()))
+                        .replace("%duplication%", String.valueOf(group.getBlocksDuplicationCooldown()))
+                        .replace("%modules%", String.valueOf(group.getModuleManipulationCooldown())));
+                sender.sendMessage(getLocaleMessage("creative.groups.info.limits.list"));
                 for (LimitType type : LimitType.values()) {
-                    sender.sendMessage("  " + type.getPath() + " - " + group.getLimit(type).limit() + " * "
-                            + group.getLimit(type).modifier());
+                    sender.sendMessage(getLocaleMessage("creative.groups.info.limits.limit")
+                            .replace("%type%", type.getPath())
+                            .replace("%limit%", String.valueOf(group.getLimit(type).limit()))
+                            .replace("%modifier%", String.valueOf(group.getLimit(type).modifier())));
                 }
-                sender.sendMessage("Permission: " + group.getPermission());
-                sender.sendMessage("Worlds Limit: " + group.getWorldsLimit());
-                sender.sendMessage("Modules Limit: " + group.getModulesLimit());
-                sender.sendMessage("Can use prompter: " + group.canUsePrompter());
-                sender.sendMessage("--- Group: " + group.getName());
+                sender.sendMessage(getLocaleMessage("creative.groups.info.ending")
+                        .replace("%worlds%", String.valueOf(group.getWorldsLimit()))
+                        .replace("%modules%", String.valueOf(group.getModulesLimit()))
+                        .replace("%size%", String.valueOf(group.getWorldSize()))
+                        .replace("%like-reward%", String.valueOf(group.getLikeReward()))
+                        .replace("%prompter%", String.valueOf(group.canUsePrompter()))
+                        .replace("%group%", groupName)
+                        .replace("%advertisement-cost%", String.valueOf(group.getAdvertisementPrice())));
             }
         }
     }
@@ -1452,6 +1533,7 @@ public class CreativeCommand extends CommandHandler {
         List<String> tabCompleter = new ArrayList<>();
         if (!sender.hasPermission("opencreative.admin")) return null;
         if (args.length == 1) {
+            tabCompleter.add("setspawn");
             tabCompleter.add("update");
             tabCompleter.add("moderation");
             tabCompleter.add("reload");

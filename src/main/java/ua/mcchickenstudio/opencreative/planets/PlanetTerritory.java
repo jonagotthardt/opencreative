@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.EnvironmentCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.StructuresCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
@@ -173,7 +174,7 @@ public class PlanetTerritory {
         World world = creator.createWorld();
         if (world == null) return;
         world.setAutoSave(autoSave);
-        setDeprecatedGameRule();
+        setGameRuleIfExists("SPAWN_CHUNK_RADIUS", 1);
         world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
@@ -357,7 +358,7 @@ public class PlanetTerritory {
 
         if (world != null) {
             world.setAutoSave(true);
-            setDeprecatedGameRule();
+            setGameRuleIfExists("SPAWN_CHUNK_RADIUS", 1);
             world.getWorldBorder().setSize(getWorldSize());
 
             world.setGameRule(GameRule.DO_MOB_LOOT, true);
@@ -398,11 +399,21 @@ public class PlanetTerritory {
     }
 
     @SuppressWarnings("unchecked")
-    public void setDeprecatedGameRule() {
+    public void setGameRuleIfExists(@NotNull String gameRule, boolean value) {
         try {
-            GameRule<?> spawnRadius = GameRule.getByName("SPAWN_CHUNK_RADIUS");
-            if (spawnRadius != null && getWorld() != null) {
-                getWorld().setGameRule((GameRule<? super Integer>) spawnRadius, 1);
+            GameRule<?> rule = GameRule.getByName(gameRule.toUpperCase());
+            if (rule != null && getWorld() != null) {
+                getWorld().setGameRule((GameRule<? super Boolean>) rule, value);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setGameRuleIfExists(@NotNull String gameRule, int value) {
+        try {
+            GameRule<?> rule = GameRule.getByName(gameRule.toUpperCase());
+            if (rule != null && getWorld() != null) {
+                getWorld().setGameRule((GameRule<? super Integer>) rule, value);
             }
         } catch (Exception ignored) {}
     }
@@ -459,29 +470,13 @@ public class PlanetTerritory {
      * @param spawnLocation new spawn location.
      */
     public void setSpawnLocation(@NotNull Location spawnLocation) {
-
-        double x = Math.round(spawnLocation.getX() * 100.0) / 100.0;
-        double y = Math.round(spawnLocation.getY() * 100.0) / 100.0;
-        double z = Math.round(spawnLocation.getZ() * 100.0) / 100.0;
-        float yaw = (float) (Math.round(spawnLocation.getYaw() * 100.0) / 100.0);
-        float pitch = (float) (Math.round(spawnLocation.getPitch() * 100.0) / 100.0);
-        spawnLocation.set(x, y, z);
-        spawnLocation.setYaw(yaw);
-        spawnLocation.setPitch(pitch);
-
-        this.spawnLocation = spawnLocation;
+        this.spawnLocation = WorldUtils.roundLocation(spawnLocation);
         World world = getWorld();
         this.spawnLocation.setWorld(world);
         if (world != null) world.setSpawnLocation(spawnLocation);
 
-        Map<String, Object> configLocation = new HashMap<>();
-        configLocation.put("x", x);
-        configLocation.put("y", y);
-        configLocation.put("z", z);
-        configLocation.put("yaw", yaw);
-        configLocation.put("pitch", pitch);
+        Map<String, Double> configLocation = WorldUtils.fromLocationToMap(spawnLocation);
         FileUtils.setPlanetConfigParameter(planet,"spawn", configLocation);
-
     }
 
     public boolean isAutoSave() {

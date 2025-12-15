@@ -70,9 +70,9 @@ public enum ItemsGroup {
             new ItemPair(13, Items.CONTROL_ACTION),         new ItemPair(14, Items.VARIABLE_ACTION),  new ItemPair(15, Items.VARIABLE_CONDITION),
             new ItemPair(18, Items.FLY_SPEED_CHANGER),      new ItemPair(19, Items.EVENT_WORLD),      new ItemPair(20, Items.WORLD_CONDITION),
             new ItemPair(21, Items.WORLD_ACTION),           new ItemPair(22, Items.METHOD),           new ItemPair(23, Items.LAUNCH_METHOD_ACTION),
-            new ItemPair(24, Items.SELECTION_ACTION),       new ItemPair(27, Items.LINES_CONTROLLER), new ItemPair(28, Items.EVENT_ENTITY),
-            new ItemPair(29, Items.ENTITY_CONDITION),       new ItemPair(30, Items.ENTITY_ACTION),    new ItemPair(31, Items.FUNCTION),
-            new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION), new ItemPair(36, Items.ARROW_NOT)),
+            new ItemPair(24, Items.SELECTION_ACTION),       new ItemPair(26, Items.DEBUG_TORCH),      new ItemPair(27, Items.LINES_CONTROLLER),
+            new ItemPair(28, Items.EVENT_ENTITY),           new ItemPair(29, Items.ENTITY_CONDITION), new ItemPair(30, Items.ENTITY_ACTION),
+            new ItemPair(31, Items.FUNCTION),               new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION), new ItemPair(36, Items.ARROW_NOT)),
 
     /**
      * Coding blocks and other coding items, that will be given, when
@@ -84,9 +84,10 @@ public enum ItemsGroup {
                   new ItemPair(13, Items.CONTROL_ACTION),         new ItemPair(14, Items.VARIABLE_ACTION),  new ItemPair(15, Items.VARIABLE_CONDITION),
                   new ItemPair(17, Items.FLY_SPEED_CHANGER),      new ItemPair(18, Items.CODING_BOOK),      new ItemPair(19, Items.EVENT_WORLD),
                   new ItemPair(20, Items.WORLD_CONDITION),        new ItemPair(21, Items.WORLD_ACTION),     new ItemPair(22, Items.METHOD),
-                  new ItemPair(23, Items.LAUNCH_METHOD_ACTION),   new ItemPair(24, Items.SELECTION_ACTION), new ItemPair(27, Items.LINES_CONTROLLER),
-                  new ItemPair(28, Items.EVENT_ENTITY),           new ItemPair(29, Items.ENTITY_CONDITION), new ItemPair(30, Items.ENTITY_ACTION),
-                  new ItemPair(31, Items.FUNCTION),               new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION), new ItemPair(36, Items.ARROW_NOT));
+                  new ItemPair(23, Items.LAUNCH_METHOD_ACTION),   new ItemPair(24, Items.SELECTION_ACTION), new ItemPair(26, Items.DEBUG_TORCH),
+                  new ItemPair(27, Items.LINES_CONTROLLER),       new ItemPair(28, Items.EVENT_ENTITY),     new ItemPair(29, Items.ENTITY_CONDITION),
+                  new ItemPair(30, Items.ENTITY_ACTION),          new ItemPair(31, Items.FUNCTION),         new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION),
+                  new ItemPair(36, Items.ARROW_NOT));
 
     private final List<ItemPair> pairs;
 

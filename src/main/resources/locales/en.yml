@@ -220,7 +220,23 @@ help:
 creative:
   reloading: "%prefix%Reloading configuration and localization files, please wait..."
   reloaded: "%prefix%Plugin has been &6successfully&f reloaded!"
+  set-spawn: "%prefix%Set &6new spawn location&f in lobby: &6%x% &6%y% &6%z% &6%yaw% %pitch%"
   loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
+  fireworks: "%prefix%Launching fireworks &6%amount% times&f every &6%cooldown% seconds&f! :)"
+
+  groups:
+    set-limit: "%prefix%New limit &6%type%&f has been set for group &6%group%&f: &6%value%&f.\n&7World limits can be modified by modifiers: limit + (modifier * player count)."
+    set-modifier: "%prefix%New limit modifier &6%type%&f has been set for group &6%group%&f: &6%value%"
+    removed: "%prefix%Group &6%group%&f has now been &cremoved&f.."
+    not-found: "%prefix%&cGroup %group% does not exist O_o"
+    wrong-limit: "%prefix%&cLimit %limit% does not exist O_o"
+    info:
+      beginning: "%prefix%&fInformation about group &6%group%&f:"
+      cooldowns: "&fUsage cooldowns:\n &7Commands &f- &6%generic% seconds\n &7World chat &f- &6%chat% seconds\n &7Creative chat &f- &6%creative-chat% seconds\n &7World advertisement &f- &6%advertisement% seconds\n &7Code line duplication &f- &6%duplication% seconds\n &7Module operations &f- &6%modules% seconds"
+      limits:
+        list: "&fLimits:"
+        limit: "&7 %type% &f- &c&n%limit%&f * &e%modifier%"
+      ending: "&fAdvertisement cost: &6%advertisement-cost%\n&fLike reward: &6%like-reward%\n&fCan use AI: &6%prompter%\n&fWorld count: &6%worlds%\n&fModule count: &6%modules%\n&fWorld size: &6%size%\n  &7Group %group%"
   locale:
     changed: "%prefix%&fChanged language to &6English&f!"
     not-found: "%prefix%&cNot found localization file for this language O_o"
@@ -300,6 +316,7 @@ not-developer: "%prefix%&cYou are not the developer of this world."
 not-builder: "%prefix%&cYou are not the builder of this world."
 only-in-world: "%prefix%&cThis can only be used in the world."
 only-in-dev-world: "%prefix%&cThis can only be used in the world for developers (/dev)."
+only-in-lobby: "%prefix%&cThis can only be used in the lobby (/spawn)."
 not-for-lobby: "%prefix%&cCreate your own world to do it!"
 no-money: "%prefix%&cIt seems you don't have enough coins! You need at least %money% coins!"
 no-planet-found: "%prefix%&cThis world does not exist."
@@ -734,6 +751,20 @@ items:
         - "&fIn hand:"
         - "&e Right-click on a condition sign:"
         - "&7  Toggle NOT on or off"
+    debug-torch:
+      name: "&cDebug Marker &a[Right-click]"
+      lore:
+        - "&7Marks events and executors"
+        - "&7so that they can send"
+        - "&7debug messages."
+        - ""
+        - "&7Debug messages will be visible"
+        - "&7only in debug mode:"
+        - "&a/env debug on"
+        - ""
+        - "&fIn hand:"
+        - "&e Click on an event sign:"
+        - "&7  Set or unset debug"
     variable:
       saved:  "&aSaved"
       global: "&eGlobal"
@@ -5094,6 +5125,16 @@ items:
         lore:
           - "&7Deletes local variables"
           - "&7that were set in the line."
+          - " "
+          - "&eClick to set the action."
+      control-clear-global-variables:
+        name: "&cClear Global Variables"
+        lore:
+          - "&7Deletes the global variables"
+          - "&7that were set in the world."
+          - ""
+          - "&7They are cleared automatically"
+          - "&7after the world is unloaded."
           - " "
           - "&eClick to set the action."
       world-switch-to-build-mode:
@@ -16712,6 +16753,22 @@ menus:
           - "&fOptions:"
           - "%1%"
           - "%2%"
+      locator-bar:
+        choices:
+          1: "Let it be visible"
+          2: "Hide the bar completely"
+        name: "&7Locator Bar"
+        lore:
+          - " "
+          - "&7This is the strip that shows"
+          - "&7the points with players’ locations."
+          - "&7For hide-and-seek it's better to hide."
+          - ""
+          - "&eClick to change."
+          - ""
+          - "&fOptions:"
+          - "%1%"
+          - "%2%"
       mob-loot:
         choices:
           1: "Allow items to drop from mobs"
@@ -17456,6 +17513,7 @@ blocks:
   control_stop_code_line: "&4Stop code line"
   control_wait: "&eWait"
   control_clear_local_variables: "&cClear local"
+  control_clear_global_variables: "&cClear Global"
   control_launch_cycles: "&aLaunch cycle"
   control_stop_cycles: "&3Stop cycle"
 

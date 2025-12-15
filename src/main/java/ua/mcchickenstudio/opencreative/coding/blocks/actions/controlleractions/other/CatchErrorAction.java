@@ -46,12 +46,14 @@ public final class CatchErrorAction extends ControllerAction {
         try {
             executeActions();
         } catch (Exception error) {
-            setVarValue(link,error.getClass().getSimpleName().toLowerCase());
+            setVarValue(link, error.getClass().getSimpleName().toLowerCase());
             if (getPlanet().getLimits().isTooManyCodingErrors()) {
                 stopPlanetCode(getPlanet(), "errors limit");
                 sendPlanetCodeCriticalErrorMessage(getPlanet(),getExecutor(),getLocaleMessage("coding-error.errors-limit",false)
                         .replace("%limit%",String.valueOf(getPlanet().getLimits().getCodingErrorsLimit())));
             }
+            getHandler().removeAllActions();
+            getHandler().executeNextAction();
         }
     }
 

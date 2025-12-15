@@ -16,33 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-public final class EntityLaunchToLocationAction extends EntityAction {
-    public EntityLaunchToLocationAction(Executor executor, Target target, int x, Arguments args) {
+public final class ClearGlobalVariablesAction extends ControlAction {
+
+    public ClearGlobalVariablesAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executeEntity(@NotNull Entity entity) {
-        Location location = getArguments().getValue("location",entity.getLocation(),this);
-        entity.setVelocity(
-                new Vector(location.getX(),location.getY(),location.getZ())
-        );
+    protected void execute(Entity entity) {
+        getPlanet().getVariables().clearGlobalVariables();
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.ENTITY_LAUNCH_TO_LOCATION;
+        return ActionType.CONTROL_CLEAR_GLOBAL_VARIABLES;
     }
 }
