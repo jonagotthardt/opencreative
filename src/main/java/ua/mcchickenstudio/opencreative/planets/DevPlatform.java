@@ -234,6 +234,10 @@ public class DevPlatform {
         int endX = platformer.getPlatformEndLocation(this).getBlockX() - 1;
         int y = location.getBlockY();
         int z = location.getBlockZ();
+        Block torchBlock = location.getBlock().getRelative(BlockFace.WEST);
+        if (torchBlock.getType() == Material.REDSTONE_WALL_TORCH) {
+            torchBlock.setType(Material.AIR);
+        }
         for (int x = location.getBlockX(); x < endX; x = x + 2) {
             Block actionBlock = world.getBlockAt(x, y, z);
             destroyCodingBlock(actionBlock.getLocation(), dropItems);
@@ -255,6 +259,10 @@ public class DevPlatform {
         Block containerBlock = block.getRelative(BlockFace.UP);
         Block additionalBlock = block.getRelative(BlockFace.EAST);
         Block signBlock = block.getRelative(BlockFace.SOUTH);
+        Block torchBlock = location.getBlock().getRelative(BlockFace.WEST);
+        if (torchBlock.getType() == Material.REDSTONE_WALL_TORCH) {
+            torchBlock.setType(Material.AIR);
+        }
 
         if (additionalBlock.getType() == Material.PISTON) {
             int closingBracketX = getClosingBracketX(this, block);

@@ -222,6 +222,7 @@ creative:
   reloaded: "%prefix%Плагин &6успешно&f перезагружен!"
   set-spawn: "%prefix%Установлена &6новая точка появления&f игроков в лобби: &6%x% &6%y% &6%z% &6%yaw% %pitch%"
   loaded-worlds-list: "%prefix%Список загруженных миров, всего %amount%: &6"
+  fireworks: "%prefix%Запускаем фейерверки &6%amount% раз&f через каждые &6%cooldown% секунд&f! :)"
   groups:
     set-limit: "%prefix%Установлен новый лимит &6%type%&f в группе &6%group%&f: &6%value%&f.\n&7Лимит в мирах может быть изменён модификаторами: лимит + (модификатор * количество игроков)."
     set-modifier: "%prefix%Установлен новый модификатор лимита &6%type%&f в группе &6%group%&f: &6%value%"

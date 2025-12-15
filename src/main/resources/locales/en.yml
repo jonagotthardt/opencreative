@@ -222,6 +222,8 @@ creative:
   reloaded: "%prefix%Plugin has been &6successfully&f reloaded!"
   set-spawn: "%prefix%Set &6new spawn location&f in lobby: &6%x% &6%y% &6%z% &6%yaw% %pitch%"
   loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
+  fireworks: "%prefix%Launching fireworks &6%amount% times&f every &6%cooldown% seconds&f! :)"
+
   groups:
     set-limit: "%prefix%New limit &6%type%&f has been set for group &6%group%&f: &6%value%&f.\n&7World limits can be modified by modifiers: limit + (modifier * player count)."
     set-modifier: "%prefix%New limit modifier &6%type%&f has been set for group &6%group%&f: &6%value%"

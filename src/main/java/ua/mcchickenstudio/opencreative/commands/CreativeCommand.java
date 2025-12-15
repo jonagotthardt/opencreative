@@ -151,9 +151,7 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                 }
-                case "groups" -> {
-                    handleGroupsCommand(sender, args);
-                }
+                case "groups" -> handleGroupsCommand(sender, args);
                 case "register" -> {
                     if (!sender.hasPermission("opencreative.world.register")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -701,12 +699,15 @@ public class CreativeCommand extends CommandHandler {
                     try {
                         times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
                     } catch (Exception ignored) {}
-                    int seconds = 20;
+                    int seconds = 5;
                     if (args.length >= 3) {
                         try {
                             seconds =  Math.clamp(Integer.parseInt(args[2]), 1, 10);
                         } catch (Exception ignored) {}
                     }
+                    sender.sendMessage(getLocaleMessage("creative.fireworks")
+                            .replace("%amount%", String.valueOf(times))
+                            .replace("%cooldown%", String.valueOf(seconds)));
                     WorldUtils.summonFireworks(times, seconds * 20);
                 }
                 case "setspawn" -> {
@@ -719,18 +720,23 @@ public class CreativeCommand extends CommandHandler {
                             sender.sendMessage(getLocaleMessage("too-few-args"));
                             return;
                         }
+                        if (isPlanet(player.getWorld())) {
+                            sender.sendMessage(getLocaleMessage("only-in-lobby"));
+                            return;
+                        }
                         Location location = roundLocation(player.getLocation());
                         OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
                         if (!player.getWorld().equals(getLobbyWorld())) {
                             OpenCreative.getPlugin().getConfig().set("lobby.world", player.getWorld().getName());
                         }
-                        sender.sendMessage(getLocaleMessage("commands.creative.set-spawn")
+                        sender.sendMessage(getLocaleMessage("creative.set-spawn")
                                 .replace("%x%", String.valueOf(location.getX()))
                                 .replace("%y%", String.valueOf(location.getY()))
                                 .replace("%z%", String.valueOf(location.getZ()))
                                 .replace("%yaw%", String.valueOf(location.getYaw()))
                                 .replace("%pitch%", String.valueOf(location.getPitch())));
                         OpenCreative.getPlugin().saveConfig();
+                        OpenCreative.getPlugin().reloadConfig();
                         return;
                     } else if (args.length < 4) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
@@ -743,7 +749,7 @@ public class CreativeCommand extends CommandHandler {
                     double z = fromTextToCoordinate(args[3], location.getZ());
                     float yaw = location.getYaw();
                     float pitch = location.getPitch();
-                    if (args.length >= 5) {
+                    if (args.length >= 6) {
                         try {
                             yaw = (float) fromTextToCoordinate(args[4], location.getYaw());
                         } catch (NumberFormatException ignored) {}
@@ -755,7 +761,7 @@ public class CreativeCommand extends CommandHandler {
                     location.setYaw(yaw);
                     location.setPitch(pitch);
                     roundLocation(location);
-                    sender.sendMessage(getLocaleMessage("commands.creative.set-spawn")
+                    sender.sendMessage(getLocaleMessage("creative.set-spawn")
                             .replace("%x%", String.valueOf(location.getX()))
                             .replace("%y%", String.valueOf(location.getY()))
                             .replace("%z%", String.valueOf(location.getZ()))
@@ -763,6 +769,7 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%pitch%", String.valueOf(location.getPitch())));
                     OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
                     OpenCreative.getPlugin().saveConfig();
+                    OpenCreative.getPlugin().reloadConfig();
                 }
                 case "items" -> {
                     if (player == null) {
@@ -1129,7 +1136,7 @@ public class CreativeCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("no-perms"));
             return;
         }
-        if (args.length == 2) {
+        if (args.length <= 2) {
             sender.sendMessage(getLocaleMessage("too-few-args"));
             return;
         }
@@ -1160,7 +1167,7 @@ public class CreativeCommand extends CommandHandler {
                     if (OpenCreative.getSettings().getGroups().setLimit(groupName, type, value)) {
                         sender.sendMessage(getLocaleMessage("creative.groups.set-limit")
                                 .replace("%value%", String.valueOf(value))
-                                .replace("%limit%", type.getPath())
+                                .replace("%type%", type.getPath())
                                 .replace("%group%", groupName));
                     } else {
                         sender.sendMessage(getLocaleMessage("creative.groups.not-found")
@@ -1178,9 +1185,9 @@ public class CreativeCommand extends CommandHandler {
                         value = Integer.parseInt(args[5]);
                     } catch (Exception ignored) {}
                     if (OpenCreative.getSettings().getGroups().setLimitModifier(groupName, type, value)) {
-                        sender.sendMessage(getLocaleMessage("creative.groups.set-modfifier")
+                        sender.sendMessage(getLocaleMessage("creative.groups.set-modifier")
                                 .replace("%value%", String.valueOf(value))
-                                .replace("%limit%", type.getPath())
+                                .replace("%type%", type.getPath())
                                 .replace("%group%", groupName));
                     } else {
                         sender.sendMessage(getLocaleMessage("creative.groups.not-found")
@@ -1238,7 +1245,7 @@ public class CreativeCommand extends CommandHandler {
                         .replace("%like-reward%", String.valueOf(group.getLikeReward()))
                         .replace("%prompter%", String.valueOf(group.canUsePrompter()))
                         .replace("%group%", groupName)
-                        .replace("%advertisement-price%", String.valueOf(group.getAdvertisementPrice())));
+                        .replace("%advertisement-cost%", String.valueOf(group.getAdvertisementPrice())));
             }
         }
     }
@@ -1526,6 +1533,7 @@ public class CreativeCommand extends CommandHandler {
         List<String> tabCompleter = new ArrayList<>();
         if (!sender.hasPermission("opencreative.admin")) return null;
         if (args.length == 1) {
+            tabCompleter.add("setspawn");
             tabCompleter.add("update");
             tabCompleter.add("moderation");
             tabCompleter.add("reload");

@@ -282,6 +282,9 @@ public final class InteractListener implements Listener {
      */
     private boolean handleSignClick(PlayerInteractEvent event, Player player, ItemStack currentItem, Block clickedBlock, DevPlanet devPlanet) {
         event.setCancelled(true);
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            translateBlockSign(clickedBlock);
+        }
         if (currentItem.getType() == Material.COMPARATOR) {
             return false;
         }
@@ -332,6 +335,7 @@ public final class InteractListener implements Listener {
         } else if (currentItem.getType() == Material.REDSTONE_TORCH && event.getHand() == EquipmentSlot.HAND) {
             if (mainBlockCategory == null) return false;
             Block torchBlock = mainBlock.getRelative(BlockFace.WEST);
+            devPlanet.setCodeChanged(true);
             if (torchBlock.getType() == Material.REDSTONE_WALL_TORCH) {
                 torchBlock.setType(Material.AIR);
             } else {

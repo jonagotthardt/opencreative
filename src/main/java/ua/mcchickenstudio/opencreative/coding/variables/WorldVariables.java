@@ -106,10 +106,11 @@ public final class WorldVariables {
             variables.add(newVariable);
         }
 
-        sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.variable." + (variable == null ? "created" : "set"), false)
-                .replace("%variable%", action != null ? parseEntity(link.getName(), action.getHandler(), action) : link.getName())
-                .replace("%value%", valueString));
-
+        if (action == null || action.getExecutor().isDebug()) {
+            sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.variable." + (variable == null ? "created" : "set"), false)
+                    .replace("%variable%", action != null ? parseEntity(link.getName(), action.getHandler(), action) : link.getName())
+                    .replace("%value%", valueString));
+        }
         return true;
     }
 

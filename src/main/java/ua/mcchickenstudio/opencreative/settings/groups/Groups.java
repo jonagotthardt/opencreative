@@ -115,6 +115,7 @@ public final class Groups {
         if (found == null) return false;
         OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() +  "  in player group " + groupName + " to: " + value);
         groups.remove(found);
+        groups.add(new Group(found.getName(), OpenCreative.getPlugin().getConfig()));
         OpenCreative.getPlugin().getConfig().set("groups." + groupName + ".world.limits." + type.getPath(), value);
         OpenCreative.getPlugin().saveConfig();
         return true;

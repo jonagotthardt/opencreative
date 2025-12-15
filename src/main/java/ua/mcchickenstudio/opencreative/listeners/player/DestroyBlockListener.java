@@ -80,6 +80,11 @@ public final class DestroyBlockListener implements Listener {
                 event.setCancelled(true);
             }
 
+            if (block.getType() == Material.REDSTONE_WALL_TORCH) {
+                devPlanet.setCodeChanged(true);
+                return;
+            }
+
             if (devPlanet.getAllCodingBlocksForPlacing().contains(block.getType())) {
                 if (ActionCategory.getByMaterial(block.getType()) != null) {
                     platform.destroyCodingBlock(block.getLocation(), devPlanet.isDropItems());

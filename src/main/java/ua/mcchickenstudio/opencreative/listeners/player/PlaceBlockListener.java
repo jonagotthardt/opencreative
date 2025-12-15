@@ -147,7 +147,8 @@ public final class PlaceBlockListener implements Listener {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 } else {
-                    if (block.getState() instanceof Powerable powerable) {
+                    devPlanet.setCodeChanged(true);
+                    if (block.getBlockData() instanceof Powerable powerable) {
                         powerable.setPowered(true);
                         block.setBlockData(powerable);
                     }
@@ -213,11 +214,11 @@ public final class PlaceBlockListener implements Listener {
     public static void placeDebugTorch(@NotNull Location location) {
         Block block = location.getBlock();
         block.setType(Material.REDSTONE_WALL_TORCH);
-        if (block.getState() instanceof Directional directional) {
+        if (block.getBlockData() instanceof Directional directional) {
             directional.setFacing(BlockFace.WEST);
             block.setBlockData(directional);
         }
-        if (block.getState() instanceof Powerable powerable) {
+        if (block.getBlockData() instanceof Powerable powerable) {
             powerable.setPowered(true);
             block.setBlockData(powerable);
         }
