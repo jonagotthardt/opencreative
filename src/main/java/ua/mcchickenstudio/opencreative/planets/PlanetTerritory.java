@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.EnvironmentCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.StructuresCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
@@ -469,29 +470,13 @@ public class PlanetTerritory {
      * @param spawnLocation new spawn location.
      */
     public void setSpawnLocation(@NotNull Location spawnLocation) {
-
-        double x = Math.round(spawnLocation.getX() * 100.0) / 100.0;
-        double y = Math.round(spawnLocation.getY() * 100.0) / 100.0;
-        double z = Math.round(spawnLocation.getZ() * 100.0) / 100.0;
-        float yaw = (float) (Math.round(spawnLocation.getYaw() * 100.0) / 100.0);
-        float pitch = (float) (Math.round(spawnLocation.getPitch() * 100.0) / 100.0);
-        spawnLocation.set(x, y, z);
-        spawnLocation.setYaw(yaw);
-        spawnLocation.setPitch(pitch);
-
-        this.spawnLocation = spawnLocation;
+        this.spawnLocation = WorldUtils.roundLocation(spawnLocation);
         World world = getWorld();
         this.spawnLocation.setWorld(world);
         if (world != null) world.setSpawnLocation(spawnLocation);
 
-        Map<String, Object> configLocation = new HashMap<>();
-        configLocation.put("x", x);
-        configLocation.put("y", y);
-        configLocation.put("z", z);
-        configLocation.put("yaw", yaw);
-        configLocation.put("pitch", pitch);
+        Map<String, Double> configLocation = WorldUtils.fromLocationToMap(spawnLocation);
         FileUtils.setPlanetConfigParameter(planet,"spawn", configLocation);
-
     }
 
     public boolean isAutoSave() {

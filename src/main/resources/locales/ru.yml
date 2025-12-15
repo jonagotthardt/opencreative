@@ -220,7 +220,21 @@ help:
 creative:
   reloading: "%prefix%Перезагрузка файлов настройки и локализации, пожалуйста подождите..."
   reloaded: "%prefix%Плагин &6успешно&f перезагружен!"
+  set-spawn: "%prefix%Установлена &6новая точка появления&f игроков в лобби: &6%x% &6%y% &6%z% &6%yaw% %pitch%"
   loaded-worlds-list: "%prefix%Список загруженных миров, всего %amount%: &6"
+  groups:
+    set-limit: "%prefix%Установлен новый лимит &6%type%&f в группе &6%group%&f: &6%value%&f.\n&7Лимит в мирах может быть изменён модификаторами: лимит + (модификатор * количество игроков)."
+    set-modifier: "%prefix%Установлен новый модификатор лимита &6%type%&f в группе &6%group%&f: &6%value%"
+    removed: "%prefix%Группа &6%group%&f теперь &cудалена&f.."
+    not-found: "%prefix%&cГруппы %group% не существует О_о"
+    wrong-limit: "%prefix%&cЛимита %limit% не существует О_о"
+    info:
+      beginning: "%prefix%&fИнформация о группе &6%group%&f:"
+      cooldowns: "&fЗадержки использований:\n &7Команды &f- &6%generic% секунд\n &7Чат мира &f- &6%chat% секунд\n &7Креатив Чат &f- &6%creative-chat% секунд\n &7Реклама мира &f- &6%advertisement% секунд\n &7Копирование строк кода &f- &6%duplication% секунд\n &7Операции с модулями &f- &6%modules% секунд"
+      limits:
+        list: "&fЛимиты:"
+        limit: "&7 %type% &f- &c&n%limit%&f * &e%modifier%"
+      ending: "&fЦена рекламы: &6%advertisement-cost%\n&fНаграда за лайк: &6%like-reward%\n&fМожет использовать ИИ: &6%prompter%\n&fКоличество миров: &6%worlds%\n&fКоличество модулей: &6%modules%\n&fРазмер мира: &6%size%\n  &7Группа %group%"
   locale:
     changed: "%prefix%&fУспешно изменён язык на &6русский&f!"
     not-found: "%prefix%&cНе найден файл локализации для такого языка О_о"
@@ -301,6 +315,7 @@ not-developer: "%prefix%&cТы не разработчик этого мира."
 not-builder: "%prefix%&cТы не строитель этого мира."
 only-in-world: "%prefix%&cЭто можно использовать только в мире."
 only-in-dev-world: "%prefix%&cЭто можно использовать только в мире для разработчиков (/dev)."
+only-in-lobby: "%prefix%&cЭто можно использовать только в лобби (/spawn)."
 only-alive: "%prefix%&cЭто невозможно использовать в состоянии смерти, возродитесь!"
 not-for-lobby: "%prefix%&cЭто можно сделать в своём мире, создайте его!"
 no-money: "%prefix%&cПохоже, что у вас не хватает монет! Нужно иметь всего %money% монет!"

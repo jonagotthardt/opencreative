@@ -25,12 +25,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.getDefaultConfig;
 
 /**
  * <h1>Groups</h1>
@@ -53,21 +51,6 @@ public final class Groups {
         for (String group : section.getKeys(false)) {
             registerGroup(new Group(group, config));
         }
-    }
-
-    public void fillDefaults(@NotNull String group) {
-        FileConfiguration config = OpenCreative.getPlugin().getConfig();
-        FileConfiguration defaultConfig = getDefaultConfig();
-        String defaultPath = "groups." + (group.equalsIgnoreCase("default") ? "default" : "premium");
-        ConfigurationSection defaultSection = defaultConfig.getConfigurationSection(defaultPath);
-        if (defaultSection == null) return;
-        for (String key : defaultSection.getKeys(true)) {
-            String path = "groups." + group + key.substring(14);
-            if (config.contains(path)) continue;
-            config.set(path, defaultSection.get(key));
-        }
-        OpenCreative.getPlugin().saveConfig();
-        OpenCreative.getPlugin().reloadConfig();
     }
 
     public @NotNull Group getDefaultGroup() {
@@ -142,6 +125,7 @@ public final class Groups {
         if (found == null) return false;
         OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() +  "  in player group " + groupName + " to: " + value);
         groups.remove(found);
+        groups.add(new Group(found.getName(), OpenCreative.getPlugin().getConfig()));
         OpenCreative.getPlugin().getConfig().set("groups." + groupName + ".world.per-player-limit-modifiers." + type.getPath(), value);
         OpenCreative.getPlugin().saveConfig();
         return true;
