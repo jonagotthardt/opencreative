@@ -20,7 +20,9 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Material;
 import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -206,6 +208,15 @@ public final class EntitySpawnListener implements Listener {
                     entity.remove();
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onHangingPlace(HangingPlaceEvent event) {
+        ItemStack item = event.getItemStack();
+        if (item == null) return;
+        if (event.getEntity() instanceof ItemFrame frame && item.getPersistentDataContainer().has(ItemUtils.getItemEntityInvisible())) {
+            frame.setInvisible(true);
         }
     }
 

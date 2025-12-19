@@ -60,6 +60,8 @@ public final class ItemUtils {
 
     private final static NamespacedKey ITEM_ID_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_id");
     private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_type");
+    private final static NamespacedKey ITEM_ENTITY_INVISIBLE = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_entity_invisible");
+
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_value_type");
     private final static NamespacedKey CODING_PARTICLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_particle_type");
     private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_variable_type");
@@ -107,6 +109,10 @@ public final class ItemUtils {
 
     public static NamespacedKey getCodingTargetTypeKey() {
         return CODING_TARGET_TYPE_KEY;
+    }
+
+    public static NamespacedKey getItemEntityInvisible() {
+        return ITEM_ENTITY_INVISIBLE;
     }
 
     public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {

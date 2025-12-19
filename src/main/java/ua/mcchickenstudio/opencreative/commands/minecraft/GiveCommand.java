@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,6 +30,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,17 +74,16 @@ public class GiveCommand extends CommandHandler {
             // give apple
             if (args.length == 1) {
                 try {
-                    Material material = Material.valueOf(args[0].replace("minecraft:","").toUpperCase());
-                    player.getInventory().addItem(new ItemStack(material));
+                    ItemStack item = getItem(args[0], 1);
+                    player.getInventory().addItem(item);
                     player.sendMessage(getLocaleMessage("commands.give.received-from-kit")
-                            .replace("%material%", material.name().toLowerCase())
+                            .replace("%material%", item.getType().name().toLowerCase())
                             .replace("%amount%", "1"));
                 } catch (IllegalArgumentException error) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong"));
                 }
                 // give player apple
             } else if (args.length == 2) {
-                Material material;
                 Player givePlayer = Bukkit.getPlayer(args[0]);
                 if (givePlayer == null) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
@@ -98,11 +99,11 @@ public class GiveCommand extends CommandHandler {
                     }
                 }
                 try {
-                    material = Material.valueOf(args[1].replace("minecraft:", "").toUpperCase());
-                    givePlayer.getInventory().addItem(new ItemStack(material));
+                    ItemStack item = getItem(args[1], 1);
+                    givePlayer.getInventory().addItem(item);
                     player.sendMessage(getLocaleMessage("commands.give.given-player")
                             .replace("%player%", givePlayer.getName())
-                            .replace("%material%", material.name().toLowerCase())
+                            .replace("%material%", item.getType().name().toLowerCase())
                             .replace("%amount%", "1"));
                 } catch (IllegalArgumentException e) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong"));
@@ -115,13 +116,12 @@ public class GiveCommand extends CommandHandler {
                         player.sendMessage(getLocaleMessage("no-player-found"));
                         return;
                     }
-                    Material material = Material.valueOf(args[1].replace("minecraft:", "").toUpperCase());
                     int amount = Integer.parseInt(args[2]);
-                    ItemStack item = new ItemStack(material, amount);
+                    ItemStack item = getItem(args[1], amount);
                     givePlayer.getInventory().addItem(item);
                     player.sendMessage(getLocaleMessage("commands.give.given-player")
                             .replace("%player%", givePlayer.getName())
-                            .replace("%material%", material.name().toLowerCase())
+                            .replace("%material%", item.getType().name().toLowerCase())
                             .replace("%amount%", String.valueOf(amount)));
                 } catch (NumberFormatException error) {
                     player.sendMessage(getLocaleMessage("commands.give.wrong-amount"));
@@ -132,6 +132,19 @@ public class GiveCommand extends CommandHandler {
         }
     }
 
+    public @NotNull ItemStack getItem(@NotNull String text, int amount) {
+        text = text.toUpperCase().replace("MINECRAFT:", "");
+        ItemStack item;
+        if (List.of("invisible_item_frame", "item_frame_invisible").contains(text.toLowerCase())) {
+            item = new ItemStack(Material.ITEM_FRAME);
+            ItemUtils.setPersistentData(item, ItemUtils.getItemEntityInvisible(), 1);
+            item.setAmount(amount);
+            return item;
+        }
+        Material material = Material.valueOf(text);
+        return new ItemStack(material, amount);
+    }
+
     @Override
     public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
@@ -140,6 +153,8 @@ public class GiveCommand extends CommandHandler {
                 tabCompleter.addAll(player.getWorld().getPlayers().stream().map(Player::getName).toList());
             } else if (args.length == 2) {
                 tabCompleter.addAll(Arrays.stream(Material.values()).filter(Material::isItem).map(material -> material.name().toLowerCase()).toList());
+                tabCompleter.add("invisible_item_frame");
+                tabCompleter.add("item_frame_invisible");
             } else if (args.length == 3) {
                 tabCompleter.add("1");
                 tabCompleter.add("16");
