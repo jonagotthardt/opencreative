@@ -68,15 +68,15 @@ public final class CodingSettings {
         legacySelectionMenu = section.getBoolean("old-selection-menu",false);
         cancelChatOnValueSet = section.getBoolean("cancel-chat-on-value-set", false);
 
-        loadDisabledBlocks(config);
-        setupPromptHandler(config);
+        loadDisabledBlocks(section);
+        setupPromptHandler(section);
     }
 
     /**
      * Loads disabled coding blocks list.
-     * @param config config with settings.
+     * @param config section with settings.
      */
-    private void loadDisabledBlocks(@NotNull FileConfiguration config) {
+    private void loadDisabledBlocks(@NotNull ConfigurationSection config) {
         disabledEvents.clear();
         disabledConditions.clear();
         disabledActions.clear();
@@ -122,9 +122,9 @@ public final class CodingSettings {
 
     /**
      * Loads prompt handler.
-     * @param config config with settings.
+     * @param config section with settings.
      */
-    private void setupPromptHandler(@NotNull FileConfiguration config) {
+    private void setupPromptHandler(@NotNull ConfigurationSection config) {
         prompterTimeout = config.getInt("prompt-handler.timeout",120);
         prompterMaxExecutors = config.getInt("prompt-handler.executors-limit",10);
 
