@@ -148,7 +148,7 @@ lobby:
   # Lobby is a world, where player teleports on server join,
   # or on command type: /lobby, /hub, /spawn. It gives player
   # items for opening menus. To change spawn location use
-  # /setworldspawn command.
+  # /oc setspawn command.
   #
   world: "world"
   disallow-placing-blocks: true    # To bypass with true, add permission: opencreative.lobby.placing-blocks.bypass
