@@ -130,6 +130,7 @@ public class Executors {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = config.getConfigurationSection("code.blocks");
         if (section != null) {
+            OpenCreative.getPlugin().getLogger().info("Loading code in planet " + planet.getId() + "...");
             long time = System.currentTimeMillis();
             List<Executor> executors = new ArrayList<>();
             Set<String> keys = section.getKeys(false);
@@ -147,7 +148,9 @@ public class Executors {
             clear();
             executorsList.addAll(executors);
             sendCodingDebugLog(planet,"Started code in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
+            OpenCreative.getPlugin().getLogger().info("Loaded code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
         } else {
+            OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " has no code to load.");
             sendCodingDebugLog(planet,"No code found to load.");
         }
     }

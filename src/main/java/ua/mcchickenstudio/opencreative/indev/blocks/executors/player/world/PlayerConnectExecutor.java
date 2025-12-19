@@ -56,7 +56,7 @@ public class PlayerConnectExecutor extends PlayerExecutor {
     }
 
     public static class PlayerConnectEvent extends PlayerEvent {
-        public PlayerConnectEvent(Player player) {
+        public PlayerConnectEvent(@NotNull Player player) {
             super(player);
         }
     }

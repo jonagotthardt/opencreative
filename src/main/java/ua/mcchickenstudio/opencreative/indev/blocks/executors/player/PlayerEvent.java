@@ -19,18 +19,19 @@
 package ua.mcchickenstudio.opencreative.indev.blocks.executors.player;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public class PlayerEvent extends WorldEvent {
 
     private final Player player;
 
-    public PlayerEvent(Player player) {
+    public PlayerEvent(@NotNull Player player) {
         super(player);
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public @NotNull Player getPlayer() {
         return player;
     }
 }
