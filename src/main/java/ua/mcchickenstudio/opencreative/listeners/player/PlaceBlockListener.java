@@ -166,7 +166,7 @@ public final class PlaceBlockListener implements Listener {
                 return;
             }
             new PlaceBlockEvent(event.getPlayer(),event).callEvent();
-        } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowPlacingBlocks()
+        } else if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isPlacingBlocksDisallowed()
                 && !player.hasPermission("opencreative.lobby.placing-blocks.bypass")) {
             event.setCancelled(true);
             player.sendActionBar(getLocaleMessage("not-for-lobby"));

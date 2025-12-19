@@ -778,7 +778,7 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onUsing(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowSpawningMobs()
+        if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isSpawningMobsDisallowed()
                 && !player.hasPermission("opencreative.lobby.spawning-mobs.bypass")) {
             ItemStack item = event.getItem();
             if (item == null) return;
@@ -900,7 +900,7 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onHang(HangingBreakByEntityEvent event) {
         if (!(event.getRemover() instanceof Player player)) return;
-        if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
+        if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isDestroyingBlocksDisallowed()
                 && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
             event.setCancelled(true);
             player.sendActionBar(getLocaleMessage("not-for-lobby"));
@@ -979,7 +979,7 @@ public final class InteractListener implements Listener {
     public void onEntityRename(PlayerNameEntityEvent event) {
         if (event.getName() == null) return;
         String text = PlainTextComponentSerializer.plainText().serialize(event.getName());
-        int limit = OpenCreative.getSettings().getItemsMaxEntityNameLength();
+        int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxEntityNameLength();
         if (text.length() > limit) {
             event.setName(PlainTextComponentSerializer.plainText()
                     .deserialize(text.substring(0,limit)));

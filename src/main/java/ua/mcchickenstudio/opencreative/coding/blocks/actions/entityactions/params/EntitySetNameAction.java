@@ -53,7 +53,7 @@ public final class EntitySetNameAction extends EntityAction {
         }
         Component name = builder.build();
         String plainText = PlainTextComponentSerializer.plainText().serialize(name);
-        int limit = OpenCreative.getSettings().getItemsMaxEntityNameLength();
+        int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxEntityNameLength();
         if (plainText.length() > limit) {
             throw new TooLongTextException(limit);
         }

@@ -75,7 +75,7 @@ public final class PlayerUtils {
         player.setGameMode(GameMode.ADVENTURE);
         clearWorldModePermissions(player);
         player.closeInventory();
-        if (OpenCreative.getSettings().isLobbyClearInventory()) {
+        if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory()) {
             player.getInventory().clear();
         }
         for (PotionEffect effect : player.getActivePotionEffects()) {

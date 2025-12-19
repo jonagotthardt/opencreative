@@ -652,7 +652,7 @@ public class EnvironmentCommand extends CommandHandler {
                                                 return;
                                             }
                                         }
-                                        if (section.getKeys(false).size() > OpenCreative.getSettings().getPrompterMaxExecutors()) {
+                                        if (section.getKeys(false).size() > OpenCreative.getSettings().getCodingSettings().getPrompterMaxExecutors()) {
                                             player.sendMessage(getLocaleMessage("environment.prompter.few-space"));
                                             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
                                                 () -> broadcastPrompter(planet, player, request, "failed")

@@ -68,7 +68,7 @@ public class Executors {
      */
     public static void activate(WorldEvent event) {
         Planet planet = event.getPlanet();
-        if (!OpenCreative.getSettings().isEnabledCoding()) return;
+        if (!OpenCreative.getSettings().getCodingSettings().isEnabled()) return;
         if (planet == null) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
         for (Executor executor : executors.executorsList) {

@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.settings.items.ItemFixerSettings;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -406,21 +407,21 @@ public final class ItemUtils {
      * @param item item to fix.
      */
     public static ItemStack fixItem(@NotNull ItemStack item) {
-        Settings settings = OpenCreative.getSettings();
-        if (!settings.isItemFixerEnabled()) return item;
+        ItemFixerSettings settings = OpenCreative.getSettings().getItemFixerSettings();
+        if (!settings.isEnabled()) return item;
         return fixItem(item,
-                settings.getItemsDisplayNameMaxLength(),
-                settings.getItemsLoreLineMaxLength(),
-                settings.getItemsLoreLinesMaxAmount(),
-                settings.getItemsMaxEnchantLevel(),
-                settings.getItemsMaxBookPagesAmount(),
-                settings.isItemsRemoveClickableBooks(),
-                settings.getItemsContainerBigItemsLimit(),
-                settings.getItemsEntitiesMaxAmount(),
-                settings.isItemsRemoveCustomSpawnEggs(),
-                settings.isItemsRemoveBossSpawnEggs(),
-                settings.isItemsRemoveAttributes(),
-                settings.isItemsClearCommandBlocksData()
+                settings.getDisplayNameMaxLength(),
+                settings.getLoreLineMaxLength(),
+                settings.getLoreLinesMaxAmount(),
+                settings.getMaxEnchantLevel(),
+                settings.getMaxBookPagesAmount(),
+                settings.isRemoveClickableBooks(),
+                settings.getContainerBigItemsLimit(),
+                settings.getEntitiesMaxAmount(),
+                settings.isRemoveCustomSpawnEggs(),
+                settings.isRemoveBossSpawnEggs(),
+                settings.isRemoveAttributes(),
+                settings.isClearCommandBlocksData()
         );
     }
 
@@ -500,7 +501,7 @@ public final class ItemUtils {
                     item.setItemMeta(null);
                     return item;
                 }
-                if (getPersistentDataAmount(item) > OpenCreative.getSettings().getItemsMaxPersistentDataSize()) {
+                if (getPersistentDataAmount(item) > OpenCreative.getSettings().getItemFixerSettings().getMaxPersistentDataSize()) {
                     for (NamespacedKey key : item.getPersistentDataContainer().getKeys()) {
                         meta.getPersistentDataContainer().remove(key);
                     }
@@ -633,7 +634,7 @@ public final class ItemUtils {
 
     public static int getPersistentDataAmount(@NotNull ItemStack item) {
         int length = 0;
-        int limit = OpenCreative.getSettings().getItemsMaxPersistentDataSize();
+        int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxPersistentDataSize();
         PersistentDataContainerView container = item.getPersistentDataContainer();
         for (NamespacedKey key : container.getKeys()) {
             /*

@@ -37,7 +37,7 @@ public final class BucketListener implements Listener {
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet != null) {
             event.setCancelled(true);
-        } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowPlacingBlocks()
+        } else if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isPlacingBlocksDisallowed()
                 && !player.hasPermission("opencreative.lobby.placing-blocks.bypass")) {
             event.setCancelled(true);
             player.sendActionBar(getLocaleMessage("not-for-lobby"));
@@ -47,7 +47,7 @@ public final class BucketListener implements Listener {
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
         Player player = event.getPlayer();
-        if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
+        if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isDestroyingBlocksDisallowed()
                 && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
             event.setCancelled(true);
             player.sendActionBar(getLocaleMessage("not-for-lobby"));

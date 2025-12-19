@@ -133,7 +133,7 @@ public final class DestroyBlockListener implements Listener {
             if (!event.isCancelled()) {
                 Menus.onBlockDestroy(event.getBlock().getLocation());
             }
-        } else if (isEntityInLobby(player) && OpenCreative.getSettings().isLobbyDisallowDestroyingBlocks()
+        } else if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isDestroyingBlocksDisallowed()
                 && !player.hasPermission("opencreative.lobby.destroying-blocks.bypass")) {
             event.setCancelled(true);
             player.sendActionBar(getPlayerLocaleComponent("not-for-lobby", player));

@@ -998,8 +998,8 @@ public enum ActionType {
     public boolean isDisabled() {
         return getActionClass() == null
                 || (requiredPlugin != null && !HookUtils.isPluginEnabled(requiredPlugin))
-                || (isCondition() && OpenCreative.getSettings().isDisabledCondition(this))
-                || OpenCreative.getSettings().isDisabledAction(this);
+                || (isCondition() && OpenCreative.getSettings().getCodingSettings().isDisabledCondition(this))
+                || OpenCreative.getSettings().getCodingSettings().isDisabledAction(this);
     }
 
     public static Set<MenusCategory> getMenusCategories(ActionCategory category) {

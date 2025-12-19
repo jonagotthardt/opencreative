@@ -271,7 +271,7 @@ public enum ExecutorType {
     }
 
     public boolean isDisabled() {
-        return getExecutorClass() == null || OpenCreative.getSettings().isDisabledEvent(this);
+        return getExecutorClass() == null || OpenCreative.getSettings().getCodingSettings().isDisabledEvent(this);
     }
 
     public final ItemStack getIcon() {

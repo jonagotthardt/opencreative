@@ -130,7 +130,7 @@ public final class EntityDamageListener implements Listener {
                 if (planet != null) {
                     new PlayerDamagesMobEvent(damager,event).callEvent();
                 } else {
-                    if (isEntityInLobby(damager) && OpenCreative.getSettings().isLobbyDisallowDamagingMobs()
+                    if (isEntityInLobby(damager) && OpenCreative.getSettings().getLobbySettings().isDamagingMobsDisallowed()
                             && !damager.hasPermission("opencreative.lobby.damaging-mobs.bypass")) {
                         event.setCancelled(true);
                         damager.sendActionBar(getPlayerLocaleComponent("not-for-lobby", damager));
@@ -147,7 +147,7 @@ public final class EntityDamageListener implements Listener {
             return;
         }
         if (isLobbyWorld(event.getEntity().getWorld())
-                && OpenCreative.getSettings().isLobbyDisableExplosions()) {
+                && OpenCreative.getSettings().getLobbySettings().areExplosionsDisabled()) {
             event.setCancelled(true);
         }
     }

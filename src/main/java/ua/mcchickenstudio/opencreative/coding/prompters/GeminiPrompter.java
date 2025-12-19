@@ -68,7 +68,7 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
                         .header("Content-Type", "application/json")
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
                         .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text, actionsLimit)))
-                        .timeout(Duration.ofSeconds(OpenCreative.getSettings().getPrompterTimeout()))
+                        .timeout(Duration.ofSeconds(OpenCreative.getSettings().getCodingSettings().getPrompterTimeout()))
                         .build();
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

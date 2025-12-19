@@ -68,7 +68,7 @@ public final class OpenRouterPrompter implements CodingPrompter, PrompterModelCa
                         .header("User-Agent", "OpenCreative+ Coding Prompter")
                         .header("HTTP-Referer", "opencreative.plugin")
                         .header("X-Title", "OpenCreative+ Coding Prompter")
-                        .timeout(Duration.ofSeconds(OpenCreative.getSettings().getPrompterTimeout()))
+                        .timeout(Duration.ofSeconds(OpenCreative.getSettings().getCodingSettings().getPrompterTimeout()))
                         .POST(HttpRequest.BodyPublishers.ofString(getRequest(nickname, uuid, text, actionsLimit)))
                         .build();
                 try {

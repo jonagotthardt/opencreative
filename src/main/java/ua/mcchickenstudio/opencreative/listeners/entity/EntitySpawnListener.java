@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Material;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.inventory.InventoryHolder;
@@ -68,7 +67,7 @@ public final class EntitySpawnListener implements Listener {
                 }
             }
             case CommandMinecart minecart -> {
-                if (OpenCreative.getSettings().isItemsClearCommandBlocksData()) {
+                if (OpenCreative.getSettings().getItemFixerSettings().isClearCommandBlocksData()) {
                     minecart.setCommand(null);
                     minecart.customName(Component.text(""));
                 }
@@ -78,7 +77,7 @@ public final class EntitySpawnListener implements Listener {
         Component customName = entity.customName();
         if (customName != null) {
             String text = PlainTextComponentSerializer.plainText().serialize(customName);
-            int limit = OpenCreative.getSettings().getItemsMaxEntityNameLength();
+            int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxEntityNameLength();
             if (text.length() > limit) {
                 entity.customName(PlainTextComponentSerializer.plainText()
                         .deserialize(text.substring(0,limit)));
@@ -129,7 +128,7 @@ public final class EntitySpawnListener implements Listener {
         } else if (isLobbyWorld(world)) {
             Player player = event.getPlayer();
             if (player == null) return;
-            if (OpenCreative.getSettings().isLobbyDisallowSpawningMobs() && !player.hasPermission("opencreative.lobby.spawning-mobs.bypass")) {
+            if (OpenCreative.getSettings().getLobbySettings().isSpawningMobsDisallowed() && !player.hasPermission("opencreative.lobby.spawning-mobs.bypass")) {
                 event.setCancelled(true);
                 player.sendActionBar(getLocaleMessage("not-for-lobby"));
             }
@@ -142,7 +141,7 @@ public final class EntitySpawnListener implements Listener {
         Entity entity = event.getEntity();
         switch (event.getSpawnReason()) {
             case EGG, SPAWNER_EGG, SPAWNER, DISPENSE_EGG, TRIAL_SPAWNER -> {
-                if (OpenCreative.getSettings().isItemsRemoveBossSpawnEggs() && entity instanceof Boss) {
+                if (OpenCreative.getSettings().getItemFixerSettings().isRemoveBossSpawnEggs() && entity instanceof Boss) {
                     event.setCancelled(true);
                 }
             }
