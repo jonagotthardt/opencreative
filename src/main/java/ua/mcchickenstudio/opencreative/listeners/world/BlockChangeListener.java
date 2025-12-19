@@ -101,7 +101,7 @@ public final class BlockChangeListener implements Listener {
     public void onEntityExplosion(EntityExplodeEvent event) {
         World world = event.getLocation().getWorld();
         if (isLobbyWorld(world)) {
-            if (OpenCreative.getSettings().isLobbyDisableExplosions()) {
+            if (OpenCreative.getSettings().getLobbySettings().areExplosionsDisabled()) {
                 event.blockList().clear();
                 event.setCancelled(true);
             }
@@ -123,7 +123,7 @@ public final class BlockChangeListener implements Listener {
     public void onBlockExplosion(BlockExplodeEvent event) {
         World world = event.getBlock().getLocation().getWorld();
         if (isLobbyWorld(world)) {
-            if (OpenCreative.getSettings().isLobbyDisableExplosions()) {
+            if (OpenCreative.getSettings().getLobbySettings().areExplosionsDisabled()) {
                 event.blockList().clear();
                 event.setCancelled(true);
             }

@@ -31,14 +31,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.prompters.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
 import ua.mcchickenstudio.opencreative.settings.items.Items;
+import ua.mcchickenstudio.opencreative.settings.items.ItemFixerSettings;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
 import ua.mcchickenstudio.opencreative.settings.items.*;
@@ -72,67 +70,20 @@ public final class Settings {
     private boolean consoleNotFoundMessage = false;
     private boolean consoleWarnings = true;
 
-    private boolean itemFixerEnabled = true;
-    private int itemsMaxEnchantLevel = 10;
-    private int itemsEntitiesMaxAmount = 3;
-    private int itemsMaxBookPagesAmount = 50;
-    private int itemsMaxEntityNameLength = 48;
-    private int itemsContainerBigItemsLimit = 3;
-    private int itemsMaxPersistentDataSize = 2048;
-    private int itemsDisplayNameMaxLength = 64;
-    private int itemsLoreLineMaxLength = 100;
-    private int itemsLoreLinesMaxAmount = 25;
-    private boolean itemsRemoveAttributes = true;
-    private boolean itemsRemoveBossSpawnEggs = true;
-    private boolean itemsRemoveCustomSpawnEggs = true;
-    private boolean itemsRemoveClickableBooks = true;
-    private boolean itemsClearCommandBlocksData = true;
-
     private boolean notifyNoPlayersAround = true;
-
-    private boolean lobbyClearInventory = true;
-    private boolean lobbyDisallowPlacingBlocks = true;
-    private boolean lobbyDisallowDestroyingBlocks = true;
-    private boolean lobbyDisallowSpawningMobs = true;
-    private boolean lobbyDisallowDamagingMobs = true;
-    private boolean lobbyDisallowWorldEdit = true;
-    private boolean lobbyDisableExplosions = true;
 
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
-    private int worldCreationMinSeconds = 30;
-    private int worldReputationMinSeconds = 300;
-
-    private String customIdPattern = "^[a-zA-Zа-яА-Я0-9_]+$";
-    private int customIdMinLength = 2;
-    private int customIdMaxLength = 16;
-
-    private int worldNameMinLength = 4;
-    private int worldNameMaxLength = 30;
-
-    private int worldDescriptionMinLength = 4;
-    private int worldDescriptionMaxLength = 256;
-
-    private int moduleNameMinLength = 4;
-    private int moduleNameMaxLength = 30;
-
-    private int moduleDescriptionMinLength = 4;
-    private int moduleDescriptionMaxLength = 256;
-
     private final Groups groups;
     private final Commands commands;
+    private final Requirements requirements;
+    private final LobbySettings lobbySettings;
+    private final CodingSettings codingSettings;
+    private final ItemFixerSettings itemFixerSettings;
+
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
-
-    private boolean enabledCoding = true;
-    private boolean cancelChatOnValueSet = false;
-    private final Set<String> disabledEvents = new HashSet<>();
-    private final Set<String> disabledActions = new HashSet<>();
-    private final Set<String> disabledConditions = new HashSet<>();
-    private boolean legacySelectionMenu = false;
-    private int prompterMaxExecutors = 10;
-    private int prompterTimeout = 120;
 
     private final Set<String> messagesIgnoringReset = new HashSet<>();
 
@@ -142,6 +93,10 @@ public final class Settings {
     public Settings() {
         groups = new Groups();
         commands = new Commands();
+        requirements = new Requirements();
+        lobbySettings = new LobbySettings();
+        codingSettings = new CodingSettings();
+        itemFixerSettings = new ItemFixerSettings();
     }
 
     /**
@@ -166,62 +121,17 @@ public final class Settings {
         consoleNotFoundMessage = config.getBoolean("messages.not-found",false);
         consoleWarnings = config.getBoolean("messages.warnings",true);
 
-        lobbyClearInventory = config.getBoolean("lobby.clear-inventory",true);
-        lobbyDisableExplosions = config.getBoolean("lobby.disable-explosions",true);
-        lobbyDisallowWorldEdit = config.getBoolean("lobby.disallow-world-edit",true);
-        lobbyDisallowDamagingMobs = config.getBoolean("lobby.disallow-damaging-mobs",true);
-        lobbyDisallowSpawningMobs = config.getBoolean("lobby.disallow-spawning-mobs",true);
-        lobbyDisallowPlacingBlocks = config.getBoolean("lobby.disallow-placing-blocks",true);
-        lobbyDisallowDestroyingBlocks = config.getBoolean("lobby.disallow-destroying-blocks",true);
-
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
-
-        legacySelectionMenu = config.getBoolean("coding.old-selection-menu",false);
-        cancelChatOnValueSet = config.getBoolean("coding.cancel-chat-on-value-set", false);
-        enabledCoding = config.getBoolean("coding.enabled",true);
         notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
 
-        worldCreationMinSeconds = config.getInt("requirements.world-creation.played-seconds",30);
-        worldReputationMinSeconds = config.getInt("requirements.world-reputation.creation-seconds",300);
-
-        customIdPattern = config.getString("requirements.world-custom-id.pattern","^[a-zA-Zа-яА-Я0-9_]+$");
-        customIdMinLength = config.getInt("requirements.world-custom-id.min-length",2);
-        customIdMaxLength = config.getInt("requirements.world-custom-id.max-length",16);
-
-        worldNameMinLength = config.getInt("requirements.world-name.min-length",2);
-        worldNameMaxLength = config.getInt("requirements.world-name.max-length",16);
-
-        worldDescriptionMinLength = config.getInt("requirements.world-description.min-length",2);
-        worldDescriptionMaxLength = config.getInt("requirements.world-description.max-length",256);
-
-        moduleNameMinLength = config.getInt("requirements.module-name.min-length",2);
-        moduleNameMaxLength = config.getInt("requirements.module-name.max-length",16);
-
-        moduleDescriptionMinLength = config.getInt("requirements.module-description.min-length",2);
-        moduleDescriptionMaxLength = config.getInt("requirements.module-description.max-length",256);
-
-        itemFixerEnabled = config.getBoolean("item-fixer.enabled", true);
-        itemsRemoveAttributes = config.getBoolean("item-fixer.remove-attribute-modifiers",true);
-        itemsRemoveClickableBooks = config.getBoolean("item-fixer.remove-clickable-in-books",true);
-        itemsRemoveCustomSpawnEggs = config.getBoolean("item-fixer.remove-custom-spawn-eggs",true);
-        itemsRemoveBossSpawnEggs = config.getBoolean("item-fixer.remove-boss-spawn-eggs",true);
-        itemsClearCommandBlocksData = config.getBoolean("item-fixer.clear-command-blocks-data",true);
-        itemsMaxEnchantLevel = config.getInt("item-fixer.max-enchantment-level",10);
-        itemsMaxEntityNameLength = config.getInt("item-fixer.entity-name-max-length",48);
-        itemsMaxPersistentDataSize = config.getInt("item-fixer.persistent-data-max-size",2048);
-        itemsEntitiesMaxAmount = config.getInt("item-fixer.entities-max-amount",3);
-        itemsMaxBookPagesAmount = config.getInt("item-fixer.books-pages-max-amount",50);
-        itemsContainerBigItemsLimit = config.getInt("item-fixer.container-big-items-max-amount",3);
-        itemsDisplayNameMaxLength = config.getInt("item-fixer.display-name-max-length",64);
-        itemsLoreLineMaxLength = config.getInt("item-fixer.lore-line-max-length",100);
-        itemsLoreLinesMaxAmount = config.getInt("item-fixer.container-lore-lines-max-amount",25);
-
+        lobbySettings.load();
+        requirements.load();
+        itemFixerSettings.load();
         groups.load();
         commands.load();
 
         String soundsTheme = config.getString("sounds.theme","default");
         loadSounds(config, soundsTheme);
-        loadDisabledBlocks(config);
         loadWorldGenerators(config);
 
         if (maintenance) {
@@ -239,52 +149,11 @@ public final class Settings {
         OpenCreative.setDevPlatformer(platformer);
 
         OpenCreative.setStability(enabledWatchdog ? new Watchdog() : new DisabledWatchdog());
-        setupPromptHandler(config);
+        codingSettings.load();
         loadExperiments(config);
         checkDebugAnnouncer();
 
         loadItems(config);
-    }
-
-    private void setupPromptHandler(FileConfiguration config) {
-        prompterTimeout = config.getInt("coding.prompt-handler.timeout",120);
-        prompterMaxExecutors = config.getInt("coding.prompt-handler.executors-limit",10);
-
-        String type = config.getString("coding.prompt-handler.type","none");
-        if (type.equalsIgnoreCase("none")) {
-            OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
-            return;
-        }
-
-        String token = config.getString("coding.prompt-handler.token", "");
-        if (token.length() <= 10) {
-            sendWarningErrorMessage("[CODING PROMPT] The token is not valid, disabling prompt handler.");
-            OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
-        } else {
-            switch (type.toLowerCase()) {
-                case "chatgpt", "openai" -> OpenCreative.setCodingPrompter(new OpenAIPrompter());
-                case "openrouter", "openrouterai" -> OpenCreative.setCodingPrompter(new OpenRouterPrompter());
-                case "gemini", "google" -> OpenCreative.setCodingPrompter(new GeminiPrompter());
-                default -> {
-                    sendWarningErrorMessage("[CODING PROMPT] Unknown prompter: " + type + ", using disabled prompt handler.");
-                    OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
-                    return;
-                }
-            }
-            OpenCreative.getCodingPrompter().setToken(token);
-        }
-
-        if (OpenCreative.getCodingPrompter() instanceof PrompterModelCapable modelable) {
-            String model = config.getString("coding.prompt-handler.model", "");
-            if (!model.isEmpty()) modelable.setModel(model);
-        }
-
-        CodingPrompter prompter = OpenCreative.getCodingPrompter();
-        if (OpenCreative.getCodingPrompter().isEnabled()) {
-            sendDebug("[CODING PROMPT] Using prompter (" + prompter.getName() +")" +
-                    (prompter instanceof PrompterModelCapable model ? " with model: " + model.getModel() : "")
-                    + " for /env make");
-        }
     }
 
     private void loadWorldGenerators(FileConfiguration config) {
@@ -347,50 +216,6 @@ public final class Settings {
         }
         if (count >= 1) {
             OpenCreative.getPlugin().getLogger().info("Enabled " + count + " experiments.");
-        }
-    }
-
-    private void loadDisabledBlocks(FileConfiguration config) {
-        disabledEvents.clear();
-        disabledConditions.clear();
-        disabledActions.clear();
-        int count = 0;
-        List<String> unknownBlocks = new ArrayList<>();
-        for (String disabled : config.getStringList("coding.disabled-actions")) {
-            try {
-                disabled = disabled.toUpperCase().replace("-","_");
-                ActionType type = ActionType.valueOf(disabled);
-                disabledActions.add(type.name());
-                count++;
-            } catch (Exception ignored) {
-                unknownBlocks.add(disabled);
-            }
-        }
-        for (String disabled : config.getStringList("coding.disabled-conditions")) {
-            try {
-                disabled = disabled.toUpperCase().replace("-","_");
-                ActionType type = ActionType.valueOf(disabled);
-                disabledConditions.add(type.name());
-                count++;
-            } catch (Exception ignored) {
-                unknownBlocks.add(disabled);
-            }
-        }
-        for (String disabled : config.getStringList("coding.disabled-events")) {
-            try {
-                disabled = disabled.toUpperCase().replace("-","_");
-                ExecutorType type = ExecutorType.valueOf(disabled);
-                disabledEvents.add(type.name());
-                count++;
-            } catch (Exception ignored) {
-                unknownBlocks.add(disabled);
-            }
-        }
-        if (count >= 1) {
-            OpenCreative.getPlugin().getLogger().info("Disabled " + count + " coding blocks!");
-        }
-        if (!unknownBlocks.isEmpty()) {
-            sendWarningErrorMessage("Can't recognize these coding blocks in disabled list, do they exist? " + unknownBlocks);
         }
     }
 
@@ -641,10 +466,6 @@ public final class Settings {
         return maintenance;
     }
 
-    public boolean isLobbyClearInventory() {
-        return lobbyClearInventory;
-    }
-
     public void setMaintenance(boolean maintenance) {
         setMaintenance(maintenance, null);
     }
@@ -743,23 +564,53 @@ public final class Settings {
         }
     }
 
-    public boolean isDisabledEvent(@NotNull ExecutorType event) {
-        return disabledEvents.contains(event.name());
-    }
-
-    public boolean isDisabledAction(@NotNull ActionType action) {
-        return disabledActions.contains(action.name());
-    }
-
-    public boolean isDisabledCondition(@NotNull ActionType condition) {
-        return disabledConditions.contains(condition.name());
-    }
-
-    public Groups getGroups() {
+    /**
+     * Returns instance of groups, that stores
+     * all groups and contains methods to
+     * get data from them.
+     * @return groups instance.
+     */
+    public @NotNull Groups getGroups() {
         return groups;
     }
 
-    public Commands getCommands() {
+    /**
+     * Returns settings of item fixer.
+     * @return item fixer settings.
+     */
+    public @NotNull ItemFixerSettings getItemFixerSettings() {
+        return itemFixerSettings;
+    }
+
+    /**
+     * Returns settings of coding mode.
+     * @return coding settings.
+     */
+    public @NotNull CodingSettings getCodingSettings() {
+        return codingSettings;
+    }
+
+    /**
+     * Returns settings of requirements.
+     * @return requirements settings.
+     */
+    public @NotNull Requirements getRequirements() {
+        return requirements;
+    }
+
+    /**
+     * Returns settings of lobby world.
+     * @return lobby settings.
+     */
+    public @NotNull LobbySettings getLobbySettings() {
+        return lobbySettings;
+    }
+
+    /**
+     * Returns custom commands executions.
+     * @return commands events.
+     */
+    public @NotNull Commands getCommands() {
         return commands;
     }
 
@@ -775,168 +626,12 @@ public final class Settings {
         return consoleNotFoundMessage;
     }
 
-    public String getCustomIdPattern() {
-        return customIdPattern;
-    }
-
-    public int getCustomIdMaxLength() {
-        return customIdMaxLength;
-    }
-
-    public int getCustomIdMinLength() {
-        return customIdMinLength;
-    }
-
-    public int getWorldDescriptionMaxLength() {
-        return worldDescriptionMaxLength;
-    }
-
-    public int getWorldDescriptionMinLength() {
-        return worldDescriptionMinLength;
-    }
-
-    public int getWorldNameMaxLength() {
-        return worldNameMaxLength;
-    }
-
-    public int getWorldNameMinLength() {
-        return worldNameMinLength;
-    }
-
-    public int getWorldCreationMinSeconds() {
-        return worldCreationMinSeconds;
-    }
-
-    public int getWorldReputationMinSeconds() {
-        return worldReputationMinSeconds;
-    }
-
     public Map<Sounds, SettingsSound> getSounds() {
         return sounds;
     }
 
     public Map<ItemsGroup, SettingsItemsGroup> getItemsGroups() {
         return itemsGroups;
-    }
-
-    public int getItemsContainerBigItemsLimit() {
-        return itemsContainerBigItemsLimit;
-    }
-
-    public int getItemsMaxBookPagesAmount() {
-        return itemsMaxBookPagesAmount;
-    }
-
-    public int getItemsMaxEnchantLevel() {
-        return itemsMaxEnchantLevel;
-    }
-
-    public boolean isItemsRemoveAttributes() {
-        return itemsRemoveAttributes;
-    }
-
-    public boolean isItemsRemoveClickableBooks() {
-        return itemsRemoveClickableBooks;
-    }
-
-    public boolean isItemsRemoveCustomSpawnEggs() {
-        return itemsRemoveCustomSpawnEggs;
-    }
-
-    public boolean isItemsRemoveBossSpawnEggs() {
-        return itemsRemoveBossSpawnEggs;
-    }
-
-    public boolean isLegacySelectionMenu() {
-        return legacySelectionMenu;
-    }
-
-    public boolean isLobbyDisableExplosions() {
-        return lobbyDisableExplosions;
-    }
-
-    public boolean isLobbyDisallowDamagingMobs() {
-        return lobbyDisallowDamagingMobs;
-    }
-
-    public boolean isLobbyDisallowDestroyingBlocks() {
-        return lobbyDisallowDestroyingBlocks;
-    }
-
-    public boolean isLobbyDisallowPlacingBlocks() {
-        return lobbyDisallowPlacingBlocks;
-    }
-
-    public boolean isLobbyDisallowSpawningMobs() {
-        return lobbyDisallowSpawningMobs;
-    }
-
-    public boolean isLobbyDisallowWorldEdit() {
-        return lobbyDisallowWorldEdit;
-    }
-
-    public int getItemsMaxEntityNameLength() {
-        return itemsMaxEntityNameLength;
-    }
-
-    public int getItemsMaxPersistentDataSize() {
-        return itemsMaxPersistentDataSize;
-    }
-
-    public int getItemsEntitiesMaxAmount() {
-        return itemsEntitiesMaxAmount;
-    }
-
-    public int getItemsDisplayNameMaxLength() {
-        return itemsDisplayNameMaxLength;
-    }
-
-    public int getItemsLoreLineMaxLength() {
-        return itemsLoreLineMaxLength;
-    }
-
-    public int getItemsLoreLinesMaxAmount() {
-        return itemsLoreLinesMaxAmount;
-    }
-
-    public int getModuleDescriptionMaxLength() {
-        return moduleDescriptionMaxLength;
-    }
-
-    public int getModuleDescriptionMinLength() {
-        return moduleDescriptionMinLength;
-    }
-
-    public int getModuleNameMaxLength() {
-        return moduleNameMaxLength;
-    }
-
-    public int getModuleNameMinLength() {
-        return moduleNameMinLength;
-    }
-
-    public boolean isItemFixerEnabled() {
-        return itemFixerEnabled;
-    }
-
-    public boolean isEnabledCoding() {
-        return enabledCoding;
-    }
-
-    public boolean isCancelChatOnValueSet() {
-        return cancelChatOnValueSet;
-    }
-
-    public boolean isItemsClearCommandBlocksData() {
-        return itemsClearCommandBlocksData;
-    }
-
-    public int getPrompterMaxExecutors() {
-        return prompterMaxExecutors;
-    }
-
-    public int getPrompterTimeout() {
-        return prompterTimeout;
     }
 
     public boolean isNotifyNoPlayersAround() {

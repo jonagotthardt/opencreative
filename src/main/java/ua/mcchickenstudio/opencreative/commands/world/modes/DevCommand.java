@@ -69,7 +69,7 @@ public class DevCommand extends CommandHandler {
             return;
         }
 
-        if (!OpenCreative.getSettings().isEnabledCoding()) {
+        if (!OpenCreative.getSettings().getCodingSettings().isEnabled()) {
             player.sendMessage(getLocaleMessage("world.dev-mode.disabled"));
             return;
         }

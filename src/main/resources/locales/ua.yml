@@ -1,5 +1,5 @@
 #
-# OpenCreative+ 5.8.0 - Що ж, це можливо.
+# OpenCreative+ 5.9.0 - Що ж, це можливо.
 # (C) McChicken Studio 2017-2025.
 #
 
@@ -384,7 +384,7 @@ coding-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворити&f у своїх світах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.8\n<green> Що ж, це можливо!\n <white>\n<gold> ⭐ <white>Оглянь всі <gold>світи<white> за допомогою компаса!\n<light_purple> ❤ <white>Створи свій світ і <light_purple>запроси <white>друзів!\n <yellow>⌚<white> Веселися і <yellow>твори <white>що завгодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.9\n<green> Що ж, це можливо!\n <white>\n<gold> ⭐ <white>Оглянь всі <gold>світи<white> за допомогою компаса!\n<light_purple> ❤ <white>Створи свій світ і <light_purple>запроси <white>друзів!\n <yellow>⌚<white> Веселися і <yellow>твори <white>що завгодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред створенням світу пограйте &6%time%&f у світах інших гравців."
   title: "&eСтворення світу ◌"
@@ -8806,6 +8806,39 @@ items:
           - "&fУ скрині:"
           - "&9 Змінна &7- Для збереження"
           - "&e Змінна &7- Для перевірки"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      var-get-block-type:
+        name: "&2Отримати тип блока"
+        lore:
+          - "&7Це присвоїть змінній"
+          - "&7тип матеріалу блока."
+          - " "
+          - "&fУ скрині:"
+          - "&e Змінна &7- Для збереження"
+          - "&e Змінна &7- Місцезнаходження блока"
+          - " "
+          - "&fПриклади:"
+          - " &7Повітря - &eair "
+          - " &7Факел на землі - &etorch"
+          - " &7Факел на стіні - &ewall_torch"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      var-get-block-facing:
+        name: "&bОтримати напрямок блока"
+        lore:
+          - "&7Це присвоїть змінній"
+          - "&7напрямок блока."
+          - " "
+          - "&fУ скрині:"
+          - "&e Змінна &7- Для збереження"
+          - "&e Змінна &7- Місцезнаходження блока"
+          - " "
+          - "&fПриклади:"
+          - " &7Північ - &enorth "
+          - " &7Південь - &esouth"
+          - " &7Схід - &eeast"
+          - " &7Захід - &ewest"
           - " "
           - "&eНатисни, щоб встановити дію."
       var-delete-variable:
@@ -17561,6 +17594,8 @@ blocks:
   var_create_list: "&aСтворити список"
   var_get_list_size: "Розмір списку"
   var_add_to_list: "Додати до списку"
+  var_get_block_type: "Тип блоку"
+  var_get_block_facing: "Напрям блоку"
   var_sublist_list: "Обріз. список"
   var_set_in_list: "Встановити у список"
   var_get_by_id_from_list: "&bОтримати зі списку"

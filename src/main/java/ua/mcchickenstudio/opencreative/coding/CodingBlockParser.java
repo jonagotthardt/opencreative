@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding;
 
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -93,9 +94,11 @@ public class CodingBlockParser {
         devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
         CodeScript script = devPlanet.getPlanet().getTerritory().getScript();
         script.clear();
+        OpenCreative.getPlugin().getLogger().info("Parsing code in planet " + devPlanet.getPlanet().getId() + "...");
         sendCodingDebugLog(devPlanet.getPlanet(),"Parsing every block, please wait...");
         parseAllExecutors(devPlanet, script.getConfig());
         sendCodingDebugLog(devPlanet.getPlanet(),"Parsed code in " + (System.currentTimeMillis() - time) + " ms.");
+        OpenCreative.getPlugin().getLogger().info("Parsed code in planet " + devPlanet.getPlanet().getId() + " in " + (System.currentTimeMillis() - time) + " ms.");
         if (script.saveCode()) {
             devPlanet.getPlanet().getTerritory().getScript().loadCode();
         }

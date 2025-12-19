@@ -126,7 +126,7 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         } else if (itemEquals(item,CREATE_WORLD)) {
             if (isNotLimitReached()) {
                 long now = System.currentTimeMillis();
-                long minSeconds = OpenCreative.getSettings().getWorldCreationMinSeconds();
+                long minSeconds = OpenCreative.getSettings().getRequirements().getWorldCreationMinSeconds();
                 long playedSeconds = (now - getPlayer().getFirstPlayed()) / 1000;
 
                 if (playedSeconds < minSeconds) {

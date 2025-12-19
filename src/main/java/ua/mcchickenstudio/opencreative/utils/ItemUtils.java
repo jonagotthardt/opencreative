@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import ua.mcchickenstudio.opencreative.settings.Settings;
+import ua.mcchickenstudio.opencreative.settings.items.ItemFixerSettings;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,6 +61,8 @@ public final class ItemUtils {
 
     private final static NamespacedKey ITEM_ID_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_id");
     private final static NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_type");
+    private final static NamespacedKey ITEM_ENTITY_INVISIBLE = new NamespacedKey(OpenCreative.getPlugin(), "oc_item_entity_invisible");
+
     private final static NamespacedKey CODING_VALUE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_value_type");
     private final static NamespacedKey CODING_PARTICLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_particle_type");
     private final static NamespacedKey CODING_VARIABLE_TYPE_KEY = new NamespacedKey(OpenCreative.getPlugin(), "oc_variable_type");
@@ -107,6 +110,10 @@ public final class ItemUtils {
 
     public static NamespacedKey getCodingTargetTypeKey() {
         return CODING_TARGET_TYPE_KEY;
+    }
+
+    public static NamespacedKey getItemEntityInvisible() {
+        return ITEM_ENTITY_INVISIBLE;
     }
 
     public static ItemStack setPersistentData(ItemStack item, NamespacedKey key, String value) {
@@ -400,21 +407,21 @@ public final class ItemUtils {
      * @param item item to fix.
      */
     public static ItemStack fixItem(@NotNull ItemStack item) {
-        Settings settings = OpenCreative.getSettings();
-        if (!settings.isItemFixerEnabled()) return item;
+        ItemFixerSettings settings = OpenCreative.getSettings().getItemFixerSettings();
+        if (!settings.isEnabled()) return item;
         return fixItem(item,
-                settings.getItemsDisplayNameMaxLength(),
-                settings.getItemsLoreLineMaxLength(),
-                settings.getItemsLoreLinesMaxAmount(),
-                settings.getItemsMaxEnchantLevel(),
-                settings.getItemsMaxBookPagesAmount(),
-                settings.isItemsRemoveClickableBooks(),
-                settings.getItemsContainerBigItemsLimit(),
-                settings.getItemsEntitiesMaxAmount(),
-                settings.isItemsRemoveCustomSpawnEggs(),
-                settings.isItemsRemoveBossSpawnEggs(),
-                settings.isItemsRemoveAttributes(),
-                settings.isItemsClearCommandBlocksData()
+                settings.getDisplayNameMaxLength(),
+                settings.getLoreLineMaxLength(),
+                settings.getLoreLinesMaxAmount(),
+                settings.getMaxEnchantLevel(),
+                settings.getMaxBookPagesAmount(),
+                settings.isRemoveClickableBooks(),
+                settings.getContainerBigItemsLimit(),
+                settings.getEntitiesMaxAmount(),
+                settings.isRemoveCustomSpawnEggs(),
+                settings.isRemoveBossSpawnEggs(),
+                settings.isRemoveAttributes(),
+                settings.isClearCommandBlocksData()
         );
     }
 
@@ -494,7 +501,7 @@ public final class ItemUtils {
                     item.setItemMeta(null);
                     return item;
                 }
-                if (getPersistentDataAmount(item) > OpenCreative.getSettings().getItemsMaxPersistentDataSize()) {
+                if (getPersistentDataAmount(item) > OpenCreative.getSettings().getItemFixerSettings().getMaxPersistentDataSize()) {
                     for (NamespacedKey key : item.getPersistentDataContainer().getKeys()) {
                         meta.getPersistentDataContainer().remove(key);
                     }
@@ -627,7 +634,7 @@ public final class ItemUtils {
 
     public static int getPersistentDataAmount(@NotNull ItemStack item) {
         int length = 0;
-        int limit = OpenCreative.getSettings().getItemsMaxPersistentDataSize();
+        int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxPersistentDataSize();
         PersistentDataContainerView container = item.getPersistentDataContainer();
         for (NamespacedKey key : container.getKeys()) {
             /*

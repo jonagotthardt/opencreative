@@ -389,7 +389,7 @@ public class Planet {
             this.mode = mode;
             return;
         }
-        if (mode == Mode.PLAYING && !OpenCreative.getSettings().isEnabledCoding()) {
+        if (mode == Mode.PLAYING && !OpenCreative.getSettings().getCodingSettings().isEnabled()) {
             mode = Mode.BUILD;
         }
         try {
@@ -509,7 +509,7 @@ public class Planet {
         if (config.getString("owner-group") != null) {
             ownerGroup = config.getString("owner-group");
         }
-        if (config.getString("mode") != null && OpenCreative.getSettings().isEnabledCoding()) {
+        if (config.getString("mode") != null && OpenCreative.getSettings().getCodingSettings().isEnabled()) {
             try {
                 mode = Mode.valueOf(config.getString("mode"));
             } catch (Exception ignored) {}
@@ -617,7 +617,7 @@ public class Planet {
         boolean wasLoaded = isLoaded();
         if (!isLoaded()) {
             OpenCreative.getPlugin().getLogger().info("Loading planet " + id + " and teleporting " + player.getName());
-            if (!OpenCreative.getSettings().isEnabledCoding() && mode == Mode.PLAYING) mode = Mode.BUILD;
+            if (!OpenCreative.getSettings().getCodingSettings().isEnabled() && mode == Mode.PLAYING) mode = Mode.BUILD;
             territory.load();
         } else {
             OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());

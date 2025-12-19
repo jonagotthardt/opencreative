@@ -73,7 +73,7 @@ public final class WorldEditManager implements BlocksManager {
                 org.bukkit.World bukkitWorld = BukkitAdapter.adapt(event.getWorld());
                 Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(bukkitWorld);
                 if (planet == null) {
-                    if (isLobbyWorld(bukkitWorld) && OpenCreative.getSettings().isLobbyDisallowWorldEdit()
+                    if (isLobbyWorld(bukkitWorld) && OpenCreative.getSettings().getLobbySettings().isWorldEditDisallowed()
                             && !event.getActor().hasPermission("opencreative.lobby.world-edit.bypass")) {
                         event.setExtent(new DisallowedExtent(event.getExtent()));
                     }

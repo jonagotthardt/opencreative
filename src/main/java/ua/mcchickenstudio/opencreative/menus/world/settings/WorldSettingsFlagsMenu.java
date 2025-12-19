@@ -127,11 +127,11 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
     public static RadioButton getLocatorBarButton(Planet planet) {
         List<Runnable> choicesActions = new ArrayList<>();
         choicesActions.add(() -> {
-            planet.getTerritory().setGameRuleIfExists("LOCATOR_BAR", true);
+            planet.getTerritory().setGameRuleIfExists("locator_bar", true);
             planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATOR_BAR, (byte) 1);
         });
         choicesActions.add(() -> {
-            planet.getTerritory().setGameRuleIfExists("LOCATOR_BAR", false);
+            planet.getTerritory().setGameRuleIfExists("locator_bar", false);
             planet.setFlagValue(PlanetFlags.PlanetFlag.LOCATOR_BAR, (byte) 2);
         });
         return new RadioButton(Material.ENDER_EYE, MessageUtils.getLocaleItemName("menus.world-settings-flags.items.locator-bar.name"),
@@ -300,7 +300,7 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
         setItem(25, getNaturalRegenerationFlagButton(planet).getButtonItem());
         setItem(28, getMobLootFlagButton(planet).getButtonItem());
         setItem(29, getWorldBordersButton(planet).getButtonItem());
-        if (GameRule.getByName("LOCATOR_BAR") != null) {
+        if (GameRule.getByName("locator_bar") != null) {
             setItem(30, getLocatorBarButton(planet).getButtonItem());
         }
     }

@@ -50,7 +50,6 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.time.Duration;
 import java.util.*;
@@ -173,7 +172,7 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
-                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                if (OpenCreative.getSettings().getCodingSettings().isCancelChatOnValueSet()) {
                     event.setCancelled(true);
                 }
             } else if (itemInHand.getType() == Material.SLIME_BALL) {
@@ -200,7 +199,7 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
-                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                if (OpenCreative.getSettings().getCodingSettings().isCancelChatOnValueSet()) {
                     event.setCancelled(true);
                 }
             } else if (itemInHand.getType() == Material.MAGMA_CREAM) {
@@ -225,7 +224,7 @@ public final class ChatListener implements Listener {
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
                 ));
                 player.swingMainHand();
-                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                if (OpenCreative.getSettings().getCodingSettings().isCancelChatOnValueSet()) {
                     event.setCancelled(true);
                 }
             } else if (itemInHand.getType() == Material.BLACK_DYE) {
@@ -246,7 +245,7 @@ public final class ChatListener implements Listener {
                 Sounds.DEV_VALUE_SET.play(player);
                 player.getInventory().setItemInMainHand(itemInHand);
                 player.swingMainHand();
-                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                if (OpenCreative.getSettings().getCodingSettings().isCancelChatOnValueSet()) {
                     event.setCancelled(true);
                 }
             } else if (itemInHand.getType() == Material.POTION || itemInHand.getType() == Material.LINGERING_POTION || itemInHand.getType() == Material.SPLASH_POTION) {
@@ -304,7 +303,7 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_POTION_SET.play(player);
                 itemInHand.setItemMeta(newMeta);
-                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                if (OpenCreative.getSettings().getCodingSettings().isCancelChatOnValueSet()) {
                     event.setCancelled(true);
                 }
             } else if (itemInHand.getType() == Material.PRISMARINE_SHARD) {
@@ -344,7 +343,7 @@ public final class ChatListener implements Listener {
                 ));
                 Sounds.DEV_VECTOR_SET.play(player);
                 player.swingMainHand();
-                if (OpenCreative.getSettings().isCancelChatOnValueSet()) {
+                if (OpenCreative.getSettings().getCodingSettings().isCancelChatOnValueSet()) {
                     event.setCancelled(true);
                 }
             }
@@ -363,10 +362,11 @@ public final class ChatListener implements Listener {
                 if (planet == null || !planet.isOwner(player)) return;
                 String newName = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredName = ChatColor.stripColor(newName);
-                if (uncoloredName.length() > OpenCreative.getSettings().getWorldNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getWorldNameMinLength()) {
+                if (uncoloredName.length() > OpenCreative.getSettings().getRequirements().getWorldNameMaxLength() || uncoloredName.length()
+                        < OpenCreative.getSettings().getRequirements().getWorldNameMinLength()) {
                     player.sendMessage(getLocaleMessage("settings.world-name.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldNameMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldNameMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getRequirements().getWorldNameMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getRequirements().getWorldNameMaxLength())));
                     return;
                 }
                 planet.getInformation().setDisplayName(newName);
@@ -375,13 +375,13 @@ public final class ChatListener implements Listener {
             }
             case WORLD_CUSTOM_ID_CHANGE -> {
                 if (planet == null || !planet.isOwner(player)) return;
-                String pattern = OpenCreative.getSettings().getCustomIdPattern();
-                if (input.length() > OpenCreative.getSettings().getCustomIdMaxLength()
-                        || input.length() < OpenCreative.getSettings().getCustomIdMinLength()
+                String pattern = OpenCreative.getSettings().getRequirements().getCustomIdPattern();
+                if (input.length() > OpenCreative.getSettings().getRequirements().getCustomIdMaxLength()
+                        || input.length() < OpenCreative.getSettings().getRequirements().getCustomIdMinLength()
                         || Character.isDigit(input.charAt(0)) || !input.matches(pattern)) {
                     player.sendMessage(getLocaleMessage("settings.world-id.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getCustomIdMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getCustomIdMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getRequirements().getCustomIdMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getRequirements().getCustomIdMaxLength())));
                     return;
                 }
                 for (Planet searchablePlanet : OpenCreative.getPlanetsManager().getPlanets()) {
@@ -398,11 +398,11 @@ public final class ChatListener implements Listener {
                 if (planet == null || !planet.isOwner(player)) return;
                 String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredDescription = ChatColor.stripColor(newDescription);
-                if (uncoloredDescription.length() > OpenCreative.getSettings().getWorldDescriptionMaxLength() ||
-                        uncoloredDescription.length() < OpenCreative.getSettings().getWorldDescriptionMinLength()) {
+                if (uncoloredDescription.length() > OpenCreative.getSettings().getRequirements().getWorldDescriptionMaxLength() ||
+                        uncoloredDescription.length() < OpenCreative.getSettings().getRequirements().getWorldDescriptionMinLength()) {
                     player.sendMessage(getLocaleMessage("settings.world-description.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getWorldDescriptionMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getRequirements().getWorldDescriptionMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getRequirements().getWorldDescriptionMaxLength())));
                     return;
                 }
                 newDescription = String.join("\\n", splitDescription(newDescription, 39));
@@ -509,10 +509,11 @@ public final class ChatListener implements Listener {
                 if (module == null || !module.isOwner(player)) return;
                 String newName = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredName = ChatColor.stripColor(newName);
-                if (uncoloredName.length() > OpenCreative.getSettings().getModuleNameMaxLength() || uncoloredName.length() < OpenCreative.getSettings().getModuleNameMinLength()) {
+                if (uncoloredName.length() > OpenCreative.getSettings().getRequirements().getModuleNameMaxLength()
+                        || uncoloredName.length() < OpenCreative.getSettings().getRequirements().getModuleNameMinLength()) {
                     player.sendMessage(getLocaleMessage("settings.module-name.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getModuleNameMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getModuleNameMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getRequirements().getModuleNameMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getRequirements().getModuleNameMaxLength())));
                     return;
                 }
                 module.getInformation().setDisplayName(newName);
@@ -524,11 +525,11 @@ public final class ChatListener implements Listener {
                 if (module == null || !module.isOwner(player)) return;
                 String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&',input);
                 String uncoloredDescription = ChatColor.stripColor(newDescription);
-                if (uncoloredDescription.length() > OpenCreative.getSettings().getModuleDescriptionMaxLength() ||
-                        uncoloredDescription.length() < OpenCreative.getSettings().getModuleDescriptionMinLength()) {
+                if (uncoloredDescription.length() > OpenCreative.getSettings().getRequirements().getModuleDescriptionMaxLength() ||
+                        uncoloredDescription.length() < OpenCreative.getSettings().getRequirements().getModuleDescriptionMinLength()) {
                     player.sendMessage(getLocaleMessage("settings.module-description.error")
-                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getModuleDescriptionMinLength()))
-                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getModuleDescriptionMaxLength())));
+                            .replace("%min%",String.valueOf(OpenCreative.getSettings().getRequirements().getModuleDescriptionMinLength()))
+                            .replace("%max%",String.valueOf(OpenCreative.getSettings().getRequirements().getModuleDescriptionMaxLength())));
                     return;
                 }
                 newDescription = String.join("\\n", splitDescription(newDescription, 39));

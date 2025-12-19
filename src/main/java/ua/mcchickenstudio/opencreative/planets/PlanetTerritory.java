@@ -174,7 +174,7 @@ public class PlanetTerritory {
         World world = creator.createWorld();
         if (world == null) return;
         world.setAutoSave(autoSave);
-        setGameRuleIfExists("SPAWN_CHUNK_RADIUS", 1);
+        setGameRuleIfExists("spawn_chunk_radius", 1);
         world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
@@ -358,7 +358,7 @@ public class PlanetTerritory {
 
         if (world != null) {
             world.setAutoSave(true);
-            setGameRuleIfExists("SPAWN_CHUNK_RADIUS", 1);
+            setGameRuleIfExists("spawn_chunk_radius", 1);
             world.getWorldBorder().setSize(getWorldSize());
 
             world.setGameRule(GameRule.DO_MOB_LOOT, true);
@@ -401,7 +401,7 @@ public class PlanetTerritory {
     @SuppressWarnings("unchecked")
     public void setGameRuleIfExists(@NotNull String gameRule, boolean value) {
         try {
-            GameRule<?> rule = GameRule.getByName(gameRule.toUpperCase());
+            GameRule<?> rule = GameRule.getByName(gameRule.toLowerCase());
             if (rule != null && getWorld() != null) {
                 getWorld().setGameRule((GameRule<? super Boolean>) rule, value);
             }
@@ -411,7 +411,7 @@ public class PlanetTerritory {
     @SuppressWarnings("unchecked")
     public void setGameRuleIfExists(@NotNull String gameRule, int value) {
         try {
-            GameRule<?> rule = GameRule.getByName(gameRule.toUpperCase());
+            GameRule<?> rule = GameRule.getByName(gameRule.toLowerCase());
             if (rule != null && getWorld() != null) {
                 getWorld().setGameRule((GameRule<? super Integer>) rule, value);
             }

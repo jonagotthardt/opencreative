@@ -67,9 +67,9 @@ public class LikeCommand extends CommandHandler {
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
             long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
-            if (OpenCreative.getSettings().getWorldReputationMinSeconds() > createdSeconds) {
+            if (OpenCreative.getSettings().getRequirements().getWorldReputationMinSeconds() > createdSeconds) {
                 Sounds.PLAYER_CANCEL.play(player);
-                long unlockTime = (OpenCreative.getSettings().getWorldReputationMinSeconds()-createdSeconds)*1000;
+                long unlockTime = (OpenCreative.getSettings().getRequirements().getWorldReputationMinSeconds()-createdSeconds)*1000;
                 player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",
                         convertTime(unlockTime)));
                 return;

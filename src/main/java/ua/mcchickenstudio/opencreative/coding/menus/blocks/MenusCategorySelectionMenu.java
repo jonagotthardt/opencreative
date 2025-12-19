@@ -53,7 +53,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
     protected final Location location;
     protected final Object frequency;
-    protected final boolean legacy = OpenCreative.getSettings().isLegacySelectionMenu();
+    protected final boolean legacy = OpenCreative.getSettings().getCodingSettings().isLegacySelectionMenu();
 
     public MenusCategorySelectionMenu(@NotNull Player player,
                                       @NotNull ItemStack mainItem,
