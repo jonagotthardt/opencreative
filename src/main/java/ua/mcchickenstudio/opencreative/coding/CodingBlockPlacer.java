@@ -284,6 +284,12 @@ public class CodingBlockPlacer {
                                      @Nullable ActionType type) {
         if (type == null) return;
         ConfigurationSection arguments = data.getConfigurationSection("arguments");
+        ConfigurationSection conditionInfo = data.getConfigurationSection("condition");
+        if (conditionInfo != null) {
+            ActionType conditionType = ActionType.getType(conditionInfo.getString("type", ""));
+            if (conditionType != null) type = conditionType;
+        }
+
         if (arguments != null && type.isChestRequired()) {
             Block containerBlock = location.getBlock().getRelative(BlockFace.UP);
             containerBlock.setType(container);
