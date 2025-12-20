@@ -23,10 +23,14 @@ import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import io.papermc.paper.event.player.PlayerNameEntityEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.sign.Side;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 
@@ -71,10 +75,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -82,6 +88,8 @@ import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.*;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDebugTorch;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
@@ -563,6 +571,45 @@ public final class InteractListener implements Listener {
                         .replace("%amount%", String.valueOf(devPlanet.getMarkedExecutors(player).size()))
                         .replace("%limit%", String.valueOf(limit)));
                 Sounds.DEV_MARK_EXECUTOR.play(player);
+            }
+        } else {
+            DevPlatform platform = devPlanet.getPlatformInLocation(clickedBlock.getLocation());
+            if (platform == null) return;
+            if (clickedBlock.getType() != platform.getEventMaterial()) return;
+            if (player.hasCooldown(Material.COMPARATOR)) {
+                return;
+            }
+            player.setCooldown(Material.COMPARATOR, 20);
+            Set<Location> markedExecutors = devPlanet.getMarkedExecutors(player);
+            if (markedExecutors.isEmpty()) {
+                player.sendActionBar(getLocaleComponent("menus.developer.manipulator.not-selected"));
+                Sounds.DEV_NOT_ALLOWED.play(player);
+                return;
+            }
+            if (getCooldown(player, CooldownUtils.CooldownType.BLOCKS_DUPLICATION) > 0) {
+                player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.BLOCKS_DUPLICATION))));
+                return;
+            }
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player)
+                    .getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.BLOCKS_DUPLICATION);
+            CodeConfiguration temporary = new CodeConfiguration();
+            new CodingBlockParser(devPlanet, true).parseExecutors(devPlanet, temporary, new LinkedList<>(markedExecutors));
+            devPlanet.clearMarkedExecutors(player);
+            ConfigurationSection section = temporary.getConfigurationSection("code.blocks");
+            if (section == null) return;
+            CodingBlockPlacer.CodePlacementResult result = new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section, clickedBlock.getLocation());
+            if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
+                player.sendMessage(getLocaleMessage("environment.duplication.few-space")
+                        .replace("%required%", String.valueOf(markedExecutors.size())));
+                Sounds.DEV_NOT_ALLOWED.play(player);
+            } else if (result == CodingBlockPlacer.CodePlacementResult.ERROR) {
+                player.sendMessage(getLocaleMessage("environment.duplication.error"));
+                devPlanet.setCodeChanged(true);
+                Sounds.PLAYER_ERROR.play(player);
+            } else {
+                player.sendMessage(getLocaleMessage("environment.duplication.success"));
+                devPlanet.setCodeChanged(true);
+                Sounds.DEV_BLOCKS_DUPLICATED.play(player);
             }
         }
     }

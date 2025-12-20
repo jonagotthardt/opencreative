@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -70,6 +72,15 @@ public enum ActionCategory {
     public static ActionCategory getByMaterial(Material material) {
         for (ActionCategory category : values()) {
             if (category.block == material) return category;
+        }
+        return null;
+    }
+
+    public static @Nullable ActionCategory getCategory(@NotNull String text) {
+        for (ActionCategory category : values()) {
+            if (category.name().equalsIgnoreCase(text)) {
+                return category;
+            }
         }
         return null;
     }

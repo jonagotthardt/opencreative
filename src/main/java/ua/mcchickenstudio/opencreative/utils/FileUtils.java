@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -761,8 +762,8 @@ public final class FileUtils {
     /**
      * Returns module's configuration.
      **/
-    public static FileConfiguration getModuleConfig(Module module) {
-        return YamlConfiguration.loadConfiguration(getModuleConfigFile(module.getId()));
+    public static CodeConfiguration getModuleConfig(Module module) {
+        return CodeConfiguration.loadConfiguration(getModuleConfigFile(module.getId()));
     }
 
     /**

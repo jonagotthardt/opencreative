@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.modules;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -31,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -100,22 +102,36 @@ public final class BlocksManipulatorMenu extends AbstractMenu {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.BLOCKS_DUPLICATION))));
                 return;
             }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.BLOCKS_DUPLICATION);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player)
+                    .getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.BLOCKS_DUPLICATION);
             player.closeInventory();
             CodeConfiguration temporary = new CodeConfiguration();
-            new CodingBlockParser(devPlanet, true).parseExecutors(devPlanet, temporary, new LinkedList<>(devPlanet.getMarkedExecutors(player)));
+            Set<Location> markedExecutors = devPlanet.getMarkedExecutors(player);
+            new CodingBlockParser(devPlanet, true).parseExecutors(devPlanet, temporary, new LinkedList<>(markedExecutors));
             devPlanet.clearMarkedExecutors(player);
             ConfigurationSection section = temporary.getConfigurationSection("code.blocks");
             if (section == null) return;
-            new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section);
-            devPlanet.setCodeChanged(true);
-            Sounds.DEV_BLOCKS_DUPLICATED.play(player);
+            CodingBlockPlacer.CodePlacementResult result = new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section);
+            if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {
+                player.sendMessage(getLocaleMessage("environment.duplication.few-space")
+                        .replace("%required%", String.valueOf(markedExecutors.size())));
+                Sounds.DEV_NOT_ALLOWED.play(player);
+            } else if (result == CodingBlockPlacer.CodePlacementResult.ERROR) {
+                player.sendMessage(getLocaleMessage("environment.duplication.error"));
+                devPlanet.setCodeChanged(true);
+                Sounds.PLAYER_ERROR.play(player);
+            } else {
+                player.sendMessage(getLocaleMessage("environment.duplication.success"));
+                devPlanet.setCodeChanged(true);
+                Sounds.DEV_BLOCKS_DUPLICATED.play(player);
+            }
         } else if (itemEquals(currentItem, createModule)) {
             if (getCooldown(player, CooldownUtils.CooldownType.MODULE_MANIPULATION) > 0) {
                 player.sendMessage(getLocaleMessage("cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.MODULE_MANIPULATION))));
                 return;
             }
-            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.MODULE_MANIPULATION);
+            setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player).getModuleManipulationCooldown(),
+                    CooldownUtils.CooldownType.MODULE_MANIPULATION);
             int limit = OpenCreative.getSettings().getGroups().getGroup(player).getModulesLimit();
             if (OpenCreative.getModuleManager().getPlayerModules(player.getUniqueId()).size() > limit) {
                 player.closeInventory();

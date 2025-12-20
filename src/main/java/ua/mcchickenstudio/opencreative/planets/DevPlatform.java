@@ -31,6 +31,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.menus.Menus;
@@ -113,6 +114,29 @@ public class DevPlatform {
             }
         }
         return columns;
+    }
+
+    public List<Location> getFreeColumns(int begin) {
+        List<Location> columns = new ArrayList<>();
+        if (begin < 1 || begin > 24) throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
+        for (int column = begin; column <= 24; column++) {
+            if (isEmptyColumn(column)) {
+                columns.add(platformer.getPlatformBeginLocation(this).clone()
+                        .add(4,0,column * 4));
+            }
+        }
+        return columns;
+    }
+
+    public @Nullable Integer getColumn(@NotNull Location location) {
+        for (int column = 1; column <= 24; column++) {
+            Location begin = platformer.getPlatformBeginLocation(this);
+            int z = begin.getBlockZ() + (column * 4);
+            if (location.getBlockZ() == z) {
+                return column;
+            }
+        }
+        return null;
     }
 
     public Material getFloorMaterial() {
