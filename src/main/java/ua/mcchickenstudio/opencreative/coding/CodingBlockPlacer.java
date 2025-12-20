@@ -262,10 +262,14 @@ public class CodingBlockPlacer {
     private boolean placeAction(@NotNull Location location, @NotNull ConfigurationSection data,
                                 int maximumX) {
         try {
+            ActionCategory category = ActionCategory.getCategory(data.getString("category", ""));
             ActionType type = ActionType.getType(data.getString("type", ""));
-            if (type == null) return true;
-            buildContainerBlock(location, data, type);
-            buildActionBlock(location, data, type, maximumX);
+            if (type != null) {
+                buildContainerBlock(location, data, type);
+            }
+            if (category != null) {
+                buildActionBlock(location, data, category, type, maximumX);
+            }
         } catch (Exception error) {
             sendDebugError("Cannot place action block.", error);
             return false;
@@ -328,26 +332,27 @@ public class CodingBlockPlacer {
     /**
      * Builds action block on specified location.
      * @param location location of action block where it will be placed.
+     * @param category category of action.
      * @param type type of action.
      * @param data configuration section of action.
      * @param maximumX limit of X coordinate for placing blocks while moving right.
      */
     private void buildActionBlock(@NotNull Location location, @NotNull ConfigurationSection data,
-                                  @NotNull ActionType type, int maximumX) {
+                                  @NotNull ActionCategory category, @Nullable ActionType type, int maximumX) {
         Location signLocation = location.getBlock().getRelative(BlockFace.SOUTH).getLocation();
         String target = data.getString("target","").toLowerCase();
-        switch (type) {
-            case LAUNCH_FUNCTION, LAUNCH_METHOD -> {
-                placeDevBlock(location, type.getCategory().getBlock(),
-                        type.getCategory().getAdditionalBlock(),
-                        wallSign, type.getCategory().name().toLowerCase());
+        switch (category) {
+            case LAUNCH_FUNCTION_ACTION, LAUNCH_METHOD_ACTION -> {
+                placeDevBlock(location, category.getBlock(),
+                        category.getAdditionalBlock(),
+                        wallSign, category.name().toLowerCase());
                 String name = data.getString("name","");
                 setSignLine(signLocation,3, name);
                 if (!target.equals("default")) setSignLine(signLocation,4, target);
             }
-            case SELECTION_SET, SELECTION_ADD, SELECTION_REMOVE -> {
-                placeDevBlock(location, type.getCategory().getBlock(),
-                        type.getCategory().getAdditionalBlock(),
+            case SELECTION_ACTION -> {
+                placeDevBlock(location, category.getBlock(),
+                        category.getAdditionalBlock(),
                         wallSign, "");
                 ConfigurationSection conditionInfo = data.getConfigurationSection("condition");
                 if (conditionInfo != null) {
@@ -361,33 +366,37 @@ public class CodingBlockPlacer {
                     setSignLine(signLocation, 2, target);
                 }
             }
-            case REPEAT_WHILE, REPEAT_WHILE_NOT -> {
-                placeDevBlock(location, type.getCategory().getBlock(),
-                        type.getCategory().getAdditionalBlock(),
-                        wallSign, "");
-                ConfigurationSection conditionInfo = data.getConfigurationSection("condition");
-                if (conditionInfo != null) {
-                    ActionCategory conditionCategory = ActionCategory.valueOf(conditionInfo.getString("category"));
-                    ActionType conditionType = ActionType.valueOf(conditionInfo.getString("type"));
-                    setSignLine(signLocation, 1, type.name().toLowerCase());
-                    setSignLine(signLocation, 2, conditionCategory.name().toLowerCase());
-                    setSignLine(signLocation, 3, conditionType.name().toLowerCase());
-                    setSignLine(signLocation, 4, target);
-                }
-            }
             default -> {
-                placeDevBlock(location, type.getCategory().getBlock(),
-                        type.getCategory().getAdditionalBlock(),
-                        wallSign, type.getCategory().name().toLowerCase());
-                setSignLine(signLocation,3, type.name().toLowerCase());
+                if (type != null) {
+                    if (type == ActionType.REPEAT_WHILE || type == ActionType.REPEAT_WHILE_NOT) {
+                        placeDevBlock(location, type.getCategory().getBlock(),
+                                type.getCategory().getAdditionalBlock(),
+                                wallSign, "");
+                        ConfigurationSection conditionInfo = data.getConfigurationSection("condition");
+                        if (conditionInfo != null) {
+                            ActionCategory conditionCategory = ActionCategory.valueOf(conditionInfo.getString("category"));
+                            ActionType conditionType = ActionType.valueOf(conditionInfo.getString("type"));
+                            setSignLine(signLocation, 1, type.name().toLowerCase());
+                            setSignLine(signLocation, 2, conditionCategory.name().toLowerCase());
+                            setSignLine(signLocation, 3, conditionType.name().toLowerCase());
+                            setSignLine(signLocation, 4, target);
+                        }
+                        buildMultiActionBlock(location, data, maximumX, false);
+                        return;
+                    }
+                }
+                placeDevBlock(location, category.getBlock(),
+                        category.getAdditionalBlock(),
+                        wallSign, category.name().toLowerCase());
+                if (type != null) setSignLine(signLocation,3, type.name().toLowerCase());
                 setSignLine(signLocation,4, target);
-                if (type.getCategory().isCondition()) {
+                if (category.isCondition()) {
                     if (data.getBoolean("opposed",false)) {
                         setSignLine(signLocation, 1, "not");
                     }
                 }
-                if (type.getCategory().isMultiAction()) {
-                    buildMultiActionBlock(location, data, maximumX, type.getCategory().isCondition());
+                if (category.isMultiAction()) {
+                    buildMultiActionBlock(location, data, maximumX, category.isCondition());
                 }
             }
         }
