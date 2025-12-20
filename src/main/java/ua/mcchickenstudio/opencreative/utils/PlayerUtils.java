@@ -189,7 +189,9 @@ public final class PlayerUtils {
         player.eject();
         if (player.isDead()) {
             player.setRespawnLocation(location);
-            player.spigot().respawn();
+            if (OpenCreative.getPlugin().isEnabled()) {
+                player.spigot().respawn();
+            }
         }
         player.teleport(location);
         clearPlayer(player);

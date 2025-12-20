@@ -48,14 +48,18 @@ import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDebugTorch;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
 
 /**
@@ -118,6 +122,28 @@ public class CodingBlockPlacer {
                 break;
             }
         }
+
+        return placeCodingLines(freeColumns, blocks);
+
+    }
+
+    /**
+     * Places all coding blocks from specified configuration
+     * section and returns result. Section must contain
+     * executor blocks with actions inside them.
+     * @param devPlanet developers planet where coding blocks will be built.
+     * @param blocks configuration section containing coding blocks.
+     * @param columnLocation location of column, where first coding line will be placed
+     * @return result of placing blocks.
+     */
+    public @NotNull CodePlacementResult placeCodingLines(@NotNull DevPlanet devPlanet, @NotNull ConfigurationSection blocks, @NotNull Location columnLocation) {
+
+        if (!devPlanet.isLoaded()) return CodePlacementResult.CANNOT_PLACE;
+
+        DevPlatform platform = devPlanet.getPlatformInLocation(columnLocation);
+        Integer column = platform.getColumn(columnLocation);
+        if (column == null) return CodePlacementResult.CANNOT_PLACE;
+        List<Location> freeColumns = platform.getFreeColumns(column);
 
         return placeCodingLines(freeColumns, blocks);
 
@@ -274,21 +300,19 @@ public class CodingBlockPlacer {
                     if (argSlot.isList()) {
                         for (int i = 1; i <= argSlot.getListSize(); i++) {
                             slot++;
-                            ConfigurationSection valueSection = argSection.getConfigurationSection("value." + i + ".value");
                             Object valueObject = argSection.get("value." + i + ".value");
                             String valueTypeString = argSection.getString("value." + i + ".type");
                             if (valueObject == null || valueTypeString == null) continue;
                             ValueType valueType = ValueType.parseString(valueTypeString);
-                            holder.getInventory().setItem(slot, getItem(valueType, valueSection, valueObject, false));
+                            holder.getInventory().setItem(slot, getItem(valueType, valueObject, false));
                         }
                     } else {
                         slot++;
-                        ConfigurationSection valueSection = argSection.getConfigurationSection("value");
                         Object valueObject = argSection.get("value");
                         String valueTypeString = argSection.getString("type");
                         if (valueObject == null || valueTypeString == null) continue;
                         ValueType valueType = ValueType.parseString(valueTypeString);
-                        holder.getInventory().setItem(slot, getItem(valueType, valueSection, valueObject, argSlot.isParameter()));
+                        holder.getInventory().setItem(slot, getItem(valueType, valueObject, argSlot.isParameter()));
                     }
                 }
             }
@@ -357,7 +381,7 @@ public class CodingBlockPlacer {
                     }
                 }
                 if (type.getCategory().isMultiAction()) {
-                    buildMultiActionBlock(location, data, maximumX);
+                    buildMultiActionBlock(location, data, maximumX, type.getCategory().isCondition());
                 }
             }
         }
@@ -369,9 +393,10 @@ public class CodingBlockPlacer {
      * @param location location of multi action block.
      * @param data configuration section of multi action.
      * @param maximumX limit of X coordinate for placing blocks while moving right.
+     * @param isCondition checks whether block is condition or not
      */
     private void buildMultiActionBlock(@NotNull Location location, @NotNull ConfigurationSection data,
-                                       int maximumX) {
+                                       int maximumX, boolean isCondition) {
         ConfigurationSection actions = data.getConfigurationSection("actions");
         if (actions != null) {
             for (String key : actions.getKeys(false)) {
@@ -381,6 +406,8 @@ public class CodingBlockPlacer {
                 if (action == null) continue;
                 placeAction(location, action, maximumX);
             }
+            addEndingPiston(location);
+        } else {
             addEndingPiston(location);
         }
         ConfigurationSection elseActions = data.getConfigurationSection("else");
@@ -403,29 +430,36 @@ public class CodingBlockPlacer {
      * Parses value and gives it as coding item stack.
      * If it's wrong value, then returns AIR.
      * @param type type of value.
-     * @param data configuration section of value.
      * @param configValue section or string.
      * @param doNotDropMe prevent dropping this item on destroying container.
      * @return item stack of value, or AIR item.
      */
-    @SuppressWarnings("deprecation")
-    private @NotNull ItemStack getItem(@NotNull ValueType type, @Nullable ConfigurationSection data,
-                                       @NotNull Object configValue, boolean doNotDropMe) {
+    @SuppressWarnings({"deprecation", "unchecked"})
+    private @NotNull ItemStack getItem(@NotNull ValueType type, @NotNull Object configValue, boolean doNotDropMe) {
         String stringValue = configValue.toString();
         ItemStack item = createItem(type.getMaterial(), 1,
                 "menus.developer.variables.items." + type.name().toLowerCase().replace("_","-"));
         if (doNotDropMe) setPersistentData(item, getCodingDoNotDropMeKey(), "1");
         ItemMeta meta = item.getItemMeta();
+        Map<String, Object> data = null;
+        if (configValue instanceof Map<?, ?> map) {
+            data = (Map<String, Object>) map;
+        } else if (configValue instanceof ConfigurationSection section) {
+            data = new HashMap<>();
+            for (String key : section.getKeys(false)) {
+                data.put(key, section.get(key));
+            }
+        }
         switch (type) {
             case LOCATION -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 double x, y ,z;
                 float yaw,pitch;
-                x = data.getDouble("x");
-                y = data.getDouble("y");
-                z = data.getDouble("z");
-                yaw = (float) data.getDouble("yaw");
-                pitch = (float) data.getDouble("pitch");
+                x = (double) data.getOrDefault("x", 0);
+                y = (double) data.getOrDefault("y", 0);
+                z = (double) data.getOrDefault("z", 0);
+                yaw = (float) data.getOrDefault("yaw", 0);
+                pitch = (float) data.getOrDefault("pitch", 0);
                 Location location = new Location(null, x, y, z, yaw, pitch);
                 setDisplayName(item, InteractListener.formatLocation(location));
                 setPersistentData(item,getCodingValueKey(),"LOCATION");
@@ -434,9 +468,9 @@ public class CodingBlockPlacer {
             case VECTOR -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 double x, y ,z;
-                x = data.getDouble("x");
-                y = data.getDouble("y");
-                z = data.getDouble("z");
+                x = (double) data.getOrDefault("x", 0);
+                y = (double) data.getOrDefault("y", 0);
+                z = (double) data.getOrDefault("z", 0);
                 setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
                         "&b" + x + " " + y + " " + z));
                 setPersistentData(item,getCodingValueKey(),"VECTOR");
@@ -445,9 +479,9 @@ public class CodingBlockPlacer {
             case COLOR -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 int r,g,b;
-                r = data.getInt("red");
-                g = data.getInt("blue");
-                b = data.getInt("green");
+                r = (int) data.getOrDefault("red", 0);
+                g = (int) data.getOrDefault("blue", 0);
+                b = (int) data.getOrDefault("green", 0);
                 if (meta != null) {
                     meta.displayName(Component.text(r + " " + g + " " + b).color(TextColor.color(r,g,b)));
                     item.setItemMeta(meta);
@@ -457,8 +491,8 @@ public class CodingBlockPlacer {
             }
             case VARIABLE -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                String varName = data.getString("name","");
-                String typeString = data.getString("type");
+                String varName = (String) data.getOrDefault("name", "");
+                String typeString = (String) data.getOrDefault("type", "GLOBAL");
                 VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
                 if (varType == null) {
                     varType = VariableLink.VariableType.GLOBAL;
@@ -470,8 +504,8 @@ public class CodingBlockPlacer {
             }
             case EVENT_VALUE -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                String valueType = data.getString("name");
-                String targetType = data.getString("target","selected");
+                String valueType = (String) data.getOrDefault("name", "");
+                String targetType = (String) data.getOrDefault("target", "selected");
                 if (valueType == null) return new ItemStack(Material.AIR);
                 if (valueType.isEmpty()) return new ItemStack(Material.AIR);
                 Target target = Target.getByText(targetType);
@@ -484,6 +518,8 @@ public class CodingBlockPlacer {
                 } else {
                     setDisplayName(item, valueType);
                 }
+                addLoreAtBegin(item, getLocaleMessage("menus.developer.event-values.target")
+                        .replace("%target%", target.getLocaleName()));
                 setPersistentData(item, getCodingValueKey(), "EVENT_VALUE");
                 setPersistentData(item, getCodingVariableTypeKey(), valueType);
                 setPersistentData(item, getCodingTargetTypeKey(), target.name());
@@ -514,7 +550,7 @@ public class CodingBlockPlacer {
             }
             case PARTICLE -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                String particle = data.getString("type");
+                String particle = (String) data.getOrDefault("type", "");
                 setPersistentData(item, getCodingValueKey(), "PARTICLE");
                 setPersistentData(item, getCodingParticleTypeKey(), particle);
                 return item;
@@ -522,7 +558,7 @@ public class CodingBlockPlacer {
             case ITEM, ANY, POTION -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 try {
-                    item = fixItem(ItemStack.deserialize(data.getValues(false)));;
+                    item = fixItem(ItemStack.deserialize(data));;
                 } catch (Exception error) {
                     item = createItem(Material.BARRIER, 1, "items.developer.broken");
                 }

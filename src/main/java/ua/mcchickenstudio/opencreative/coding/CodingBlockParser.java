@@ -298,6 +298,7 @@ public class CodingBlockParser {
 
     private static ValueType parseItemType(ItemStack item) {
         ValueType valueType = ValueType.ITEM;
+        if (item == null) return ValueType.ITEM;
         if (item.getItemMeta() != null) {
             PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
             String dataType = container.get(getCodingValueKey(), PersistentDataType.STRING);
@@ -317,6 +318,7 @@ public class CodingBlockParser {
     }
 
     public static Object parseItemValue(ItemStack item) {
+        if (item == null) return "EMPTY";
         ValueType valueType = parseItemType(item);
         if (valueType == ValueType.ITEM) {
             if (item.isEmpty()) {

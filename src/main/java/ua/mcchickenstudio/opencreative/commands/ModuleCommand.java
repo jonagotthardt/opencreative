@@ -64,7 +64,7 @@ public class ModuleCommand extends CommandHandler {
             return;
         }
         switch (args[0].toLowerCase()) {
-            case "load" -> {
+            case "load", "install" -> {
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
@@ -112,7 +112,7 @@ public class ModuleCommand extends CommandHandler {
                     return;
                 }
                 sender.sendMessage(getLocaleMessage("modules.deleted")
-                        .replace("%id%", String.valueOf(module.getId())));
+                        .replace("%moduleID%", String.valueOf(module.getId())));
                 OpenCreative.getModuleManager().deleteModule(module);
             }
             case "list" -> {

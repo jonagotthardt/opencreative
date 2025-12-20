@@ -198,6 +198,10 @@ environment:
       dev: "&7LMB &f- Teleport to world, &7F &f- Teleport to location"
     vector: "&7Chat &f- Set coordinates of vector"
     particle: "&7RMB &f- Select a type, &7Shift+RMB &f- Show particle"
+  duplication:
+    success: "%prefix%&fCode lines successfully &6copied &fto the new location :)"
+    fail: "%prefix%&cThere was a problem copying the code lines.. :("
+    few-space: "%prefix%&cIt seems all platforms are filled with your code! To paste code lines, you need %required% free rows for coding blocks."
   prompter:
     help: "%prefix%You can try to generate a simple code by your words:\n &6/env make [Your wishes]"
     thinking: "%prefix%Thinking, please wait..."

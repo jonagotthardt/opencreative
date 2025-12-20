@@ -22,6 +22,8 @@ import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,6 +55,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.StringReader;
@@ -267,6 +270,27 @@ public class EnvironmentCommand extends CommandHandler {
                         }
                         break;
 
+                    }
+                    case "clearitems": {
+                        if (!planet.getDevPlanet().isLoaded()) return;
+                        int count = 0;
+                        for (Entity entity : new ArrayList<>(planet.getDevPlanet().getWorld().getEntities())) {
+                            if (entity instanceof Item) {
+                                entity.remove();
+                                count++;
+                            }
+                        }
+                        if (count == 0) {
+                            Sounds.PLAYER_FAIL.play(player);
+                            break;
+                        }
+                        for (Player p : planet.getPlayers()) {
+                            if (planet.getWorldPlayers().canDevelop(p)) {
+                                p.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.entities-browser.removed-all",
+                                        player).replace("%count%",String.valueOf(count)));
+                            }
+                        }
+                        break;
                     }
                     case "drops", "drop", "drop-items": {
                         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
@@ -710,7 +734,7 @@ public class EnvironmentCommand extends CommandHandler {
     public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops");
+            Collections.addAll(tabCompleter,"platform","variables","debug","execute","barrel","floor","action","theme","event","sign","save-location","night-vision","drops","clearitems");
             if (OpenCreative.getCodingPrompter().isEnabled()) tabCompleter.add("make");
             return tabCompleter;
         }

@@ -215,6 +215,10 @@ environment:
       success: "%prefix%&fОбработчик желаний &6создал&f код для &6%player%&f. "
       failed: "%prefix%&cОбработчику желаний не удалось создать код для %player%.. :("
       hover: "&6%idea%"
+  duplication:
+    success: "%prefix%&fСтроки кода &6успешно &fскопированы на новое место :)"
+    fail: "%prefix%&cВозникла проблема при копировании строк кода.. :("
+    few-space: "%prefix%&cКажется, что все платформы заполнены вашим кодом! Для вставки строк кода необходимо %required% свободных рядов для блоков кодинга."
 help:
   placeholders: "%prefix%Список плейсхолдеров: &6%player% %player_uuid% %entity% %entity_uuid% %target% %target_uuid% %players_amount% %entities_amount% %online%"
 creative:
