@@ -353,7 +353,7 @@ public final class MessageUtils {
     public static String getLocaleMessage(String messageID) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
             return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()));
@@ -370,7 +370,7 @@ public final class MessageUtils {
     public static String getPlayerLocaleMessage(String messageID, OfflinePlayer player) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
             return ChatColor.translateAlternateColorCodes('&',parsePAPI(player, originalMessage
@@ -392,7 +392,7 @@ public final class MessageUtils {
     public static String getLocaleMessage(String messageID, boolean returnDetailedError) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             if (returnDetailedError) {
                 return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
             } else {
@@ -411,7 +411,7 @@ public final class MessageUtils {
     public static String getLocaleItemName(String nameID) {
         String originalName = getLocalization().getString(nameID);
         if (originalName == null || originalName.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found item name " + nameID + " in localization file!");
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found item name " + nameID + " in localization file!");
             return "§fNot found: " + nameID;
         } else {
             if (originalName.length() > 50) originalName = originalName.substring(0,50);
@@ -428,7 +428,7 @@ public final class MessageUtils {
         List<String> originalDescription = getLocalization().getStringList(descriptionID);
         List<String> parsedDescription = new ArrayList<>();
         if (originalDescription.isEmpty()) {
-            if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found item description " + descriptionID);
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found item description " + descriptionID);
             parsedDescription.add("§6Not found item description");
             parsedDescription.add("§6" + descriptionID);
             parsedDescription.add("§fPlease send this to server administration!");
@@ -452,7 +452,7 @@ public final class MessageUtils {
         List<String> foundPages = getLocalization().getStringList(localizationID);
         List<Component> pages = new ArrayList<>();
         if (foundPages.isEmpty()) {
-            if (OpenCreative.getSettings().isConsoleNotFoundMessage()) ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
             pages.add(Component.text("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml"));
         } else {
             for (String page : foundPages) {

@@ -40,6 +40,7 @@ public final class HookUtils {
     public static boolean isVaultEnabled = false;
     public static boolean isLibsDisguisesEnabled = false;
     public static boolean isWorldEditEnabled = false;
+    public static boolean isTheNewEconomyEnabled = false;
 
     /**
      Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
@@ -49,11 +50,14 @@ public final class HookUtils {
         isProtocolLibEnabled = isPluginEnabled("ProtocolLib");
         isVaultEnabled = isPluginEnabled("Vault");
         isWorldEditEnabled = isPluginEnabled("WorldEdit");
-        isLibsDisguisesEnabled = isProtocolLibEnabled && isPluginEnabled("LibsDisguises");
+        isLibsDisguisesEnabled = isPluginEnabled("LibsDisguises");
+        isTheNewEconomyEnabled = isPluginEnabled("TheNewEconomy");
         OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Successfully integrated to PlaceholderAPI: Added placeholders." : "Didn't detect PlaceholderAPI."));
         OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Successfully integrated to ProtocolLib: Added blocks effects and animations." : "Didn't detect ProtocolLib, some block effects will be not available."));
+
+        OpenCreative.getPlugin().getLogger().info((isTheNewEconomyEnabled ? "Successfully integrated to WorldEdit: Added out-of-borders limit." : "Didn't detect WorldEdit."));
         OpenCreative.getPlugin().getLogger().info((isVaultEnabled ? "Successfully integrated to Vault: Economy actions are working." : "Didn't detect Vault, action Request Purchase will be not available."));
-        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Successfully integrated to LibsDisguises: Added morph actions." : "Didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Successfully integrated to LibsDisguises: Added morph actions." : "Didn't detect LibsDisguises, disguise actions will be not available."));
         OpenCreative.getPlugin().getLogger().info((isWorldEditEnabled ? "Successfully integrated to WorldEdit: Added out-of-borders limit." : "Didn't detect WorldEdit."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
@@ -71,14 +75,6 @@ public final class HookUtils {
 
     public static void clearPlayerHook(Player player) {
         if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguise(player);
-    }
-
-    public static Economy getEconomy() {
-        if (isVaultEnabled) {
-            return new VaultEconomy();
-        } else {
-            return new DisabledEconomy();
-        }
     }
 
     public static PacketManager getPacketManager() {

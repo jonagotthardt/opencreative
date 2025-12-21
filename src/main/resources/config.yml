@@ -165,6 +165,20 @@ lobby:
   #  yaw: 20   # Horizontal camera rotation
   #  pitch: 25 # Vertical camera rotation
 
+economy:
+  #
+  # Economy is used for giving player money
+  # after liking their world, or taking money
+  # when player buys something in other worlds
+  # by player action "Request Purchase"
+  #
+  # You need to use Vault or The New Economy plugin.
+  # Vault is better with EssentialsX installed (it adds /balance command).
+  #
+  type: auto # Available: vault, the-new-economy, none.
+  currency: default # Only for the-new-economy!
+                    # Write here an identifier of currency to use.
+
 recommended-worlds: # List of featured worlds in /games, type world's numeric IDs here.
   - 1 # To add world to recommendations, use /oc recommend ID
   - 2 # To remove world from recommendations, use /oc unrecommend ID

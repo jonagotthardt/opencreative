@@ -80,6 +80,7 @@ public final class Settings {
     private final Requirements requirements;
     private final LobbySettings lobbySettings;
     private final CodingSettings codingSettings;
+    private final EconomySettings economySettings;
     private final ItemFixerSettings itemFixerSettings;
 
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
@@ -96,6 +97,7 @@ public final class Settings {
         requirements = new Requirements();
         lobbySettings = new LobbySettings();
         codingSettings = new CodingSettings();
+        economySettings = new EconomySettings();
         itemFixerSettings = new ItemFixerSettings();
     }
 
@@ -127,6 +129,7 @@ public final class Settings {
         lobbySettings.load();
         requirements.load();
         itemFixerSettings.load();
+        economySettings.load();
         groups.load();
         commands.load();
 
@@ -435,7 +438,7 @@ public final class Settings {
 
     public void resetItemsGroup(ItemsGroup group) {
         String path = "items." + group.name().toLowerCase();
-        // Removes duplicate with under score if exists
+        // Removes duplicate with underscore if exists
         OpenCreative.getPlugin().getConfig().set(path, null);
         path = path.replace("_","-");
         OpenCreative.getPlugin().getConfig().set(path, null);
@@ -462,14 +465,41 @@ public final class Settings {
         checkDebugAnnouncer();
     }
 
+    /**
+     * Checks whether it's maintenance mode or not.
+     * @return true - enabled, false - disabled.
+     */
     public boolean isMaintenance() {
         return maintenance;
     }
 
+    /**
+     * Sets maintenance mode without command sender.
+     * <p>
+     * If maintenance mode is same as specified, nothing will be changed.
+     * <p>
+     * If true - will unload all worlds and teleport players to lobby,
+     * and then prevent them from browsing and connecting to worlds.
+     * <p>
+     * If false - will allow players to visit their worlds.
+     * @param maintenance true - enabled, false - disabled.
+     */
     public void setMaintenance(boolean maintenance) {
         setMaintenance(maintenance, null);
     }
 
+    /**
+     * Sets maintenance mode.
+     * <p>
+     * If maintenance mode is same as specified, nothing will be changed.
+     * <p>
+     * If true - will unload all worlds and teleport players to lobby,
+     * and then prevent them from browsing and connecting to worlds.
+     * <p>
+     * If false - will allow players to visit their worlds.
+     * @param maintenance true - enabled, false - disabled.
+     * @param sender sender, who set maintenance mode.
+     */
     public void setMaintenance(boolean maintenance, @Nullable CommandSender sender) {
         if (this.maintenance == maintenance) return;
         this.maintenance = maintenance;
@@ -607,6 +637,14 @@ public final class Settings {
     }
 
     /**
+     * Returns settings of economy.
+     * @return economy settings.
+     */
+    public @NotNull EconomySettings getEconomySettings() {
+        return economySettings;
+    }
+
+    /**
      * Returns custom commands executions.
      * @return commands events.
      */
@@ -614,30 +652,60 @@ public final class Settings {
         return commands;
     }
 
-    public boolean isConsoleCriticalErrors() {
+    /**
+     * Checks whether critical errors will be shown in console.
+     * @return true - will be shown, false - hidden.
+     */
+    public boolean shouldLogCriticalErrors() {
         return consoleCriticalErrors;
     }
 
-    public boolean isConsoleWarnings() {
+    /**
+     * Checks whether warnings will be shown in console.
+     * @return true - will be shown, false - hidden.
+     */
+    public boolean shouldLogWarnings() {
         return consoleWarnings;
     }
 
-    public boolean isConsoleNotFoundMessage() {
+    /**
+     * Checks whether not translated messages will be shown in console.
+     * @return true - will be shown, false - hidden.
+     */
+    public boolean shouldLogNotFoundMessages() {
         return consoleNotFoundMessage;
     }
 
+    /**
+     * Returns a map of sounds and custom sounds from config.
+     * @return map of sounds.
+     */
     public Map<Sounds, SettingsSound> getSounds() {
         return sounds;
     }
 
+    /**
+     * Returns a map of item groups and custom item groups from config.
+     * @return map of item groups.
+     */
     public Map<ItemsGroup, SettingsItemsGroup> getItemsGroups() {
         return itemsGroups;
     }
 
-    public boolean isNotifyNoPlayersAround() {
+    /**
+     * Checks whether player should see "No players around message"
+     * message, when there is no other players in their world.
+     * @return true - will be shown, false - will be hidden.
+     */
+    public boolean shouldNotifyAboutNoPlayersAround() {
         return notifyNoPlayersAround;
     }
 
+    /**
+     * Returns set of messages paths, that will be recovered
+     * on resetting locale from old localization file to new.
+     * @return set of messages paths, that should be saved.
+     */
     public Set<String> getMessagesIgnoringReset() {
         return messagesIgnoringReset;
     }

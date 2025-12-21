@@ -162,7 +162,7 @@ public final class ErrorUtils {
      * @param error exception, that has occurred.
      */
     public static void sendPlayerErrorMessage(Player player, String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().shouldLogWarnings()) OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
         Component message = Component
                 .text(getLocaleMessage("player-error").replace("%error%",errorMessage))
                 .hoverEvent(HoverEvent.showText(Component.text(parseException(error,true))));
@@ -179,7 +179,7 @@ public final class ErrorUtils {
      * @param error description of error.
      */
     public static void sendPlanetErrorMessage(@NotNull Planet planet, @NotNull String error) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + error);
+        if (OpenCreative.getSettings().shouldLogWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + error);
         for (Player player : planet.getPlayers()) {
             player.sendMessage(getLocaleMessage("planet-error").replace("%error%",error));
             Sounds.PLAYER_ERROR.play(player);
@@ -197,7 +197,7 @@ public final class ErrorUtils {
      * @param error exception, that has occurred.
      */
     public static void sendPlanetErrorMessage(Planet planet, String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().shouldLogWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage + " " + parseException(error,false));
         for (Player player : planet.getPlayers()) {
             Component message = Component
                     .text(getLocaleMessage("planet-error").replace("%error%",errorMessage))
@@ -459,7 +459,7 @@ public final class ErrorUtils {
      * @param warning description of warning.
      */
     public static void sendWarningErrorMessage(String warning) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) {
+        if (OpenCreative.getSettings().shouldLogWarnings()) {
             OpenCreative.getPlugin().getLogger().warning("Warning! " + warning);
         }
     }
@@ -471,7 +471,7 @@ public final class ErrorUtils {
      * @param error exception, that has occurred.
      */
     public static void sendWarningMessage(String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().isConsoleWarnings()) {
+        if (OpenCreative.getSettings().shouldLogWarnings()) {
             OpenCreative.getPlugin().getLogger().warning("Warning! " + errorMessage + " " + parseException(error, false));
         }
     }
@@ -481,7 +481,7 @@ public final class ErrorUtils {
      * @param errorMessage description of error.
      */
     public static void sendCriticalErrorMessage(String errorMessage) {
-        if (OpenCreative.getSettings().isConsoleCriticalErrors()) {
+        if (OpenCreative.getSettings().shouldLogCriticalErrors()) {
             OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occured: " + errorMessage);
         }
     }
@@ -493,7 +493,7 @@ public final class ErrorUtils {
      * @param error exception, that has occurred.
      */
     public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().isConsoleCriticalErrors()) {
+        if (OpenCreative.getSettings().shouldLogCriticalErrors()) {
             OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
         }
     }
