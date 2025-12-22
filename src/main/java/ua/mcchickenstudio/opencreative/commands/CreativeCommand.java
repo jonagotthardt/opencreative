@@ -19,9 +19,11 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.settings.groups.Group;
@@ -203,6 +205,19 @@ public class CreativeCommand extends CommandHandler {
                     }
                     OpenCreative.getPlanetsManager().unregisterPlanet(planet);
                     sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%",args[1]));
+                }
+                case "updateicons" -> {
+                    if (!sender.hasPermission("opencreative.update-icons")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
+                        planet.getInformation().updateIconAsync();
+                    }
+                    for (Module module : OpenCreative.getModuleManager().getModules()) {
+                        module.getInformation().updateIconAsync();
+                    }
+                    sender.sendMessage(getLocaleMessage("creative.updated-icons"));
                 }
                 case "updateworld" -> {
                     if (!sender.hasPermission("opencreative.world.update")) {
@@ -609,6 +624,16 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%",sender.getName()));
                     }
                 }
+                case "all", "created" -> {
+                    if (!sender.hasPermission("opencreative.list.all")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    int amount = OpenCreative.getPlanetsManager().getPlanets().size();
+                    amount += OpenCreative.getPlanetsManager().getCorruptedPlanets().size();
+                    sender.sendMessage(getLocaleMessage("creative.all-worlds-amount")
+                            .replace("%amount%", String.valueOf(amount)));
+                }
                 case "spy" -> {
                     if (!sender.hasPermission("opencreative.spy")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
@@ -949,17 +974,63 @@ public class CreativeCommand extends CommandHandler {
                 case "unload" -> handleUnloadCommand(sender, args);
                 case "update", "updates", "checkupdate" -> handleUpdateCommand(sender);
                 case "list" -> {
-                    if (!sender.hasPermission("opencreative.list.loaded")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
+                    if (args.length == 1) {
+                        if (!sender.hasPermission("opencreative.list.loaded")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
+                        List<World> worlds = Bukkit.getWorlds().stream()
+                                .filter(WorldUtils::isPlanet).toList();
+                        if (worlds.isEmpty()) {
+                            sender.sendMessage(getLocaleMessage("creative.loaded-worlds.no-worlds"));
+                            return;
+                        }
+                        int devCount = 0;
+                        for (World world : worlds) {
+                            Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
+                            if (planet == null) continue;
+                            PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
+                            long now = System.currentTimeMillis();
+                            if (isDevPlanet(world)) {
+                                devCount++;
+                                sender.sendMessage(getLocaleMessage("creative.loaded-worlds.world-dev")
+                                        .replace("%id%", String.valueOf(planet.getId())));
+                            } else {
+                                sender.sendMessage(getLocaleMessage("creative.loaded-worlds.world")
+                                        .replace("%id%", String.valueOf(planet.getId()))
+                                        .replace("%name%", substring(serializer.serialize(planet.getInformation().displayName()), 25))
+                                        .replace("%online%", String.valueOf(planet.getOnline()))
+                                        .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
+                            }
+                            sender.sendMessage(getLocaleMessage("creative.loaded-worlds.list")
+                                    .replace("%amount%", String.valueOf(worlds.size()))
+                                    .replace("%build%", String.valueOf(worlds.size()-devCount))
+                                    .replace("%dev%", String.valueOf(devCount)));
+                        }
+                    } else {
+                        if (!sender.hasPermission("opencreative.list.players")) {
+                            sender.sendMessage(getLocaleMessage("no-perms"));
+                            return;
+                        }
+                        String nickname = args[1];
+                        Set<Planet> planets = OpenCreative.getPlanetsManager().getPlanetsByOwner(nickname);
+                        if (planets.isEmpty()) {
+                            sender.sendMessage(getLocaleMessage("creative.player-worlds.no-worlds")
+                                    .replace("%player%", nickname));
+                            return;
+                        }
+                        for (Planet planet : planets) {
+                            PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
+                            long now = System.currentTimeMillis();
+                            sender.sendMessage(getLocaleMessage("creative.player-worlds.world")
+                                    .replace("%id%", String.valueOf(planet.getId()))
+                                    .replace("%name%", substring(serializer.serialize(planet.getInformation().displayName()), 25))
+                                    .replace("%online%", String.valueOf(planet.getOnline()))
+                                    .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
+                            sender.sendMessage(getLocaleMessage("creative.player-worlds.list")
+                                    .replace("%amount%", String.valueOf(planets.size())));
+                        }
                     }
-                    List<String> worlds = Bukkit.getServer().getWorlds().stream()
-                            .filter(WorldUtils::isPlanet)
-                            .map(WorldUtils::getPlanetIdFromName)
-                            .toList();
-                    sender.sendMessage(getLocaleMessage("creative.loaded-worlds-list")
-                            .replace("%amount%",String.valueOf(worlds.size()))
-                            + String.join(", ",worlds));
                 }
                 case "deprecated" -> handleDeprecatedCommand(sender, args);
                 case "corrupted" -> handleCorruptedCommand(sender, args);
@@ -1565,6 +1636,8 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("unignoremessage");
             tabCompleter.add("spy");
             tabCompleter.add("experiments");
+            tabCompleter.add("updateicons");
+            tabCompleter.add("fireworks");
             tabCompleter.add("groups");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {

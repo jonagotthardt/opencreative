@@ -43,9 +43,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
-
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
  * <h1>ErrorUtils</h1>
@@ -273,14 +271,14 @@ public final class ErrorUtils {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
-            Component message = Component
-                    .text(getLocaleMessage("world.build-mode.changed-because-of-code")
-                            .replace("%event%", executor.getExecutorType().getLocaleName())
-                            .replace("%action%",action.getActionType().getLocaleName())
-                            .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(action.getExecutor().getY()))
-                            .replace("%z%",String.valueOf(action.getExecutor().getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
+            Component message = getComponentWithPlaceholders("world.build-mode.changed-because-of-code",
+                    player,
+                    "event", executor.getExecutorType().getLocaleName(),
+                    "action", action.getActionType().getLocaleName(),
+                    "x", action.getX(),
+                    "y", action.getExecutor().getY(),
+                    "z", action.getExecutor().getZ())
+                    .hoverEvent(HoverEvent.showText(getLocaleComponent("coding-error.hover-message")))
                     .clickEvent(ClickEvent.runCommand("/dev " + (action.getX()-0.5) + " " + action.getExecutor().getY() + " " + (action.getExecutor().getZ()-0.5)));
             player.sendMessage(message);
         }

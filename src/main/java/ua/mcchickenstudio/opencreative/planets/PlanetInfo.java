@@ -382,4 +382,12 @@ public class PlanetInfo {
         this.downloadable = downloadable;
         setPlanetConfigParameter(planet,"downloadable",downloadable);
     }
+
+    /**
+     * Returns assigned planet.
+     * @return assigned planet.
+     */
+    public @NotNull Planet getPlanet() {
+        return planet;
+    }
 }

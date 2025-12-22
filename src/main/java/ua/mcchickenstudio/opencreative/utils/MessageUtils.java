@@ -192,15 +192,15 @@ public final class MessageUtils {
      * sending some messages in game.
      * @return prefix of plugin.
      */
-    private static String getPrefix() {
+    private static @NotNull String getPrefix() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.prefix");
-        if (prefix == null || prefix.equalsIgnoreCase("null")) {
+        if (prefix == null) {
             prefix = ChatColor.translateAlternateColorCodes('&',"&6 Worlds &8| &f");
             OpenCreative.getPlugin().getConfig().set("messages.prefix","&6 Worlds &8| &f");
             OpenCreative.getPlugin().saveConfig();
             return prefix;
         } else {
-            return ChatColor.translateAlternateColorCodes('&',prefix);
+            return ChatColor.translateAlternateColorCodes('&', prefix);
         }
     }
 
@@ -211,7 +211,7 @@ public final class MessageUtils {
      */
     private static String getCreativeChatPrefix() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix");
-        if (prefix == null || prefix.equalsIgnoreCase("null")) {
+        if (prefix == null) {
             prefix = ChatColor.translateAlternateColorCodes('&',"&6 Creative Chat &8| &7");
             OpenCreative.getPlugin().getConfig().set("messages.cc-prefix","&6 Creative Chat &8| &7");
             OpenCreative.getPlugin().reloadConfig();
@@ -229,7 +229,7 @@ public final class MessageUtils {
      */
     private static String getBranding() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.branding");
-        if (prefix == null || prefix.equalsIgnoreCase("null")) {
+        if (prefix == null) {
             prefix = ChatColor.translateAlternateColorCodes('&',"&fOpen&7Creative&a+");
             OpenCreative.getPlugin().getConfig().set("messages.branding","&fOpen&7Creative&a+");
             OpenCreative.getPlugin().reloadConfig();
@@ -356,7 +356,10 @@ public final class MessageUtils {
             if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
         } else {
-            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()));
+            return ChatColor.translateAlternateColorCodes('&',
+                    originalMessage.replace("%prefix%", getPrefix())
+                            .replace("%branding%", getBranding())
+                            .replace("%cc-prefix%", getCreativeChatPrefix()));
         }
     }
 

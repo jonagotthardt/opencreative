@@ -225,9 +225,18 @@ creative:
   reloading: "%prefix%Reloading configuration and localization files, please wait..."
   reloaded: "%prefix%Plugin has been &6successfully&f reloaded!"
   set-spawn: "%prefix%Set &6new spawn location&f in lobby: &6%x% &6%y% &6%z% &6%yaw% %pitch%"
-  loaded-worlds-list: "%prefix%List of loaded worlds, total %amount%: &6"
   fireworks: "%prefix%Launching fireworks &6%amount% times&f every &6%cooldown% seconds&f! :)"
-
+  updated-icons: "%prefix%World and module icons &6updated&f :)"
+  all-worlds-amount: "%prefix%Amount of all created worlds on server: &6%amount%"
+  loaded-worlds:
+    no-worlds: "%prefix%No worlds loaded.."
+    list: "%prefix%Total &6%amount% worlds loaded&f (%build% gameplay, %dev% coding)."
+    world: "&6 %id% &7- &6%name% &7- Online: %online% &7- Created &6%creation-time%"
+    world-dev: "&3 %id% &7- &7Coding world %id%"
+  player-worlds:
+    no-worlds: "%prefix%Player &6%player%&f has no worlds.."
+    list: "%prefix%Player &6%player% &fhas %amount% worlds."
+    world: "&6 %id% &7- &6%name% &7- Online: %online% &7- Created &6%creation-time%"
   groups:
     set-limit: "%prefix%New limit &6%type%&f has been set for group &6%group%&f: &6%value%&f.\n&7World limits can be modified by modifiers: limit + (modifier * player count)."
     set-modifier: "%prefix%New limit modifier &6%type%&f has been set for group &6%group%&f: &6%value%"

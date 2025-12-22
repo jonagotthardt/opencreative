@@ -225,8 +225,9 @@ creative:
   reloading: "%prefix%Перезагрузка файлов настройки и локализации, пожалуйста подождите..."
   reloaded: "%prefix%Плагин &6успешно&f перезагружен!"
   set-spawn: "%prefix%Установлена &6новая точка появления&f игроков в лобби: &6%x% &6%y% &6%z% &6%yaw% %pitch%"
-  loaded-worlds-list: "%prefix%Список загруженных миров, всего %amount%: &6"
   fireworks: "%prefix%Запускаем фейерверки &6%amount% раз&f через каждые &6%cooldown% секунд&f! :)"
+  updated-icons: "%prefix%Значки миров и модулей &6обновлены&f :)"
+  all-worlds-amount: "%prefix%Количество всех созданных миров на сервере: &6%amount%"
   groups:
     set-limit: "%prefix%Установлен новый лимит &6%type%&f в группе &6%group%&f: &6%value%&f.\n&7Лимит в мирах может быть изменён модификаторами: лимит + (модификатор * количество игроков)."
     set-modifier: "%prefix%Установлен новый модификатор лимита &6%type%&f в группе &6%group%&f: &6%value%"
@@ -272,6 +273,15 @@ creative:
     list: "%prefix%Список повреждённых миров, всего %amount%: "
     world: "&f ID: &6%id% &3[Нажмите, чтобы подключиться]"
     set-owner: "%prefix%Теперь владелец этого мира &6%player%&f. Мир добавлен в список всех миров."
+  loaded-worlds:
+    no-worlds: "%prefix%Нет загруженных миров.."
+    list: "%prefix%Всего загружено &6%amount% миров&f (%build% игровых, %dev% кодинга)."
+    world: "&6 %id% &7- &6%name% &7- Онлайн: %online% &7- Создан &6%creation-time%"
+    world-dev: "&3 %id% &7- &7Мир кодинга %id%"
+  player-worlds:
+    no-worlds: "%prefix%У игрока &6%player%&f нет миров.."
+    list: "%prefix%У игрока &6%player% &f%amount% миров."
+    world: "&6 %id% &7- &6%name% &7- Онлайн: %online% &7- Создан &6%creation-time%"
   creative-chat:
     cleared: "%prefix%Чат был очищен администрацией сервера..."
     off: "%prefix%Сейчас креатив чат &6не доступен&f для общения, поскольку был &6отключен&f администрацией сервера для всех игроков. Ожидайте решения администрации..."
