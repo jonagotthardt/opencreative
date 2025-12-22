@@ -105,6 +105,10 @@
             <url>https://mvn.lib.co.nz/public</url>
         </repository>
         <repository>
+            <id>codemc-creatorfromhell</id>
+            <url>https://repo.codemc.io/repository/creatorfromhell/</url>
+        </repository>
+        <repository>
             <!-- For deploying on Gitlab -->
             <id>gitlab-maven</id>
             <!--suppress UnresolvedMavenProperty -->

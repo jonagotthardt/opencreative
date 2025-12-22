@@ -46,7 +46,7 @@ import ua.mcchickenstudio.opencreative.listeners.entity.*;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.*;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
-import ua.mcchickenstudio.opencreative.managers.economy.Economy;
+import ua.mcchickenstudio.opencreative.managers.economy.*;
 import ua.mcchickenstudio.opencreative.managers.hints.*;
 import ua.mcchickenstudio.opencreative.managers.modules.*;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
@@ -93,7 +93,7 @@ public final class OpenCreative extends JavaPlugin {
     private DevPlatformer devPlatformer;
     private CodingPrompter prompter;
 
-    private static final String version = "5.9.0 Preview 3";
+    private static final String version = "5.9.0 Preview 4";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -132,6 +132,7 @@ public final class OpenCreative extends JavaPlugin {
         }
         saveDefaultConfig();
         settings = new Settings();
+        HookUtils.loadHooks();
         settings.load(getConfig());
         registerCommands();
         registerEvents();
@@ -145,15 +146,14 @@ public final class OpenCreative extends JavaPlugin {
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
         if (prompter == null) prompter = new DisabledCodingPrompter();
         if (watchdog == null) watchdog = new DisabledWatchdog();
+        if (economy == null) economy = new DisabledEconomy();
 
         PlayerUtils.loadPermissions();
-        HookUtils.loadHooks();
         FileUtils.loadPlanets();
         PhysService.run();
         FileUtils.loadModules();
         watchdog.init();
 
-        economy = HookUtils.getEconomy();
         economy.init();
         updater = new HangarUpdater();
         updater.init();
@@ -323,7 +323,9 @@ public final class OpenCreative extends JavaPlugin {
      */
     @SuppressWarnings("unused")
     public static void setEconomy(@NotNull Economy economy) {
-        getPlugin().getLogger().info("Now using economy manager: " + economy.getName());
+        if (!(economy instanceof VaultEconomy || economy instanceof DisabledEconomy)) {
+            getPlugin().getLogger().info("Now using economy manager: " + economy.getName());
+        }
         getPlugin().economy = economy;
     }
 

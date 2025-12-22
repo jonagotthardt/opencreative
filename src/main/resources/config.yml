@@ -66,6 +66,8 @@
 #    /creative unignoremessage [Path] - Makes message possible to be reset in the future.   (opencreative.resetlocale.remove-ignored)
 #    /creative print [Path] - Prints message content from localization file to player.      (opencreative.print)
 #    /creative list - Displays list of loaded worlds.                                       (opencreative.list.loaded)
+#              list [Player] - Displays list of worlds made by player.                      (opencreative.list.players)
+#    /creative created - Displays amount of all created worlds on server.                   (opencreative.list.all)
 #    /creative deprecated - Displays list of old worlds, which have owner,
 #                           that last joined server 1 month ago.                            (opencreative.list.deprecated)
 #    /creative corrupted - Displays list of worlds, that lost settings.yml.                 (opencreative.list.corrupted)
@@ -98,6 +100,7 @@
 #    /creative update - Check if new version is available                                   (opencreative.updates.check)
 #    /creative fireworks [times] [delay in seconds] - Summons fireworks for all players.    (opencreative.fireworks)
 #    /creative spy [on/off] - Enables or disables seeing messages from other worlds.        (opencreative.spy)
+#    /creative updateicons - Updates all planets and modules icons.                         (opencreative.update-icons)
 #    /creative experiments list - Shows a list of all experimental not stable features      (opencreative.experiments.list)
 #    /creative experiments enable [id] - Enables an experiment                              (opencreative.experiments.enable)
 #    /creative experiments disable [id] - Disables an experiment                            (opencreative.experiments.disable)
@@ -164,6 +167,18 @@ lobby:
   #  z: 3
   #  yaw: 20   # Horizontal camera rotation
   #  pitch: 25 # Vertical camera rotation
+
+economy:
+  #
+  # Economy is used for giving player money
+  # after liking their world, or taking money
+  # when player buys something in other worlds
+  # by player action "Request Purchase"
+  #
+  # You need to use Vault plugin.
+  # Vault is better with EssentialsX installed (it adds /balance command).
+  #
+  type: auto # Available: vault, none.
 
 recommended-worlds: # List of featured worlds in /games, type world's numeric IDs here.
   - 1 # To add world to recommendations, use /oc recommend ID

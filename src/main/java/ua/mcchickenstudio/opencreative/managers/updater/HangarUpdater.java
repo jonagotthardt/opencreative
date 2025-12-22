@@ -109,11 +109,11 @@ public final class HangarUpdater implements Updater {
                 }
                 return Double.parseDouble(versionBuilder.toString());
             }
-            // "5.9.0 Preview 3"
+            // "5.9.0 Preview 2"
             String firstNumber = text.substring(0, firstDot);
             int first = Integer.parseInt(firstNumber); // 5
 
-            String secondText = text.substring(firstDot+1); // 9.0 Preview 3
+            String secondText = text.substring(firstDot+1); // 9.0 Preview 2
             StringBuilder secondBuilder = new StringBuilder();
             for (char c : secondText.toCharArray()) {
                 if (Character.isDigit(c)) {

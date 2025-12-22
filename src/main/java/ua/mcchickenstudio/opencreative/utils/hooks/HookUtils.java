@@ -26,9 +26,6 @@ import org.bukkit.plugin.Plugin;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.blocks.DisabledBlocksManager;
 import ua.mcchickenstudio.opencreative.managers.blocks.WorldEditManager;
-import ua.mcchickenstudio.opencreative.managers.economy.DisabledEconomy;
-import ua.mcchickenstudio.opencreative.managers.economy.Economy;
-import ua.mcchickenstudio.opencreative.managers.economy.VaultEconomy;
 import ua.mcchickenstudio.opencreative.managers.packets.DisabledPacketManager;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.packets.ProtocolLibManager;
@@ -49,11 +46,10 @@ public final class HookUtils {
         isProtocolLibEnabled = isPluginEnabled("ProtocolLib");
         isVaultEnabled = isPluginEnabled("Vault");
         isWorldEditEnabled = isPluginEnabled("WorldEdit");
-        isLibsDisguisesEnabled = isProtocolLibEnabled && isPluginEnabled("LibsDisguises");
+        isLibsDisguisesEnabled = isPluginEnabled("LibsDisguises");
         OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Successfully integrated to PlaceholderAPI: Added placeholders." : "Didn't detect PlaceholderAPI."));
         OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Successfully integrated to ProtocolLib: Added blocks effects and animations." : "Didn't detect ProtocolLib, some block effects will be not available."));
-        OpenCreative.getPlugin().getLogger().info((isVaultEnabled ? "Successfully integrated to Vault: Economy actions are working." : "Didn't detect Vault, action Request Purchase will be not available."));
-        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Successfully integrated to LibsDisguises: Added morph actions." : "Didn't detect LibsDisguises or ProtocolLib, disguise actions will be not available."));
+        OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Successfully integrated to LibsDisguises: Added morph actions." : "Didn't detect LibsDisguises, disguise actions will be not available."));
         OpenCreative.getPlugin().getLogger().info((isWorldEditEnabled ? "Successfully integrated to WorldEdit: Added out-of-borders limit." : "Didn't detect WorldEdit."));
         if (isPlaceholderAPIEnabled) {
             PAPIUtils.registerPlaceholder();
@@ -71,14 +67,6 @@ public final class HookUtils {
 
     public static void clearPlayerHook(Player player) {
         if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguise(player);
-    }
-
-    public static Economy getEconomy() {
-        if (isVaultEnabled) {
-            return new VaultEconomy();
-        } else {
-            return new DisabledEconomy();
-        }
     }
 
     public static PacketManager getPacketManager() {
