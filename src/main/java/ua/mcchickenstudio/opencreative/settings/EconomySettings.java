@@ -51,27 +51,35 @@ public class EconomySettings {
 
         OpenCreative.setEconomy(new DisabledEconomy());
         if (economyType.equalsIgnoreCase("the-new-economy")) {
-            if (HookUtils.isTheNewEconomyEnabled) {
-                OpenCreative.getPlugin().getLogger().info("Successfully integrated to The New Economy: Economy actions are working.");
-                OpenCreative.setEconomy(new TheNewEconomy());
-            } else {
-                OpenCreative.getPlugin().getLogger().info("Didn't detect TheNewEconomy, action Request Purchase and like rewards will be not available.");
-            }
+            setupTheNewEconomy();
         } else if (economyType.equalsIgnoreCase("vault")) {
-            if (HookUtils.isVaultEnabled) {
-                OpenCreative.getPlugin().getLogger().info("Successfully integrated to Vault: Economy actions are working.");
-                OpenCreative.setEconomy(new VaultEconomy());
-            } else {
-                OpenCreative.getPlugin().getLogger().info("Didn't detect Vault, action Request Purchase and like rewards will be not available.");
-            }
+            setupVault();
         } else {
             if (HookUtils.isTheNewEconomyEnabled) {
-                OpenCreative.getPlugin().getLogger().info("Successfully integrated to The New Economy: Economy actions are working.");
-                OpenCreative.setEconomy(new TheNewEconomy());
+                setupTheNewEconomy();
             } else if (HookUtils.isVaultEnabled) {
-                OpenCreative.getPlugin().getLogger().info("Successfully integrated to Vault: Economy actions are working.");
-                OpenCreative.setEconomy(new VaultEconomy());
+                setupVault();
+            } else {
+                OpenCreative.getPlugin().getLogger().info("Didn't detect Vault or The New Economy, action Request Purchase and like rewards will be not available.");
             }
+        }
+    }
+
+    private void setupVault() {
+        if (HookUtils.isVaultEnabled) {
+            OpenCreative.getPlugin().getLogger().info("Successfully integrated to Vault: Economy actions are working.");
+            OpenCreative.setEconomy(new VaultEconomy());
+        } else {
+            OpenCreative.getPlugin().getLogger().info("Didn't detect Vault, action Request Purchase and like rewards will be not available.");
+        }
+    }
+
+    private void setupTheNewEconomy() {
+        if (HookUtils.isTheNewEconomyEnabled) {
+            OpenCreative.getPlugin().getLogger().info("Successfully integrated to The New Economy: Economy actions are working.");
+            OpenCreative.setEconomy(new TheNewEconomy());
+        } else {
+            OpenCreative.getPlugin().getLogger().info("Didn't detect TheNewEconomy, action Request Purchase and like rewards will be not available.");
         }
     }
 

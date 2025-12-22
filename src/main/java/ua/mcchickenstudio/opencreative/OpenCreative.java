@@ -132,6 +132,7 @@ public final class OpenCreative extends JavaPlugin {
         }
         saveDefaultConfig();
         settings = new Settings();
+        HookUtils.loadHooks();
         settings.load(getConfig());
         registerCommands();
         registerEvents();
@@ -148,7 +149,6 @@ public final class OpenCreative extends JavaPlugin {
         if (economy == null) economy = new DisabledEconomy();
 
         PlayerUtils.loadPermissions();
-        HookUtils.loadHooks();
         FileUtils.loadPlanets();
         PhysService.run();
         FileUtils.loadModules();
