@@ -9905,22 +9905,48 @@ items:
           - " "
           - "&eClick to set action."
       var-round-number:
-        name: "&fRound number"
+        name: "&bRound number"
         lore:
-          - "&7This will remove the digits"
-          - "&7after the decimal point from the"
-          - "&7number and set it in the variable."
+          - "&7Rounds the number and removes"
+          - "&7digits after the decimal point,"
+          - "&7leaving specified amount of digits."
           - " "
           - "&fIn the chest:"
           - "&e Variable &7- To save"
           - "&a Number &7- Number to round"
-          - "&3 Option &7- Round type"
+          - "&3 Parameter &7- Rounding type"
+          - "&a Number &7- Amount of digits"
+          - "&7 after the decimal point"
           - ""
           - "&fExamples:"
-          - " &a30.67 &7floor &7= &e30"
-          - " &a30.67 &7ceil &7= &e31"
+          - " &a30.67&7, &cDown&7, &a0 &7= &e30"
+          - " &a30.67&7, &2Up&7, &a1 &7= &e30.7"
           - " "
-          - "&eClick to set action."
+          - "&eClick to set the action."
+        placeholders:
+          digits:
+            name: "&aNumber of digits after decimal"
+            lore:
+              - "&7Place a number here that specifies"
+              - "&7how many digits should remain"
+              - "&7after the decimal point."
+              - ""
+              - "&7By default: &a0"
+        arguments:
+          type:
+            name: "&bUp or down"
+            lore:
+              - "&7Choose how the number"
+              - "&7will be rounded."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              ceil: "Down"
+              floor: "Up"
       var-subtract-numbers:
         name: "&9Subtract numbers"
         lore:

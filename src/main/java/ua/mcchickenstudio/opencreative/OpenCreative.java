@@ -323,8 +323,7 @@ public final class OpenCreative extends JavaPlugin {
      */
     @SuppressWarnings("unused")
     public static void setEconomy(@NotNull Economy economy) {
-        if (!(economy instanceof VaultEconomy || economy instanceof TheNewEconomy
-                || economy instanceof DisabledEconomy)) {
+        if (!(economy instanceof VaultEconomy || economy instanceof DisabledEconomy)) {
             getPlugin().getLogger().info("Now using economy manager: " + economy.getName());
         }
         getPlugin().economy = economy;

@@ -172,12 +172,10 @@ economy:
   # when player buys something in other worlds
   # by player action "Request Purchase"
   #
-  # You need to use Vault or The New Economy plugin.
+  # You need to use Vault plugin.
   # Vault is better with EssentialsX installed (it adds /balance command).
   #
-  type: auto # Available: vault, the-new-economy, none.
-  currency: default # Only for the-new-economy!
-                    # Write here an identifier of currency to use.
+  type: auto # Available: vault, none.
 
 recommended-worlds: # List of featured worlds in /games, type world's numeric IDs here.
   - 1 # To add world to recommendations, use /oc recommend ID

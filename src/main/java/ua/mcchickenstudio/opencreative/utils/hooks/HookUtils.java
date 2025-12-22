@@ -37,7 +37,6 @@ public final class HookUtils {
     public static boolean isVaultEnabled = false;
     public static boolean isLibsDisguisesEnabled = false;
     public static boolean isWorldEditEnabled = false;
-    public static boolean isTheNewEconomyEnabled = false;
 
     /**
      Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
@@ -48,7 +47,6 @@ public final class HookUtils {
         isVaultEnabled = isPluginEnabled("Vault");
         isWorldEditEnabled = isPluginEnabled("WorldEdit");
         isLibsDisguisesEnabled = isPluginEnabled("LibsDisguises");
-        isTheNewEconomyEnabled = isPluginEnabled("TheNewEconomy");
         OpenCreative.getPlugin().getLogger().info((isPlaceholderAPIEnabled ? "Successfully integrated to PlaceholderAPI: Added placeholders." : "Didn't detect PlaceholderAPI."));
         OpenCreative.getPlugin().getLogger().info((isProtocolLibEnabled ? "Successfully integrated to ProtocolLib: Added blocks effects and animations." : "Didn't detect ProtocolLib, some block effects will be not available."));
         OpenCreative.getPlugin().getLogger().info((isLibsDisguisesEnabled ? "Successfully integrated to LibsDisguises: Added morph actions." : "Didn't detect LibsDisguises, disguise actions will be not available."));
