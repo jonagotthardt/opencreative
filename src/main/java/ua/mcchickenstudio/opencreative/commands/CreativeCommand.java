@@ -1002,11 +1002,11 @@ public class CreativeCommand extends CommandHandler {
                                         .replace("%online%", String.valueOf(planet.getOnline()))
                                         .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
                             }
-                            sender.sendMessage(getLocaleMessage("creative.loaded-worlds.list")
-                                    .replace("%amount%", String.valueOf(worlds.size()))
-                                    .replace("%build%", String.valueOf(worlds.size()-devCount))
-                                    .replace("%dev%", String.valueOf(devCount)));
                         }
+                        sender.sendMessage(getLocaleMessage("creative.loaded-worlds.list")
+                                .replace("%amount%", String.valueOf(worlds.size()))
+                                .replace("%build%", String.valueOf(worlds.size()-devCount))
+                                .replace("%dev%", String.valueOf(devCount)));
                     } else {
                         if (!sender.hasPermission("opencreative.list.players")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
@@ -1027,9 +1027,10 @@ public class CreativeCommand extends CommandHandler {
                                     .replace("%name%", substring(serializer.serialize(planet.getInformation().displayName()), 25))
                                     .replace("%online%", String.valueOf(planet.getOnline()))
                                     .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
-                            sender.sendMessage(getLocaleMessage("creative.player-worlds.list")
-                                    .replace("%amount%", String.valueOf(planets.size())));
                         }
+                        sender.sendMessage(getLocaleMessage("creative.player-worlds.list")
+                                .replace("%player%", nickname)
+                                .replace("%amount%", String.valueOf(planets.size())));
                     }
                 }
                 case "deprecated" -> handleDeprecatedCommand(sender, args);

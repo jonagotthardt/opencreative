@@ -51,9 +51,12 @@ public class Main {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int width = (int) (screen.width * 0.5);
-        int height = (int) (screen.height * 0.3);
-        frame.setSize(width, height);
+        double heightFactor = (screen.height <= 800) ? 0.49 : 0.3;
+
+        int width = (int) (screen.width * 0.6);
+        int height = (int) (screen.height * heightFactor);
+
+        frame.setSize(Math.max(width, 400), Math.max(height, 300));
 
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
@@ -74,21 +77,23 @@ public class Main {
         String formattedMessage = getMessage();
 
         JLabel label = new JLabel(formattedMessage);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN, 18f));
+        label.setFont(label.getFont().deriveFont(Font.PLAIN, scale(17f)));
         label.setForeground(Color.WHITE);
         label.setAlignmentY(Component.TOP_ALIGNMENT);
 
         contentPanel.setBackground(Color.darkGray);
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.X_AXIS));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(
+                scale(30), scale(40), scale(30), scale(40)));
 
         URL iconURL = Main.class.getResource("/logo.png");
         if (iconURL != null) {
             ImageIcon icon = new ImageIcon(iconURL);
-            Image scaledImage = icon.getImage().getScaledInstance(128, 128, Image.SCALE_SMOOTH);
+            int iconSize = Math.round(scale(128f));
+            Image scaledImage = icon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
             JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
             imageLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-            imageLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 40));
+            imageLabel.setBorder(BorderFactory.createEmptyBorder(scale(10), 0, 0, scale(40)));
             contentPanel.add(imageLabel);
             imageLabel.addMouseListener(new MouseAdapter() {
                 @Override
@@ -114,7 +119,7 @@ public class Main {
      */
     private static @NotNull JPanel createButtonsPanel(@NotNull Frame frame) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(scale(10), 0, scale(20), 0));
         buttonPanel.setBackground(Color.BLACK);
 
         for (Hyperlink link : Hyperlink.values()) {
@@ -140,7 +145,7 @@ public class Main {
         button.setBackground(new Color(47, 181, 235));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font("Arial", Font.BOLD, 14).deriveFont(scale(14f)));
         return button;
     }
 
@@ -236,6 +241,26 @@ public class Main {
                 To install plugin please download PaperMC server, then load it and accept EULA.
                 After that put this .jar file into server's /plugins/ folder and launch a server.
                 """;
+    }
+
+    /**
+     * Scales size of font for screen resolution.
+     * @param size size of font.
+     * @return scaled size.
+     */
+    private static float scale(float size) {
+        int dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+        return size * dpi / 96f;
+    }
+
+    /**
+     * Scales size of font for screen resolution.
+     * @param size size of font.
+     * @return scaled size.
+     */
+    private static int scale(int size) {
+        int dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+        return (int) (size * dpi / 96f);
     }
 
     enum Hyperlink {
