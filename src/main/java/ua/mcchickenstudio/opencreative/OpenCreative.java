@@ -154,7 +154,6 @@ public final class OpenCreative extends JavaPlugin {
         FileUtils.loadModules();
         watchdog.init();
 
-        economy.init();
         updater = new HangarUpdater();
         updater.init();
         packet = HookUtils.getPacketManager();
