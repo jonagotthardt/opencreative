@@ -142,6 +142,7 @@ public class CreativeCommand extends CommandHandler {
                         return;
                     }
                     Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
+                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(args[1]);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return;
