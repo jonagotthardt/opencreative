@@ -843,7 +843,7 @@ public enum ActionType {
 
     IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("require-caps"), new ParameterSlot("require-color")),
     IF_ENTITY_UUID_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityUUIDEqualsCondition.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("uuids", ValueType.TEXT,(byte) 27)),
-    IF_ENTITY_IN_AREA(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityInAreaCondition.class, Material.PAPER, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
+    IF_ENTITY_IN_AREA(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityInAreaCondition.class, Material.PAPER, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
     IF_ENTITY_IS_PLAYER(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityPlayer.class, Material.PLAYER_HEAD),
     IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityDead.class, Material.REDSTONE),
     IF_ENTITY_IS_MOB(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityMob.class, Material.PIG_SPAWN_EGG),
