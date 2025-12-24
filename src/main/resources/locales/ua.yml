@@ -11906,6 +11906,28 @@ items:
               owner: "Власник"
               build: "Будівельник"
               develop: "Розробник"
+      if-player-in-area:
+        name: "&bЗнаходиться в регіоні"
+        lore:
+          - "&7Перевіряє, чи знаходиться"
+          - "&7гравець між двома точками."
+          - " "
+          - "&fУ скрині:"
+          - "&f Локація &7- Перша точка"
+          - "&f Локація &7- Друга точка"
+          - " "
+          - "&eНатисни, щоб встановити умову."
+      if-entity-in-area:
+        name: "&bЗнаходиться в регіоні"
+        lore:
+          - "&7Перевіряє, чи знаходиться"
+          - "&7сутність між двома точками."
+          - " "
+          - "&fУ скрині:"
+          - "&f Локація &7- Перша точка"
+          - "&f Локація &7- Друга точка"
+          - " "
+          - "&eНатисни, щоб встановити умову."
       if-var-location-in-area:
         name: "&6Місцезнаходження в регіоні"
         lore:
@@ -17840,6 +17862,7 @@ blocks:
   if_player_scoreboard_equals: "Скорборд дорівнює"
   if_player_boss_bar_equals: "Боссбар дорівнює"
   if_player_has_resource_pack: "З ресурс-паком"
+  if_player_in_area: "У регіоні"
   world_set_difficulty: "Вст. складність"
   world_spawn_arrow: "Створ. стрілу"
   world_spawn_firework: "Призв. феєрверк"
@@ -17909,6 +17932,7 @@ blocks:
   if_entity_is_inside_vehicle: "У транспорті"
   if_entity_has_no_physics: "Без фізики"
   if_entity_is_invulnerable: "Невразливий"
+  if_entity_in_area: "У регіоні"
   if_var_equals: "&bДорівнює значенню"
   if_var_is_null: "&cПорожня"
   if_var_exists: "&6Існує"

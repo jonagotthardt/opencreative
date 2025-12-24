@@ -217,6 +217,7 @@ public enum ActionType {
     IF_PLAYER_STANDS_ON_BLOCK(          ActionCategory.PLAYER_CONDITION, MenusCategory.MOVEMENT, IsStandingOnBlockCondition.class, Material.GRASS_BLOCK, new ArgumentSlot("blocks", ValueType.ITEM,(byte) 9)),
     IF_PLAYER_LOOKS_AT_BLOCK(                   ActionCategory.PLAYER_CONDITION, MenusCategory.MOVEMENT, IsLookingAtBlockCondition.class, Material.CHEST, new ArgumentSlot("blocks", ValueType.ITEM,(byte) 9), new ArgumentSlot("locations", ValueType.LOCATION,(byte) 9), new ArgumentSlot("radius", ValueType.NUMBER)),
     IF_PLAYER_BLOCK_EQUALS(                   ActionCategory.PLAYER_CONDITION, MenusCategory.MOVEMENT, IsBlockEqualsCondition.class, Material.OAK_LOG, new ArgumentSlot("blocks", ValueType.ITEM,(byte) 9)),
+    IF_PLAYER_IN_AREA(                  ActionCategory.PLAYER_CONDITION, MenusCategory.ENTITY_STATE, PlayerInAreaCondition.class, Material.PAPER, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
 
     IF_PLAYER_ITEM_EQUALS(                   ActionCategory.PLAYER_CONDITION, MenusCategory.INVENTORY, IsItemEqualsCondition.class, Material.GLOW_ITEM_FRAME, new ArgumentSlot("items", ValueType.ITEM,(byte) 18), new ParameterSlot("ignore-amount", Material.BEETROOT_SEEDS, Material.OAK_BUTTON), new ParameterSlot("ignore-name", Material.NAME_TAG, Material.STRING), new ParameterSlot("ignore-lore", Material.WRITABLE_BOOK, Material.COBWEB), new ParameterSlot("ignore-enchantments", Material.ENCHANTED_BOOK, Material.BOOK), new ParameterSlot("ignore-flags",Material.BLUE_BANNER,Material.WHITE_BANNER), new ParameterSlot("ignore-material",Material.CRAFTING_TABLE,Material.WHITE_STAINED_GLASS), new ParameterSlot("ignore-damage",Material.DEAD_BUSH,Material.GOLDEN_HOE)),
     IF_PLAYER_HAS_ITEM_COOLDOWN(                   ActionCategory.PLAYER_CONDITION, MenusCategory.INVENTORY, HasItemCooldownCondition.class, Material.CLOCK, new ArgumentSlot("items", ValueType.ITEM,(byte) 18)),
@@ -842,7 +843,7 @@ public enum ActionType {
 
     IF_ENTITY_NAME_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityNameEqualsCondition.class, Material.NAME_TAG, new ArgumentSlot("names", ValueType.TEXT,(byte) 18), new ParameterSlot("require-caps"), new ParameterSlot("require-color")),
     IF_ENTITY_UUID_EQUALS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityUUIDEqualsCondition.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("uuids", ValueType.TEXT,(byte) 27)),
-
+    IF_ENTITY_IN_AREA(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, EntityInAreaCondition.class, Material.PAPER, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
     IF_ENTITY_IS_PLAYER(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityPlayer.class, Material.PLAYER_HEAD),
     IF_ENTITY_IS_DEAD(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityDead.class, Material.REDSTONE),
     IF_ENTITY_IS_MOB(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_STATE, IsEntityMob.class, Material.PIG_SPAWN_EGG),

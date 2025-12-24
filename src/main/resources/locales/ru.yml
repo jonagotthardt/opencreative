@@ -12071,6 +12071,28 @@ items:
               owner: "Владелец"
               build: "Строитель"
               develop: "Разработчик"
+      if-player-in-area:
+        name: "&bНаходится в регионе"
+        lore:
+          - "&7Проверит находится ли"
+          - "&7игрок между двумя точками."
+          - " "
+          - "&fВ сундуке:"
+          - "&f Местоположение &7- Первая точка"
+          - "&f Местоположение &7- Вторая точка"
+          - " "
+          - "&eНажми, чтобы установить условие."
+      if-entity-in-area:
+        name: "&bНаходится в регионе"
+        lore:
+          - "&7Проверит находится ли"
+          - "&7сущность между двумя точками."
+          - " "
+          - "&fВ сундуке:"
+          - "&f Местоположение &7- Первая точка"
+          - "&f Местоположение &7- Вторая точка"
+          - " "
+          - "&eНажми, чтобы установить условие."
       if-var-location-in-area:
         name: "&6Местоположение в регионе"
         lore:
@@ -18054,6 +18076,7 @@ blocks:
   if_player_scoreboard_equals: "Скорборд равен"
   if_player_boss_bar_equals: "Боссбар равен"
   if_player_has_resource_pack: "С ресурс-паком"
+  if_player_in_area: "В регионе"
   world_set_difficulty: "Уст. сложность"
   world_spawn_arrow: "Созд. стрелу"
   world_spawn_firework: "Призв. фейерверк"
@@ -18125,6 +18148,7 @@ blocks:
   if_entity_has_no_physics: "Без физики"
   if_entity_is_invulnerable: "Неуязвимый"
   if_entity_uuid_equals: "Айди равен"
+  if_entity_in_area: "В регионе"
 
   if_var_equals: "&bРавна значению"
   if_var_is_null: "&cПустая"

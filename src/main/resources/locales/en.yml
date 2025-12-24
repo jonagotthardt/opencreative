@@ -11909,6 +11909,28 @@ items:
               owner: "Owner"
               build: "Builder"
               develop: "Developer"
+      if-player-in-area:
+        name: "&bIs in region"
+        lore:
+          - "&7Checks whether player"
+          - "&is between two locations."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- First point"
+          - "&f Location &7- Second point"
+          - " "
+          - "&eClick to set the condition."
+      if-entity-in-area:
+        name: "&bIs in region"
+        lore:
+          - "&7Checks whether entity"
+          - "&7is between two locations."
+          - " "
+          - "&fIn the chest:"
+          - "&f Location &7- First point"
+          - "&f Location &7- Second point"
+          - " "
+          - "&eClick to set the condition."
       if-var-location-in-area:
         name: "&6Location in region"
         lore:
@@ -17793,6 +17815,7 @@ blocks:
   if_player_scoreboard_equals: "Scoreboard Equals"
   if_player_boss_bar_equals: "Boss Bar Equals"
   if_player_has_resource_pack: "Has Resource Pack"
+  if_player_in_area: "In Region"
   world_set_difficulty: "Set Difficulty"
   world_spawn_arrow: "Spawn Arrow"
   world_spawn_firework: "Spawn Firework"
@@ -17864,6 +17887,7 @@ blocks:
   if_entity_has_no_physics: "No Physics"
   if_entity_is_invulnerable: "Invulnerable"
   if_entity_uuid_equals: "UUID Equals"
+  if_entity_in_area: "In Region"
   if_var_equals: "&bEquals value"
   if_var_is_null: "&cIs null"
   if_var_exists: "&6Exists"
