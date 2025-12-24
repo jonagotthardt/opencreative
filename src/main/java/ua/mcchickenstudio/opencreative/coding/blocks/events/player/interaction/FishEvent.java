@@ -40,6 +40,10 @@ public final class FishEvent extends WorldEvent implements Cancellable, ItemEven
         }
     }
 
+    public @NotNull PlayerFishEvent.State getState() {
+        return event.getState();
+    }
+
     @Override
     public @NotNull ItemStack getItem() {
         return caughtItem == null ? ItemStack.empty() : caughtItem;

@@ -118,7 +118,7 @@ public final class EventValues {
                 new WorldVariablesAmountValue(), new WorldVariablesAmountLimitValue(), new WorldBlockEditsAmountValue(),
                 new WorldBlockEditsLimitValue(), new ClearWeatherDurationValue(), new ThunderWeatherDurationValue(), new WorldTimeValue());
         registerEventValue(new BedEnterResultValue(), new BedEventValue(), new EventItemValue(),
-                new EventNewItemValue(), new BlockInteractionTypeValue(), new CursorItemValue(),
+                new EventNewItemValue(), new FishingStateValue(), new BlockInteractionTypeValue(), new CursorItemValue(),
                 new ClickTypeValue(), new ClickedSlotValue(), new OldSlotValue(), new NewSlotValue(),
                 new ChatMessageValue(), new BlockMaterialValue(), new BlockLocationValue(), new TransferKeyValue(),
                 new TransferVariableValue(), new WebUrlValue(), new WebResponseCodeValue(), new WebResponseValue(),

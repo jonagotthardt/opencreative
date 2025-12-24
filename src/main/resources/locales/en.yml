@@ -14837,6 +14837,25 @@ menus:
             - "&7 an inventory click."
             - ""
             - "&eClick to set."
+        fishing-state:
+          name: "&3Fishing State"
+          lore:
+            - "&7Type: &6Text"
+            - ""
+            - "&7 Gets the fishing state"
+            - "&7 when interacting with a fishing rod."
+            - ""
+            - "&f Examples:"
+            - "&6  fishing&7 - Casting the fishing rod"
+            - "&6  caught_fish&7 - Caught a fish"
+            - "&6  caught_entity&7 - Caught an item or a mob"
+            - "&6  failed_attempt&7 - Fish escaped the hook"
+            - "&6  in_ground&7 - Bobber hit the ground"
+            - "&6  reel_in&7 - Reeled in with nothing caught"
+            - "&6  bite&7 - Something bit the hook"
+            - "&6  lured&7 - Faster bite due to enchantment"
+            - ""
+            - "&eClick to set."
         click-type:
           name: "&eInventory Click Type"
           lore:
