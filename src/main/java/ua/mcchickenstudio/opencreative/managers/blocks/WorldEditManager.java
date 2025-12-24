@@ -38,9 +38,12 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.Command;
 import ua.mcchickenstudio.opencreative.utils.SystemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
@@ -75,6 +78,15 @@ public final class WorldEditManager implements BlocksManager {
                 if (planet == null) {
                     if (isLobbyWorld(bukkitWorld) && OpenCreative.getSettings().getLobbySettings().isWorldEditDisallowed()
                             && !event.getActor().hasPermission("opencreative.lobby.world-edit.bypass")) {
+                        event.setExtent(new DisallowedExtent(event.getExtent()));
+                    }
+                    return;
+                }
+                CommandSender sender = BukkitAdapter.adapt(event.getActor());
+                if (sender instanceof Player player) {
+                    if (planet.getWorldPlayers().canBuild(player)) {
+                        event.setExtent(new PlanetExtent(planet, event.getExtent()));
+                    } else {
                         event.setExtent(new DisallowedExtent(event.getExtent()));
                     }
                     return;
