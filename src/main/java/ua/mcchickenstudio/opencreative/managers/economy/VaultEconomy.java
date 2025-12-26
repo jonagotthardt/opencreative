@@ -55,7 +55,7 @@ public final class VaultEconomy implements Economy {
 
     @Override
     public boolean isEnabled() {
-        return vaultEconomy.isEnabled();
+        return vaultEconomy != null && vaultEconomy.isEnabled();
     }
 
     @Override

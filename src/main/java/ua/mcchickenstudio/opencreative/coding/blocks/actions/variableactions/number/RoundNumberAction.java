@@ -35,16 +35,16 @@ public final class RoundNumberAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         double number = getArguments().getValue("number",0.7,this);
-        int decimals = getArguments().getValue("number",0,this);
+        int digits = getArguments().getValue("digits",0,this);
         String type  = getArguments().getValue("type","ceil",this);
 
         double result = (type.equalsIgnoreCase("floor")) ? Math.floor(number) : Math.ceil(number);
-        if (decimals <= 0) {
+        if (digits <= 0) {
             setVarValue(variable, Math.round(result));
             return;
         }
 
-        double scale = Math.pow(10, decimals);
+        double scale = Math.pow(10, digits);
         result = type.equalsIgnoreCase("floor")
                 ? Math.floor(number * scale) / scale
                 : Math.ceil(number * scale) / scale;

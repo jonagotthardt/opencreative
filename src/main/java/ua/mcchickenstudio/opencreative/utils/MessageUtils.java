@@ -546,8 +546,8 @@ public final class MessageUtils {
 
         long currentTime = System.currentTimeMillis();
 
-        if (recentPlanetMessages.get(planet) != null) {
-            long timeInMap = recentPlanetMessages.get(planet);
+        if (recentPlanetMessages.get(planet.getId()) != null) {
+            long timeInMap = recentPlanetMessages.get(planet.getId());
             long elapsedTime = currentTime-timeInMap;
             long elapsedSeconds = elapsedTime / 1000;
             if (elapsedSeconds < onceInSeconds) return;

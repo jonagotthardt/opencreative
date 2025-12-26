@@ -59,6 +59,7 @@ public class EconomySettings {
         if (HookUtils.isVaultEnabled) {
             OpenCreative.getPlugin().getLogger().info("Successfully integrated to Vault: Economy actions are working.");
             OpenCreative.setEconomy(new VaultEconomy());
+            OpenCreative.getEconomy().init();
         } else {
             OpenCreative.getPlugin().getLogger().info("Didn't detect Vault, action Request Purchase and like rewards will be not available.");
         }
