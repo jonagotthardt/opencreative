@@ -42,23 +42,27 @@ public abstract class WorldEvent extends Event  {
     protected final World world;
 
     public WorldEvent(@NotNull Planet planet, @NotNull List<Entity> selection) {
-        this.selection = selection;
         world = planet.getTerritory().getWorld();
+        this.selection = selection;
     }
 
     public WorldEvent(@NotNull Planet planet) {
-        this.selection.addAll(planet.getTerritory().getWorld().getPlayers());
         world = planet.getTerritory().getWorld();
+        if (world != null) {
+            selection.addAll(world.getPlayers());
+        }
     }
 
     public WorldEvent(@NotNull Planet planet, @NotNull Block block) {
-        this.selection.addAll(planet.getTerritory().getWorld().getPlayers());
         world = block.getWorld();
+        if (planet.getTerritory().getWorld() != null) {
+            selection.addAll(planet.getTerritory().getWorld().getPlayers());
+        }
     }
 
     public WorldEvent(@NotNull Entity entity) {
-        selection.add(entity);
         world = entity.getWorld();
+        selection.add(entity);
     }
 
     public List<Entity> getSelection() {
@@ -73,6 +77,8 @@ public abstract class WorldEvent extends Event  {
         if (getWorld() == null) return null;
         return OpenCreative.getPlanetsManager().getPlanetByWorld(getWorld());
     }
+
+
 
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;

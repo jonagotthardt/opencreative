@@ -31,7 +31,6 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeCriticalErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.stopPlanetCode;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public final class CatchErrorAction extends ControllerAction {
@@ -50,7 +49,7 @@ public final class CatchErrorAction extends ControllerAction {
         } catch (Exception error) {
             setVarValue(link, error.getClass().getSimpleName().toLowerCase());
             if (getPlanet().getLimits().isTooManyCodingErrors()) {
-                stopPlanetCode(getPlanet(), "errors limit");
+                getPlanet().stopCode("errors limit");
                 sendPlanetCodeCriticalErrorMessage(getPlanet(),getExecutor(),getLocaleMessage("coding-error.errors-limit",false)
                         .replace("%limit%",String.valueOf(getPlanet().getLimits().getCodingErrorsLimit())));
             }

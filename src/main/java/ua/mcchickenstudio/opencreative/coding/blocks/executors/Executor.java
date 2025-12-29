@@ -26,6 +26,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugExecutor;
 
@@ -126,6 +127,22 @@ public abstract class Executor {
 
     public boolean isDebug() {
         return debug;
+    }
+
+    @Override
+    public int hashCode() {
+        String type = getExecutorType() != null ? getExecutorType().name() : "null";
+        return (type + x + " " + y + " " + z).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Executor executor)) return false;
+        if (executor.x != this.x) return false;
+        if (executor.y != this.y) return false;
+        if (executor.z != this.z) return false;
+        return Objects.equals(executor.getExecutorType(), this.getExecutorType());
     }
 
     public WorldEvent getEvent() {

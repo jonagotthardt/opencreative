@@ -377,6 +377,45 @@ public class Planet {
     }
 
     /**
+     * Stops code in planet by setting its mode to Build
+     * and sends log in console.
+     * @param reason reason of stopping the code.
+     */
+    public void stopCode(@NotNull String reason) {
+        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + getWorldName() + " because of " + reason + ".");
+        this.mode = Mode.BUILD;
+        for (Player player : getPlayers()) {
+            if (!isEntityInDevPlanet(player)) {
+                player.showTitle(Title.title(
+                        toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
+                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
+                ));
+                clearPlayer(player);
+                player.teleport(territory.getSpawnLocation());
+                Sounds.WORLD_MODE_BUILD.play(player);
+                territory.showBorders(player);
+                if (isOwner(player)) {
+                    ItemsGroup.BUILD_OWNER.setItems(player);
+                }
+                if (worldPlayers.canBuild(player)) {
+                    player.setGameMode(GameMode.CREATIVE);
+                    giveBuildPermissions(player);
+                    player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
+                    if (!territory.isAutoSave()) {
+                        player.sendMessage(getLocaleMessage("settings.autosave.warning"));
+                    }
+                } else {
+                    player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
+                }
+            } else {
+                player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
+            }
+        }
+        territory.stopBukkitRunnables();
+        HookUtils.clearEntitiesHook(territory.getWorld());
+    }
+
+    /**
      * Changes planet's mode to Play or Build.
      * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
      * <p>In the Play mode code script will work, player damaging is enabled.</p>

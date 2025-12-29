@@ -39,7 +39,7 @@ public final class LaunchHorizontalAction extends PlayerAction {
             power = 20;
         }
         player.setVelocity(
-            player.getVelocity().add(player.getLocation().getDirection().multiply(power))
+            player.getLocation().getDirection().multiply(power)
         );
     }
 

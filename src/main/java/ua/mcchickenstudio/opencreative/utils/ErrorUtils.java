@@ -437,22 +437,6 @@ public final class ErrorUtils {
     }
 
     /**
-     * Stops code in planet by setting its mode to Build
-     * and sends log in console.
-     * @param planet planet to stop the code.
-     */
-    public static void stopPlanetCode(@NotNull Planet planet, @NotNull String reason) {
-        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getWorldName() + " because of " + reason + ".");
-        if (planet.getMode() != Planet.Mode.BUILD) {
-            PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD);
-            event.callEvent();
-            if (!event.isCancelled()) {
-                planet.setMode(Planet.Mode.BUILD);
-            }
-        }
-    }
-
-    /**
      * Sends warning log in console about issue with plugin.
      * @param warning description of warning.
      */
