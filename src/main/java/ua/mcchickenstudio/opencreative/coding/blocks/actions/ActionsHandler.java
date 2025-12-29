@@ -198,7 +198,7 @@ public class ActionsHandler {
                 sendErrorMessage(action, error);
                 removeAllActions();
                 if (action.getPlanet().getLimits().isTooManyCodingErrors()) {
-                    stopPlanetCode(action.getPlanet(), "errors limit");
+                    action.getPlanet().stopCode("errors limit");
                     sendPlanetCodeCriticalErrorMessage(action.getPlanet(),executor,getLocaleMessage("coding-error.errors-limit",false)
                             .replace("%limit%",String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
                     return;

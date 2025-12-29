@@ -70,10 +70,11 @@ public class Executors {
         Planet planet = event.getPlanet();
         if (!OpenCreative.getSettings().getCodingSettings().isEnabled()) return;
         if (planet == null) return;
+        if (planet.getMode() != Planet.Mode.PLAYING) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
         for (Executor executor : executors.executorsList) {
             if (executor.getExecutorType().getEventClass() == event.getClass()) {
-                activate(executor,event);
+                activate(executor, event);
             }
         }
     }
@@ -86,12 +87,13 @@ public class Executors {
     public static void activate(Executor executor, WorldEvent event) {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
+        if (planet.getMode() != Planet.Mode.PLAYING) return;
         Executors executors = planet.getTerritory().getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
-            executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet, "operations limit");
+        if (executors.getLastExecutorCallsAmount(executor) >= planet.getLimits().getCodeOperationsLimit()) {
+            planet.stopCode("operations limit");
             sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
                     .replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            executors.clearExecutionsAmount(executor);
         } else {
             executors.increaseCallsAmount(executor);
             executor.run(event);
@@ -107,10 +109,10 @@ public class Executors {
     public static void simulateIncreaseCall(Executor executor) {
         Planet planet = executor.getPlanet();
         Executors executors = planet.getTerritory().getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) > planet.getLimits().getCodeOperationsLimit()) {
-            executors.clearExecutionsAmount(executor);
-            stopPlanetCode(planet, "operations limit");
+        if (executors.getLastExecutorCallsAmount(executor) >= planet.getLimits().getCodeOperationsLimit()) {
+            planet.stopCode("operations limit");
             sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            executors.clearExecutionsAmount(executor);
         } else {
             executors.increaseCallsAmount(executor);
             new BukkitRunnable() {

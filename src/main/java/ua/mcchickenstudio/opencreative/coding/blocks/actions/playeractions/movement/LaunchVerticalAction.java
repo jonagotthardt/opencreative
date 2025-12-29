@@ -40,7 +40,7 @@ public final class LaunchVerticalAction extends PlayerAction {
             power = 20;
         }
         player.setVelocity(
-                player.getVelocity().add(new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ()))
+               new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ())
         );
     }
 

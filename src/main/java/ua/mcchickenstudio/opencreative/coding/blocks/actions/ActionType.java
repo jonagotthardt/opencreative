@@ -559,6 +559,7 @@ public enum ActionType {
 
     VAR_NORMALIZE_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, NormalizeVectorAction.class, Material.PRISMARINE_BRICKS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
     VAR_VECTOR_TO_LOCATION( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, VectorToLocationAction.class, Material.PAPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR)),
+    VAR_MODIFY_VECTOR( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, ModifyVectorAction.class, Material.CYAN_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("vector", ValueType.VECTOR), new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y", ValueType.NUMBER), new ArgumentSlot("z", ValueType.NUMBER), new ParameterSlot("add")),
 
     VAR_ADD_VECTORS( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, AddVectorsAction.class, Material.BRICK,new ArgumentSlot("vectors", ValueType.VECTOR, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_SUBTRACT_VECTORS( ActionCategory.VARIABLE_ACTION, MenusCategory.VECTOR_OPERATIONS, SubtractVectorsAction.class, Material.NETHER_BRICK,new ArgumentSlot("vectors", ValueType.VECTOR, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
