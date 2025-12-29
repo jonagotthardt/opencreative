@@ -36,7 +36,7 @@ public final class EntitySetDogCollarColorAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String colorName = getArguments().getValue("color", "red", this);
+        String colorName = getArguments().getText("color", "red", this);
         DyeColor color;
         try {
             color = DyeColor.valueOf(colorName.toUpperCase().replace("-","_"));

@@ -39,9 +39,9 @@ public final class CreateExplosionAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: create explosion action is cancelled.");
             return;
         }
-        float power = Math.min(10f,getArguments().getValue("power",0f,this));
-        boolean setFire = getArguments().getValue("fire",false,this);
-        boolean breakBlocks = getArguments().getValue("damage",false,this);
+        float power = Math.min(10f,getArguments().getFloat("power",0f,this));
+        boolean setFire = getArguments().getBoolean("fire",false,this);
+        boolean breakBlocks = getArguments().getBoolean("damage",false,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             getPlanet().getTerritory().getWorld().createExplosion(location,power,setFire,breakBlocks);
         }

@@ -34,7 +34,7 @@ public final class GetItemAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        int index = getArguments().getValue("slot",1,this);
+        int index = getArguments().getInt("slot",1,this);
         setVarValue(link,player.getInventory().getItem(index-1));
     }
 

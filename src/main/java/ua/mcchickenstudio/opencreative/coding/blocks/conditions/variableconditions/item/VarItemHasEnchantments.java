@@ -41,10 +41,10 @@ public class VarItemHasEnchantments extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        ItemStack item = getArguments().getValue("item", new ItemStack(Material.APPLE),this);
-        ItemStack enchantedBook = getArguments().getValue("enchantment", new ItemStack(Material.ENCHANTED_BOOK), this);
-        boolean requireAllEnchants = getArguments().getValue("all", true, this);
-        String levelCheckMode = getArguments().getValue("level-check", "exact", this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.APPLE),this);
+        ItemStack enchantedBook = getArguments().getItem("enchantment", new ItemStack(Material.ENCHANTED_BOOK), this);
+        boolean requireAllEnchants = getArguments().getBoolean("all", true, this);
+        String levelCheckMode = getArguments().getText("level-check", "exact", this);
 
         if (!item.hasItemMeta() || !enchantedBook.hasItemMeta()) {
             return false;

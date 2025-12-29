@@ -32,7 +32,7 @@ public final class ShowElderGuardianAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean silent = getArguments().getValue("silent",false,this);
+        boolean silent = getArguments().getBoolean("silent",false,this);
         player.showElderGuardian(silent);
     }
 

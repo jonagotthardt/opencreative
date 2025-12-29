@@ -34,7 +34,7 @@ public final class EntitySetScreamingAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof Goat goat) {
             goat.setScreaming(value);
         } else if (entity instanceof Enderman enderman) {

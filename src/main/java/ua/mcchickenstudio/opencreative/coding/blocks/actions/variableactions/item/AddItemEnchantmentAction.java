@@ -40,9 +40,9 @@ public final class AddItemEnchantmentAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
-        ItemStack enchantmentItem = getArguments().getValue("enchantment",new ItemStack(Material.ENCHANTED_BOOK),this);
-        int level = getArguments().getValue("level",1,this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
+        ItemStack enchantmentItem = getArguments().getItem("enchantment",new ItemStack(Material.ENCHANTED_BOOK),this);
+        int level = getArguments().getInt("level",1,this);
         if (enchantmentItem.getItemMeta() instanceof EnchantmentStorageMeta enchantmentMeta) {
             Map<Enchantment,Integer> enchantments = enchantmentMeta.getStoredEnchants();
             for (Enchantment enchantment : enchantments.keySet()) {

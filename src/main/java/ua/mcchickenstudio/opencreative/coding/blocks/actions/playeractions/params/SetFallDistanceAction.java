@@ -32,8 +32,8 @@ public final class SetFallDistanceAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        float distance = getArguments().getValue("distance",0.0f,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        float distance = getArguments().getFloat("distance",0.0f,this);
         if (!add) {
             player.setFallDistance(distance);
         } else {

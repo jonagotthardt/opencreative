@@ -71,7 +71,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
  * <p>Planet files are stored in ./planets/planetID folder.</p>
  * @author McChicken Studio
  * @since 1.0
- * @version 5.8
+ * @version 5.9
  */
 public class Planet {
 
@@ -377,42 +377,13 @@ public class Planet {
     }
 
     /**
-     * Stops code in planet by setting its mode to Build
-     * and sends log in console.
-     * @param reason reason of stopping the code.
+     * Changes planet's mode to Play or Build.
+     * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
+     * <p>In the Play mode code script will work, player damaging is enabled.</p>
+     * @param mode Mode to set.
      */
-    public void stopCode(@NotNull String reason) {
-        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + getWorldName() + " because of " + reason + ".");
-        this.mode = Mode.BUILD;
-        for (Player player : getPlayers()) {
-            if (!isEntityInDevPlanet(player)) {
-                player.showTitle(Title.title(
-                        toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
-                        Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
-                ));
-                clearPlayer(player);
-                player.teleport(territory.getSpawnLocation());
-                Sounds.WORLD_MODE_BUILD.play(player);
-                territory.showBorders(player);
-                if (isOwner(player)) {
-                    ItemsGroup.BUILD_OWNER.setItems(player);
-                }
-                if (worldPlayers.canBuild(player)) {
-                    player.setGameMode(GameMode.CREATIVE);
-                    giveBuildPermissions(player);
-                    player.sendMessage(getLocaleMessage("world.build-mode.message.owner"));
-                    if (!territory.isAutoSave()) {
-                        player.sendMessage(getLocaleMessage("settings.autosave.warning"));
-                    }
-                } else {
-                    player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
-                }
-            } else {
-                player.sendMessage(getLocaleMessage("world.build-mode.message.players"));
-            }
-        }
-        territory.stopBukkitRunnables();
-        HookUtils.clearEntitiesHook(territory.getWorld());
+    public void setMode(@NotNull Mode mode) {
+        setMode(mode, false);
     }
 
     /**
@@ -420,23 +391,25 @@ public class Planet {
      * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
      * <p>In the Play mode code script will work, player damaging is enabled.</p>
      * @param mode Mode to set.
+     * @param ignoreEvents Don't call world start, player join or player quit events on mode change.
      */
-    public void setMode(@NotNull Mode mode) {
+    public void setMode(@NotNull Mode mode, boolean ignoreEvents) {
         if (this.mode == mode) return;
-        setPlanetConfigParameter(this,"mode",mode.name());
+        setPlanetConfigParameter(this,"mode", mode.name());
         if (!isLoaded()) {
             this.mode = mode;
             return;
         }
-        if (mode == Mode.PLAYING && !OpenCreative.getSettings().getCodingSettings().isEnabled()) {
+        if (mode == Mode.PLAYING && !OpenCreative.getSettings().getCodingSettings().isEnabled() && !ignoreEvents) {
             mode = Mode.BUILD;
         }
+        if (ignoreEvents) this.mode = mode;
         try {
             territory.getSpawnLocation().getChunk().load(true);
             if (mode == Mode.BUILD) {
                 for (Player player : getPlayers()) {
                     if (!isEntityInDevPlanet(player)) {
-                        new QuitEvent(player).callEvent();
+                        if (!ignoreEvents) new QuitEvent(player).callEvent();
                         player.showTitle(Title.title(
                                 toComponent(getLocaleMessage("world.build-mode.title")), toComponent(getLocaleMessage("world.build-mode.subtitle")),
                                 Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(2), Duration.ofMillis(130))
@@ -488,10 +461,12 @@ public class Planet {
                 } else {
                     territory.getScript().loadCode();
                 }
-                new GamePlayEvent(this).callEvent();
-                for (Player player : getPlayers()) {
-                    if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
-                        new JoinEvent(player).callEvent();
+                if (!ignoreEvents) {
+                    new GamePlayEvent(this).callEvent();
+                    for (Player player : getPlayers()) {
+                        if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
+                            new JoinEvent(player).callEvent();
+                        }
                     }
                 }
             }

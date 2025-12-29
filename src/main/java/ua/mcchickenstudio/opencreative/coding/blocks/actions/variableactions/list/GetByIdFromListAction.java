@@ -40,7 +40,7 @@ public final class GetByIdFromListAction extends VariableAction {
         if (elements.isEmpty()) {
             return;
         }
-        int index = getArguments().getValue("index",1,this);
+        int index = getArguments().getInt("index",1,this);
         setVarValue(variable, elements.get(index-1));
     }
 

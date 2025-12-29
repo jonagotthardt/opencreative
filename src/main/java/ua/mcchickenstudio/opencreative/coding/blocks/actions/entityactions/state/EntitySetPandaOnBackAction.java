@@ -38,7 +38,7 @@ public final class EntitySetPandaOnBackAction extends EntityAction {
         if (!(entity instanceof Panda panda)) {
            throw new UnsupportedEntityException(Panda.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         panda.setOnBack(value);
     }
 

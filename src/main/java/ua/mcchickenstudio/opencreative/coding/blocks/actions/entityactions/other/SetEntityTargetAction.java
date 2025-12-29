@@ -37,7 +37,7 @@ public final class SetEntityTargetAction extends EntityAction {
         if (!(entity instanceof Mob mob)) {
             throw new UnsupportedEntityException(Mob.class, entity);
         }
-        String text = getArguments().getValue("entity","",this);
+        String text = getArguments().getText("entity","",this);
         for (Entity foundEntity : getEntitiesByNameOrUUID(text)) {
             if (foundEntity instanceof LivingEntity livingEntity) {
                 mob.setTarget(livingEntity);

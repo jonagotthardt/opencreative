@@ -36,7 +36,7 @@ public final class EntitySetDisplayTextAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        Component text = getArguments().getValue("text", Component.text(""),this);
+        Component text = getArguments().getComponent("text", Component.text(""),this);
         if (entity instanceof TextDisplay display) {
             display.text(text);
         } else {

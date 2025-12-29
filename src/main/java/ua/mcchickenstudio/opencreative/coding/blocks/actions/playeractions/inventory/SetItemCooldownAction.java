@@ -34,8 +34,8 @@ public final class SetItemCooldownAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.SHIELD),this);
-        int ticks = getArguments().getValue("cooldown",100,this);
+        ItemStack item = getArguments().getItem("item",new ItemStack(Material.SHIELD),this);
+        int ticks = getArguments().getInt("cooldown",100,this);
         player.setCooldown(item.getType(),ticks);
     }
 

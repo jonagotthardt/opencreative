@@ -39,7 +39,7 @@ public class BooleanIsTrueCondition extends VariableCondition {
         if (booleans.isEmpty()) {
             return false;
         }
-        boolean requireAll = getArguments().getValue("all", true, this);
+        boolean requireAll = getArguments().getBoolean("all", true, this);
         boolean isTrue = false;
         for (Boolean bool : booleans) {
             if (bool) {

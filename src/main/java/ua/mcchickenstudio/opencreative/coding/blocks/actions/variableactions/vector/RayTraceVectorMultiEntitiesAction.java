@@ -50,13 +50,13 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
-        final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
-        final Location from = getArguments().getValue("from", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
+        final Location from = getArguments().getLocation("from", new Location(entity.getWorld(), 0, 0, 0), this);
         AsyncScheduler.run(() -> {
-            final double range = getArguments().getValue("range", 3.0, this);
+            final double range = getArguments().getDouble("range", 3.0, this);
             final List<Entity> list = getEntitiesAroundPoint(from, range + 1.0);
             final List<Location> resultList = new ArrayList<>();
-            final String filter = getArguments().getValue("filter", "no-filter", this);
+            final String filter = getArguments().getText("filter", "no-filter", this);
             for (final Entity e : list) {
                 final boolean isPlayer = (e instanceof Player);
                 if (filter.equals("only-players") && !isPlayer) continue;
@@ -68,7 +68,7 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
                 y = to.getY(),
                 z = to.getZ();
                 final BuildSpeed buildSpeed =
-                                (getArguments().getValue("calculation", "vanilla-java", this)
+                                (getArguments().getText("calculation", "vanilla-java", this)
                                                 .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
                 final Vec2f rotation = getYawPitch(vector);
                 final AxisAlignedBB aabb = new AxisAlignedBB(

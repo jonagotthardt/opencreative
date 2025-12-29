@@ -41,7 +41,7 @@ public final class SpawnArrowAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        ItemStack arrowItem = getArguments().getValue("arrow",new ItemStack(Material.ARROW,1),this);
+        ItemStack arrowItem = getArguments().getItem("arrow",new ItemStack(Material.ARROW,1),this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (arrowItem.getType() == Material.ARROW) {
                 Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.ARROW);

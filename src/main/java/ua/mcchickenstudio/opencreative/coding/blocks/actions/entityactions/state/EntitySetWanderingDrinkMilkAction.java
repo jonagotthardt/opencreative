@@ -38,7 +38,7 @@ public final class EntitySetWanderingDrinkMilkAction extends EntityAction {
         if (!(entity instanceof WanderingTrader trader)) {
             throw new UnsupportedEntityException(WanderingTrader.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         trader.setCanDrinkMilk(value);
     }
 

@@ -38,7 +38,7 @@ public class IsCurrentBossBarCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         List<String> names = getArguments().getTextList("bossbars",this);
-        boolean requireAll = getArguments().getValue("all",false,this);
+        boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean seesBossBar = false;
         for (String name : names) {
             BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name);

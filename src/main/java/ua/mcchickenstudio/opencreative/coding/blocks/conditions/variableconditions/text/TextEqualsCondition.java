@@ -39,10 +39,10 @@ public class TextEqualsCondition extends VariableCondition {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("content")) {
             return false;
         }
-        String text = getArguments().getValue("text","",this);
+        String text = getArguments().getText("text","",this);
         List<String> contents = getArguments().getTextList("content", this);
-        boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
-        boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
+        boolean ignoreColors = getArguments().getBoolean("ignore-colors",false,this);
+        boolean ignoreCaps = getArguments().getBoolean("ignore-caps",false,this);
         if (ignoreColors) text = ChatColor.stripColor(text);
         for (String content : contents) {
             if (ignoreColors) {

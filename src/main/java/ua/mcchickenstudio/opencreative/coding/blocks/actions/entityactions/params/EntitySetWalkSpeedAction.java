@@ -39,8 +39,8 @@ public final class EntitySetWalkSpeedAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getValue("add",false,this);
-        double speed = getArguments().getValue("speed",0.6f,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        double speed = getArguments().getFloat("speed",0.6f,this);
         if (add) {
             speed = livingEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue() + speed;
         }

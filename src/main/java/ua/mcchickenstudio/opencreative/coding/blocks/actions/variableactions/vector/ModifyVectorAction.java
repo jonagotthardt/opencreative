@@ -35,20 +35,20 @@ public final class ModifyVectorAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable", this);
-        Vector vector = getArguments().getValue("vector", new Vector(), this);
+        Vector vector = getArguments().getVector("vector", new Vector(), this);
         vector = vector.clone();
-        boolean add = getArguments().getValue("add", false, this);
+        boolean add = getArguments().getBoolean("add", false, this);
         double x = (add ? 0.0d : vector.getX());
         double y = (add ? 0.0d : vector.getY());
         double z = (add ? 0.0d : vector.getZ());
         if (getArguments().pathExists("x")) {
-            x = getArguments().getValue("x", x, this);
+            x = getArguments().getDouble("x", x, this);
         }
         if (getArguments().pathExists("y")) {
-            y = getArguments().getValue("y", y, this);
+            y = getArguments().getDouble("y", y, this);
         }
         if (getArguments().pathExists("z")) {
-            z = getArguments().getValue("z", z, this);
+            z = getArguments().getDouble("z", z, this);
         }
         if (add) {
             vector.setX(vector.getX()+x);

@@ -32,8 +32,8 @@ public final class SetMaxHealthAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        double health = getArguments().getValue("health",30.0d,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        double health = getArguments().getDouble("health",30.0d,this);
         if (add) {
             health = health + player.getMaxHealth();
         }

@@ -40,8 +40,8 @@ public final class SetSkullOwnerAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String owner = getArguments().getValue("owner","Notch",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.PLAYER_HEAD),this),this);
+        String owner = getArguments().getText("owner","Notch",this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.PLAYER_HEAD),this),this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;

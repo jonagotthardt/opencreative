@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -56,15 +58,17 @@ public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
         this.cause = Cause.PLAYER;
     }
 
-    public Planet.Mode getOldMode() {
+    @SuppressWarnings("unused")
+    public @NotNull Planet.Mode getOldMode() {
         return oldMode;
     }
 
-    public Planet.Mode getNewMode() {
+    @SuppressWarnings("unused")
+    public @NotNull Planet.Mode getNewMode() {
         return newMode;
     }
 
-    public Player getPlayer() {
+    public @Nullable Player getPlayer() {
         return player;
     }
 
@@ -73,7 +77,7 @@ public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
         return cancel;
     }
 
-    public Cause getCause() {
+    public @NotNull Cause getCause() {
         return cause;
     }
 

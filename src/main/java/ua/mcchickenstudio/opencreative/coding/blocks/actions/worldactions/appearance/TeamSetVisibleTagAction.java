@@ -37,15 +37,15 @@ public final class TeamSetVisibleTagAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getValue("scoreboard","board",this);
-        String teamName = getArguments().getValue("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard","board",this);
+        String teamName = getArguments().getText("team","team",this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
         if (scoreboard == null) {
             return;
         }
         Team team = scoreboard.getTeam(teamName);
         if (team == null) return;
-        String statusString = getArguments().getValue("option","always",this);
+        String statusString = getArguments().getText("option","always",this);
         Team.OptionStatus optionStatus = statusString.equalsIgnoreCase("never") ? Team.OptionStatus.NEVER : statusString.equalsIgnoreCase("for-own-team") ? Team.OptionStatus.FOR_OWN_TEAM : statusString.equalsIgnoreCase("for-other-teams") ? Team.OptionStatus.FOR_OTHER_TEAMS : Team.OptionStatus.ALWAYS;
         team.setOption(Team.Option.NAME_TAG_VISIBILITY,optionStatus);
     }

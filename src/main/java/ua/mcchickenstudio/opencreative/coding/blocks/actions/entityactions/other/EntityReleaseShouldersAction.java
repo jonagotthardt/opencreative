@@ -38,7 +38,7 @@ public final class EntityReleaseShouldersAction extends EntityAction {
         if (!(entity instanceof HumanEntity humanEntity)) {
             throw new UnsupportedEntityException(HumanEntity.class, entity);
         }
-        String type = getArguments().getValue("type", "all", this);
+        String type = getArguments().getText("type", "all", this);
         switch (type.toLowerCase()) {
             case "left" -> humanEntity.releaseLeftShoulderEntity();
             case "right" -> humanEntity.releaseRightShoulderEntity();

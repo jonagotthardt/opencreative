@@ -43,7 +43,7 @@ public class EqualsGameModeCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        String gm = getArguments().getValue("game-mode","adventure",this);
+        String gm = getArguments().getText("game-mode","adventure",this);
         GameMode gameMode;
         try {
             gameMode = GameMode.valueOf(gm.toUpperCase());

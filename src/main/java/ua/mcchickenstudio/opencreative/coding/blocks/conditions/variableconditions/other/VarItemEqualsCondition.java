@@ -39,19 +39,19 @@ public class VarItemEqualsCondition extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        boolean ignoreAmount = getArguments().getValue("ignore-amount",true,this);
-        boolean ignoreName = getArguments().getValue("ignore-name",false,this);
-        boolean ignoreLore = getArguments().getValue("ignore-lore",false,this);
-        boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
-        boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
-        boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
-        boolean ignoreDamage = getArguments().getValue("ignore-damage",false,this);
+        boolean ignoreAmount = getArguments().getBoolean("ignore-amount",true,this);
+        boolean ignoreName = getArguments().getBoolean("ignore-name",false,this);
+        boolean ignoreLore = getArguments().getBoolean("ignore-lore",false,this);
+        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments",false,this);
+        boolean ignoreFlags = getArguments().getBoolean("ignore-flags",false,this);
+        boolean ignoreMaterial = getArguments().getBoolean("ignore-material",false,this);
+        boolean ignoreDamage = getArguments().getBoolean("ignore-damage",false,this);
 
         boolean check = false;
         List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
-        ItemStack comparedItem = getArguments().getValue("item",new ItemStack(Material.AIR,1),this);
+        ItemStack comparedItem = getArguments().getItem("item",new ItemStack(Material.AIR,1),this);
         comparedItem = ItemUtils.getItemWithIgnoreData(comparedItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
         for (ItemStack checkItem : items) {
             checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);

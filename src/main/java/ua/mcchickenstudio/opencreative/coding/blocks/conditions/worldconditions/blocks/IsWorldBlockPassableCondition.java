@@ -38,7 +38,7 @@ public class IsWorldBlockPassableCondition extends WorldCondition {
     @Override
     public boolean check(Entity entity) {
         List<Location> blockLocations = getArguments().getLocationList("blocks",this);
-        boolean requireAll = getArguments().getValue("all",true,this);
+        boolean requireAll = getArguments().getBoolean("all",true,this);
         boolean isPassable = false;
         for (Location location : blockLocations) {
             if (getWorld().getBlockAt(location).isPassable()) {

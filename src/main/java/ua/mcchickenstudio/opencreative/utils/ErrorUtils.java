@@ -27,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -51,6 +50,8 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * and logging them in console with friendly look.
  */
 public final class ErrorUtils {
+
+    private static final Random random = new Random();
 
     /**
      * Cuts common packages paths from stack trace text.
@@ -130,13 +131,13 @@ public final class ErrorUtils {
                 "Errors in the plugin that never ends", "It might just work if we can try not to go insane",
                 "Try not to panic when you see this", "This is not supposed to be here",
                 ":( Your PLUGIN ran into a problem.", "Why is this happening?", "Dum dum, this sucks..",
-                "Error the Troublemaker..", "Knocks off worlds like a terminator", "Gotta hate it cause' you just can't like it",
-                "We had something to learn from that experience", "Bug toy, bug toy, bug toy...",
-                "Jester thinks there is a solution to this bug?", "Get your bug toy, get a little opposite of joy",
+                "Error the Troublemaker..", "Bug toy, bug toy, bug toy...", "Get your bug toy, get a little opposite of joy",
+                "It's an error, munch munch munch!", "And then an error meets me, because I'm there.",
+                "Sometimes I pretend it's fixed, I might be liar.", "I don't see a fix on the normal route it walks.",
                 "I could say I'm sorry, but it's not that kind of party", "The right error in the wrong place",
                 "Raise and shine, Mr. Error!"
         };
-        return phrases[new Random().nextInt(phrases.length)];
+        return phrases[random.nextInt(phrases.length)];
     }
 
     /**

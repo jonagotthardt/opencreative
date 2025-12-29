@@ -34,7 +34,7 @@ public final class LaunchToLocationAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Location location = getArguments().getValue("location",player.getLocation(),this);
+        Location location = getArguments().getLocation("location",player.getLocation(),this);
         player.setVelocity(new Vector(location.getX(),location.getY(),location.getZ()));
     }
 

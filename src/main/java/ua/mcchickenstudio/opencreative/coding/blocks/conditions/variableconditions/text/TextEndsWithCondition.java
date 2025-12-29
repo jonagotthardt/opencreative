@@ -39,10 +39,10 @@ public class TextEndsWithCondition extends VariableCondition {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("ending")) {
             return false;
         }
-        String text = getArguments().getValue("text","",this);
+        String text = getArguments().getText("text","",this);
         List<String> endings = getArguments().getTextList("ending", this);
-        boolean ignoreColors = getArguments().getValue("ignore-colors",false,this);
-        boolean ignoreCaps = getArguments().getValue("ignore-caps",false,this);
+        boolean ignoreColors = getArguments().getBoolean("ignore-colors",false,this);
+        boolean ignoreCaps = getArguments().getBoolean("ignore-caps",false,this);
         if (ignoreColors) text = ChatColor.stripColor(text);
         if (ignoreCaps) text = text.toLowerCase();
         for (String ending : endings) {

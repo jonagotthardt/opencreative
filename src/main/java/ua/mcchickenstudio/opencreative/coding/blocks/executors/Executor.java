@@ -35,7 +35,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
  * This class represents Executor that has actions to run.
  * Executor will be executed on events in planet.
  * @since 5.0
- * @version 5.6
+ * @version 5.9
  * @author McChicken Studio
  */
 public abstract class Executor {
@@ -50,7 +50,7 @@ public abstract class Executor {
     private boolean debug;
 
     /**
-     * Creates an Executor with specified planet and block's location in developers planet.
+     * Creates an Executor @NotNullwith specified planet and block's location in developers planet.
      * @param planet Planet where executor will work.
      * @param x X from Executor's block location in developers planet.
      * @param y Y from Executor's block location in developers planet.

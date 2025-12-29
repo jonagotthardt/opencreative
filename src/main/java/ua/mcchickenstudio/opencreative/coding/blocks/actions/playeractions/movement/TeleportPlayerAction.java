@@ -33,8 +33,8 @@ public final class TeleportPlayerAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        String consider = getArguments().getValue("consider","all",this);
+        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
+        String consider = getArguments().getText("consider","all",this);
         if (consider.equals("only-coordinates")) {
             location.setYaw(player.getYaw());
             location.setPitch(player.getPitch());

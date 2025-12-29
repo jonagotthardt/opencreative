@@ -35,7 +35,7 @@ public final class EntitySetDisplayBillboardAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String type = getArguments().getValue("billboard", "center",this);
+        String type = getArguments().getText("billboard", "center",this);
         Display.Billboard billboard = Display.Billboard.CENTER;
         try {
             Display.Billboard.valueOf(type.toUpperCase().replace("-","_"));

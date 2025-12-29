@@ -34,7 +34,7 @@ public final class EntitySetInterestedAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof Cat cat) {
             cat.setHeadUp(value);
         } else if (entity instanceof Wolf wolf) {

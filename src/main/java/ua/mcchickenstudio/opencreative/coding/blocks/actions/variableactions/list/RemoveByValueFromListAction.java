@@ -40,7 +40,7 @@ public final class RemoveByValueFromListAction extends VariableAction {
         List<Object> elements = getArguments().getList("elements",this);
         if (list.isEmpty() || elements.isEmpty()) return;
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        String deletionType = getArguments().getValue("deletion", "all", this);
+        String deletionType = getArguments().getText("deletion", "all", this);
 
         if (cannotChangeListElements(elements.size())) {
             return;

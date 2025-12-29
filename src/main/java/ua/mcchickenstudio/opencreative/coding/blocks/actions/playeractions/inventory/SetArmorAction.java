@@ -33,11 +33,11 @@ public final class SetArmorAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack helmet = getArguments().getValue("helmet", ItemStack.empty(),this);
-        ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty(),this);
-        ItemStack leggings = getArguments().getValue("leggings",ItemStack.empty(),this);
-        ItemStack boots = getArguments().getValue("boots",ItemStack.empty(),this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
+        ItemStack helmet = getArguments().getItem("helmet", ItemStack.empty(),this);
+        ItemStack chestplate = getArguments().getItem("chestplate",ItemStack.empty(),this);
+        ItemStack leggings = getArguments().getItem("leggings",ItemStack.empty(),this);
+        ItemStack boots = getArguments().getItem("boots",ItemStack.empty(),this);
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",false,this);
         if (replaceWithAir || !helmet.isEmpty()) {
             player.getInventory().setHelmet(helmet);
         }

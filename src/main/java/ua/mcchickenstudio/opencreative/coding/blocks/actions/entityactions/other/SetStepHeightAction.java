@@ -39,8 +39,8 @@ public final class SetStepHeightAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getValue("add",false,this);
-        double height = getArguments().getValue("height",0.6f,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        double height = getArguments().getFloat("height",0.6f,this);
         if (add) height += livingEntity.getAttribute(Attribute.GENERIC_STEP_HEIGHT).getBaseValue();
         livingEntity.getAttribute(Attribute.GENERIC_STEP_HEIGHT).setBaseValue(height);
     }

@@ -32,7 +32,7 @@ public final class SetGlowingAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.setGlowing(getArguments().getValue("glowing",true,this));
+        player.setGlowing(getArguments().getBoolean("glowing",true,this));
     }
 
     @Override

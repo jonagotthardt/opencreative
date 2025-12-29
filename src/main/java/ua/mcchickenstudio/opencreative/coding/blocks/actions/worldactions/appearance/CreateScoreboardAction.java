@@ -43,8 +43,8 @@ public final class CreateScoreboardAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getValue("name","board",this);
-        Component displayName = getArguments().getValue("display-name",Component.text("Scoreboard"),this);
+        String name = getArguments().getText("name","board",this);
+        Component displayName = getArguments().getComponent("display-name",Component.text("Scoreboard"),this);
         try {
             if (getPlanet().getTerritory().getScoreboards().getAmount() >= getPlanet().getLimits().getScoreboardsLimit()) {
                 // FIXME: Replace with hard-coded message, sendMessageOnce()

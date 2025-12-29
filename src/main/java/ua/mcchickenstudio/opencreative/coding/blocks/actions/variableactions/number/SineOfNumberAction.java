@@ -34,7 +34,7 @@ public final class SineOfNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getValue("number",1.0d,this);
+        double number = getArguments().getDouble("number",1.0d,this);
         double result = Math.sin(number);
         setVarValue(variable, result);
     }

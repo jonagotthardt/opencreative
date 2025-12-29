@@ -39,8 +39,8 @@ public final class GetItemLoreLineAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
-        int index = getArguments().getValue("index",1,this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
+        int index = getArguments().getInt("index",1,this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             setVarValue(link, "");

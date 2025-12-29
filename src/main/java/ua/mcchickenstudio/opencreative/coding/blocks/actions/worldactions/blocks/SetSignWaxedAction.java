@@ -42,7 +42,7 @@ public final class SetSignWaxedAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean waxed = getArguments().getValue("waxed",true,this);
+        boolean waxed = getArguments().getBoolean("waxed",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {

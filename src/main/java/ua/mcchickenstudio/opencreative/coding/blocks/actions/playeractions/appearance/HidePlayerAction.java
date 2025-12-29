@@ -33,7 +33,7 @@ public final class HidePlayerAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String text = getArguments().getValue("player"," ",this);
+        String text = getArguments().getText("player"," ",this);
         for (Player p : getPlayersByNameOrUUID(text)) {
             player.hidePlayer(OpenCreative.getPlugin(), p);
         }

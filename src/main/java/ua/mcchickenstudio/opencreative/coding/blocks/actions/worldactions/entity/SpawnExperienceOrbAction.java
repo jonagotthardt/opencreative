@@ -41,7 +41,7 @@ public final class SpawnExperienceOrbAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        int amount = getArguments().getValue("amount",1,this);
+        int amount = getArguments().getInt("amount",1,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);
             if (spawnedEntity instanceof ExperienceOrb orb) {

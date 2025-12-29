@@ -38,7 +38,7 @@ public final class EntitySetAwareAction extends EntityAction {
         if (!(entity instanceof Mob mob)) {
             throw new UnsupportedEntityException(Mob.class, entity);
         }
-        boolean aware = getArguments().getValue("boolean", true, this);
+        boolean aware = getArguments().getBoolean("boolean", true, this);
         mob.setAware(aware);
     }
 

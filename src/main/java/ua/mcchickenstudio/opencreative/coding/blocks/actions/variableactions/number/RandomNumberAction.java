@@ -39,8 +39,8 @@ public final class RandomNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        int min = getArguments().getValue("min",0,this);
-        int max = getArguments().getValue("max",10,this);
+        int min = getArguments().getInt("min",0,this);
+        int max = getArguments().getInt("max",10,this);
         int result = random.nextInt(max + 1 - min) + min;
         setVarValue(variable, result);
 

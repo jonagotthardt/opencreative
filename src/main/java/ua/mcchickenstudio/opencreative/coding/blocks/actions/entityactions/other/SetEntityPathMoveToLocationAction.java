@@ -39,7 +39,7 @@ public final class SetEntityPathMoveToLocationAction extends EntityAction {
         if (!(entity instanceof Mob mob)) {
             throw new UnsupportedEntityException(Mob.class, entity);
         }
-        Location location = getArguments().getValue("location",entity.getLocation(),this);
+        Location location = getArguments().getLocation("location",entity.getLocation(),this);
         mob.getPathfinder().moveTo(location);
     }
 

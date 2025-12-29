@@ -47,7 +47,7 @@ public final class SetResourcePackAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String url = getArguments().getValue("url","",this);
+        String url = getArguments().getText("url","",this);
         if (url.isEmpty() || !isAllowed(url)) return;
 
         List<ResourcePackInfo> packs = new ArrayList<>();
@@ -62,7 +62,7 @@ public final class SetResourcePackAction extends PlayerAction {
             packs.add(serverPackInfo);
         }
 
-        Component prompt = getArguments().getValue("prompt", Component.empty(), this);
+        Component prompt = getArguments().getComponent("prompt", Component.empty(), this);
         String plainText = PlainTextComponentSerializer.plainText().serialize(prompt);
         if (plainText.length() > 256) {
             throw new TooLongTextException(256);

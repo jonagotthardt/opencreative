@@ -41,7 +41,7 @@ public final class SetMenuItemAction extends PlayerAction {
              */
             return;
         }
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.AIR),this);
+        ItemStack item = getArguments().getItem("item",new ItemStack(Material.AIR),this);
         for (Double slot : getArguments().getNumbersList("slots",this)) {
             if (slot > player.getOpenInventory().getTopInventory().getSize()) {
                 slot = player.getOpenInventory().getTopInventory().getSize() + 0.0d;

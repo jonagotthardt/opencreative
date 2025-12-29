@@ -50,7 +50,7 @@ public class EconomySettings {
             if (HookUtils.isVaultEnabled) {
                 setupVault();
             } else {
-                OpenCreative.getPlugin().getLogger().info("Didn't detect Vault or The New Economy, action Request Purchase and like rewards will be not available.");
+                OpenCreative.getPlugin().getLogger().info("Didn't detect Vault, action Request Purchase and like rewards will be not available.");
             }
         }
     }

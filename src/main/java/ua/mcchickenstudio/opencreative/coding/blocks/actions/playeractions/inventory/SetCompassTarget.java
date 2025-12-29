@@ -33,7 +33,7 @@ public final class SetCompassTarget extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Location location = getArguments().getValue("location",player.getLocation(),this);
+        Location location = getArguments().getLocation("location",player.getLocation(),this);
         player.setCompassTarget(location);
     }
 

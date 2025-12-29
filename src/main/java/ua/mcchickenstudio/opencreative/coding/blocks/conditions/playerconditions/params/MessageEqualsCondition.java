@@ -41,7 +41,7 @@ public class MessageEqualsCondition extends PlayerCondition {
         }
         boolean check = false;
         List<String> messages = getArguments().getTextList("messages",this);
-        boolean caps = getArguments().getValue("require-caps",false,this);
+        boolean caps = getArguments().getBoolean("require-caps",false,this);
         for (String message : messages) {
             if (caps) {
                 if (message.equals(text)) {

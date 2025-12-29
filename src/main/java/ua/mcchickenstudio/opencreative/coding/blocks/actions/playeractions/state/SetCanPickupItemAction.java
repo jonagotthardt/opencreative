@@ -32,7 +32,7 @@ public final class SetCanPickupItemAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.setCanPickupItems(getArguments().getValue("boolean",true,this));
+        player.setCanPickupItems(getArguments().getBoolean("boolean",true,this));
     }
 
     @Override

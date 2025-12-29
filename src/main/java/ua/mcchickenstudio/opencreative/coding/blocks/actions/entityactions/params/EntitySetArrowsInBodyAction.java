@@ -38,8 +38,8 @@ public final class EntitySetArrowsInBodyAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getValue("add",false,this);
-        int count = getArguments().getValue("count",0,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int count = getArguments().getInt("count",0,this);
         if (add) {
             count = count + livingEntity.getArrowsInBody();
         }

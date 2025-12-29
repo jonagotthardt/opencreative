@@ -51,10 +51,10 @@ public final class RequestPurchaseAction extends PlayerAction {
              */
             throw new TooManyOpenedMenusException(player.getName());
         }
-        String id = getArguments().getValue("id","example",this);
-        String name = getArguments().getValue("name","Example",this);
-        boolean save = getArguments().getValue("save",false,this);
-        int price = getArguments().getValue("price",100,this);
+        String id = getArguments().getText("id","example",this);
+        String name = getArguments().getText("name","Example",this);
+        boolean save = getArguments().getBoolean("save",false,this);
+        int price = getArguments().getInt("price",100,this);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return;
         new ConfirmationMenu(

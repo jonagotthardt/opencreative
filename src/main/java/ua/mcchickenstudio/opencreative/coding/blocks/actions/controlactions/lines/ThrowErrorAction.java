@@ -33,7 +33,7 @@ public final class ThrowErrorAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        String message = getArguments().getValue("message","Thrown error from control action",this);
+        String message = getArguments().getText("message","Thrown error from control action",this);
         throw new NullPointerException(message);
     }
 

@@ -44,21 +44,21 @@ public final class RayTraceVectorAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
-        final Vector vector = getArguments().getValue("vector", new Vector(0, 0, 0), this);
-        final Location from = getArguments().getValue("from", new Location(entity.getWorld(), 0, 0, 0), this);
-        final Location to = getArguments().getValue("to", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
+        final Location from = getArguments().getLocation("from", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Location to = getArguments().getLocation("to", new Location(entity.getWorld(), 0, 0, 0), this);
         final double
         x = to.getX(),
         y = to.getY(),
         z = to.getZ();
-        final double range = getArguments().getValue("range", 3.0, this);
+        final double range = getArguments().getDouble("range", 3.0, this);
         final double
-        xSize = getArguments().getValue("xSize", 0.3, this) / 2.0,
-        ySize = getArguments().getValue("ySize", 1.8, this) / 2.0,
-        zSize = getArguments().getValue("zSize", 0.3, this) / 2.0;
+        xSize = getArguments().getDouble("xSize", 0.3, this) / 2.0,
+        ySize = getArguments().getDouble("ySize", 1.8, this) / 2.0,
+        zSize = getArguments().getDouble("zSize", 0.3, this) / 2.0;
         AsyncScheduler.run(() -> {
             final BuildSpeed buildSpeed =
-                            (getArguments().getValue("calculation", "vanilla-java", this)
+                            (getArguments().getText("calculation", "vanilla-java", this)
                                             .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
             final Vec2f rotation = getYawPitch(vector);
             final AxisAlignedBB aabb = new AxisAlignedBB(

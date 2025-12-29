@@ -41,7 +41,7 @@ public final class SetWaterLoggedAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean water = getArguments().getValue("water",true,this);
+        boolean water = getArguments().getBoolean("water",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {

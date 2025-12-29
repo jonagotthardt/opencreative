@@ -34,7 +34,7 @@ public final class ReverseTextAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getValue("text", " ",this);
+        String text = getArguments().getText("text", " ",this);
         StringBuilder result = new StringBuilder();
         result.append(text);
         result.reverse();

@@ -37,7 +37,7 @@ public final class SendDialogAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         List<Player> players = new ArrayList<>(List.of(player));
-        int cooldown = getArguments().getValue("cooldown",20,this);
+        int cooldown = getArguments().getInt("cooldown",20,this);
         List<String> text = getArguments().getTextList("messages",this);
         new CreativeRunnable(getPlanet()) {
             byte current = 0;

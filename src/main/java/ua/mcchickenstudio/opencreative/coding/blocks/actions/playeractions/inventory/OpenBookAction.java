@@ -34,7 +34,7 @@ public final class OpenBookAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack item = getArguments().getValue("book", new ItemStack(Material.WRITTEN_BOOK),this);
+        ItemStack item = getArguments().getItem("book", new ItemStack(Material.WRITTEN_BOOK),this);
         player.openBook(item);
     }
 

@@ -32,7 +32,7 @@ public final class SetSprintingAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.setSprinting(getArguments().getValue("boolean",false,this));
+        player.setSprinting(getArguments().getBoolean("boolean",false,this));
     }
 
     @Override

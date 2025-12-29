@@ -49,7 +49,7 @@ public final class CatchErrorAction extends ControllerAction {
         } catch (Exception error) {
             setVarValue(link, error.getClass().getSimpleName().toLowerCase());
             if (getPlanet().getLimits().isTooManyCodingErrors()) {
-                getPlanet().stopCode("errors limit");
+                getPlanet().getTerritory().getScript().getExecutors().stopCode("errors limit");
                 sendPlanetCodeCriticalErrorMessage(getPlanet(),getExecutor(),getLocaleMessage("coding-error.errors-limit",false)
                         .replace("%limit%",String.valueOf(getPlanet().getLimits().getCodingErrorsLimit())));
             }

@@ -42,7 +42,7 @@ public final class AddItemLoreLineAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -51,7 +51,7 @@ public final class AddItemLoreLineAction extends VariableAction {
         if (newLore == null) {
             newLore = new ArrayList<>();
         }
-        Component text = getArguments().getValue("line",Component.text(""),this);
+        Component text = getArguments().getComponent("line",Component.text(""),this);
         if (!text.hasDecoration(TextDecoration.ITALIC)) {
             text = text.decoration(TextDecoration.ITALIC, false);
         }

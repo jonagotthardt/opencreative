@@ -35,8 +35,8 @@ public final class DisguiseAsPlayerAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String name = getArguments().getValue("name","",this);
-        String skin = getArguments().getValue("skin","mhf_steve",this);
+        String name = getArguments().getText("name","",this);
+        String skin = getArguments().getText("skin","mhf_steve",this);
         if (name.isEmpty()) return;
         if (!HookUtils.isLibsDisguisesEnabled) return;
         DisguiseUtils.disguiseAsPlayer(entity,name,skin);

@@ -39,7 +39,7 @@ public final class EntitySetDisplayItemAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        ItemStack item = getArguments().getValue("item", new ItemStack(Material.AIR), this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.AIR), this);
         if (entity instanceof ItemDisplay display) {
             display.setItemStack(item);
         } else if (entity instanceof BlockDisplay display) {

@@ -41,7 +41,7 @@ public final class SetBlockBiomeAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        String biomeString = getArguments().getValue("biome", "plains",this);
+        String biomeString = getArguments().getText("biome", "plains",this);
         Biome biome;
         try {
             biome = Biome.valueOf(biomeString.toUpperCase());

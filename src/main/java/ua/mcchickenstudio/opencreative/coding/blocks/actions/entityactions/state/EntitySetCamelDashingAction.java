@@ -38,7 +38,7 @@ public final class EntitySetCamelDashingAction extends EntityAction {
         if (!(entity instanceof Camel camel)) {
             throw new UnsupportedEntityException(Camel.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         camel.setDashing(value);
     }
 

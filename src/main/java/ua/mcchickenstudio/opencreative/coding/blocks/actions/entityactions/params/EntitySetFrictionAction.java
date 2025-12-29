@@ -39,7 +39,7 @@ public final class EntitySetFrictionAction extends EntityAction {
         if (!(entity instanceof Frictional frictional)) {
             throw new UnsupportedEntityException(Frictional.class, entity);
         }
-        String frictionString = getArguments().getValue("friction", "not-set", this);
+        String frictionString = getArguments().getText("friction", "not-set", this);
         TriState state = switch (frictionString.toLowerCase()) {
             case "true" -> TriState.TRUE;
             case "false" -> TriState.FALSE;

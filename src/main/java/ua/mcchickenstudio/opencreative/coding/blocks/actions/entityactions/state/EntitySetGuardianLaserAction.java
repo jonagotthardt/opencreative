@@ -38,7 +38,7 @@ public final class EntitySetGuardianLaserAction extends EntityAction {
         if (!(entity instanceof Guardian guardian)) {
            throw new UnsupportedEntityException(Guardian.class, entity);
         }
-        boolean laser = getArguments().getValue("boolean", true, this);
+        boolean laser = getArguments().getBoolean("boolean", true, this);
         guardian.setLaser(laser);
     }
 

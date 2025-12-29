@@ -34,8 +34,8 @@ public final class CharAtTextAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getValue("text"," ",this);
-        int index = getArguments().getValue("index",1,this);
+        String text = getArguments().getText("text"," ",this);
+        int index = getArguments().getInt("index",1,this);
         setVarValue(link, String.valueOf(text.charAt(index-1)));
     }
 

@@ -36,7 +36,7 @@ public final class SetHotBarAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         List<ItemStack> items = getArguments().getItemList("items",this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",false,this);
         for (byte slot = 0; slot < 9; slot++) {
             if (slot == items.size()) {
                 return;

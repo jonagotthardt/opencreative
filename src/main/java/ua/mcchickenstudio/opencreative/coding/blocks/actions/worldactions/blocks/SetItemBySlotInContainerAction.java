@@ -43,8 +43,8 @@ public final class SetItemBySlotInContainerAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.AIR),this);
-        int slot = getArguments().getValue("slot",1,this);
+        ItemStack item = getArguments().getItem("item",new ItemStack(Material.AIR),this);
+        int slot = getArguments().getInt("slot",1,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {

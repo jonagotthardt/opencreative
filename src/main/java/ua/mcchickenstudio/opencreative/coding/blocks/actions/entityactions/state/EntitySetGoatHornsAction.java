@@ -38,8 +38,8 @@ public final class EntitySetGoatHornsAction extends EntityAction {
         if (!(entity instanceof Goat goat)) {
             throw new UnsupportedEntityException(Goat.class, entity);
         }
-        boolean left = getArguments().getValue("left", true, this);
-        boolean right = getArguments().getValue("right", true, this);
+        boolean left = getArguments().getBoolean("left", true, this);
+        boolean right = getArguments().getBoolean("right", true, this);
         goat.setLeftHorn(left);
         goat.setRightHorn(right);
     }

@@ -35,7 +35,7 @@ public final class WaitAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        time = getArguments().getValue("time",20,this);
+        time = getArguments().getInt("time",20,this);
     }
 
     @Override

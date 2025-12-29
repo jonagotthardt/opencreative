@@ -32,7 +32,7 @@ public final class SetSlotAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        int slot = getArguments().getValue("slot",1,this);
+        int slot = getArguments().getInt("slot",1,this);
         if (slot > 9 || slot < 1) {
             slot = 1;
         }

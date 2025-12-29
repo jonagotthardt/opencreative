@@ -32,7 +32,7 @@ public final class PlayerReleaseShouldersAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String type = getArguments().getValue("type", "all", this);
+        String type = getArguments().getText("type", "all", this);
         switch (type.toLowerCase()) {
             case "left" -> player.releaseLeftShoulderEntity();
             case "right" -> player.releaseRightShoulderEntity();

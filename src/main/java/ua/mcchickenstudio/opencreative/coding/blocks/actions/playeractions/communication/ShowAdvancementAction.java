@@ -35,11 +35,11 @@ public final class ShowAdvancementAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack itemStack = getArguments().getValue("icon",new ItemStack(Material.DIAMOND),this);
+        ItemStack itemStack = getArguments().getItem("icon",new ItemStack(Material.DIAMOND),this);
         Advancement.AdvancementStyle style = Advancement.AdvancementStyle.GOAL;
-        String styleString = getArguments().getValue("style","goal",this);
-        String title = getArguments().getValue("title","You got Advancement!",this);
-        String message = getArguments().getValue("message","Good job.",this);
+        String styleString = getArguments().getText("style","goal",this);
+        String title = getArguments().getText("title","You got Advancement!",this);
+        String message = getArguments().getText("message","Good job.",this);
         try {
             style = Advancement.AdvancementStyle.valueOf(styleString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}

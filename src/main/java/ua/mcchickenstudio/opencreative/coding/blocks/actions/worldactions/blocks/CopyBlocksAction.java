@@ -44,10 +44,10 @@ public final class CopyBlocksAction extends WorldAction {
         if (!getArguments().pathExists("first") || !getArguments().pathExists("second") || !getArguments().pathExists("from") ||  !getArguments().pathExists("where")) {
             return;
         }
-        Location first = getArguments().getValue("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location second = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location from = getArguments().getValue("from",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location where = getArguments().getValue("where",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location from = getArguments().getLocation("from",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location where = getArguments().getLocation("where",getPlanet().getTerritory().getSpawnLocation(),this);
 
         int minX = Math.min(first.getBlockX(),second.getBlockX());
         int minY = Math.min(first.getBlockY(),second.getBlockY());

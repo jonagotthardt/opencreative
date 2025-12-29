@@ -39,7 +39,7 @@ public final class SetInListAction extends VariableAction {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = new ArrayList<>(getArguments().getList("variable",this));
         Object value = getArguments().getValue("value",this);
-        int index = getArguments().getValue("index",1,this);
+        int index = getArguments().getInt("index",1,this);
         if (cannotChangeListElements(1)) {
             return;
         }

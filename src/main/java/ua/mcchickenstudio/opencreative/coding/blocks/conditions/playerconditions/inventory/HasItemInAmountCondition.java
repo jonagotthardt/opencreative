@@ -39,9 +39,9 @@ public class HasItemInAmountCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        ItemStack item = getArguments().getValue("item", new ItemStack(Material.APPLE), this);
-        int amount = getArguments().getValue("amount", item.getAmount(), this);
-        String compareMode = getArguments().getValue("compare-mode", "full", this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.APPLE), this);
+        int amount = getArguments().getInt("amount", item.getAmount(), this);
+        String compareMode = getArguments().getText("compare-mode", "full", this);
 
         Inventory inv = player.getInventory();
 

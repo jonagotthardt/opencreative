@@ -43,7 +43,7 @@ public final class RepeatForEachAction extends RepeatAction {
         if (link == null || list.isEmpty()) {
             return false;
         }
-        int index = getArguments().getValue("index",1,this);
+        int index = getArguments().getInt("index",1,this);
         if (index > list.size()) {
             arguments.removeArgumentValue("index");
             return false;

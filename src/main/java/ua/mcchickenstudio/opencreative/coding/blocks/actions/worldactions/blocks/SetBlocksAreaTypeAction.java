@@ -44,9 +44,9 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
         if (!getArguments().pathExists("first") || !getArguments().pathExists("second")) {
             return;
         }
-        Location firstLocation = getArguments().getValue("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location secondLocation = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
-        Material type = getArguments().getValue("type", Material.AIR,this);
+        Location firstLocation = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location secondLocation = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Material type = getArguments().getMaterial("type", Material.AIR,this);
         int minX = Math.min(firstLocation.getBlockX(),secondLocation.getBlockX());
         int minY = Math.min(firstLocation.getBlockY(),secondLocation.getBlockY());
         int minZ = Math.min(firstLocation.getBlockZ(),secondLocation.getBlockZ());

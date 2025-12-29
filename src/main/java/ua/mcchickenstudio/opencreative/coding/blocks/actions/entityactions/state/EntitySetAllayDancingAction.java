@@ -39,8 +39,8 @@ public final class EntitySetAllayDancingAction extends EntityAction {
         if (!(entity instanceof Allay allay)) {
             throw new UnsupportedEntityException(Allay.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
-        Location jukebox = getArguments().getValue("jukebox",
+        boolean value = getArguments().getBoolean("boolean", true, this);
+        Location jukebox = getArguments().getLocation("jukebox",
                 getPlanet().getTerritory().getSpawnLocation(), this);
         if (value) {
             if (getArguments().pathExists("jukebox")) {

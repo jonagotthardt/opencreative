@@ -33,7 +33,7 @@ public final class SetDifficultyAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-        String difficultyString = getArguments().getValue("difficulty", "normal",this);
+        String difficultyString = getArguments().getText("difficulty", "normal",this);
         Difficulty difficulty;
         try {
             difficulty = Difficulty.valueOf(difficultyString.toUpperCase());

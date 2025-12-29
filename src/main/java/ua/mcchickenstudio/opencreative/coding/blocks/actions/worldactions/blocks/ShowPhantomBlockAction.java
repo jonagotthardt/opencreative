@@ -39,8 +39,8 @@ public final class ShowPhantomBlockAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        final Location location = getArguments().getValue("location", entity.getLocation(), this);
-        final ItemStack item = getArguments().getValue("block", new ItemStack(Material.STONE), this);
+        final Location location = getArguments().getLocation("location", entity.getLocation(), this);
+        final ItemStack item = getArguments().getItem("block", new ItemStack(Material.STONE), this);
         if (location != null && item.getType().isBlock()) {
             AsyncScheduler.run(() -> OpenCreative.getPacketManager().showBlockForPlayer(player, location, item.getType()), AsyncScheduler.getScheduler());
         }

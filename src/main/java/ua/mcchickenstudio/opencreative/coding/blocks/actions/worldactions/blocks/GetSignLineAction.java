@@ -38,11 +38,11 @@ public final class GetSignLineAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        int number = getArguments().getValue("number",1,this);
+        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
+        int number = getArguments().getInt("number",1,this);
         Block block = location.getBlock();
         if (!(block.getState() instanceof Sign sign)) return;
-        String sideString = getArguments().getValue("side","front",this);
+        String sideString = getArguments().getText("side","front",this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
         if (number <= 0 || number > sign.getSide(side).lines().size()) number = 1;
         setVarValue(variable,sign.getSide(side).getLine(number-1));

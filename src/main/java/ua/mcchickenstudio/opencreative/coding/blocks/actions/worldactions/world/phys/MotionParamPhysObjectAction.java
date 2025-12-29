@@ -39,13 +39,13 @@ public final class MotionParamPhysObjectAction extends WorldAction {
     protected void execute(Entity entity) {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getValue("location", new Location(entity.getWorld(), 0, 0, 0), this),
-                        a.getValue("speed", 3, this),
-                        a.getValue("weight", 0.4, this),
-                        a.getValue("acceleration-speed", 0.06, this),
-                        a.getValue("speed-limit", 5, this),
-                        a.getValue("acceleration-weight", 0.02, this),
-                        a.getValue("weight-limit", 1.5, this)
+                        a.getLocation("location", new Location(entity.getWorld(), 0, 0, 0), this),
+                        a.getInt("speed", 3, this),
+                        a.getDouble("weight", 0.4, this),
+                        a.getDouble("acceleration-speed", 0.06, this),
+                        a.getInt("speed-limit", 5, this),
+                        a.getDouble("acceleration-weight", 0.02, this),
+                        a.getDouble("weight-limit", 1.5, this)
         ));
     }
 

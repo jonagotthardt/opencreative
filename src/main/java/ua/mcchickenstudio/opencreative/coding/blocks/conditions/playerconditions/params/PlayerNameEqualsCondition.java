@@ -36,7 +36,7 @@ public class PlayerNameEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        boolean requiredCaps = getArguments().getValue("require-caps",false,this);
+        boolean requiredCaps = getArguments().getBoolean("require-caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
         for (String name : names) {
             if (requiredCaps) {

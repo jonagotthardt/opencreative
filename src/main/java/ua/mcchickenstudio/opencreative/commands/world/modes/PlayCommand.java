@@ -92,7 +92,7 @@ public class PlayCommand extends CommandHandler {
         removePlayerWithLocation(player);
         if (planet.getMode() != Planet.Mode.PLAYING) {
             if (planet.getWorldPlayers().canDevelop(player)) {
-                PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING,player);
+                PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING, player);
                 event.callEvent();
                 if (event.isCancelled()) {
                     return;

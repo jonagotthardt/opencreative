@@ -41,14 +41,14 @@ public class HasItemInHandCondition extends PlayerCondition {
         List<ItemStack> items = getArguments().getItemList("items",this);
         if (items.isEmpty()) return false;
 
-        String hand = getArguments().getValue("hand","main-hand",this);
-        boolean ignoreAmount = getArguments().getValue("ignore-amount",true,this);
-        boolean ignoreName = getArguments().getValue("ignore-name",false,this);
-        boolean ignoreLore = getArguments().getValue("ignore-lore",false,this);
-        boolean ignoreEnchantments = getArguments().getValue("ignore-enchantments",false,this);
-        boolean ignoreFlags = getArguments().getValue("ignore-flags",false,this);
-        boolean ignoreMaterial = getArguments().getValue("ignore-material",false,this);
-        boolean ignoreDamage = getArguments().getValue("ignore-damage",false,this);
+        String hand = getArguments().getText("hand","main-hand",this);
+        boolean ignoreAmount = getArguments().getBoolean("ignore-amount",true,this);
+        boolean ignoreName = getArguments().getBoolean("ignore-name",false,this);
+        boolean ignoreLore = getArguments().getBoolean("ignore-lore",false,this);
+        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments",false,this);
+        boolean ignoreFlags = getArguments().getBoolean("ignore-flags",false,this);
+        boolean ignoreMaterial = getArguments().getBoolean("ignore-material",false,this);
+        boolean ignoreDamage = getArguments().getBoolean("ignore-damage",false,this);
 
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
         itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial, ignoreDamage);

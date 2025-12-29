@@ -38,8 +38,8 @@ public final class EntitySetPiglinDancingAction extends EntityAction {
         if (!(entity instanceof Piglin piglin)) {
             throw new UnsupportedEntityException(Piglin.class, entity);
         }
-        long time = getArguments().getValue("time", 100L, this);
-        boolean dance = getArguments().getValue("boolean", true, this);
+        long time = getArguments().getLong("time", 100L, this);
+        boolean dance = getArguments().getBoolean("boolean", true, this);
         if (getArguments().pathExists("time") && dance) {
             piglin.setDancing(time);
         } else {

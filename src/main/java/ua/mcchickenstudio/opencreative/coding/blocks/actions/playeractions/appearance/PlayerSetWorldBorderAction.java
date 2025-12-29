@@ -35,17 +35,17 @@ public final class PlayerSetWorldBorderAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        double radius = getArguments().getValue("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
-        int time = getArguments().getValue("time",0,this);
-        int warningDistance = getArguments().getValue("warning-distance",5,this);
-        int warningTime = getArguments().getValue("warning-time",15,this);
-        int safeDistance = getArguments().getValue("safe-distance",5,this);
+        double radius = getArguments().getDouble("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
+        int time = getArguments().getInt("time",0,this);
+        int warningDistance = getArguments().getInt("warning-distance",5,this);
+        int warningTime = getArguments().getInt("warning-time",15,this);
+        int safeDistance = getArguments().getInt("safe-distance",5,this);
         WorldBorder border = Bukkit.createWorldBorder();
         border.setSize(radius,time);
         border.setWarningTime(warningTime);
         border.setWarningDistance(warningDistance);
         border.setDamageBuffer(safeDistance);
-        Location center = getArguments().getValue("center",player.getLocation(),this);
+        Location center = getArguments().getLocation("center",player.getLocation(),this);
         border.setCenter(center);
         player.setWorldBorder(border);
     }

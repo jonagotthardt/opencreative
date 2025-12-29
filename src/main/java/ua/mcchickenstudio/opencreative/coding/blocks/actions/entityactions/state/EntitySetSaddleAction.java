@@ -37,7 +37,7 @@ public final class EntitySetSaddleAction extends EntityAction {
         if (!(entity instanceof Steerable steerable)) {
             throw new UnsupportedEntityException(Steerable.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         steerable.setSaddle(value);
     }
 

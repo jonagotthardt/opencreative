@@ -33,12 +33,12 @@ public final class SetWorldBorderAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-        double radius = getArguments().getValue("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
-        int time = getArguments().getValue("time",0,this);
-        int warningDistance = getArguments().getValue("warning-distance",5,this);
-        int warningTime = getArguments().getValue("warning-time",15,this);
-        double damage = getArguments().getValue("damage",0.2d,this);
-        int safeDistance = getArguments().getValue("safe-distance",5,this);
+        double radius = getArguments().getDouble("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
+        int time = getArguments().getInt("time",0,this);
+        int warningDistance = getArguments().getInt("warning-distance",5,this);
+        int warningTime = getArguments().getInt("warning-time",15,this);
+        double damage = getArguments().getDouble("damage",0.2d,this);
+        int safeDistance = getArguments().getInt("safe-distance",5,this);
         WorldBorder border = getWorld().getWorldBorder();
         border.setSize(Math.min(getPlanet().getTerritory().getWorldSize(),radius),time);
         border.setWarningTime(warningTime);

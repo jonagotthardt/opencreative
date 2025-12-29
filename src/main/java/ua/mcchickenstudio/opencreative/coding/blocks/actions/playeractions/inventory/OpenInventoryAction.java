@@ -42,12 +42,12 @@ public final class OpenInventoryAction extends PlayerAction {
              */
             throw new TooManyOpenedMenusException(player.getName());
         }
-        String inventoryTypeString = getArguments().getValue("type","chest",this);
+        String inventoryTypeString = getArguments().getText("type","chest",this);
         InventoryType inventoryType = InventoryType.CHEST;
         try {
             inventoryType = InventoryType.valueOf(inventoryTypeString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}
-        String title = getArguments().getValue("title",inventoryType.getDefaultTitle(),this);
+        String title = getArguments().getText("title",inventoryType.getDefaultTitle(),this);
         if (!inventoryType.isCreatable()) inventoryType = InventoryType.CHEST;
         player.openInventory(new CustomMenu(inventoryType,title).getInventory());
     }

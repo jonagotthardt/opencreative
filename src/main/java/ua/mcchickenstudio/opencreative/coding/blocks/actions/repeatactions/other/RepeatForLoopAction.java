@@ -41,10 +41,10 @@ public final class RepeatForLoopAction extends RepeatAction {
         if (link == null) {
             return false;
         }
-        double add = getArguments().getValue("add", 1.0d, this);
-        String type = getArguments().getValue("type", "less", this);
-        double untilValue = getArguments().getValue("range", 10.0d, this);
-        double currentValue = getArguments().getValue("variable", 0.0d, this);
+        double add = getArguments().getDouble("add", 1.0d, this);
+        String type = getArguments().getText("type", "less", this);
+        double untilValue = getArguments().getDouble("range", 10.0d, this);
+        double currentValue = getArguments().getDouble("variable", 0.0d, this);
         boolean execute = switch (type.toLowerCase()) {
             case "less" -> currentValue < untilValue;
             case "less-equals" -> currentValue <= untilValue;

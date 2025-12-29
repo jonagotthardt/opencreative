@@ -45,7 +45,7 @@ public final class EntityGivePotionEffectsAction extends EntityAction {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
         List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
-        boolean replace = getArguments().getValue("replace",true,this);
+        boolean replace = getArguments().getBoolean("replace",true,this);
         for (ItemStack potionItem : potionsItems) {
             PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
             List<PotionEffect> effects = new ArrayList<>();

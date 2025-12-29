@@ -34,7 +34,7 @@ public final class NegateNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getValue("number",1.0d,this);
+        double number = getArguments().getDouble("number",1.0d,this);
         double result = -number;
         setVarValue(variable, result);
     }

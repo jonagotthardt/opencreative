@@ -39,7 +39,7 @@ public final class GivePotionEffectsAction extends PlayerAction {
     @Override
     public void executePlayer(Player player) {
         List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
-        boolean replace = getArguments().getValue("replace",true,this);
+        boolean replace = getArguments().getBoolean("replace",true,this);
         for (ItemStack potionItem : potionsItems) {
             PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
             List<PotionEffect> effects = new ArrayList<>();

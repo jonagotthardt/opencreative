@@ -36,8 +36,8 @@ public final class BossBarColorAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getValue("name","boss",this);
-        String colorString = getArguments().getValue("color","purple",this);
+        String name = getArguments().getText("name","boss",this);
+        String colorString = getArguments().getText("color","purple",this);
         BossBar.Color color = BossBar.Color.PURPLE;
         try {
             color = BossBar.Color.valueOf(colorString.toUpperCase());

@@ -32,8 +32,8 @@ public final class SetTotalExpAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int exp = getArguments().getValue("exp",100,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int exp = getArguments().getInt("exp",100,this);
         if (add) {
             exp = exp + player.getTotalExperience();
         }

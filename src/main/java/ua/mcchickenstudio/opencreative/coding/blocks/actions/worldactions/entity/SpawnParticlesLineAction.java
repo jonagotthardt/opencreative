@@ -41,13 +41,13 @@ public final class SpawnParticlesLineAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn particles action is cancelled.");
             return;
         }
-        Particle particle = getArguments().getValue("particle",Particle.HEART,this);
-        int count = Math.min(30,getArguments().getValue("count",1,this));
-        double offsetX = getArguments().getValue("offset-x",0.0d,this);
-        double offsetY = getArguments().getValue("offset-y",0.0d,this);
-        double offsetZ = getArguments().getValue("offset-z",0.0d,this);
-        Location first = getArguments().getValue("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location second = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Particle particle = getArguments().getParticle("particle",Particle.HEART,this);
+        int count = Math.min(30,getArguments().getInt("count",1,this));
+        double offsetX = getArguments().getDouble("offset-x",0.0d,this);
+        double offsetY = getArguments().getDouble("offset-y",0.0d,this);
+        double offsetZ = getArguments().getDouble("offset-z",0.0d,this);
+        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
         Vector firstVector = first.toVector();
         Vector secondVector = second.toVector();
         Vector locationVector = secondVector.subtract(firstVector);

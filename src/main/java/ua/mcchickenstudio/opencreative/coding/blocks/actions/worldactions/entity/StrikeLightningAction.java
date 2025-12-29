@@ -42,7 +42,7 @@ public final class StrikeLightningAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        boolean damage = getArguments().getValue("damage",true,this);
+        boolean damage = getArguments().getBoolean("damage",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (damage) {
                 getPlanet().getTerritory().getWorld().strikeLightning(location);

@@ -33,8 +33,8 @@ public final class SetLastDamageAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        double damage = getArguments().getValue("damage",1.0d,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        double damage = getArguments().getDouble("damage",1.0d,this);
         if (add) {
             damage = damage + player.getLastDamage();
         }

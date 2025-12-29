@@ -44,7 +44,7 @@ public class CanSeeEntitiesCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         List<String> names = getArguments().getTextList("players",this);
-        boolean requireAll = getArguments().getValue("all",false,this);
+        boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean canSee = false;
         for (String name : names) {
             for (Entity entity : getEntitiesByNameOrUUID(name)) {

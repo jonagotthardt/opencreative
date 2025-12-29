@@ -55,7 +55,7 @@ public class IsLookingAtBlockCondition extends PlayerCondition {
                 return true;
             }
         }
-        double radius = getArguments().getValue("radius",0.5,this);
+        double radius = getArguments().getDouble("radius",0.5,this);
         Location location = block.getLocation();
         for (Location checkLocation : locations) {
             if (location.distance(checkLocation) <= radius) {

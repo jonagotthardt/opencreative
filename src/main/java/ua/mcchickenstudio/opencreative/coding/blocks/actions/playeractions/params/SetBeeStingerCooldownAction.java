@@ -32,8 +32,8 @@ public final class SetBeeStingerCooldownAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int cooldown = getArguments().getValue("cooldown",20,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int cooldown = getArguments().getInt("cooldown",20,this);
         if (add) {
             cooldown = cooldown + player.getBeeStingerCooldown();
         }

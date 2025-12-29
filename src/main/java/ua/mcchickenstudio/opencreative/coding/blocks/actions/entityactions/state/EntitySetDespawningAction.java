@@ -38,7 +38,7 @@ public final class EntitySetDespawningAction extends EntityAction {
         if (!(entity instanceof LivingEntity living)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean despawn = getArguments().getValue("boolean", true, this);
+        boolean despawn = getArguments().getBoolean("boolean", true, this);
         living.setRemoveWhenFarAway(despawn);
     }
 

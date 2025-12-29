@@ -35,7 +35,7 @@ public final class GetVectorZAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Vector vector = getArguments().getValue("vector",new Vector(),this);
+        Vector vector = getArguments().getVector("vector",new Vector(),this);
         setVarValue(link,vector.getZ());
     }
 

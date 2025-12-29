@@ -39,8 +39,8 @@ public class IsWorldPlayerInWorldCondition extends WorldCondition {
     @Override
     public boolean check(Entity entity) {
         List<String> players = getArguments().getTextList("players",this);
-        boolean allElements = getArguments().getValue("all",true,this);
-        String consider = getArguments().getValue("consider","all",this);
+        boolean allElements = getArguments().getBoolean("all",true,this);
+        String consider = getArguments().getText("consider","all",this);
         boolean inWorld = false;
         for (String requiredPlayer : players) {
             Player player = Bukkit.getPlayerExact(requiredPlayer);

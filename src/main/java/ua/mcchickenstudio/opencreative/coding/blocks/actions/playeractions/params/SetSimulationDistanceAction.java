@@ -32,8 +32,8 @@ public final class SetSimulationDistanceAction extends PlayerAction {
     }
 
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int distance = getArguments().getValue("distance",Bukkit.getSimulationDistance(),this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int distance = getArguments().getInt("distance",Bukkit.getSimulationDistance(),this);
         if (add) {
             distance = distance + player.getViewDistance();
         }
