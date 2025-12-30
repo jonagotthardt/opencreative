@@ -78,11 +78,4 @@ public class ChunkCache {
         return (31L * x + z + world.getUID().hashCode()) * 31L;
     }
 
-    /**
-     * Clears all stored chunks
-     */
-    public void clear() {
-        statusKeeper.clear();
-    }
-
 }
