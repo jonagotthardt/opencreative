@@ -851,16 +851,7 @@ public class Planet {
                         player.getInventory().addItem(item);
                     }
                 }
-                BukkitRunnable translation = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (getDevPlanet().getWorld() == null) return;
-                        getDevPlanet().translateCodingBlocks(player);
-                        territory.removeBukkitRunnable(this);
-                    }
-                };
-                territory.addBukkitRunnable(translation);
-                translation.runTaskLater(OpenCreative.getPlugin(),5L);
+                translateSigns(player, 10);
             }
         });
     }

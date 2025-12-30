@@ -218,6 +218,10 @@ public final class InteractListener implements Listener {
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             ItemStack item = player.getInventory().getItemInMainHand();
             if (item.isEmpty()) return true;
+            if (getItemType(item).equals("lines_controller")) {
+                Sounds.DEV_NOT_ALLOWED.play(player);
+                return true;
+            }
             ActionType action = ActionType.getType(clickedBlock.getRelative(BlockFace.DOWN));
             if (action == null) return true;
             if (action.getCategory() == ActionCategory.SELECTION_ACTION || action == ActionType.REPEAT_WHILE || action == ActionType.REPEAT_WHILE_NOT) {
@@ -256,6 +260,11 @@ public final class InteractListener implements Listener {
         }
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;
         if (player.isSneaking()) return true;
+        if (getItemType(player.getInventory().getItemInMainHand()).equals("lines_controller")) {
+            event.setCancelled(true);
+            Sounds.DEV_NOT_ALLOWED.play(player);
+            return false;
+        }
         Block actionBlock = clickedBlock.getRelative(BlockFace.DOWN);
         Block signBlock = actionBlock.getRelative(BlockFace.SOUTH);
         if (!(signBlock.getState() instanceof Sign sign)) return false;

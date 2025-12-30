@@ -66,7 +66,7 @@ public enum Items {
     /**
      * For moving lines and marking them in coding world.
      */
-    LINES_CONTROLLER(Material.COMPARATOR, "developer"),
+    LINES_CONTROLLER(Material.COMPARATOR, "developer", "lines_controller"),
     /**
      * For marking or unmarking condition as opposed.
      */
