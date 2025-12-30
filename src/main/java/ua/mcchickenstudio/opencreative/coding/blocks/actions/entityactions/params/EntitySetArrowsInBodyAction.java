@@ -43,6 +43,9 @@ public final class EntitySetArrowsInBodyAction extends EntityAction {
         if (add) {
             count = count + livingEntity.getArrowsInBody();
         }
+        if (count > 1000) {
+            count = 1000;
+        }
         livingEntity.setArrowsInBody(count);
     }
 

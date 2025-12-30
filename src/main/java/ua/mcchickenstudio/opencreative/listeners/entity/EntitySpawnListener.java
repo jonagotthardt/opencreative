@@ -147,7 +147,7 @@ public final class EntitySpawnListener implements Listener {
             }
         }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
-        if (isEntityInDevPlanet(entity) && !(event.getEntity() instanceof Item)) {
+        if (isEntityInDevPlanet(entity) && entity.getType() != EntityType.ITEM) {
             event.setCancelled(true);
         }
         if (planet != null) {

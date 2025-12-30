@@ -55,6 +55,9 @@ public final class SetBeeStingersInBodyAction extends PlayerAction {
         if (add) {
             count = count + player.getBeeStingersInBody();
         }
+        if (count > 1000) {
+            count = 1000;
+        }
         player.setBeeStingersInBody(count);
     }
 

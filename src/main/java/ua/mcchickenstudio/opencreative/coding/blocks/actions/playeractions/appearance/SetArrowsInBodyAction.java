@@ -55,6 +55,9 @@ public final class SetArrowsInBodyAction extends PlayerAction {
         if (add) {
             count = count + player.getArrowsInBody();
         }
+        if (count > 1000) {
+            count = 1000;
+        }
         player.setArrowsInBody(count);
     }
 
