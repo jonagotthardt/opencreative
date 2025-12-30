@@ -93,7 +93,7 @@ public final class OpenCreative extends JavaPlugin {
     private DevPlatformer devPlatformer;
     private CodingPrompter prompter;
 
-    private static final String version = "5.9.0 Pre-release 2";
+    private static final String version = "5.9.0 Pre-release 3";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -125,7 +125,7 @@ public final class OpenCreative extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
             player.showTitle(Title.title(
-                MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version),
+                MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version),
                 Component.text("§f" + codename + "..."),
                 Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
@@ -168,7 +168,7 @@ public final class OpenCreative extends JavaPlugin {
             teleportToLobby(player);
             getServer().sendActionBar(
                 MiniMessage.miniMessage().deserialize(
-                    "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
+                    "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
                 )
             );
         }
@@ -199,7 +199,7 @@ public final class OpenCreative extends JavaPlugin {
         for (Player player: Bukkit.getOnlinePlayers()) {
             player.sendMessage(
                 MiniMessage.miniMessage().deserialize(
-                        " \n<white> Shutting down Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <gray>" + version + "<white>, please wait...\n "
+                        " \n<white> Shutting down Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white>, please wait...\n "
                 ));
             teleportToLobby(player);
         }

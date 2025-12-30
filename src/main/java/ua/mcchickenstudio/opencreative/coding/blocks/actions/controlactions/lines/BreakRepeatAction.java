@@ -41,6 +41,7 @@ public final class BreakRepeatAction extends ControlAction {
         }
         if (handler.getAction() instanceof RepeatAction repeatAction) {
             repeatAction.setMustStop(true);
+            handler.removeAllActions();
         }
     }
 

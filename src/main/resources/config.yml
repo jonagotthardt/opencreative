@@ -196,7 +196,7 @@ messages:
   #
   locale: en
 
-  branding: "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+" # Branding uses minimessage (https://webui.advntr.dev/)
+  branding: "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f" # Prefix, that will be used in many messages.
   version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2025\n &c"
 
