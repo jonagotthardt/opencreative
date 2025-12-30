@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -26,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.menus.BlockMenu;
+
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * This class represents a menu where player can select type of coding block.
@@ -38,10 +41,12 @@ public abstract class BlocksWithMenusCategoryMenu<T> extends ContentWithMenusCat
     public BlocksWithMenusCategoryMenu(@NotNull Player player,
                                        @NotNull Location location,
                                        @NotNull String mainCategory,
-                                       @NotNull String titleName,
+                                       @NotNull String blockPath,
                                        @NotNull Material stainedPane,
                                        @NotNull MenusCategory defaultCategory) {
-        super(player,mainCategory,titleName,stainedPane,defaultCategory);
+        super(player, mainCategory,
+                ChatColor.stripColor(getLocaleMessage("blocks." + blockPath,false)),
+                stainedPane, defaultCategory);
         this.signLocation = location;
     }
 

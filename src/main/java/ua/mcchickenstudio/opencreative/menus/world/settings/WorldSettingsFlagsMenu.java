@@ -41,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 
 public final class WorldSettingsFlagsMenu extends AbstractMenu {
 
-    private final ItemStack BACK_ITEM = createItem(Material.SPECTRAL_ARROW,1,"menus.world-settings-flags.items.back");
+    private final ItemStack BACK_ITEM = createItem(Material.ARROW,1,"menus.world-settings-flags.items.back");
 
     public WorldSettingsFlagsMenu() {
         super(6, MessageUtils.getLocaleMessage("menus.world-settings.title"));
@@ -316,7 +316,7 @@ public final class WorldSettingsFlagsMenu extends AbstractMenu {
 
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer((Player) event.getWhoClicked());
         if (planet == null) return;
-        if (event.getCurrentItem().getType() == Material.SPECTRAL_ARROW) {
+        if (event.getCurrentItem().getType() == Material.ARROW) {
             new WorldSettingsMenu(planet, (Player) event.getWhoClicked()).open((Player) event.getWhoClicked());
         } else if (event.getCurrentItem().getType() != Material.AIR) {
             RadioButton rd = RadioButton.getRadioButtonByItemStack(event.getCurrentItem());

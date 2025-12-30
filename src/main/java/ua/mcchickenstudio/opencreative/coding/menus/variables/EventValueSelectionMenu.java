@@ -20,13 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -91,6 +85,6 @@ public final class EventValueSelectionMenu extends ContentWithMenusCategoryMenu<
 
     @Override
     public List<EventValue> getElements() {
-        return EventValues.getInstance().getEventValues();
+        return EventValues.getInstance().getByCategories(currentCategory);
     }
 }

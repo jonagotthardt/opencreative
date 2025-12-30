@@ -121,7 +121,7 @@ public abstract class ListBrowserMenu<T> extends AbstractListMenu<T> {
     @Override
     protected void fillEmpty() {
         for (int slot : getElementsSlots()) {
-            setItem(slot, AIR_ITEM);
+            setItem(slot, null);
         }
         setItem(nextPageButtonSlot,getNextPageEmptyButton());
         setItem(previousPageButtonSlot,getPreviousPageEmptyButton());

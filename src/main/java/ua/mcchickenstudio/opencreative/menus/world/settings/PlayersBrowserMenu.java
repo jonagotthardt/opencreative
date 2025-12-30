@@ -69,7 +69,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
     private final List<ParameterButton> buttons = new ArrayList<>();
 
     private final ItemStack KICK_ALL = createItem(Material.STRUCTURE_VOID,1,"menus.players-browser.items.kick-all");
-    private final ItemStack BACK_TO_SETTINGS = createItem(Material.SPECTRAL_ARROW,1,"menus.players-browser.items.back");
+    private final ItemStack BACK_TO_SETTINGS = createItem(Material.ARROW,1,"menus.players-browser.items.back");
 
     public PlayersBrowserMenu(Player player, Planet planet) {
         super(player,getLocaleMessage("menus.players-browser.title",false),
@@ -305,7 +305,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,Math.max(1, getCurrentPage()-1),"menus.players-browser.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.players-browser.items.previous-page"),"%page%",getCurrentPage()-1);
     }
 
     @Override

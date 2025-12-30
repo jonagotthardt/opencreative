@@ -190,7 +190,7 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,Math.max(1, getCurrentPage()-1),"menus.own-worlds.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.own-worlds.items.previous-page"),"%page%",getCurrentPage()-1);
     }
 
     @Override

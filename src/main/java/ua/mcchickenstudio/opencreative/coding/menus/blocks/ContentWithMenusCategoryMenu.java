@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -29,7 +28,6 @@ import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * This class represents a menu where player can select type of coding block.
@@ -48,16 +46,15 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
 
     public ContentWithMenusCategoryMenu(@NotNull Player player,
                                         @NotNull String mainCategory,
-                                        @NotNull String titleName,
+                                        @NotNull String title,
                                         @NotNull Material stainedPane,
                                         @NotNull MenusCategory defaultCategory) {
-        super(player,ChatColor.stripColor(getLocaleMessage("blocks." + titleName,false)),
-                PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45},new int[]{45,46,52,53});
+        super(player, title, PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45},new int[]{45,46,52,53});
         this.mainCategory = mainCategory;
         this.player = player;
         this.stainedPane = stainedPane;
         this.currentCategory = defaultCategory;
-        this.BACK_TO_CATEGORIES = createItem(Material.SPECTRAL_ARROW, 1, "items.developer.categories." + mainCategory + ".back-to-categories","categories");
+        this.BACK_TO_CATEGORIES = createItem(Material.ARROW, 1, "items.developer.categories." + mainCategory + ".back-to-categories","categories");
     }
 
     public void setCategoriesMenu(MenusCategorySelectionMenu categoriesMenu) {
@@ -112,7 +109,7 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW,1,"items.developer.categories." + mainCategory + ".previous-page"),"%page%", getCurrentPage() -1);
+        return replacePlaceholderInName(createItem(Material.ARROW,1,"items.developer.categories." + mainCategory + ".previous-page"),"%page%", getCurrentPage() -1);
     }
 
     @Override

@@ -48,7 +48,7 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
     private final ItemStack OWN_WORLDS = createItem(Material.REPEATING_COMMAND_BLOCK,1,"menus.all-worlds.items.own-worlds");
     private final ItemStack DECORATION_OWN_WORLDS = createItem(Material.PURPLE_STAINED_GLASS_PANE,1);
     private final ItemStack SEARCH = createItem(Material.SPYGLASS,1,"menus.all-worlds.items.search");
-    private final ItemStack ALL_WORLDS = createItem(Material.SPECTRAL_ARROW,1,"menus.recommended-worlds.items.all-worlds");
+    private final ItemStack ALL_WORLDS = createItem(Material.ARROW,1,"menus.recommended-worlds.items.all-worlds");
 
     public RecommendedWorldsMenu() {
         super(6, getLocaleMessage("menus.recommended-worlds.title",false));
