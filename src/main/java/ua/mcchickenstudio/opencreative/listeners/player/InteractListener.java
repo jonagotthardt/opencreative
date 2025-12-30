@@ -40,12 +40,10 @@ import ua.mcchickenstudio.opencreative.coding.menus.*;
 import ua.mcchickenstudio.opencreative.coding.menus.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.coding.menus.variables.EventValuesMenu;
-import ua.mcchickenstudio.opencreative.coding.menus.variables.ParticlesMenu;
-import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
-import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.variables.*;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
@@ -156,7 +154,12 @@ public final class InteractListener implements Listener {
                 if (player.isSneaking()) {
                     new ValueTargetSelectionMenu(player).open(player);
                 } else {
-                    new EventValuesMenu(player).open(player);
+                    if (Experiments.isEnabled("new_event_values_menu")) {
+                        new EventValuesCategorySelectionMenu(player, player.getInventory().getItemInMainHand())
+                                .open(player);
+                    } else {
+                        new EventValuesMenu(player).open(player);
+                    }
                 }
             }
             case COMPARATOR -> {

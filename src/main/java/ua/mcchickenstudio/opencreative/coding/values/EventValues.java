@@ -156,12 +156,30 @@ public final class EventValues {
                 new WorldMoonPhaseValue());
     }
 
+    /**
+     * Returns list of event values, that have same menu category.
+     * @param menusCategory menu category.
+     * @return list of event values with specified menu category.
+     */
     public @NotNull List<EventValue> getByCategories(@NotNull MenusCategory menusCategory) {
-        List<EventValue> list = new ArrayList<>();
+        List<EventValue> list = new LinkedList<>();
         for (EventValue name : eventValues) {
             if (name.getCategory() == menusCategory) {
                 list.add(name);
             }
+        }
+        return list;
+    }
+
+    /**
+     * Returns list of all menu categories of all event values.
+     * @return list of menu categories.
+     */
+    public @NotNull List<MenusCategory> getCategories() {
+        List<MenusCategory> list = new LinkedList<>();
+        for (EventValue value : eventValues) {
+            if (list.contains(value.getCategory())) continue;
+            list.add(value.getCategory());
         }
         return list;
     }

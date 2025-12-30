@@ -43,6 +43,8 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
     private ActionCategory actionCategory = null;
     private String firstLine = null;
 
+    private final Location location;
+
     public BlocksCategorySelectionMenu(@NotNull Player player,
                                        @NotNull Location location,
                                        @NotNull ExecutorCategory category) {
@@ -50,7 +52,8 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
                 category.getStainedPane(),
                 ExecutorType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
-                "events", location, category);
+                "events", category);
+        this.location = location;
     }
 
     public BlocksCategorySelectionMenu(@NotNull Player player,
@@ -60,7 +63,8 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
                 category.getStainedPane(),
                 ActionType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
-                category.isCondition() ? "conditions" : "actions", location, category);
+                category.isCondition() ? "conditions" : "actions", category);
+        this.location = location;
     }
 
     public BlocksCategorySelectionMenu(@NotNull Player player,
@@ -71,12 +75,13 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
                 category.getStainedPane(),
                 ActionType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
-                category.isCondition() ? "conditions" : "actions", location, category);
+                category.isCondition() ? "conditions" : "actions", category);
         this.firstLine = firstLine;
+        this.location = location;
     }
 
     @Override
-    public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(final Location location, final Object frequency) {
+    public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(final Object frequency) {
         BlocksWithMenusCategoryMenu<?> content;
         if (frequency instanceof ActionCategory category) {
             this.actionCategory = category;

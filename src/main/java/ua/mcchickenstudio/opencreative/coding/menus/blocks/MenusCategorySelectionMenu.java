@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -51,7 +50,6 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final String mainCategory;
     protected ContentWithMenusCategoryMenu<?> contentMenu;
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
-    protected final Location location;
     protected final Object frequency;
     protected final boolean legacy = OpenCreative.getSettings().getCodingSettings().isLegacySelectionMenu();
 
@@ -61,7 +59,6 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
                                       @NotNull Collection<MenusCategory> menusCategories,
                                       @NotNull String title,
                                       @NotNull String mainCategory,
-                                      @NotNull Location location,
                                       @NotNull Object frequency
     ) {
         super(6, title);
@@ -70,15 +67,14 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
         this.additionalPane = additionalPane;
         this.mainItem = mainItem;
         this.mainCategory = mainCategory;
-        this.location = location;
         this.frequency = frequency;
     }
 
-    public abstract @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(Location location, Object frequency);
+    public abstract @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(Object frequency);
 
     @Override
     public void fillItems(Player player) {
-        if (contentMenu == null) this.contentMenu = getContentBrowserMenu(location, frequency);
+        if (contentMenu == null) this.contentMenu = getContentBrowserMenu(frequency);
         contentMenu.setCategoriesMenu(this);
         if (legacy) {
             fillLegacy();
