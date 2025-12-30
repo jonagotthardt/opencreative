@@ -39,7 +39,7 @@ public final class EntityLaunchHorizontalAction extends EntityAction {
         } else if (power > 20) {
             power = 20;
         }
-        entity.setVelocity(entity.getLocation().getDirection().multiply(power));
+        entity.setVelocity(entity.getVelocity().add(entity.getLocation().getDirection().multiply(power)));
     }
 
     @Override

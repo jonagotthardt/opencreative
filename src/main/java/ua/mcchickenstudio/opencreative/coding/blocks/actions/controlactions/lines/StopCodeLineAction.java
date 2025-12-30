@@ -19,11 +19,9 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 
@@ -34,14 +32,7 @@ public final class StopCodeLineAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        if (getHandler().getAction() instanceof RepeatAction repeat) {
-            repeat.setMustStop(true);
-        }
-        getHandler().removeAllActions();
-        ActionsHandler parentHandler = getHandler().getParentActionHandler();
-        if (parentHandler != null) {
-            parentHandler.removeAllActions();
-        }
+        getHandler().stopAllParentHandlers();
     }
 
     @Override

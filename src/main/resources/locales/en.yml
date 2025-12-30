@@ -5927,6 +5927,22 @@ items:
           - "&6 Texts &7- Loop names"
           - " "
           - "&eClick to set the action."
+      control-break-repeat:
+        name: "&cStop repetition"
+        lore:
+          - "&7This will stop the repetition and"
+          - "&7execute the action after"
+          - "&7the repeating pistons."
+          - " "
+          - "&eClick to set the action."
+      control-skip-repeat:
+        name: "&bSkip repetition"
+        lore:
+          - "&7This will not execute the following"
+          - "&7actions in the repetition, but will"
+          - "&7start next iteration."
+          - " "
+          - "&eClick to set the action."
       control-stop-code-line:
         name: "&3Stop Action Execution"
         lore:
@@ -17351,7 +17367,7 @@ blocks:
   player_changed_sign: "Sign changed"
   player_entered_vehicle: "Entered Vehicle"
   player_vehicle_exit: "Vehicle Exit"
-  player_set_bee_stingers: "Number of stingers"
+  player_set_bee_stingers_in_body: "Number of stingers"
 
   world_play_mode: "&aPlay mode"
   world_variable_transfer: "Value receive"
@@ -17400,7 +17416,7 @@ blocks:
   entity_set_silent: "Silence"
   entity_set_physics: "Mob physics"
   entity_set_collidable: "Mob collision"
-  entity_set_bee_stingers: "Number of stingers"
+  entity_set_bee_stingers_in_body: "Number of stingers"
   entity_pig_zombie_angered: "Zombie Pig Angered"
   entity_bat_toggled_sleep_mode: "Bat sleep mode"
   entity_slime_split: "Slime Split"
@@ -17672,6 +17688,8 @@ blocks:
   control_clear_global_variables: "&cClear Global"
   control_launch_cycles: "&aLaunch cycle"
   control_stop_cycles: "&3Stop cycle"
+  control_skip_repeat: "&bSkip repeat"
+  control_break_repeat: "&cStop repeat"
 
   var_set_value: "Assign value"
   var_get_type: "Get type of var"

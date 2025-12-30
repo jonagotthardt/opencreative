@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -71,8 +72,9 @@ public abstract class Condition extends Action {
         boolean check = false;
         if (getTargets().isEmpty()) return;
         for (Entity entity : getTargets()) {
-            this.entity = entity;
-            if (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld()) {
+            if (entity == null) continue;
+            if (entity.getWorld().equals(getPlanet().getWorld()) || !OpenCreative.getSettings().getCodingSettings().isIgnoreActionsIfEntityNotInWorld()) {
+                this.entity = entity;
                 if (check(entity)) {
                     check = true;
                 }

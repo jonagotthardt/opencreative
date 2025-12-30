@@ -16,35 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.RepeatAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
-public final class LaunchVerticalAction extends PlayerAction {
-    public LaunchVerticalAction(Executor executor, Target target, int x, Arguments args) {
+public final class SkipRepeatAction extends ControlAction {
+    public SkipRepeatAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
-    public void executePlayer(@NotNull Player player) {
-        float power = getArguments().getFloat("power",1.0f,this);
-        if (power < -20) {
-            power = -20;
-        } else if (power > 20) {
-            power = 20;
+    protected void execute(Entity entity) {
+        ActionsHandler handler = getHandler().getFirstActionsHandler(ActionCategory.REPEAT_ACTION);
+        if (handler == null) {
+            return;
         }
-        player.setVelocity(player.getVelocity().add(new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ())));
+        if (handler.getAction() instanceof RepeatAction) {
+            handler.removeAllActions();
+        }
     }
 
     @Override
     public ActionType getActionType() {
-        return ActionType.PLAYER_LAUNCH_VERTICAL;
+        return ActionType.CONTROL_SKIP_REPEAT;
     }
 }

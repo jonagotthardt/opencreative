@@ -231,6 +231,9 @@ coding:
     # To test them, use /world platformer [ID].
   cancel-chat-on-value-set: false # Cancels sending message to local chat, when player sets new value of text, number, vector,
                                   # variable, potion, color while holding item in hand.
+  ignore-actions-if-entity-not-in-world: false # If true, will cancel any action (player, entity, variable, world, control...)
+                                               # if target entity in action is not in world. By default, it's false to make
+                                               # possible to execute non-player and non-entity actions, that don't require entity.
 
   #
   # You can disable some coding blocks,

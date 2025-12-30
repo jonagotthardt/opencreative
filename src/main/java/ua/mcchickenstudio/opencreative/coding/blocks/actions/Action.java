@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
@@ -86,9 +87,11 @@ public abstract class Action {
         sendCodingDebugAction(this);
         if (this instanceof SelectionAction) {
             execute(null);
+            return;
         }
         for (Entity entity : getTargets()) {
-            if (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld()) {
+            if (entity == null) continue;
+            if (entity.getWorld().equals(getPlanet().getWorld()) || !OpenCreative.getSettings().getCodingSettings().isIgnoreActionsIfEntityNotInWorld()) {
                 this.entity = entity;
                 execute(entity);
             }
