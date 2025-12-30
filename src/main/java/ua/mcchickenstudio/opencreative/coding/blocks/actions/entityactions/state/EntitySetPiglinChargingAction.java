@@ -38,7 +38,7 @@ public final class EntitySetPiglinChargingAction extends EntityAction {
         if (!(entity instanceof Piglin piglin)) {
             throw new UnsupportedEntityException(Piglin.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         piglin.setChargingCrossbow(value);
     }
 

@@ -40,7 +40,7 @@ public class HasPotionEffectsCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
-        boolean requireAll = getArguments().getValue("all",false,this);
+        boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean hasEffect = false;
         for (ItemStack potionItem : potionsItems) {
             PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();

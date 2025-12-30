@@ -40,11 +40,11 @@ public final class SpawnParticleAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn particles action is cancelled.");
             return;
         }
-        Particle particle = getArguments().getValue("particle",Particle.HEART,this);
-        int count = Math.min(30,getArguments().getValue("count",1,this));
-        double offsetX = getArguments().getValue("offset-x",0.0d,this);
-        double offsetY = getArguments().getValue("offset-y",0.0d,this);
-        double offsetZ = getArguments().getValue("offset-z",0.0d,this);
+        Particle particle = getArguments().getParticle("particle",Particle.HEART,this);
+        int count = Math.min(30,getArguments().getInt("count",1,this));
+        double offsetX = getArguments().getDouble("offset-x",0.0d,this);
+        double offsetY = getArguments().getDouble("offset-y",0.0d,this);
+        double offsetZ = getArguments().getDouble("offset-z",0.0d,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             getPlanet().getTerritory().getWorld().spawnParticle(particle,location,count,offsetX,offsetY,offsetZ);
         }

@@ -34,9 +34,9 @@ public final class SetItemInHandAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack mainItem = getArguments().getValue("main",new ItemStack(Material.AIR),this);
-        ItemStack offItem = getArguments().getValue("off",new ItemStack(Material.AIR),this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
+        ItemStack mainItem = getArguments().getItem("main",new ItemStack(Material.AIR),this);
+        ItemStack offItem = getArguments().getItem("off",new ItemStack(Material.AIR),this);
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",false,this);
         if (replaceWithAir || !mainItem.isEmpty()) player.getInventory().setItemInMainHand(mainItem);
         if (replaceWithAir || !offItem.isEmpty()) player.getInventory().setItemInOffHand(offItem);
     }

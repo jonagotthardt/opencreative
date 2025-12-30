@@ -36,8 +36,8 @@ public final class SetItemAmountAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE,1),this),this);
-        int amount = getArguments().getValue("amount",item.getAmount(),this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE,1),this),this);
+        int amount = getArguments().getInt("amount",item.getAmount(),this);
         item.setAmount(amount);
         setVarValue(link,item);
     }

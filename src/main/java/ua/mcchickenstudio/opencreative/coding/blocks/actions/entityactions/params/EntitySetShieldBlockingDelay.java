@@ -39,8 +39,8 @@ public final class EntitySetShieldBlockingDelay extends EntityAction {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
 
-        boolean add = getArguments().getValue("add",false,this);
-        int delay = getArguments().getValue("delay", 0,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int delay = getArguments().getInt("delay", 0,this);
         if (add) {
             delay = delay + livingEntity.getShieldBlockingDelay();
         }

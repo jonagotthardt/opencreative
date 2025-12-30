@@ -33,7 +33,7 @@ public final class PlayerSetWeatherAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String weatherString = getArguments().getValue("weather", "clean",this);
+        String weatherString = getArguments().getText("weather", "clean",this);
         WeatherType weather = (weatherString.equals("storm") ? WeatherType.DOWNFALL : WeatherType.CLEAR);
         player.setPlayerWeather(weather);
     }

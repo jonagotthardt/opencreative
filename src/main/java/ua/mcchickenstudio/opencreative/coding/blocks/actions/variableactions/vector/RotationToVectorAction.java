@@ -38,8 +38,8 @@ public final class RotationToVectorAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable", this);
         final float
-        yaw = getArguments().getValue("yaw", 0, this),
-        pitch = getArguments().getValue("pitch", 0, this);
+        yaw = getArguments().getInt("yaw", 0, this),
+        pitch = getArguments().getInt("pitch", 0, this);
         final double
         yawRad = Math.toRadians(yaw),
         pitchRad = Math.toRadians(pitch),

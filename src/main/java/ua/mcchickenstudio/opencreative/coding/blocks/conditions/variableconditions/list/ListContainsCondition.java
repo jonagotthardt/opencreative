@@ -39,7 +39,7 @@ public class ListContainsCondition extends VariableCondition {
     public boolean check(Entity entity) {
         List<Object> list = getArguments().getList("list",this);
         List<Object> elements = getArguments().getList("elements",this);
-        boolean allElements = getArguments().getValue("all",true,this);
+        boolean allElements = getArguments().getBoolean("all",true,this);
         if (allElements) {
             return new HashSet<>(list).containsAll(elements);
         } else {

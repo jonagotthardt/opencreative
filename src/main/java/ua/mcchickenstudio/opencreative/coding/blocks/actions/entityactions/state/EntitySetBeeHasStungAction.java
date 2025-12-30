@@ -38,7 +38,7 @@ public final class EntitySetBeeHasStungAction extends EntityAction {
         if (!(entity instanceof Bee bee)) {
             throw new UnsupportedEntityException(Bee.class, entity);
         }
-        boolean hasStung = getArguments().getValue("boolean", true, this);
+        boolean hasStung = getArguments().getBoolean("boolean", true, this);
         bee.setHasStung(hasStung);
     }
 

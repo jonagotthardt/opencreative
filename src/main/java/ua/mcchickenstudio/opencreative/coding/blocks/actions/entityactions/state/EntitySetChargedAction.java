@@ -36,7 +36,7 @@ public final class EntitySetChargedAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof WitherSkull skull) {
             skull.setCharged(value);
         } else if (entity instanceof Creeper creeper) {

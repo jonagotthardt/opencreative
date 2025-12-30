@@ -35,7 +35,7 @@ public final class EntitySetHookApplyLureAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof FishHook hook) {
             hook.setApplyLure(value);
         } else {

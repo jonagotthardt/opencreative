@@ -32,7 +32,7 @@ public final class ApplyMendingAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        int amount = getArguments().getValue("amount",1,this);
+        int amount = getArguments().getInt("amount",1,this);
         player.applyMending(amount);
     }
 

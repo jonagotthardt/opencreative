@@ -38,8 +38,8 @@ public final class ScoreboardSetDisplayNameAction extends WorldAction {
         if (!getArguments().pathExists("name") || !getArguments().pathExists("display-name")) {
             return;
         }
-        String name = getArguments().getValue("name","board",this);
-        Component displayName = getArguments().getValue("display-name", Component.text("Scoreboard"), this);
+        String name = getArguments().getText("name","board",this);
+        Component displayName = getArguments().getComponent("display-name", Component.text("Scoreboard"), this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
         if (scoreboard == null) {
             return;

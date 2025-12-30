@@ -32,7 +32,7 @@ public final class SendHurtAnimationAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        float yaw = getArguments().getValue("yaw",player.getYaw(),this);
+        float yaw = getArguments().getFloat("yaw",player.getYaw(),this);
         player.sendHurtAnimation(yaw);
     }
 

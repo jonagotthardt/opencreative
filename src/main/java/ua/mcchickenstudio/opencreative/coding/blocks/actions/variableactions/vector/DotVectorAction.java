@@ -35,8 +35,8 @@ public final class DotVectorAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Vector first = getArguments().getValue("first",new Vector(),this);
-        Vector second = getArguments().getValue("second",new Vector(),this);
+        Vector first = getArguments().getVector("first",new Vector(),this);
+        Vector second = getArguments().getVector("second",new Vector(),this);
         setVarValue(link,first.dot(second));
     }
 

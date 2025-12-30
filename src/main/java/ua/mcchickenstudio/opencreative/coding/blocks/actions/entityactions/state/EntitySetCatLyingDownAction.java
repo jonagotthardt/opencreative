@@ -38,7 +38,7 @@ public final class EntitySetCatLyingDownAction extends EntityAction {
         if (!(entity instanceof Cat cat)) {
             throw new UnsupportedEntityException(Cat.class, entity);
         }
-        boolean laying = getArguments().getValue("boolean", true, this);
+        boolean laying = getArguments().getBoolean("boolean", true, this);
         cat.setLyingDown(laying);
     }
 

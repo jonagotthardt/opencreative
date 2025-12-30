@@ -35,9 +35,9 @@ public class NumberGreaterCondition extends VariableCondition {
 
     @Override
     public boolean check(Entity entity) {
-        double first = getArguments().getValue("first",2.0d,this);
-        double second = getArguments().getValue("second",1.0d,this);
-        boolean equals = getArguments().getValue("equals",false,this);
+        double first = getArguments().getDouble("first",2.0d,this);
+        double second = getArguments().getDouble("second",1.0d,this);
+        boolean equals = getArguments().getBoolean("equals",false,this);
         if (equals) {
             return first >= second;
         }

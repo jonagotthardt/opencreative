@@ -32,7 +32,7 @@ public final class SetSneakingAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.setSneaking(getArguments().getValue("boolean",false,this));
+        player.setSneaking(getArguments().getBoolean("boolean",false,this));
     }
 
     @Override

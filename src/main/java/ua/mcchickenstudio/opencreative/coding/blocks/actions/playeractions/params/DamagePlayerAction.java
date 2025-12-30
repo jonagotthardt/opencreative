@@ -34,7 +34,7 @@ public final class DamagePlayerAction extends PlayerAction {
         if (player.isDead()) {
             return;
         }
-        player.damage(getArguments().getValue("damage",2.0d,this));
+        player.damage(getArguments().getDouble("damage",2.0d,this));
     }
 
     @Override

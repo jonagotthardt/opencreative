@@ -49,8 +49,8 @@ public final class SpawnTextDisplayAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getValue("name",Component.text(""),this);
-        Component text = getArguments().getValue("text",Component.text(""),this);
+        Component customName = getArguments().getComponent("name",Component.text(""),this);
+        Component text = getArguments().getComponent("text",Component.text(""),this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);

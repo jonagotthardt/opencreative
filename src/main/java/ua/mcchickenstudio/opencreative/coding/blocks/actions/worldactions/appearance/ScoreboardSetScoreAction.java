@@ -37,9 +37,9 @@ public final class ScoreboardSetScoreAction extends WorldAction {
         if (!getArguments().pathExists("name") || !getArguments().pathExists("object")) {
             return;
         }
-        String name = getArguments().getValue("name","board",this);
-        String object = getArguments().getValue("object","board",this);
-        int score = getArguments().getValue("score",0,this);
+        String name = getArguments().getText("name","board",this);
+        String object = getArguments().getText("object","board",this);
+        int score = getArguments().getInt("score",0,this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
         if (scoreboard == null) {
             return;

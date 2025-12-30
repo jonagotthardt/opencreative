@@ -39,7 +39,7 @@ public final class EntitySetMinecartBlockAction extends EntityAction {
         if (!(entity instanceof Minecart minecart)) {
             throw new UnsupportedEntityException(Minecart.class, entity);
         }
-        Material material = getArguments().getValue("block", Material.GRASS_BLOCK, this);
+        Material material = getArguments().getMaterial("block", Material.GRASS_BLOCK, this);
         minecart.setDisplayBlockData(material.createBlockData());
     }
 

@@ -32,8 +32,8 @@ public final class SetViewDistanceAction extends PlayerAction {
     }
 
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int distance = getArguments().getValue("distance",player.getClientViewDistance(),this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int distance = getArguments().getInt("distance",player.getClientViewDistance(),this);
         if (add) {
             distance = distance + player.getViewDistance();
         }

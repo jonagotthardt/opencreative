@@ -32,8 +32,8 @@ public final class SetNoDamageTicksAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int ticks = getArguments().getValue("ticks",0,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int ticks = getArguments().getInt("ticks",0,this);
         if (add) {
             ticks = ticks + player.getNoDamageTicks();
         }

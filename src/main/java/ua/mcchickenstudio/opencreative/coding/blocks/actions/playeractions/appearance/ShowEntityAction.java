@@ -34,7 +34,7 @@ public final class ShowEntityAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String text = getArguments().getValue("entity"," ",this);
+        String text = getArguments().getText("entity"," ",this);
         for (Entity entity : getEntitiesByNameOrUUID(text)) {
             player.showEntity(OpenCreative.getPlugin(),entity);
         }

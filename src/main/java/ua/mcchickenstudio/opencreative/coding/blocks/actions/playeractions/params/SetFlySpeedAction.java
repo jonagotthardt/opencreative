@@ -33,8 +33,8 @@ public final class SetFlySpeedAction extends PlayerAction  {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        float speed = getArguments().getValue("speed",0.6f,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        float speed = getArguments().getFloat("speed",0.6f,this);
         if (add) {
             speed = player.getFlySpeed() + speed;
         }

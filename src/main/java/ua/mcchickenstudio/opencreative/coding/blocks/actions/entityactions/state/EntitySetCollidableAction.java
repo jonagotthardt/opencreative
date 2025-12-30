@@ -35,7 +35,7 @@ public final class EntitySetCollidableAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof LivingEntity living) {
             living.setCollidable(value);
         } else {

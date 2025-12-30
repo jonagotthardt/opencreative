@@ -38,7 +38,7 @@ public final class EntitySetHandAction extends EntityAction {
         if (!(entity instanceof Mob mob)) {
             throw new UnsupportedEntityException(Mob.class, entity);
         }
-        String hand = getArguments().getValue("hand", "right", this);
+        String hand = getArguments().getText("hand", "right", this);
         mob.setLeftHanded(hand.equalsIgnoreCase("left"));
     }
 

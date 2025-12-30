@@ -39,8 +39,8 @@ public class HasItemCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         List<ItemStack> items = getArguments().getItemList("items", this);
-        boolean all = getArguments().getValue("all", false, this);
-        String compareMode = getArguments().getValue("compare-mode", "min-items", this);
+        boolean all = getArguments().getBoolean("all", false, this);
+        String compareMode = getArguments().getText("compare-mode", "min-items", this);
 
         if (all) {
             return items.stream().allMatch(itemStack -> matches(itemStack, player, compareMode));

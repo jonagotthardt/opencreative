@@ -37,8 +37,8 @@ public final class FormatUnixTimeAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        long unixTime = getArguments().getValue("time", 0L,this);
-        String format = getArguments().getValue("format", "dd/MM/yyyy HH:mm:ss", this);
+        long unixTime = getArguments().getLong("time", 0L,this);
+        String format = getArguments().getText("format", "dd/MM/yyyy HH:mm:ss", this);
         String result = new SimpleDateFormat(format).format(new Date(unixTime));
         setVarValue(link, result);
     }

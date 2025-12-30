@@ -40,7 +40,7 @@ public final class CalculateFromListAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = getArguments().getList("list",this);
-        final String type = getArguments().getValue("calculation", "get-min", this);
+        final String type = getArguments().getText("calculation", "get-min", this);
 
         if (elements != null && !elements.isEmpty() && elements.getFirst() instanceof Number) {
             List<Number> numbers = elements.stream()

@@ -37,8 +37,8 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        boolean requiredColor = getArguments().getValue("color",false,this);
-        boolean requiredCaps = getArguments().getValue("caps",false,this);
+        boolean requiredColor = getArguments().getBoolean("color",false,this);
+        boolean requiredCaps = getArguments().getBoolean("caps",false,this);
         List<String> names = getArguments().getTextList("names",this);
         String title = player.getOpenInventory().getTitle();
         for (String name : names) {

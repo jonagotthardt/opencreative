@@ -41,8 +41,8 @@ public final class DropItemAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.BREAD,1),this);
-        boolean naturally = getArguments().getValue("naturally",true,this);
+        ItemStack item = getArguments().getItem("item",new ItemStack(Material.BREAD,1),this);
+        boolean naturally = getArguments().getBoolean("naturally",true,this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             if (naturally) {
                 setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItemNaturally(location,item));

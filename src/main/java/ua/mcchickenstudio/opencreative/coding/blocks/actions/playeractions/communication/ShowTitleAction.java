@@ -36,11 +36,11 @@ public final class ShowTitleAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        Component title = getArguments().getValue("title", Component.text(""),this);
-        Component subtitle = getArguments().getValue("subtitle", Component.text(""),this);
-        int fadeIn = getArguments().getValue("fade-in",20,this);
-        int stay = getArguments().getValue("stay",60,this);
-        int fadeOut = getArguments().getValue("stay-out",10,this);
+        Component title = getArguments().getComponent("title", Component.text(""),this);
+        Component subtitle = getArguments().getComponent("subtitle", Component.text(""),this);
+        int fadeIn = getArguments().getInt("fade-in",20,this);
+        int stay = getArguments().getInt("stay",60,this);
+        int fadeOut = getArguments().getInt("stay-out",10,this);
         /*
          * We multiply ticks by 50L to
          * convert them into milliseconds.

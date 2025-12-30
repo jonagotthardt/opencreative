@@ -39,9 +39,9 @@ public final class SetArmorStandPoseAction extends EntityAction {
         if (!(entity instanceof ArmorStand armorStand)) {
             throw new UnsupportedEntityException(ArmorStand.class, entity);
         }
-        double x = getArguments().getValue("x",0.0d,this);
-        double y = getArguments().getValue("x",0.0d,this);
-        double z = getArguments().getValue("x",0.0d,this);
+        double x = getArguments().getDouble("x",0.0d,this);
+        double y = getArguments().getDouble("x",0.0d,this);
+        double z = getArguments().getDouble("x",0.0d,this);
         armorStand.setBodyPose(new EulerAngle(x,y,z));
     }
 

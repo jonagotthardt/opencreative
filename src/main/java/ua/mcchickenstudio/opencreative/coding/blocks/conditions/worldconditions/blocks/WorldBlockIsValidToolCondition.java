@@ -40,8 +40,8 @@ public class WorldBlockIsValidToolCondition extends WorldCondition {
     @Override
     public boolean check(Entity entity) {
         List<Location> blockLocations = getArguments().getLocationList("blocks",this);
-        ItemStack tool = getArguments().getValue("tool",new ItemStack(Material.AIR),this);
-        boolean requireAll = getArguments().getValue("all",true,this);
+        ItemStack tool = getArguments().getItem("tool",new ItemStack(Material.AIR),this);
+        boolean requireAll = getArguments().getBoolean("all",true,this);
         boolean isPreferred = false;
         for (Location location : blockLocations) {
             if (getWorld().getBlockAt(location).isValidTool(tool)) {

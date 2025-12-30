@@ -32,8 +32,8 @@ public final class SetExpLevelAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int level = getArguments().getValue("level",0,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int level = getArguments().getInt("level",0,this);
         if (!add) {
             player.setLevel(level);
         } else {

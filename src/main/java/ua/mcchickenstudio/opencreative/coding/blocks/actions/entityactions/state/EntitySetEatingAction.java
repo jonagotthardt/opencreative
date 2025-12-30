@@ -33,7 +33,7 @@ public final class EntitySetEatingAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean eating = getArguments().getValue("boolean", true, this);
+        boolean eating = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof AbstractHorse horse) {
             horse.setEating(eating);
         } else if (entity instanceof Panda panda) {

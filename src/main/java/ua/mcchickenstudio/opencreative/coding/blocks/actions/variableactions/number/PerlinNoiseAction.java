@@ -40,13 +40,13 @@ public final class PerlinNoiseAction extends VariableAction {
         VariableLink link = getArguments().getVariableLink("variable",this);
         if (link == null) return;
 
-        long seed = getArguments().getValue("seed",1L,this);
-        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        double lacunarity = getArguments().getValue("lacunarity",1.0d,this);
-        int octaves = getArguments().getValue("octaves",7,this);
-        double frequency = getArguments().getValue("frequency",0.5d,this);
-        double amplitude = getArguments().getValue("amplitude",-3.0d,this);
-        boolean normalize = getArguments().getValue("normalize",true,this);
+        long seed = getArguments().getLong("seed",1L,this);
+        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
+        double lacunarity = getArguments().getDouble("lacunarity",1.0d,this);
+        int octaves = getArguments().getInt("octaves",7,this);
+        double frequency = getArguments().getDouble("frequency",0.5d,this);
+        double amplitude = getArguments().getDouble("amplitude",-3.0d,this);
+        boolean normalize = getArguments().getBoolean("normalize",true,this);
 
         PerlinNoiseGenerator generator = new PerlinNoiseGenerator(seed);
 

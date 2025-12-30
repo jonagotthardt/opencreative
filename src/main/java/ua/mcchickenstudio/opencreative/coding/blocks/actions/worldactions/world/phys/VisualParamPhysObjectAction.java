@@ -39,14 +39,14 @@ public final class VisualParamPhysObjectAction extends WorldAction {
     protected void execute(Entity entity) {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getValue("particle", Particle.CLOUD, this),
+                        a.getParticle("particle", Particle.CLOUD, this),
                         a.getValue("particle2", this),
-                        a.getValue("param1", 1, this),
-                        a.getValue("param2", 0, this),
-                        a.getValue("param3", 0, this),
-                        a.getValue("param4", 0, this),
-                        a.getValue("hit-particle", Particle.EXPLOSION, this),
-                        a.getValue("hit-param1", 1, this)
+                        a.getInt("param1", 1, this),
+                        a.getInt("param2", 0, this),
+                        a.getInt("param3", 0, this),
+                        a.getInt("param4", 0, this),
+                        a.getParticle("hit-particle", Particle.EXPLOSION, this),
+                        a.getInt("hit-param1", 1, this)
         ));
     }
 

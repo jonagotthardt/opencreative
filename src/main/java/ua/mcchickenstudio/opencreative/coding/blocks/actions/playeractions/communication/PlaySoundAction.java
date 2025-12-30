@@ -37,16 +37,16 @@ public final class PlaySoundAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String sound = getArguments().getValue("sound","entity.player.levelup",this);
-        ItemStack musicDisc = getArguments().getValue("sound",new ItemStack(Material.AIR),this);
+        String sound = getArguments().getText("sound","entity.player.levelup",this);
+        ItemStack musicDisc = getArguments().getItem("sound",new ItemStack(Material.AIR),this);
         if (musicDisc.getType() != Material.AIR && musicDisc.getType().name().contains("MUSIC_DISC")) {
             sound = musicDisc.getType().name().toLowerCase().replace("music_disc_","music_disc.");
         }
-        float volume = getArguments().getValue("volume",100f,this);
-        float pitch = getArguments().getValue("pitch",1f,this);
-        String categoryString = getArguments().getValue("category","ambient",this);
-        Location location = getArguments().getValue("location",player.getLocation(),this);
-        long seed = getArguments().getValue("seed",0L,this);
+        float volume = getArguments().getFloat("volume",100f,this);
+        float pitch = getArguments().getFloat("pitch",1f,this);
+        String categoryString = getArguments().getText("category","ambient",this);
+        Location location = getArguments().getLocation("location",player.getLocation(),this);
+        long seed = getArguments().getLong("seed",0L,this);
         SoundCategory category;
         try {
             category = SoundCategory.valueOf(categoryString.toUpperCase());

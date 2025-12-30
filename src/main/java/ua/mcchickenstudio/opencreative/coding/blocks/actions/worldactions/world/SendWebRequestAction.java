@@ -48,10 +48,10 @@ public final class SendWebRequestAction extends WorldAction {
             return;
         }
 
-        String url = getArguments().getValue("url", "", this);
-        String body = getArguments().getValue("body", "", this);
-        String request = getArguments().getValue("request", "GET", this).toUpperCase();
-        String media = getArguments().getValue("media", "text", this);
+        String url = getArguments().getText("url", "", this);
+        String body = getArguments().getText("body", "", this);
+        String request = getArguments().getText("request", "GET", this).toUpperCase();
+        String media = getArguments().getText("media", "text", this);
 
         if (url.isEmpty()) return;
 

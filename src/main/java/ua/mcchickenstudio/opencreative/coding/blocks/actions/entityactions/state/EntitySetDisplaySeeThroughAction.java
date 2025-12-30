@@ -36,7 +36,7 @@ public final class EntitySetDisplaySeeThroughAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (entity instanceof TextDisplay display) {
-            display.setSeeThrough(getArguments().getValue("see",true,this));
+            display.setSeeThrough(getArguments().getBoolean("see",true,this));
         } else {
             throw new UnsupportedEntityException(TextDisplay.class, entity);
         }

@@ -34,8 +34,8 @@ public final class MinNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        double first = getArguments().getValue("first",0,this);
-        double second = getArguments().getValue("second",1,this);
+        double first = getArguments().getInt("first",0,this);
+        double second = getArguments().getInt("second",1,this);
         setVarValue(variable, Math.min(first,second));
     }
 

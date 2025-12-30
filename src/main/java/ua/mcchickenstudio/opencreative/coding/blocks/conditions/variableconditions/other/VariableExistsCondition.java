@@ -37,7 +37,7 @@ public class VariableExistsCondition extends VariableCondition {
     @Override
     public boolean check(Entity entity) {
         List<VariableLink> links = getArguments().getVarLinksList("variables",this);
-        boolean requireAll = getArguments().getValue("all",false,this);
+        boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean exists = false;
         for (VariableLink link : links) {
             if (getPlanet().getVariables().getVariable(link,this) != null) {

@@ -40,10 +40,10 @@ public final class TeamSetColorAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getValue("scoreboard","board",this);
-        String teamName = getArguments().getValue("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard","board",this);
+        String teamName = getArguments().getText("team","team",this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
-        Color color = getArguments().getValue("color",Color.BLUE,this);
+        Color color = getArguments().getColor("color",Color.BLUE,this);
         if (scoreboard == null) {
             return;
         }

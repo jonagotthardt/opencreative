@@ -115,6 +115,7 @@ public final class PlayerUtils {
         player.setNoDamageTicks(20);
         player.setMaximumNoDamageTicks(20);
         player.setArrowsInBody(0);
+        player.setBeeStingersInBody(0);
         player.setExp(0);
         player.setLevel(0);
         player.setMaxHealth(20);

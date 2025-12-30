@@ -38,7 +38,7 @@ public final class EntitySetBreedAction extends EntityAction {
         if (!(entity instanceof Breedable breedable)) {
             throw new UnsupportedEntityException(Breedable.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         breedable.setBreed(value);
     }
 

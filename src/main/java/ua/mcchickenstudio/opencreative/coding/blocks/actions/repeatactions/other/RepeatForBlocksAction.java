@@ -45,8 +45,8 @@ public final class RepeatForBlocksAction extends RepeatAction {
             return false;
         }
 
-        Location first = getArguments().getValue("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location second = getArguments().getValue("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
 
         int minX = Math.min(first.getBlockX(), second.getBlockX());
         int minY = Math.min(first.getBlockY(), second.getBlockY());
@@ -61,9 +61,9 @@ public final class RepeatForBlocksAction extends RepeatAction {
             return false;
         }
 
-        int currentX = arguments.getValue("current-x",minX,this);
-        int currentY = arguments.getValue("current-y",minY,this);
-        int currentZ = arguments.getValue("current-z",minZ-1,this);
+        int currentX = arguments.getInt("current-x",minX,this);
+        int currentY = arguments.getInt("current-y",minY,this);
+        int currentZ = arguments.getInt("current-z",minZ-1,this);
 
         currentZ++;
         if (currentZ > maxZ) {

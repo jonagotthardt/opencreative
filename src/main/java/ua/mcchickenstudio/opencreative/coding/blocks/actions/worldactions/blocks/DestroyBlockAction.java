@@ -42,9 +42,9 @@ public final class DestroyBlockAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        ItemStack item = getArguments().getValue("item",new ItemStack(Material.NETHERITE_PICKAXE),this);
-        boolean triggerEffect = getArguments().getValue("show-particle",true,this);
-        boolean dropExperience = getArguments().getValue("drop-experience",true,this);
+        ItemStack item = getArguments().getItem("item",new ItemStack(Material.NETHERITE_PICKAXE),this);
+        boolean triggerEffect = getArguments().getBoolean("show-particle",true,this);
+        boolean dropExperience = getArguments().getBoolean("drop-experience",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {

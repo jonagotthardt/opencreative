@@ -32,8 +32,8 @@ public final class SetExpAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        float exp = getArguments().getValue("exp",0.0f,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        float exp = getArguments().getFloat("exp",0.0f,this);
         if (!add) {
             player.setExp(exp);
         } else {

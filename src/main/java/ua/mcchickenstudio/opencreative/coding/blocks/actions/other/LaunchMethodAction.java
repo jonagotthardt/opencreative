@@ -38,7 +38,7 @@ public final class LaunchMethodAction extends Action {
 
     @Override
     protected void execute(Entity entity) {
-        String name = getArguments().getValue("name","",this);
+        String name = getArguments().getText("name","",this);
         if (name.isEmpty()) return;
         List<Method> methods = new ArrayList<>();
         for (Method method : getPlanet().getTerritory().getScript().getExecutors().getMethodsList()) {

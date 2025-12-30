@@ -38,7 +38,7 @@ public final class EntitySetHasChestAction extends EntityAction {
         if (!(entity instanceof ChestedHorse chested)) {
             throw new UnsupportedEntityException(ChestedHorse.class, entity);
         }
-        boolean hasChest = getArguments().getValue("boolean", true, this);
+        boolean hasChest = getArguments().getBoolean("boolean", true, this);
         chested.setCarryingChest(hasChest);
     }
 

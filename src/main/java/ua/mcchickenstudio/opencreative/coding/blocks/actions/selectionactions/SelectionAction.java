@@ -104,7 +104,7 @@ public abstract class SelectionAction extends Action {
         }
         getPlanet().getLimits().setLastModifiedTargetsAmount(getPlanet().getLimits().getLastRedstoneOperationsAmount() + size);
         if (getPlanet().getLimits().getLastModifiedTargetsAmount() > getPlanet().getLimits().getTargetsChangesLimit()) {
-            getPlanet().stopCode( "targets changes limit");
+            getPlanet().getTerritory().getScript().getExecutors().stopCode( "targets changes limit");
             sendPlanetCodeCriticalErrorMessage(getPlanet(),getExecutor(),getLocaleMessage("coding-error.targets-changes-limit",false)
                     .replace("%limit%",String.valueOf(getPlanet().getLimits().getTargetsChangesLimit())));
             return;

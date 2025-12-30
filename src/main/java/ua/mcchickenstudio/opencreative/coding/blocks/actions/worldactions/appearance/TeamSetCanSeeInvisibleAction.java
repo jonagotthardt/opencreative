@@ -37,10 +37,10 @@ public final class TeamSetCanSeeInvisibleAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getValue("scoreboard","board",this);
-        String teamName = getArguments().getValue("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard","board",this);
+        String teamName = getArguments().getText("team","team",this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
-        boolean visible = getArguments().getValue("visible",true,this);
+        boolean visible = getArguments().getBoolean("visible",true,this);
         if (scoreboard == null) {
             return;
         }

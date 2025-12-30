@@ -33,7 +33,7 @@ public final class EntitySetAggressiveAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean angry = getArguments().getValue("boolean", true, this);
+        boolean angry = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof Wolf wolf) {
             wolf.setAngry(angry);
         }

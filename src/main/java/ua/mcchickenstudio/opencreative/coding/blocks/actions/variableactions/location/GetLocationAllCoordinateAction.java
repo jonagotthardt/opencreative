@@ -34,7 +34,7 @@ public class GetLocationAllCoordinateAction extends VariableAction {
 
     @Override
     protected void execute(Entity entity) {
-        Location location = getArguments().getValue("location",entity.getLocation(),this);
+        Location location = getArguments().getLocation("location",entity.getLocation(),this);
 
         VariableLink x = getArguments().getVariableLink("x",this);
         VariableLink y = getArguments().getVariableLink("y",this);

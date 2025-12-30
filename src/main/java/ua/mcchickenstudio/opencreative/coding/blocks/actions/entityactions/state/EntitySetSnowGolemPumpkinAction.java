@@ -38,7 +38,7 @@ public final class EntitySetSnowGolemPumpkinAction extends EntityAction {
         if (!(entity instanceof Snowman snowman)) {
             throw new UnsupportedEntityException(Snowman.class, entity);
         }
-        boolean pumpkin = getArguments().getValue("boolean", true, this);
+        boolean pumpkin = getArguments().getBoolean("boolean", true, this);
         snowman.setDerp(!pumpkin);
     }
 

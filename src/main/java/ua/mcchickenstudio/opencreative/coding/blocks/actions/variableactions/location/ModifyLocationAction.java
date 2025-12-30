@@ -35,28 +35,28 @@ public final class ModifyLocationAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getValue("location",entity.getLocation(),this);
+        Location location = getArguments().getLocation("location",entity.getLocation(),this);
         location = location.clone();
-        boolean add = getArguments().getValue("add",false,this);
+        boolean add = getArguments().getBoolean("add",false,this);
         double x = (add ? 0.0d : location.getX());
         double y = (add ? 0.0d : location.getY());
         double z = (add ? 0.0d : location.getZ());
         float yaw = (add ? 0.0f : location.getYaw());
         float pitch = (add ? 0.0f : location.getPitch());
         if (getArguments().pathExists("x")) {
-            x = getArguments().getValue("x",x,this);
+            x = getArguments().getDouble("x",x,this);
         }
         if (getArguments().pathExists("y")) {
-            y = getArguments().getValue("y",y,this);
+            y = getArguments().getDouble("y",y,this);
         }
         if (getArguments().pathExists("z")) {
-            z = getArguments().getValue("z",z,this);
+            z = getArguments().getDouble("z",z,this);
         }
         if (getArguments().pathExists("yaw")) {
-            yaw = getArguments().getValue("yaw",yaw,this);
+            yaw = getArguments().getFloat("yaw",yaw,this);
         }
         if (getArguments().pathExists("pitch")) {
-            pitch = getArguments().getValue("pitch",pitch,this);
+            pitch = getArguments().getFloat("pitch",pitch,this);
         }
         if (add) {
             location.setX(location.getX()+x);

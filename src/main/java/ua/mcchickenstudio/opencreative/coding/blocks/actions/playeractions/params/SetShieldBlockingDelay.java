@@ -32,8 +32,8 @@ public final class SetShieldBlockingDelay extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int delay = getArguments().getValue("delay", 0,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int delay = getArguments().getInt("delay", 0,this);
         if (add) {
             delay = delay + player.getShieldBlockingDelay();
         }

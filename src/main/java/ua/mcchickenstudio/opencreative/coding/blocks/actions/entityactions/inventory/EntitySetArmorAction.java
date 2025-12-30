@@ -40,11 +40,11 @@ public final class EntitySetArmorAction extends EntityAction {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
         if (living.getEquipment() == null) return;
-        ItemStack helmet = getArguments().getValue("helmet", ItemStack.empty(),this);
-        ItemStack chestplate = getArguments().getValue("chestplate",ItemStack.empty(),this);
-        ItemStack leggings = getArguments().getValue("leggings",ItemStack.empty(),this);
-        ItemStack boots = getArguments().getValue("boots",ItemStack.empty(),this);
-        boolean replaceWithAir = getArguments().getValue("replace-with-air",false,this);
+        ItemStack helmet = getArguments().getItem("helmet", ItemStack.empty(),this);
+        ItemStack chestplate = getArguments().getItem("chestplate",ItemStack.empty(),this);
+        ItemStack leggings = getArguments().getItem("leggings",ItemStack.empty(),this);
+        ItemStack boots = getArguments().getItem("boots",ItemStack.empty(),this);
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",false,this);
         if (replaceWithAir || !helmet.isEmpty()) {
             living.getEquipment().setHelmet(helmet);
         }

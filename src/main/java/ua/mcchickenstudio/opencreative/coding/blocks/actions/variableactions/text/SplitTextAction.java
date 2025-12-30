@@ -37,8 +37,8 @@ public final class SplitTextAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getValue("text", " ",this);
-        String splitter = getArguments().getValue("splitter", " ",this);
+        String text = getArguments().getText("text", " ",this);
+        String splitter = getArguments().getText("splitter", " ",this);
         setVarValue(link, new ArrayList<>(List.of(text.split(splitter))));
     }
 

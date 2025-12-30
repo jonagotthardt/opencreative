@@ -32,8 +32,8 @@ public final class SetFlyingAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean flying = getArguments().getValue("flying",false,this);
-        boolean allowFlight = getArguments().getValue("allow-flight",false,this);
+        boolean flying = getArguments().getBoolean("flying",false,this);
+        boolean allowFlight = getArguments().getBoolean("allow-flight",false,this);
         player.setAllowFlight(flying);
         player.setFlying(flying);
         player.setAllowFlight(allowFlight);

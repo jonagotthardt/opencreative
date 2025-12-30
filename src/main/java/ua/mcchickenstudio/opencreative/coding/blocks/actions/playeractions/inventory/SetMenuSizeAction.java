@@ -43,7 +43,7 @@ public final class SetMenuSizeAction extends PlayerAction {
             return;
         }
         InventoryView oldInventory = player.getOpenInventory();
-        int rows = getArguments().getValue("rows",6,this);
+        int rows = getArguments().getInt("rows",6,this);
         if (rows > 6) rows = 6;
         else if (rows < 1) rows = 1;
         Inventory newInventory = new CustomMenu(rows*9,oldInventory.getTitle()).getInventory();

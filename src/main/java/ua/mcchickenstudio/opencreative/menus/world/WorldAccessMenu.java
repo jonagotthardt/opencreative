@@ -128,7 +128,7 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                     return;
                 }
                 player.setCooldown(PLAY_MODE.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
-                PlanetModeChangeEvent planetEvent = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING);
+                PlanetModeChangeEvent planetEvent = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING, player);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
                     Sounds.PLAYER_FAIL.play(player);

@@ -194,14 +194,14 @@ public class Arguments {
         }
     }
 
-    public final boolean pathExists(String path) {
+    public final boolean pathExists(@NotNull String path) {
         for (Argument argument : argumentList) {
             if (argument.getPath().equals(path)) return true;
         }
         return false;
     }
 
-    private @Nullable Argument getArg(String path) {
+    private @Nullable Argument getArg(@NotNull String path) {
         for (Argument argument : argumentList) {
             if (argument.getPath().equals(path)) {
                 return argument;
@@ -210,7 +210,7 @@ public class Arguments {
         return null;
     }
 
-    public final @NotNull Map<Object, Object> getMap(String path, Action action) {
+    public final @NotNull Map<Object, Object> getMap(@NotNull String path, @NotNull Action action) {
         Map<Object, Object> map = new LinkedHashMap<>();
         Argument arg = getArg(path);
         if (arg == null) {
@@ -229,7 +229,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final <T> List<T> getList(String path, Action action) {
+    public final <T> List<T> getList(@NotNull String path, @NotNull Action action) {
         List<T> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null) {
@@ -254,7 +254,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<VariableLink> getVarLinksList(String path, Action action) {
+    public final @NotNull List<VariableLink> getVarLinksList(@NotNull String path, @NotNull Action action) {
         List<VariableLink> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
@@ -274,7 +274,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<Boolean> getBooleanList(String path, Action action) {
+    public final @NotNull List<Boolean> getBooleanList(@NotNull String path, @NotNull Action action) {
         List<Boolean> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
@@ -298,7 +298,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<String> getTextList(String path, Action action) {
+    public final @NotNull List<String> getTextList(@NotNull String path, @NotNull Action action) {
         List<String> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
@@ -324,7 +324,7 @@ public class Arguments {
         return list;
     }
 
-    public final List<Component> getComponentList(String path, Action action) {
+    public final @NotNull List<Component> getComponentList(@NotNull String path, @NotNull Action action) {
         List<Component> list = new ArrayList<>();
         List<String> texts = getTextList(path,action);
         for (String text : texts) {
@@ -335,7 +335,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<Double> getNumbersList(String path, Action action) {
+    public final @NotNull List<Double> getNumbersList(@NotNull String path, @NotNull Action action) {
         List<Double> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
@@ -354,7 +354,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<ItemStack> getItemList(String path, Action action) {
+    public final @NotNull List<ItemStack> getItemList(@NotNull String path, @NotNull Action action) {
         List<ItemStack> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
@@ -372,7 +372,7 @@ public class Arguments {
     }
 
     @SuppressWarnings("unchecked")
-    public final List<Location> getLocationList(String path, Action action) {
+    public final @NotNull List<Location> getLocationList(@NotNull String path, @NotNull Action action) {
         List<Location> list = new ArrayList<>();
         Argument arg = getArg(path);
         if (arg != null && arg.isList()) {
@@ -394,7 +394,13 @@ public class Arguments {
         return list;
     }
 
-    public VariableLink getVariableLink(String path, Action action) {
+    /**
+     * Returns variable link stored in arguments.
+     * @param path key of argument, that stores boolean value.
+     * @param action action, that asks for variable link.
+     * @return variable link, or null - if not found.
+     */
+    public @Nullable VariableLink getVariableLink(@NotNull String path, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet,path);
@@ -408,7 +414,14 @@ public class Arguments {
         return null;
     }
 
-    public Material getValue(String path, Material defaultValue, Action action) {
+    /**
+     * Returns material value stored in arguments.
+     * @param path key of argument, that stores material value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Material getMaterial(@NotNull String path, @NotNull Material defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet,path);
@@ -437,7 +450,14 @@ public class Arguments {
         return defaultValue;
     }
 
-    public ItemStack getValue(String path, ItemStack defaultValue, Action action) {
+    /**
+     * Returns item value stored in arguments.
+     * @param path key of argument, that stores item value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull ItemStack getItem(@NotNull String path, @NotNull ItemStack defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet,path);
@@ -451,7 +471,14 @@ public class Arguments {
         return defaultValue;
     }
 
-    public boolean getValue(String path, boolean defaultValue, Action action) {
+    /**
+     * Returns boolean value stored in arguments.
+     * @param path key of argument, that stores boolean value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public boolean getBoolean(@NotNull String path, boolean defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         boolean value = defaultValue;
         if (arg == null) {
@@ -475,7 +502,14 @@ public class Arguments {
         return value;
     }
 
-    public int getValue(String path, int defaultValue, Action action) {
+    /**
+     * Returns integer number value stored in arguments.
+     * @param path key of argument, that stores integer number value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public int getInt(@NotNull String path, int defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         int value = defaultValue;
         if (arg == null) {
@@ -487,7 +521,14 @@ public class Arguments {
         return value;
     }
 
-    public long getValue(String path, long defaultValue, Action action) {
+    /**
+     * Returns long number value stored in arguments.
+     * @param path key of argument, that stores long number value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public long getLong(@NotNull String path, long defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         long value = defaultValue;
         if (arg == null) {
@@ -499,7 +540,14 @@ public class Arguments {
         return value;
     }
 
-    public Color getValue(String path, Color defaultValue, Action action) {
+    /**
+     * Returns color value stored in arguments.
+     * @param path key of argument, that stores color value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Color getColor(@NotNull String path, Color defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         Color value = defaultValue;
         if (arg == null) {
@@ -511,7 +559,14 @@ public class Arguments {
         return value;
     }
 
-    public float getValue(String path, float defaultValue, Action action) {
+    /**
+     * Returns float value stored in arguments.
+     * @param path key of argument, that stores float value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public float getFloat(@NotNull String path, float defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         float value = defaultValue;
         if (arg == null) {
@@ -523,19 +578,33 @@ public class Arguments {
         return value;
     }
 
-    public double getValue(String path, double defaultValue, Action action) {
+    /**
+     * Returns double value stored in arguments.
+     * @param path key of argument, that stores double value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public double getDouble(@NotNull String path, double defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         double value = defaultValue;
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet, path);
         } else {
-            value = parseObject(arg.getValue(action),defaultValue);
+            value = parseObject(arg.getValue(action), defaultValue);
             sendCodingDebugVariable(planet,path,value);
         }
         return value;
     }
 
-    public String getValue(String path, String defaultValue, Action action) {
+    /**
+     * Returns text value stored in arguments.
+     * @param path key of argument, that stores text value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull String getText(@NotNull String path, @NotNull String defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet,path);
@@ -545,7 +614,14 @@ public class Arguments {
         return arg.getValue(action).toString();
     }
 
-    public Component getValue(String path, Component defaultValue, Action action) {
+    /**
+     * Returns component value stored in arguments.
+     * @param path key of argument, that stores component value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Component getComponent(@NotNull String path, @NotNull Component defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg == null) {
             sendCodingDebugNotFoundVariable(planet,path);
@@ -572,7 +648,14 @@ public class Arguments {
         return Component.text(text);
     }
 
-    public Particle getValue(String path, Particle defaultValue, Action action) {
+    /**
+     * Returns particle value stored in arguments.
+     * @param path key of argument, that stores particle value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Particle getParticle(@NotNull String path, @NotNull Particle defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg != null && arg.getValue(action) instanceof Particle particle) {
             sendCodingDebugVariable(planet,path,arg.getValue(action));
@@ -582,7 +665,14 @@ public class Arguments {
         return defaultValue;
     }
 
-    public char getValue(String path, char defaultValue, Action action) {
+    /**
+     * Returns character value stored in arguments.
+     * @param path key of argument, that stores character value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public char getCharacter(@NotNull String path, char defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         if (arg != null) {
             String value = arg.getValue(action).toString();
@@ -595,7 +685,14 @@ public class Arguments {
         return defaultValue;
     }
 
-    public Location getValue(String path, Location defaultValue, Action action) {
+    /**
+     * Returns location value stored in arguments.
+     * @param path key of argument, that stores location value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Location getLocation(@NotNull String path, @NotNull Location defaultValue, @NotNull Action action) {
         Argument arg = getArg(path);
         Location locationValue = defaultValue;
         if (arg == null) {
@@ -612,7 +709,14 @@ public class Arguments {
         return locationValue.clone();
     }
 
-    public Vector getValue(String path, Vector defaultValue, Action action) {
+    /**
+     * Returns vector value stored in arguments.
+     * @param path key of argument, that stores vector value.
+     * @param defaultValue default value.
+     * @param action action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Vector getVector(String path, Vector defaultValue, Action action) {
         Argument arg = getArg(path);
         Vector vectionValue = defaultValue;
         if (arg == null) {

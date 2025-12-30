@@ -38,7 +38,7 @@ public final class EntitySetFoxLeapingAction extends EntityAction {
         if (!(entity instanceof Fox fox)) {
             throw new UnsupportedEntityException(Fox.class, entity);
         }
-        boolean leap = getArguments().getValue("boolean", true, this);
+        boolean leap = getArguments().getBoolean("boolean", true, this);
         fox.setLeaping(leap);
     }
 

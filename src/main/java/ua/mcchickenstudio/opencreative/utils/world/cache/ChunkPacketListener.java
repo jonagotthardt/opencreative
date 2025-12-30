@@ -29,6 +29,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Collections;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
 public class ChunkPacketListener extends PacketAdapter {
 
@@ -41,6 +42,7 @@ public class ChunkPacketListener extends PacketAdapter {
     @Override
     public void onPacketSending(PacketEvent event) {
         final World world = event.getPlayer().getWorld();
+        if (!isDevPlanet(world)) return;
         try {
             final int
             chunkX = event.getPacket().getIntegers().read(0),

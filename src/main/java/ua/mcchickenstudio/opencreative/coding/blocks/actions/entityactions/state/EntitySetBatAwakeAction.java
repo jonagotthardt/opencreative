@@ -35,7 +35,7 @@ public final class EntitySetBatAwakeAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         if (entity instanceof Bat bat) {
             bat.setAwake(value);
         } else {

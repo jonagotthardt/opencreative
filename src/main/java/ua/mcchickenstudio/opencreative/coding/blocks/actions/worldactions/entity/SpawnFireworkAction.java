@@ -43,7 +43,7 @@ public final class SpawnFireworkAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        ItemStack firework = getArguments().getValue("firework",new ItemStack(Material.FIREWORK_ROCKET,1),this);
+        ItemStack firework = getArguments().getItem("firework",new ItemStack(Material.FIREWORK_ROCKET,1),this);
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.FIREWORK_ROCKET);
             if (spawnedEntity instanceof Firework rocket) {

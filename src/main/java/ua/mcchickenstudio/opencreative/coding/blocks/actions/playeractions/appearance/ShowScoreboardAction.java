@@ -36,7 +36,7 @@ public final class ShowScoreboardAction extends PlayerAction {
     public void executePlayer(Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
         if (getArguments().pathExists("scoreboard")) {
-            String name = getArguments().getValue("scoreboard"," ",this);
+            String name = getArguments().getText("scoreboard"," ",this);
             scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
             if (scoreboard == null) {
                 scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();

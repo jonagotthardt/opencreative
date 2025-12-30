@@ -40,7 +40,7 @@ public final class SetBlockTypeAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        Material material = getArguments().getValue("type", Material.AIR,this);
+        Material material = getArguments().getMaterial("type", Material.AIR,this);
         PlanetRunnable planetRunnable = new PlanetRunnable(getPlanet()) {
             @Override
             public void execute() {

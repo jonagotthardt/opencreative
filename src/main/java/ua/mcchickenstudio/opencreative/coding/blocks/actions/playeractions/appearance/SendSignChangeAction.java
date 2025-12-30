@@ -35,9 +35,9 @@ public final class SendSignChangeAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String text = getArguments().getValue("text","Hello world!",this);
-        int numberOfLine = getArguments().getValue("number",1,this);
-        Location location = getArguments().getValue("location",getPlanet().getTerritory().getSpawnLocation(),this);
+        String text = getArguments().getText("text","Hello world!",this);
+        int numberOfLine = getArguments().getInt("number",1,this);
+        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
         sendSignChange(location,player,numberOfLine,text);
     }
 

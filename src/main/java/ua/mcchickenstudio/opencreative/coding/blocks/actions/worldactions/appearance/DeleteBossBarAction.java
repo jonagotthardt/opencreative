@@ -36,7 +36,7 @@ public final class DeleteBossBarAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getValue("name","boss",this);
+        String name = getArguments().getText("name","boss",this);
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             getPlanet().getTerritory().getWorld().audiences().forEach(bossBar::removeViewer);

@@ -38,7 +38,7 @@ public final class EntitySetFoxCrouchingAction extends EntityAction {
         if (!(entity instanceof Fox fox)) {
             throw new UnsupportedEntityException(Fox.class, entity);
         }
-        boolean value = getArguments().getValue("boolean", true, this);
+        boolean value = getArguments().getBoolean("boolean", true, this);
         fox.setCrouching(value);
     }
 

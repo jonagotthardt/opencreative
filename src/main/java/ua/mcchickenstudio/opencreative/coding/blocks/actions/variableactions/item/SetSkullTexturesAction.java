@@ -43,8 +43,8 @@ public final class SetSkullTexturesAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String textures = getArguments().getValue("textures","eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjllZjA4MjRkMzFiNDU3NTEzZGI1Y2ZkZjk1ZWNlMjAxODBjZWYzYzhmODFhZmRjM2FlMmM5MzE0YmMyMGRiNSJ9fX0=",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.PLAYER_HEAD),this),this);
+        String textures = getArguments().getText("textures","eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjllZjA4MjRkMzFiNDU3NTEzZGI1Y2ZkZjk1ZWNlMjAxODBjZWYzYzhmODFhZmRjM2FlMmM5MzE0YmMyMGRiNSJ9fX0=",this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.PLAYER_HEAD),this),this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;

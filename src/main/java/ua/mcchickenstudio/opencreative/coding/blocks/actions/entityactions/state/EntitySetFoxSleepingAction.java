@@ -38,7 +38,7 @@ public final class EntitySetFoxSleepingAction extends EntityAction {
         if (!(entity instanceof Fox fox)) {
             throw new UnsupportedEntityException(Fox.class, entity);
         }
-        boolean sleep = getArguments().getValue("boolean", true, this);
+        boolean sleep = getArguments().getBoolean("boolean", true, this);
         fox.setSleeping(sleep);
     }
 

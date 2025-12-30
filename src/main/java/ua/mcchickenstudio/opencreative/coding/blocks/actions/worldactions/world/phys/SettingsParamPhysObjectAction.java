@@ -38,11 +38,11 @@ public final class SettingsParamPhysObjectAction extends WorldAction {
     protected void execute(Entity entity) {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getValue("damage", 5, this),
-                        a.getValue("explosion", 0, this),
+                        a.getInt("damage", 5, this),
+                        a.getInt("explosion", 0, this),
                         a.getValue("potion", this),
-                        a.getValue("shockwave-range", 0, this),
-                        a.getValue("shockwave-power", 0, this)
+                        a.getInt("shockwave-range", 0, this),
+                        a.getInt("shockwave-power", 0, this)
         ));
     }
 

@@ -47,21 +47,21 @@ public final class SpawnEntityAction extends WorldAction {
         }
 
         String typeString;
-        String customName = getArguments().getValue("name","",this);
+        String customName = getArguments().getText("name","",this);
 
-        boolean ai = getArguments().getValue("ai",true,this);
-        boolean gravity = getArguments().getValue("gravity",true,this);
-        boolean glowing = getArguments().getValue("glowing",false,this);
-        boolean invisible = getArguments().getValue("invisible",false,this);
-        boolean invulnerable = getArguments().getValue("invulnerable",false,this);
-        boolean customNameVisible = getArguments().getValue("show-name",true,this);
-        boolean visibleByDefault = getArguments().getValue("visible-for-all",true,this);
+        boolean ai = getArguments().getBoolean("ai",true,this);
+        boolean gravity = getArguments().getBoolean("gravity",true,this);
+        boolean glowing = getArguments().getBoolean("glowing",false,this);
+        boolean invisible = getArguments().getBoolean("invisible",false,this);
+        boolean invulnerable = getArguments().getBoolean("invulnerable",false,this);
+        boolean customNameVisible = getArguments().getBoolean("show-name",true,this);
+        boolean visibleByDefault = getArguments().getBoolean("visible-for-all",true,this);
 
-        ItemStack spawnEgg = getArguments().getValue("type",new ItemStack(Material.AIR),this);
+        ItemStack spawnEgg = getArguments().getItem("type",new ItemStack(Material.AIR),this);
         if (spawnEgg.getType() != Material.AIR && spawnEgg.getType().name().endsWith("_SPAWN_EGG")) {
             typeString = spawnEgg.getType().name().replace("_SPAWN_EGG","");
         } else {
-            typeString = getArguments().getValue("type","chicken",this);
+            typeString = getArguments().getText("type","chicken",this);
         }
 
         EntityType type;

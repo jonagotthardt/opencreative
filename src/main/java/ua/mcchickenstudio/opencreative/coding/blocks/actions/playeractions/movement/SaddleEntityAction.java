@@ -33,7 +33,7 @@ public final class SaddleEntityAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String text = getArguments().getValue("entity"," ",this);
+        String text = getArguments().getText("entity"," ",this);
         for (Entity entity : getEntitiesByNameOrUUID(text)) {
             entity.addPassenger(player);
         }

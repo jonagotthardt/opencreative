@@ -94,7 +94,7 @@ public class BuildCommand extends CommandHandler {
                             return;
                         }
                     }
-                    PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD,player);
+                    PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD, player);
                     event.callEvent();
                     if (event.isCancelled()) {
                         return;

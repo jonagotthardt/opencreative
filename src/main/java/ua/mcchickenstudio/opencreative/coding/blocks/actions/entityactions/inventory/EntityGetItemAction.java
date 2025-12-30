@@ -40,7 +40,7 @@ public final class EntityGetItemAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        int index = getArguments().getValue("slot",1,this);
+        int index = getArguments().getInt("slot",1,this);
         ItemStack item;
         if (entity instanceof InventoryHolder holder) {
             item = holder.getInventory().getItem(index-1);

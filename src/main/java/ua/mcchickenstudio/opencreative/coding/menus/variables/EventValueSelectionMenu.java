@@ -18,72 +18,45 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.ContentWithMenusCategoryMenu;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
-import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 
-public final class EventValuesMenu extends ListBrowserMenu<EventValue> {
+/**
+ * This class represents a menu where player can select event value
+ * and assign it to current item in hand.
+ */
+public final class EventValueSelectionMenu extends ContentWithMenusCategoryMenu<EventValue> {
 
-    private MenusCategory currentCategory = MenusCategory.WORLD;
-
-    public EventValuesMenu(Player player) {
-        super(player, ChatColor.stripColor(getLocaleMessage("menus.developer.event-values.title",false)));
+    public EventValueSelectionMenu(@NotNull Player player) {
+        super(player, "event-values", getLocaleMessage("menus.developer.event-values.title",false),
+                Material.ORANGE_STAINED_GLASS_PANE, MenusCategory.WORLD);
     }
 
     @Override
     protected ItemStack getElementIcon(EventValue value) {
-        ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items." + value.getID().toLowerCase().replace("_","-"));
+        ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items."
+                + value.getID().toLowerCase().replace("_","-"));
         setPersistentData(icon, getCodingValueKey(), "EVENT_VALUE");
         setPersistentData(icon, getCodingVariableTypeKey(), value.getID().toUpperCase());
         return icon;
-    }
-
-    @Override
-    protected void fillOtherItems() {
-        int slot = 0;
-        for (MenusCategory category : getMenusCategories()) {
-            setItem(getCharmsBarSlots()[slot], category.getItem("event-values"));
-            slot++;
-        }
-    }
-
-    private Set<MenusCategory> getMenusCategories() {
-        return new HashSet<>(List.of(MenusCategory.PLAYER,MenusCategory.ENTITY,MenusCategory.EVENTS,MenusCategory.WORLD));
-    }
-
-
-    @Override
-    protected void onCharmsBarClick(InventoryClickEvent event) {
-        ItemStack clicked = event.getCurrentItem();
-        event.setCancelled(true);
-        MenusCategory category = MenusCategory.getByIcon(clicked);
-        if (category != null) {
-            setCurrentPage(1);
-            Sounds.DEV_CHANGE_CATEGORY.play(event.getWhoClicked());
-            currentCategory = category;
-            elements.clear();
-            elements.addAll(getElements());
-            fillElements(1);
-            fillArrowsItems(1);
-        }
     }
 
     @Override
@@ -112,27 +85,6 @@ public final class EventValuesMenu extends ListBrowserMenu<EventValue> {
 
     @Override
     public List<EventValue> getElements() {
-        if (currentCategory == null) currentCategory = MenusCategory.ENTITY;
-        return new ArrayList<>(EventValues.getInstance().getByCategories(currentCategory));
-    }
-
-    @Override
-    protected ItemStack getNextPageButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.event-values.items.next-page");
-    }
-
-    @Override
-    protected ItemStack getPreviousPageButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.event-values.items.previous-page");
-    }
-
-    @Override
-    protected ItemStack getNoElementsButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.event-values.items.no-elements");
-    }
-
-    @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {
-
+        return EventValues.getInstance().getByCategories(currentCategory);
     }
 }

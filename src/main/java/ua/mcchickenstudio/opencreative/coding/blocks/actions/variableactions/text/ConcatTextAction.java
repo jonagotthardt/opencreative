@@ -37,7 +37,7 @@ public final class ConcatTextAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         List<String> messages = getArguments().getTextList("text",this);
-        String type = getArguments().getValue("type","new-line",this);
+        String type = getArguments().getText("type","new-line",this);
         StringBuilder text = new StringBuilder();
         if (type.equals("new-line")) {
             text.append(String.join("\n",messages));

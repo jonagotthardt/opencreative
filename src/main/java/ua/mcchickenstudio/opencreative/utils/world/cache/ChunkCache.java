@@ -2,63 +2,80 @@
  * OpenCreative+, Minecraft plugin.
  * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
  *
- * OpenCreative+ is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * OpenCreative+ is free software: zou can redistribute it and/or modifz
+ * it under the terms of the GNU General Public License as published bz
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * (at zour option) anz later version.
  *
  * OpenCreative+ is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * but WITHOUT ANz WARRANTz; without even the implied warrantz of
+ * MERCHANTABILITz or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * zou should have received a copz of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package ua.mcchickenstudio.opencreative.utils.world.cache;
 
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <h1>ChunkCache</h1>
- * Which saves the state of the chunk in the
- * cache so as not to overload the memory
+ * This class saves the state of the chunk in the
+ * cache so as not to overload the memory.
  * @author Sasha Kireiko
  */
 public class ChunkCache {
 
-    private final static Map<Long, Boolean> statusKeeper = new ConcurrentHashMap<>();
+    private static final Map<Long, Boolean> statusKeeper = new ConcurrentHashMap<>();
 
-    public static boolean isChunkGenerated(final World world, final int i, final int i1) {
-        if (world == null) return false;
-        final long hash = hash(world, i, i1);
-        return statusKeeper.computeIfAbsent(hash, k -> world.isChunkGenerated(i, i1));
+    /**
+     * Checks whether chunk is generated.
+     * @param world world with chunk.
+     * @param x x coordinate of chunk.
+     * @param z z coordinate of chunk.
+     * @return true - chunk is generated, false - not generated.
+     */
+    public static boolean isChunkGenerated(@NotNull World world, int x, final int z) {
+        long hash = hash(world, x, z);
+        return statusKeeper.computeIfAbsent(hash, k -> world.isChunkGenerated(x, z));
     }
 
-    public static void preCheck(final World world, final int i, final int i1) {
-        if (world == null) return;
-        final long hash = hash(world, i, i1);
-        statusKeeper.computeIfAbsent(hash, k -> world.isChunkGenerated(i, i1));
-    }
-
-    public static void preLoad(final World world, final int i, final int i1) {
-        if (world == null) return;
-        final long hash = hash(world, i, i1);
+    /**
+     * Preloads chunk and saves it's hashcode into map.
+     * @param world world with chunk.
+     * @param x x coordinate of chunk.
+     * @param z z coordinate of chunk.
+     */
+    public static void preLoad(@NotNull World world, int x, int z) {
+        long hash = hash(world, x, z);
         statusKeeper.putIfAbsent(hash, true);
     }
 
-    public static void unload(final World world, final int i, final int i1) {
-        if (world == null) return;
-        final long hash = hash(world, i, i1);
+    /**
+     * Marks chunk as unloaded.
+     * @param world world with chunk.
+     * @param x x coordinate of chunk.
+     * @param z z coordinate of chunk.
+     */
+    public static void unload(@NotNull World world, int x, int z) {
+        long hash = hash(world, x, z);
         statusKeeper.putIfAbsent(hash, false);
     }
 
-    private static long hash(final World world, final int i, final int i1) {
-        return (31L * i + i1 + world.getUID().hashCode()) * 31L;
+    /**
+     * Returns chunk's hashcode.
+     * @param world world with chunk.
+     * @param x x coordinate of chunk.
+     * @param z z coordinate of chunk.
+     */
+    private static long hash(@NotNull World world, int x, int z) {
+        return (31L * x + z + world.getUID().hashCode()) * 31L;
     }
 
 }

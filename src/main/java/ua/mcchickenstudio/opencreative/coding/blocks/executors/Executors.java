@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
@@ -43,7 +44,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <h1>Executors</h1>
  * This class represents Executors in every planet code script.
  * @since 5.0
- * @version 5.0
+ * @version 5.9
  * @author McChicken Studio
  */
 public class Executors {
@@ -57,6 +58,9 @@ public class Executors {
         this.planet = planet;
     }
 
+    /**
+     * Clears temporary data: executors list, last executors calls.
+     */
     public void clear() {
         executorsList.clear();
         lastExecutorsCallsAmount.clear();
@@ -66,7 +70,7 @@ public class Executors {
      * Finds executor for world event and activates it, if found.
      * @param event event to activate executor.
      */
-    public static void activate(WorldEvent event) {
+    public static void activate(@NotNull WorldEvent event) {
         Planet planet = event.getPlanet();
         if (!OpenCreative.getSettings().getCodingSettings().isEnabled()) return;
         if (planet == null) return;
@@ -84,35 +88,23 @@ public class Executors {
      * @param executor executor to call.
      * @param event event of executor.
      */
-    public static void activate(Executor executor, WorldEvent event) {
+    public static void activate(@NotNull Executor executor, @NotNull WorldEvent event) {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
         if (planet.getMode() != Planet.Mode.PLAYING) return;
-        Executors executors = planet.getTerritory().getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) >= planet.getLimits().getCodeOperationsLimit()) {
-            planet.stopCode("operations limit");
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
-                    .replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
-            executors.clearExecutionsAmount(executor);
-        } else {
-            executors.increaseCallsAmount(executor);
+        if (canRunExecutor(planet, executor)) {
             executor.run(event);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    executors.decreaseCallsAmount(executor);
-                }
-            }.runTaskLater(OpenCreative.getPlugin(),35L);
         }
     }
 
-    public static void simulateIncreaseCall(Executor executor) {
-        Planet planet = executor.getPlanet();
+    public static boolean canRunExecutor(@NotNull Planet planet, @NotNull Executor executor) {
         Executors executors = planet.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) >= planet.getLimits().getCodeOperationsLimit()) {
-            planet.stopCode("operations limit");
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false).replace("%limit%",String.valueOf(planet.getLimits().getCodeOperationsLimit())));
+            planet.getTerritory().getScript().getExecutors().stopCode("operations limit");
+            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
+                    .replace("%limit%", String.valueOf(planet.getLimits().getCodeOperationsLimit())));
             executors.clearExecutionsAmount(executor);
+            return false;
         } else {
             executors.increaseCallsAmount(executor);
             new BukkitRunnable() {
@@ -121,6 +113,7 @@ public class Executors {
                     executors.decreaseCallsAmount(executor);
                 }
             }.runTaskLater(OpenCreative.getPlugin(),35L);
+            return true;
         }
     }
 
@@ -140,7 +133,7 @@ public class Executors {
             for (String key : keys) {
                 path = "code.blocks." + key;
                 if (config.getString(path + ".type") != null) {
-                    Executor executor = createExecutor(config,path);
+                    Executor executor = createExecutor(config, path);
                     if (executor != null) {
                         if (executor.getExecutorType() == null) continue;
                         executors.add(executor);
@@ -183,6 +176,11 @@ public class Executors {
         return conditions;
     }
 
+    /**
+     * Returns list of actions inside the condition or multi action.
+     * @param action condition or multi action.
+     * @return list of inside actions.
+     */
     public @NotNull List<Action> getInsideActionsList(@NotNull Action action) {
         List<Action> actions = new ArrayList<>();
         actions.add(action);
@@ -257,7 +255,7 @@ public class Executors {
      * @param path path of executor.
      * @return instance of executor, or null.
      */
-    private Executor createExecutor(YamlConfiguration config, String path) {
+    private Executor createExecutor(@NotNull YamlConfiguration config, @NotNull String path) {
         Executor executor = null;
         try {
             int[] coords = getCoords(config,path);
@@ -269,23 +267,29 @@ public class Executors {
                  * We will not create cycle without name,
                  * because it can't be called in code.
                  */
+                if (time < 5 || time > 3600 ) {
+                    time = 20;
+                }
                 if (name != null) {
-                    executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class,String.class,int.class).newInstance(planet,coords[0],coords[1],coords[2],name,(time >= 5 && time <= 3600 ? time : 20));
+                    executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class, String.class, int.class)
+                            .newInstance(planet, coords[0], coords[1], coords[2], name, time);
                 }
             } else if (type == ExecutorType.FUNCTION || type == ExecutorType.METHOD) {
                 String name = config.getString(path+".name");
                 /*
-                 * We will not create function without name,
+                 * We will not create function or method without name,
                  * because it can't be called in code.
                  */
                 if (name != null) {
-                    executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class,String.class).newInstance(planet,coords[0],coords[1],coords[2],name);
+                    executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class, String.class)
+                            .newInstance(planet, coords[0], coords[1], coords[2], name);
                 }
             } else {
-                executor = type.getExecutorClass().getConstructor(Planet.class,int.class,int.class,int.class).newInstance(planet,coords[0],coords[1],coords[2]);
+                executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class)
+                        .newInstance(planet, coords[0], coords[1], coords[2]);
             }
             if (executor == null) return null;
-            List<Action> allActionsList = createActionList(executor, path + ".actions",config);
+            List<Action> allActionsList = createActionList(executor, path + ".actions", config);
             if (!allActionsList.isEmpty()) {
                 executor.setActions(allActionsList);
             }
@@ -304,7 +308,9 @@ public class Executors {
      * @param config script file.
      * @return list of actions, or empty list.
      */
-    private List<Action> createActionList(Executor executor, String path, YamlConfiguration config) {
+    private @NotNull List<Action> createActionList(@NotNull Executor executor,
+                                                   @NotNull String path,
+                                                   @NotNull YamlConfiguration config) {
         List<Action> actionList = new ArrayList<>();
         ConfigurationSection actions = config.getConfigurationSection(path);
         if (actions != null) {
@@ -327,7 +333,9 @@ public class Executors {
      * @param config script file.
      * @return instance of action, or null.
      */
-    private Action createAction(Executor executor, String path, YamlConfiguration config) {
+    private @Nullable Action createAction(@NotNull Executor executor,
+                                          @NotNull String path,
+                                          @NotNull YamlConfiguration config) {
 
         String type = config.getString(path + ".type");
         if (type == null) return null;
@@ -393,12 +401,23 @@ public class Executors {
         }
     }
 
+    /**
+     * Stops code in planet by setting its mode to Build
+     * and sends log in console. Doesn't call quit events.
+     * @param reason reason of stopping the code.
+     */
+    public void stopCode(@NotNull String reason) {
+        if (planet.getMode() == Planet.Mode.BUILD) return;
+        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getId() + " because of " + reason + ".");
+        planet.setMode(Planet.Mode.BUILD, true);
+    }
+
     private void increaseCallsAmount(Executor executor) {
-        lastExecutorsCallsAmount.put(executor,getLastExecutorCallsAmount(executor)+1);
+        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor)+1);
     }
 
     private void decreaseCallsAmount(Executor executor) {
-        lastExecutorsCallsAmount.put(executor,getLastExecutorCallsAmount(executor)-1);
+        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor)-1);
     }
 
     private int getLastExecutorCallsAmount(Executor executor) {

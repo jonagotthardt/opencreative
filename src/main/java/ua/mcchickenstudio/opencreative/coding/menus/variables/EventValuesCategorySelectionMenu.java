@@ -34,30 +34,33 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement;
+package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.ContentWithMenusCategoryMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.MenusCategorySelectionMenu;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public final class SetVelocityAction extends EntityAction {
-    public SetVelocityAction(Executor executor, Target target, int x, Arguments args) {
-        super(executor, target, x, args);
+/**
+ * This class represents a menu where player
+ * can select category of event values.
+ */
+public final class EventValuesCategorySelectionMenu extends MenusCategorySelectionMenu{
+
+    public EventValuesCategorySelectionMenu(@NotNull Player player,
+                                            @NotNull ItemStack currentItem) {
+        super(player, currentItem, Material.ORANGE_STAINED_GLASS_PANE, EventValues.getInstance().getCategories(),
+                getLocaleMessage("menus.developer.event-values.title",false),
+                "event-values", "");
     }
 
     @Override
-    public void executeEntity(@NotNull Entity entity) {
-        Vector vector = getArguments().getVector("vector",new Vector(),this);
-        entity.setVelocity(vector);
+    public @NotNull ContentWithMenusCategoryMenu<?> getContentBrowserMenu(Object frequency) {
+        return new EventValueSelectionMenu(player);
     }
 
-    @Override
-    public ActionType getActionType() {
-        return ActionType.ENTITY_SET_VELOCITY;
-    }
 }

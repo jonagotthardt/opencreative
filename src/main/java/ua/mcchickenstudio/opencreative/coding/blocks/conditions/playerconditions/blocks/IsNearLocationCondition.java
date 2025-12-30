@@ -38,7 +38,7 @@ public class IsNearLocationCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        float radius = getArguments().getValue("distance",5.0f,this);
+        float radius = getArguments().getFloat("distance",5.0f,this);
         if (locations.isEmpty()) return false;
         boolean isPlayerNear = false;
         for (Location location : locations) {

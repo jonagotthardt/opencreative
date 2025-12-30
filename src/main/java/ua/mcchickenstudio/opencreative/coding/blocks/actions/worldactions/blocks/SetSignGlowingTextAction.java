@@ -42,8 +42,8 @@ public final class SetSignGlowingTextAction extends WorldAction {
     @Override
     protected void execute(Entity entity) {
         List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean glowing = getArguments().getValue("glowing",true,this);
-        String sideString = getArguments().getValue("side","front",this);
+        boolean glowing = getArguments().getBoolean("glowing",true,this);
+        String sideString = getArguments().getText("side","front",this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override

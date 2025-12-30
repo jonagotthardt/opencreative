@@ -34,9 +34,9 @@ public final class RoundNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getValue("number",0.7,this);
-        int digits = getArguments().getValue("digits",0,this);
-        String type  = getArguments().getValue("type","ceil",this);
+        double number = getArguments().getDouble("number",0.7,this);
+        int digits = getArguments().getInt("digits",0,this);
+        String type  = getArguments().getText("type","ceil",this);
 
         double result = (type.equalsIgnoreCase("floor")) ? Math.floor(number) : Math.ceil(number);
         if (digits <= 0) {

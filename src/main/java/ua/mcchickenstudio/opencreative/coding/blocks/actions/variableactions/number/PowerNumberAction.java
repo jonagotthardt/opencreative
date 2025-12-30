@@ -34,8 +34,8 @@ public final class PowerNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getValue("number",2.0d,this);
-        double power = getArguments().getValue("power",2.0d,this);
+        double number = getArguments().getDouble("number",2.0d,this);
+        double power = getArguments().getDouble("power",2.0d,this);
         double result = Math.pow(number,power);
         setVarValue(variable, result);
     }

@@ -32,7 +32,7 @@ public final class PlayerSetTimeAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        float time = getArguments().getValue("time",6f,this);
+        float time = getArguments().getFloat("time",6f,this);
         player.setPlayerTime((long) (time*1000),false);
     }
 

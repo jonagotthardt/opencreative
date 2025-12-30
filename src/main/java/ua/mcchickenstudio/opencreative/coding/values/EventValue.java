@@ -122,4 +122,11 @@ public abstract class EventValue implements ExtensionContent {
     public int hashCode() {
         return id.hashCode();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof EventValue value)) return false;
+        return id.equals(value.id);
+    }
 }

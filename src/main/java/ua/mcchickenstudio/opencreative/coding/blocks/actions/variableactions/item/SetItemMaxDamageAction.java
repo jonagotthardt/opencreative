@@ -38,9 +38,9 @@ public final class SetItemMaxDamageAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE,1),this),this);
-        int durability = getArguments().getValue("damage",item.getAmount(),this);
-        boolean add = getArguments().getValue("add",false,this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE,1),this),this);
+        int durability = getArguments().getInt("damage",item.getAmount(),this);
+        boolean add = getArguments().getBoolean("add",false,this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;

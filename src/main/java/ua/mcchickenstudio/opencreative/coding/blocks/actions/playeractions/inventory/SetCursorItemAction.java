@@ -34,7 +34,7 @@ public final class SetCursorItemAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        ItemStack cursor = getArguments().getValue("item",new ItemStack(Material.AIR),this);
+        ItemStack cursor = getArguments().getItem("item",new ItemStack(Material.AIR),this);
         player.setItemOnCursor(cursor);
     }
 

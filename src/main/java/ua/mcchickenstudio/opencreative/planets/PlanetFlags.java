@@ -23,13 +23,13 @@ import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class PlanetFlags {
 
     private final Planet planet;
-    private final Map<PlanetFlag,Byte> flags = new HashMap<>();
+    private final Map<PlanetFlag,Byte> flags = new EnumMap<>(PlanetFlag.class);
 
     public PlanetFlags(Planet planet) {
         this.planet = planet;

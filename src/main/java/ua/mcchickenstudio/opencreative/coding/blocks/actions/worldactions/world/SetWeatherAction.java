@@ -32,8 +32,8 @@ public final class SetWeatherAction extends WorldAction {
 
     @Override
     protected void execute(Entity entity) {
-        String weather = getArguments().getValue("weather", "clean",this);
-        int duration = getArguments().getValue("duration", 6000,this);
+        String weather = getArguments().getText("weather", "clean",this);
+        int duration = getArguments().getInt("duration", 6000,this);
         switch (weather.toLowerCase()) {
             case "storm": {
                 getPlanet().getTerritory().getWorld().setStorm(true);

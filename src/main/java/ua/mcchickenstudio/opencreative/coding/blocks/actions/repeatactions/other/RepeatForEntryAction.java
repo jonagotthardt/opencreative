@@ -47,7 +47,7 @@ public final class RepeatForEntryAction extends RepeatAction {
         if ((keyLink == null && valueLink == null) || map.isEmpty()) {
             return false;
         }
-        int index = getArguments().getValue("index",1,this);
+        int index = getArguments().getInt("index",1,this);
         if (index > map.size()) {
             arguments.removeArgumentValue("index");
             return false;

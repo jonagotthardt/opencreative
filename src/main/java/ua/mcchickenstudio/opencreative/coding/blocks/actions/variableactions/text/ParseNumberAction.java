@@ -43,7 +43,7 @@ public final class ParseNumberAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Component component = getArguments().getValue("text", Component.text("0.0"),this);
+        Component component = getArguments().getComponent("text", Component.text("0.0"),this);
         String text = PlainTextComponentSerializer.plainText().serialize(component);
         if (text.length() > 1024) {
             throw new TooLongTextException(1024);

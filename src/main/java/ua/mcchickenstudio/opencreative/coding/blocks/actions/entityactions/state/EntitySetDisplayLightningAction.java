@@ -38,8 +38,8 @@ public final class EntitySetDisplayLightningAction extends EntityAction {
         if (!(entity instanceof Display display)) {
             throw new UnsupportedEntityException(Display.class, entity);
         }
-        int blockLight = getArguments().getValue("block", 0,this);
-        int skyLight = getArguments().getValue("sky", 0,this);
+        int blockLight = getArguments().getInt("block", 0,this);
+        int skyLight = getArguments().getInt("sky", 0,this);
         int oldBlockLight = display.getBrightness() != null ? display.getBrightness().getBlockLight() : 0;
         int oldSkyLight = display.getBrightness() != null ? display.getBrightness().getSkyLight() : 0;
         /*

@@ -33,7 +33,7 @@ public final class LaunchVerticalAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        float power = getArguments().getValue("power",1.0f,this);
+        float power = getArguments().getFloat("power",1.0f,this);
         if (power < -20) {
             power = -20;
         } else if (power > 20) {

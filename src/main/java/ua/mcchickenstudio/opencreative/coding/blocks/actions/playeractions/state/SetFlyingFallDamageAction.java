@@ -34,7 +34,7 @@ public final class SetFlyingFallDamageAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.setFlyingFallDamage((getArguments().getValue("boolean",false,this) ? TriState.TRUE : TriState.FALSE));
+        player.setFlyingFallDamage((getArguments().getBoolean("boolean",false,this) ? TriState.TRUE : TriState.FALSE));
     }
 
     @Override

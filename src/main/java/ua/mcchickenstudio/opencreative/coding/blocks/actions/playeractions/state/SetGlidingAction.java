@@ -32,7 +32,7 @@ public final class SetGlidingAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        player.setGliding(getArguments().getValue("boolean",false,this));
+        player.setGliding(getArguments().getBoolean("boolean",false,this));
     }
 
     @Override

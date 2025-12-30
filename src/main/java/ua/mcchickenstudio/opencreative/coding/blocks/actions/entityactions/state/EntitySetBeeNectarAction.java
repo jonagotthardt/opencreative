@@ -38,7 +38,7 @@ public final class EntitySetBeeNectarAction extends EntityAction {
         if (!(entity instanceof Bee bee)) {
             throw new UnsupportedEntityException(Bee.class, entity);
         }
-        boolean hasNectar = getArguments().getValue("boolean", true, this);
+        boolean hasNectar = getArguments().getBoolean("boolean", true, this);
         bee.setHasNectar(hasNectar);
     }
 

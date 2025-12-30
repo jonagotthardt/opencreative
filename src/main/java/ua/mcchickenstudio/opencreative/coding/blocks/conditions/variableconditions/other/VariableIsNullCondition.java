@@ -38,7 +38,7 @@ public class VariableIsNullCondition extends VariableCondition {
     @Override
     public boolean check(Entity entity) {
         List<Object> values = getArguments().getList("values",this);
-        boolean requireAll = getArguments().getValue("all",false,this);
+        boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean isNull = false;
         for (Object value : values) {
             if (value instanceof EventValueLink || value instanceof VariableLink) {

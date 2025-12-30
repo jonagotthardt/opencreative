@@ -39,16 +39,16 @@ public final class CreateBossBarAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getValue("name","boss",this);
-        Component displayName = getArguments().getValue("display-name",Component.text(" "),this);
-        float progress = getArguments().getValue("progress",100.0f,this)/100;
+        String name = getArguments().getText("name","boss",this);
+        Component displayName = getArguments().getComponent("display-name",Component.text(" "),this);
+        float progress = getArguments().getFloat("progress",100.0f,this)/100;
 
-        String overlayString = getArguments().getValue("overlay","progress",this);
+        String overlayString = getArguments().getText("overlay","progress",this);
         BossBar.Overlay overlay = BossBar.Overlay.PROGRESS;
         try {
             overlay = BossBar.Overlay.valueOf(overlayString.toUpperCase());
         } catch (IllegalArgumentException ignored) {}
-        String colorString = getArguments().getValue("color","purple",this);
+        String colorString = getArguments().getText("color","purple",this);
         BossBar.Color color = BossBar.Color.PURPLE;
         try {
             color = BossBar.Color.valueOf(colorString.toUpperCase());

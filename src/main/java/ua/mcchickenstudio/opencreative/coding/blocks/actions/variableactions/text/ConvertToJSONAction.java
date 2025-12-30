@@ -42,7 +42,7 @@ public final class ConvertToJSONAction extends VariableAction {
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Object value = getArguments().getValue("variable", this);
-        boolean pretty = getArguments().getValue("pretty", false, this);
+        boolean pretty = getArguments().getBoolean("pretty", false, this);
         Gson gson = pretty ? new GsonBuilder().setPrettyPrinting().create() : new GsonBuilder().create();
         String text;
 

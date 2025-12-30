@@ -38,7 +38,7 @@ public final class EntitySetPillagerCelebratingAction extends EntityAction {
         if (!(entity instanceof Raider raider)) {
             throw new UnsupportedEntityException(Raider.class, entity);
         }
-        boolean celebrate = getArguments().getValue("boolean", true, this);
+        boolean celebrate = getArguments().getBoolean("boolean", true, this);
         raider.setCelebrating(celebrate);
     }
 

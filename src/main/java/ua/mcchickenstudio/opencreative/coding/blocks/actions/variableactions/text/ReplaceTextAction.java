@@ -34,9 +34,9 @@ public final class ReplaceTextAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getValue("text", "Hello World",this);
-        String target = getArguments().getValue("target", " ",this);
-        String replacement = getArguments().getValue("replacement", "",this);
+        String text = getArguments().getText("text", "Hello World",this);
+        String target = getArguments().getText("target", " ",this);
+        String replacement = getArguments().getText("replacement", "",this);
         setVarValue(link, text.replace(target,replacement));
     }
 

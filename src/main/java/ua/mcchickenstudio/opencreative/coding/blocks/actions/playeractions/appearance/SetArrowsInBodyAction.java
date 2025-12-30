@@ -50,8 +50,8 @@ public final class SetArrowsInBodyAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        boolean add = getArguments().getValue("add",false,this);
-        int count = getArguments().getValue("count",0,this);
+        boolean add = getArguments().getBoolean("add",false,this);
+        int count = getArguments().getInt("count",0,this);
         if (add) {
             count = count + player.getArrowsInBody();
         }

@@ -1151,6 +1151,30 @@ items:
         - "&fCategory: &cAction"
     categories:
       event-values:
+        next-page:
+          name: " "
+          lore:
+            - "&e Next... &6→"
+            - ""
+            - "&7 Click to show"
+            - "&7 more event values."
+            - ""
+        previous-page:
+          name: " "
+          lore:
+            - " &6← &eBack..."
+            - ""
+            - "&7 Click to show"
+            - "&7 previous event values."
+            - ""
+        back-to-categories:
+          name: " "
+          lore:
+            - " &6← &eBack to categories..."
+            - ""
+            - "&7  Click to show"
+            - "&7  categories list."
+            - ""
         world:
           name: "&bWorld Values"
           lore:
@@ -14190,22 +14214,6 @@ menus:
       nullable: "&c May not return value!"
       target: "&7Target: &f%target%"
       items:
-        next-page:
-          name: " "
-          lore:
-            - "&e Next... &6→"
-            - ""
-            - "&7 Click to show"
-            - "&7 more event values."
-            - ""
-        previous-page:
-          name: " "
-          lore:
-            - " &6← &eBack..."
-            - ""
-            - "&7 Click to show"
-            - "&7 previous event values."
-            - ""
         message:
           name: "&6Chat message"
           lore:

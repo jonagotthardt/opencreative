@@ -50,8 +50,8 @@ public final class SpawnBlockDisplayAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getValue("name",Component.text(""),this);
-        Material block = getArguments().getValue("block",Material.GRASS_BLOCK,this);
+        Component customName = getArguments().getComponent("name",Component.text(""),this);
+        Material block = getArguments().getMaterial("block",Material.GRASS_BLOCK,this);
 
         for (Location location : getArguments().getLocationList("locations",this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.BLOCK_DISPLAY);

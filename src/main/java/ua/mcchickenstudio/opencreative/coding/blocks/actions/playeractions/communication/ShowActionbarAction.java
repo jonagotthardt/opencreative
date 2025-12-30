@@ -38,7 +38,7 @@ public final class ShowActionbarAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String separator = getArguments().getValue("type","new-line",this);
+        String separator = getArguments().getText("type","new-line",this);
         List<Component> components = getArguments().getComponentList("actionbar",this);
         TextComponent.Builder builder = Component.text();
         Component separatorComponent = separator.equals("join-spaces") ? Component.space() : Component.empty();

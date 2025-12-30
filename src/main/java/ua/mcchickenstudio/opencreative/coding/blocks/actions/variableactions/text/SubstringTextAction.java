@@ -34,9 +34,9 @@ public final class SubstringTextAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getValue("text", " ",this);
-        int from = getArguments().getValue("from", 1,this);
-        int to = getArguments().getValue("to", text.length()-1,this);
+        String text = getArguments().getText("text", " ",this);
+        int from = getArguments().getInt("from", 1,this);
+        int to = getArguments().getInt("to", text.length()-1,this);
         if (from < 1 || from > text.length()) {
             from = 0;
         }

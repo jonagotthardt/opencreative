@@ -39,12 +39,12 @@ public final class SetItemDisplayNameAction extends VariableAction {
     @Override
     protected void execute(Entity entity) {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getValue("item",getArguments().getValue("variable",new ItemStack(Material.APPLE),this),this);
+        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
         }
-        Component displayName = getArguments().getValue("name", Component.text(""), this);
+        Component displayName = getArguments().getComponent("name", Component.text(""), this);
         if (!displayName.hasDecoration(TextDecoration.ITALIC)) {
             displayName = displayName.decoration(TextDecoration.ITALIC, false);
         }

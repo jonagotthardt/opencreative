@@ -48,7 +48,7 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
     private final ItemStack REMOVE_ALL = createItem(Material.BARRIER,1,"menus.entities-browser.items.remove-all");
-    private final ItemStack BACK_TO_SETTINGS = createItem(Material.SPECTRAL_ARROW,1,"menus.entities-browser.items.back");
+    private final ItemStack BACK_TO_SETTINGS = createItem(Material.ARROW,1,"menus.entities-browser.items.back");
 
     public EntitiesBrowserMenu(Player player, Planet planet) {
         super(player,getLocaleMessage("menus.entities-browser.title",false),
@@ -259,12 +259,12 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,getCurrentPage()+1,"menus.entities-browser.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,getCurrentPage()+1,"menus.entities-browser.items.next-page"),"%page%",getCurrentPage()+1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,Math.max(1, getCurrentPage()-1),"menus.entities-browser.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.entities-browser.items.previous-page"),"%page%",getCurrentPage()-1);
     }
 
     @Override

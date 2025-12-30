@@ -33,7 +33,7 @@ public final class ShowPlayerAction extends PlayerAction {
 
     @Override
     public void executePlayer(Player player) {
-        String text = getArguments().getValue("player"," ",this);
+        String text = getArguments().getText("player"," ",this);
         for (Player p : getPlayersByNameOrUUID(text)) {
             player.showPlayer(OpenCreative.getPlugin(),p);
         }

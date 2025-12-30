@@ -39,7 +39,7 @@ public final class LaunchFunctionAction extends Action {
 
     @Override
     protected void execute(Entity entity) {
-        String name = getArguments().getValue("name","",this);
+        String name = getArguments().getText("name","",this);
         if (name.isEmpty()) return;
         List<Function> functions = new ArrayList<>();
         for (Function function : getPlanet().getTerritory().getScript().getExecutors().getFunctionsList()) {
@@ -51,7 +51,7 @@ public final class LaunchFunctionAction extends Action {
             throw new UnknownFunctionException(name);
         }
         for (Function function : functions) {
-            Executors.simulateIncreaseCall(function);
+            if (!(Executors.canRunExecutor(getPlanet(), function))) return;
             ActionsHandler handler = new ActionsHandler(this);
             if (entity != null) {
                 Set<Entity> targets = new HashSet<>();
