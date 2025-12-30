@@ -40,7 +40,7 @@ public final class CopyBlocksAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getArguments().pathExists("first") || !getArguments().pathExists("second") || !getArguments().pathExists("from") ||  !getArguments().pathExists("where")) {
             return;
         }

@@ -34,7 +34,7 @@ public class NumberLessCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         double first = getArguments().getDouble("first",2.0d,this);
         double second = getArguments().getDouble("second",1.0d,this);
         boolean equals = getArguments().getBoolean("equals",false,this);

@@ -34,7 +34,7 @@ public final class RemoveFromMapByKeyAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         Map<Object,Object> map = getArguments().getMap("variable",this);
         Object key = getArguments().getValue("key",this);

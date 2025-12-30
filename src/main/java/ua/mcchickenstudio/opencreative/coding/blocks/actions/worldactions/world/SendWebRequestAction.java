@@ -43,7 +43,7 @@ public final class SendWebRequestAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getPlanet().getLimits().canSendWebRequest()) {
             return;
         }

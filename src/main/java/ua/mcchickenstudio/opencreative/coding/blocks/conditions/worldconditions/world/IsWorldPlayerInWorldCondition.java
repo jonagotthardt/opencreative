@@ -37,7 +37,7 @@ public class IsWorldPlayerInWorldCondition extends WorldCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<String> players = getArguments().getTextList("players",this);
         boolean allElements = getArguments().getBoolean("all",true,this);
         String consider = getArguments().getText("consider","all",this);

@@ -32,7 +32,7 @@ public final class RoundNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         double number = getArguments().getDouble("number",0.7,this);
         int digits = getArguments().getInt("digits",0,this);

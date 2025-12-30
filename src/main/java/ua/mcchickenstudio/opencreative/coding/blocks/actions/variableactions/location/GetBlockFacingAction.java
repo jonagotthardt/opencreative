@@ -34,7 +34,7 @@ public final class GetBlockFacingAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable", this);
         Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
         if (location.getBlock().getState() instanceof Directional directional) {

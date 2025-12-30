@@ -45,7 +45,7 @@ public final class SetBlockPoweredAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations",this);
         boolean powered = getArguments().getBoolean("powered",true,this);
         BukkitRunnable runnable = new BukkitRunnable() {

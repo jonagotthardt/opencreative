@@ -32,7 +32,7 @@ public final class SetVariableValueAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Object value = getArguments().getValue("value",this);
         setVarValue(link,value);

@@ -35,7 +35,7 @@ public final class TransferVariableAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getArguments().pathExists("world") || !getArguments().pathExists("key") || !getArguments().pathExists("value")) return;
         String worldId = getArguments().getText("world","0",this);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetById(worldId);

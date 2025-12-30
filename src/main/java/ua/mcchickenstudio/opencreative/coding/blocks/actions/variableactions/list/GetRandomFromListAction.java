@@ -35,7 +35,7 @@ public final class GetRandomFromListAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = getArguments().getList("list",this);
         if (elements.isEmpty()) {

@@ -32,7 +32,7 @@ public final class SquareRootNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         double number = getArguments().getDouble("number",4.0d,this);
         double result = Math.sqrt(number);

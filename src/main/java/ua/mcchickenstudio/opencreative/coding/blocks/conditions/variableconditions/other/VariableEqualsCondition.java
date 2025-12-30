@@ -34,7 +34,7 @@ public class VariableEqualsCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         Object variableValue = getArguments().getValue("variable",this);
         if (variableValue == null) {
             return false;

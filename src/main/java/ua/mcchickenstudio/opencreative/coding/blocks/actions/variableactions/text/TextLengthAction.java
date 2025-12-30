@@ -32,7 +32,7 @@ public final class TextLengthAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text","",this);
         setVarValue(link, text.length());

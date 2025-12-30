@@ -35,7 +35,7 @@ public class IsWorldDayTimeCondition extends WorldCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         return getWorld().isDayTime();
     }
 

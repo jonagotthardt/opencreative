@@ -34,7 +34,7 @@ public class BooleanIsTrueCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<Boolean> booleans = getArguments().getBooleanList("booleans",this);
         if (booleans.isEmpty()) {
             return false;

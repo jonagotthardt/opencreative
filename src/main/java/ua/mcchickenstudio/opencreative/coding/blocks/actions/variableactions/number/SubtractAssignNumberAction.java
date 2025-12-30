@@ -32,7 +32,7 @@ public final class SubtractAssignNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         double variableValue = getArguments().getDouble("variable",0.0d,this);
         double number = getArguments().getDouble("number",1.0d,this);

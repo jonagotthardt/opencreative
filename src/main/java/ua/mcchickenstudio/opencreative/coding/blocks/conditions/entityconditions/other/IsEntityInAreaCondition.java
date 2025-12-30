@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entitycondition
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,7 +36,7 @@ public class IsEntityInAreaCondition extends EntityCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean checkEntity(@NotNull Entity entity) {
         Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
         Location location = entity.getLocation();
         Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);

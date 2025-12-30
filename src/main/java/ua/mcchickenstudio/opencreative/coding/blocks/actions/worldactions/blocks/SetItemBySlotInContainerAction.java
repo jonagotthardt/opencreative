@@ -41,7 +41,7 @@ public final class SetItemBySlotInContainerAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations",this);
         ItemStack item = getArguments().getItem("item",new ItemStack(Material.AIR),this);
         int slot = getArguments().getInt("slot",1,this);

@@ -64,7 +64,7 @@ public abstract class MultiAction extends Action {
         this.event = getExecutor().getEvent();
         sendCodingDebugAction(this);
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+            if (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld()) {
                 this.entity = entity;
                 execute(entity);
             }

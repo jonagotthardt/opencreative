@@ -39,7 +39,7 @@ public final class ApplyBoneMealAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations",this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override

@@ -34,7 +34,7 @@ public class NumberInRangeCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         double min = getArguments().getDouble("min",0.0d,this);
         boolean minEquals = getArguments().getBoolean("min-equals",false,this);
         double number = getArguments().getDouble("number",5.0d,this);

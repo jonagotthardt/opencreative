@@ -33,9 +33,9 @@ public final class LocationToVectorAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",entity.getLocation(),this);
+        Location location = getArguments().getLocation("location",getDefaultLocation(),this);
         setVarValue(link,location.toVector());
     }
 

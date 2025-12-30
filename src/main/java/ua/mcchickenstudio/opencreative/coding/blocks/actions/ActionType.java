@@ -873,7 +873,6 @@ public enum ActionType {
     private final ActionCategory category;
     private final MenusCategory menusCategory;
     private final Material material;
-    private final boolean selectionMustBeInWorld;
     private final String requiredPlugin;
     private ArgumentSlot[] layout;
 
@@ -882,7 +881,6 @@ public enum ActionType {
         this.category = category;
         this.menusCategory = menusCategory;
         this.material = material;
-        this.selectionMustBeInWorld = true;
         this.requiredPlugin = null;
     }
 
@@ -892,7 +890,6 @@ public enum ActionType {
         this.category = category;
         this.menusCategory = menusCategory;
         this.material = material;
-        this.selectionMustBeInWorld = true;
         this.requiredPlugin = requiredPlugin;
     }
 
@@ -902,16 +899,11 @@ public enum ActionType {
         this.category = category;
         this.menusCategory = menusCategory;
         this.material = material;
-        this.selectionMustBeInWorld = true;
         this.requiredPlugin = null;
     }
 
     public Class<? extends Action> getActionClass() {
         return actionClass;
-    }
-
-    public boolean isSelectionMustBeInWorld() {
-        return selectionMustBeInWorld;
     }
 
     public boolean isChestRequired() {

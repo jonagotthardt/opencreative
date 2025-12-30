@@ -35,7 +35,7 @@ public final class DeleteVariableAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<VariableLink> variableLinks = getArguments().getVarLinksList("variables",this);
         for (VariableLink link : variableLinks) {
             getPlanet().getVariables().removeVariable(link,this);

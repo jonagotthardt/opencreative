@@ -35,7 +35,7 @@ public final class PerlinNoiseAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
 
         VariableLink link = getArguments().getVariableLink("variable",this);
         if (link == null) return;

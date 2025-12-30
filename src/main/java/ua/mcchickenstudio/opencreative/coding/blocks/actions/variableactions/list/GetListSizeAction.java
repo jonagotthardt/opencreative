@@ -34,7 +34,7 @@ public final class GetListSizeAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> list = getArguments().getList("list",this);
         setVarValue(variable,list.size());

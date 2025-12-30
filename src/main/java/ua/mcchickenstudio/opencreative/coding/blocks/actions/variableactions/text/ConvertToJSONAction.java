@@ -39,7 +39,7 @@ public final class ConvertToJSONAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Object value = getArguments().getValue("variable", this);
         boolean pretty = getArguments().getBoolean("pretty", false, this);

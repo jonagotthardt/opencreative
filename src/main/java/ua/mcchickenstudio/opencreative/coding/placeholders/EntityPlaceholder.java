@@ -38,6 +38,7 @@ public final class EntityPlaceholder extends KeyPlaceholder {
                 if (handler.getEvent() instanceof MobInteractionEvent event) {
                     return event.getEntity().getName();
                 } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
+                    if (!entity.getWorld().equals(action.getExecutor().getPlanet().getWorld())) return null;
                     return entity.getName();
                 }
             }
@@ -45,6 +46,7 @@ public final class EntityPlaceholder extends KeyPlaceholder {
                 if (handler.getEvent() instanceof MobInteractionEvent event) {
                     return event.getEntity().getUniqueId().toString();
                 } else if (handler.getEvent().getSelection().getFirst() instanceof Entity entity) {
+                    if (!entity.getWorld().equals(action.getExecutor().getPlanet().getWorld())) return null;
                     return entity.getUniqueId().toString();
                 }
             }

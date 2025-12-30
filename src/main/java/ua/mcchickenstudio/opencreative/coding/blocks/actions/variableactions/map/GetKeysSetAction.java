@@ -36,7 +36,7 @@ public final class GetKeysSetAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         Map<Object,Object> map = getArguments().getMap("map",this);
         List<Object> keysList = new ArrayList<>(map.keySet());

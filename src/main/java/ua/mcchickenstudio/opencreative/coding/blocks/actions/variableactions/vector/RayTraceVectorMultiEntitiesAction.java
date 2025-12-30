@@ -48,10 +48,10 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
         super(executor, target, x, args);
     }
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
         final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
-        final Location from = getArguments().getLocation("from", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Location from = getArguments().getLocation("from", new Location(getPlanet().getWorld(), 0, 0, 0), this);
         AsyncScheduler.run(() -> {
             final double range = getArguments().getDouble("range", 3.0, this);
             final List<Entity> list = getEntitiesAroundPoint(from, range + 1.0);
@@ -60,7 +60,7 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
             for (final Entity e : list) {
                 final boolean isPlayer = (e instanceof Player);
                 if (filter.equals("only-players") && !isPlayer) continue;
-                if (filter.equals("only-entities") && (isPlayer || !(entity instanceof LivingEntity))) continue;
+                if (filter.equals("only-entities") && (isPlayer || !(e instanceof LivingEntity))) continue;
                 if (e.isDead()) continue;
                 final Location to = e.getLocation();
                 final double

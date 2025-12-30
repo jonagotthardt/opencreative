@@ -32,7 +32,7 @@ public final class CodePointOfCharAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String character = getArguments().getText("char","A",this);
         setVarValue(link, character.codePointAt(0));

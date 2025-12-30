@@ -40,7 +40,7 @@ public final class SetSignGlowingTextAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations",this);
         boolean glowing = getArguments().getBoolean("glowing",true,this);
         String sideString = getArguments().getText("side","front",this);

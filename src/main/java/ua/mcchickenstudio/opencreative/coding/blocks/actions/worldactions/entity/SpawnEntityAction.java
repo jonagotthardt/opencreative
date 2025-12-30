@@ -39,7 +39,7 @@ public final class SpawnEntityAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
 
         if (getWorld().getEntities().size() >= getPlanet().getLimits().getEntitiesLimit()) {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");

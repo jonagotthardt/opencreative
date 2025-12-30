@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.CreativeRunnable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -35,7 +36,7 @@ public final class SendDialogAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         List<Player> players = new ArrayList<>(List.of(player));
         int cooldown = getArguments().getInt("cooldown",20,this);
         List<String> text = getArguments().getTextList("messages",this);

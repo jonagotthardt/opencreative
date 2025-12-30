@@ -35,7 +35,7 @@ public class TextEndsWithCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("ending")) {
             return false;
         }

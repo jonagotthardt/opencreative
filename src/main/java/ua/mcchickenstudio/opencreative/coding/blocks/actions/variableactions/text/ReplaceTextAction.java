@@ -32,7 +32,7 @@ public final class ReplaceTextAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text", "Hello World",this);
         String target = getArguments().getText("target", " ",this);

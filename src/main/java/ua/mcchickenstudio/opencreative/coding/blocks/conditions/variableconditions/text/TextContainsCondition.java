@@ -35,7 +35,7 @@ public class TextContainsCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("contains")) {
             return false;
         }

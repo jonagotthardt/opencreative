@@ -33,9 +33,9 @@ public abstract class EntityAction extends Action {
     }
 
     public final void execute(Entity entity) {
-        if (entity != null) {
-            executeEntity(entity);
-        }
+        if (entity == null) return;
+        if (!entity.getWorld().equals(getPlanet().getWorld())) return;
+        executeEntity(entity);
     }
 
     public abstract void executeEntity(@NotNull Entity entity);

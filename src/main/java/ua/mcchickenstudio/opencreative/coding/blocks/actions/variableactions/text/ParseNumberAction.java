@@ -41,7 +41,7 @@ public final class ParseNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Component component = getArguments().getComponent("text", Component.text("0.0"),this);
         String text = PlainTextComponentSerializer.plainText().serialize(component);

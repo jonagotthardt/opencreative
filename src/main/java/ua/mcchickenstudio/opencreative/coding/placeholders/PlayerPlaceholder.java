@@ -33,6 +33,7 @@ public final class PlayerPlaceholder extends KeyPlaceholder {
     @Override
     public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
         if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
+            if (!player.getWorld().equals(action.getExecutor().getPlanet().getWorld())) return null;
             switch (key) {
                 case "player" -> {
                     return player.getName();

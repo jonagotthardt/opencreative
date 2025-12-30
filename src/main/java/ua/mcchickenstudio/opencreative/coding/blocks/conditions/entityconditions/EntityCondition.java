@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions;
 
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -32,6 +34,15 @@ public abstract class EntityCondition extends Condition {
     public EntityCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }
+
+    @Override
+    public boolean check(Entity entity) {
+        if (entity == null) return false;
+        if (!entity.getWorld().equals(getPlanet().getWorld())) return false;
+        return checkEntity(entity);
+    }
+
+    public abstract boolean checkEntity(@NotNull Entity entity);
 
     @Override
     public ActionCategory getActionCategory() {

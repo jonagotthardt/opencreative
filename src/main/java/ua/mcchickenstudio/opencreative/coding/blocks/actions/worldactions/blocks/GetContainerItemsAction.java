@@ -40,7 +40,7 @@ public final class GetContainerItemsAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<ItemStack> items = new ArrayList<>();
         VariableLink link = getArguments().getVariableLink("variable",this);
         Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);

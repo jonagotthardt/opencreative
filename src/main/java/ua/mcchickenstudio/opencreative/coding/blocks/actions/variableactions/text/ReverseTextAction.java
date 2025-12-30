@@ -32,7 +32,7 @@ public final class ReverseTextAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text", " ",this);
         StringBuilder result = new StringBuilder();

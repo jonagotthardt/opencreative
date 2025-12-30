@@ -38,7 +38,7 @@ public final class CreateListAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = getArguments().getList("elements",this);
         for (Object element : elements) {

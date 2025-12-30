@@ -35,7 +35,7 @@ public final class SettingsParamPhysObjectAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
                         a.getInt("damage", 5, this),

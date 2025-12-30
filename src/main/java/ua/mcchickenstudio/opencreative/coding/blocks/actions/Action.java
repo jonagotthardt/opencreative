@@ -88,7 +88,7 @@ public abstract class Action {
             execute(null);
         }
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+            if (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld()) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -264,7 +264,7 @@ public abstract class Action {
             default -> entities.addAll(eventEntities);
         }
         entities.removeIf(entity -> entity instanceof Player player && ChangedWorld.isPlayerWithLocation(player));
-        entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
+        //entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
         int selectionLimit = getPlanet().getLimits().getEntitiesLimit() + getPlanet().getPlayers().size(); // adding players count if entities limit is set to 0
         if (entities.size() > selectionLimit) {
             entities = entities.subList(0, selectionLimit);

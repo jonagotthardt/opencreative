@@ -32,7 +32,7 @@ public final class BossBarProgressAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getArguments().pathExists("name")) {
             return;
         }

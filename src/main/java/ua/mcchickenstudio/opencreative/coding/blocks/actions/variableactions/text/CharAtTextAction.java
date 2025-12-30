@@ -32,7 +32,7 @@ public final class CharAtTextAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text"," ",this);
         int index = getArguments().getInt("index",1,this);

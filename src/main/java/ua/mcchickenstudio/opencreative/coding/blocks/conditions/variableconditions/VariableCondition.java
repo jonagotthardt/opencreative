@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -32,6 +33,13 @@ public abstract class VariableCondition extends Condition {
     public VariableCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }
+
+    @Override
+    public boolean check(Entity entity) {
+        return check();
+    }
+
+    public abstract boolean check();
 
     @Override
     public ActionCategory getActionCategory() {

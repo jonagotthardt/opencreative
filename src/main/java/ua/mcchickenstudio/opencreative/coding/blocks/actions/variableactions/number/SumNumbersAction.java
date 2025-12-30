@@ -34,7 +34,7 @@ public final class SumNumbersAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         List<Double> doubles = getArguments().getNumbersList("numbers",this);
         double result = doubles.getFirst();

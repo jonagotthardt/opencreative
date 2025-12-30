@@ -38,7 +38,7 @@ public final class SpawnTextDisplayAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
 
         if (!getArguments().pathExists("text")) {
             return;

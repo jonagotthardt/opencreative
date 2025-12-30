@@ -34,7 +34,7 @@ public final class StrikeLightningAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getPlanet().getLimits().canLightningStrike()) {
             return;
         }

@@ -33,7 +33,7 @@ public final class GetBlockTypeAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(),this);
         setVarValue(link, location.getBlock().getType().name().toLowerCase());

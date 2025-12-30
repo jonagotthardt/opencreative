@@ -34,7 +34,7 @@ public final class ConcatTextAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         List<String> messages = getArguments().getTextList("text",this);
         String type = getArguments().getText("type","new-line",this);

@@ -32,7 +32,7 @@ public final class SetWorldBorderAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         double radius = getArguments().getDouble("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
         int time = getArguments().getInt("time",0,this);
         int warningDistance = getArguments().getInt("warning-distance",5,this);

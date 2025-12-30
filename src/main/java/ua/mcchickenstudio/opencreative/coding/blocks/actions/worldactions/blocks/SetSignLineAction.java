@@ -39,7 +39,7 @@ public final class SetSignLineAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
         int number = getArguments().getInt("number",1,this);
         Block block = location.getBlock();

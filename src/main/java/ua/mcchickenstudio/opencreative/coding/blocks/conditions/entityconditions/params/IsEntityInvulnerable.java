@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.params;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -34,7 +35,7 @@ public class IsEntityInvulnerable extends EntityCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean checkEntity(@NotNull Entity entity) {
         return entity.isInvulnerable();
     }
 

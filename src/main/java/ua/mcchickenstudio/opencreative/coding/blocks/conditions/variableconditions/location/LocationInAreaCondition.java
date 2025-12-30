@@ -35,7 +35,7 @@ public class LocationInAreaCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
         Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
         Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);

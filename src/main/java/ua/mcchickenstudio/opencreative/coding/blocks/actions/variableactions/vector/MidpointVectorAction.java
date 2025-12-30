@@ -33,7 +33,7 @@ public final class MidpointVectorAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         Vector first = getArguments().getVector("first",new Vector(),this);
         Vector second = getArguments().getVector("second",new Vector(),this);

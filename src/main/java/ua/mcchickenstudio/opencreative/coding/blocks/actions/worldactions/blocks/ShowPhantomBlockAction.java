@@ -22,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -38,10 +39,10 @@ public final class ShowPhantomBlockAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
-        final Location location = getArguments().getLocation("location", entity.getLocation(), this);
+    public void executePlayer(@NotNull Player player) {
+        final Location location = getArguments().getLocation("location", player.getLocation(), this);
         final ItemStack item = getArguments().getItem("block", new ItemStack(Material.STONE), this);
-        if (location != null && item.getType().isBlock()) {
+        if (item.getType().isBlock()) {
             AsyncScheduler.run(() -> OpenCreative.getPacketManager().showBlockForPlayer(player, location, item.getType()), AsyncScheduler.getScheduler());
         }
     }

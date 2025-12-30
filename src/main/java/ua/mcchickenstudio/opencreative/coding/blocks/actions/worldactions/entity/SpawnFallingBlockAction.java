@@ -39,7 +39,7 @@ public final class SpawnFallingBlockAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
 
         if (!getArguments().pathExists("block")) {
             return;

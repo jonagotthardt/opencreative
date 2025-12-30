@@ -37,7 +37,7 @@ public final class RandomNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         int min = getArguments().getInt("min",0,this);
         int max = getArguments().getInt("max",10,this);

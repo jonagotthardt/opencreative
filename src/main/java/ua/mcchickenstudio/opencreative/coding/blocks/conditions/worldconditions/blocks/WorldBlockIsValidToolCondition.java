@@ -38,7 +38,7 @@ public class WorldBlockIsValidToolCondition extends WorldCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<Location> blockLocations = getArguments().getLocationList("blocks",this);
         ItemStack tool = getArguments().getItem("tool",new ItemStack(Material.AIR),this);
         boolean requireAll = getArguments().getBoolean("all",true,this);

@@ -42,7 +42,7 @@ public final class ParseJSONAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text", " ",this);
         if (text.length() > 1024) {

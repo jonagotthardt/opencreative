@@ -37,13 +37,13 @@ public final class AddPhysObjectAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         final Arguments a = getArguments();
         final List<?>
         visual = a.getList("visual", this),
         motion = a.getList("motion", this),
         settings =  a.getList("settings", this);
-        final PhysObject physObject = new PhysObject(entity.getWorld(), visual, motion, settings);
+        final PhysObject physObject = new PhysObject(getPlanet().getWorld(), visual, motion, settings);
         PhysService.add(physObject,getPlanet().getLimits().getPhysicalObjectsLimit());
     }
 

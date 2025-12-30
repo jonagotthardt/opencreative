@@ -33,7 +33,7 @@ public final class TranslateColorsAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text", " ",this);
         char character = getArguments().getCharacter("character", '&',this);

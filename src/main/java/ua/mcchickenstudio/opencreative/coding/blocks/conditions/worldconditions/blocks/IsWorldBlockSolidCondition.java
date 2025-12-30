@@ -36,7 +36,7 @@ public class IsWorldBlockSolidCondition extends WorldCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<Location> blockLocations = getArguments().getLocationList("blocks",this);
         boolean requireAll = getArguments().getBoolean("all",true,this);
         boolean isSolid = false;

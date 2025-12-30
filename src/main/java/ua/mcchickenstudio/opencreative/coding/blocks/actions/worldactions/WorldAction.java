@@ -32,6 +32,13 @@ public abstract class WorldAction extends Action {
         super(executor, target, x, args);
     }
 
+    @Override
+    protected void execute(Entity entity) {
+        execute();
+    }
+
+    protected abstract void execute();
+
     protected void setLastSpawnedEntity(@NotNull Entity entity) {
         getHandler().getMainActionHandler().setLastSpawnedEntity(entity);
     }

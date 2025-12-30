@@ -38,7 +38,7 @@ public class VarItemEqualsCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         boolean ignoreAmount = getArguments().getBoolean("ignore-amount",true,this);
         boolean ignoreName = getArguments().getBoolean("ignore-name",false,this);
         boolean ignoreLore = getArguments().getBoolean("ignore-lore",false,this);

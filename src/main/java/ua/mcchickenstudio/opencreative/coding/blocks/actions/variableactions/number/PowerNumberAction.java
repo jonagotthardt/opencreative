@@ -32,7 +32,7 @@ public final class PowerNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         double number = getArguments().getDouble("number",2.0d,this);
         double power = getArguments().getDouble("power",2.0d,this);

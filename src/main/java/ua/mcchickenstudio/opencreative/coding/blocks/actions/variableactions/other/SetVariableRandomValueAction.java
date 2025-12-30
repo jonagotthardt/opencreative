@@ -38,7 +38,7 @@ public final class SetVariableRandomValueAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         List<Object> values = getArguments().getList("values",this);
         if (values.isEmpty()) return;

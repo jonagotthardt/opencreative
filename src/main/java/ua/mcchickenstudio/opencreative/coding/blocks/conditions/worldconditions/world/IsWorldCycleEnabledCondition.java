@@ -36,7 +36,7 @@ public class IsWorldCycleEnabledCondition extends WorldCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<String> list = getArguments().getTextList("names",this);
         boolean requireAll = getArguments().getBoolean("all",true,this);
         boolean isEnabled = false;

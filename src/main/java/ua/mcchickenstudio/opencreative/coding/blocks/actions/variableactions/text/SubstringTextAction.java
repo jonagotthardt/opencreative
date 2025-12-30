@@ -32,7 +32,7 @@ public final class SubstringTextAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         String text = getArguments().getText("text", " ",this);
         int from = getArguments().getInt("from", 1,this);

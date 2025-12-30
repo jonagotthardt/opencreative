@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -32,7 +33,7 @@ public final class SetArmorAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         ItemStack helmet = getArguments().getItem("helmet", ItemStack.empty(),this);
         ItemStack chestplate = getArguments().getItem("chestplate",ItemStack.empty(),this);
         ItemStack leggings = getArguments().getItem("leggings",ItemStack.empty(),this);

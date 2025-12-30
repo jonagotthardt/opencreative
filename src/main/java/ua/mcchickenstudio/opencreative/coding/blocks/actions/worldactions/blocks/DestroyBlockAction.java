@@ -40,7 +40,7 @@ public final class DestroyBlockAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations",this);
         ItemStack item = getArguments().getItem("item",new ItemStack(Material.NETHERITE_PICKAXE),this);
         boolean triggerEffect = getArguments().getBoolean("show-particle",true,this);

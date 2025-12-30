@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entitycondition
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,7 +36,7 @@ public class EntityUUIDEqualsCondition extends EntityCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean checkEntity(@NotNull Entity entity) {
         List<String> uuids = getArguments().getTextList("uuids",this);
         String entityUUID = entity.getUniqueId().toString();
         for (String uuid : uuids) {

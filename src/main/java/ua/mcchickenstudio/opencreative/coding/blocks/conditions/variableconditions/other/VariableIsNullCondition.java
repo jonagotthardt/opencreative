@@ -36,7 +36,7 @@ public class VariableIsNullCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<Object> values = getArguments().getList("values",this);
         boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean isNull = false;

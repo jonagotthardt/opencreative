@@ -38,7 +38,7 @@ public class WorldBlockTypeEqualsCondition extends WorldCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<Location> blockLocations = getArguments().getLocationList("blocks",this);
         ItemStack item = getArguments().getItem("type",new ItemStack(Material.AIR),this);
         boolean requireAll = getArguments().getBoolean("all",true,this);

@@ -35,7 +35,7 @@ public class TextStartsWithCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("start")) {
             return false;
         }

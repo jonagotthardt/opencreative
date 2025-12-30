@@ -35,7 +35,7 @@ public final class RemoveByIdFromListAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = new ArrayList<>(getArguments().getList("variable",this));
         int index = getArguments().getInt("index",1,this);

@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -30,6 +33,13 @@ public abstract class VariableAction extends Action {
     public VariableAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
+
+    @Override
+    protected void execute(Entity entity) {
+        execute();
+    }
+
+    protected abstract void execute();
 
     @Override
     public ActionCategory getActionCategory() {
@@ -48,5 +58,13 @@ public abstract class VariableAction extends Action {
                 getPlanet().getLimits().setLastVariableElementsChangesAmount(0);
             }
         },20L);
+    }
+
+    protected @NotNull Location getDefaultLocation() {
+        Entity entity = getEntity();
+        if (entity != null && entity.getWorld().equals(getPlanet().getWorld())) {
+            return entity.getLocation();
+        }
+        return getPlanet().getTerritory().getSpawnLocation();
     }
 }

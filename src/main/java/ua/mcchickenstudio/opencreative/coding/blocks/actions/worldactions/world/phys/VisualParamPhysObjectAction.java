@@ -36,7 +36,7 @@ public final class VisualParamPhysObjectAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
                         a.getParticle("particle", Particle.CLOUD, this),

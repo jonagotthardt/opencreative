@@ -33,9 +33,9 @@ public final class ModifyLocationAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",entity.getLocation(),this);
+        Location location = getArguments().getLocation("location",getDefaultLocation(),this);
         location = location.clone();
         boolean add = getArguments().getBoolean("add",false,this);
         double x = (add ? 0.0d : location.getX());

@@ -38,7 +38,7 @@ public final class AddToListAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> list = new ArrayList<>(getArguments().getList("variable",this));
         List<Object> elements = getArguments().getList("elements",this);

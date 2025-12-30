@@ -35,7 +35,7 @@ public final class RotationToVectorAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable", this);
         final float
         yaw = getArguments().getInt("yaw", 0, this),

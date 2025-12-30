@@ -36,7 +36,7 @@ public final class GetValuesSetAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         Map<Object,Object> map = getArguments().getMap("map",this);
         List<Object> valuesList = new ArrayList<>(map.values());

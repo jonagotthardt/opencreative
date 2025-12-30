@@ -37,7 +37,7 @@ public final class SetScoreNumberStyleAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getArguments().pathExists("scoreboards")) {
             return;
         }

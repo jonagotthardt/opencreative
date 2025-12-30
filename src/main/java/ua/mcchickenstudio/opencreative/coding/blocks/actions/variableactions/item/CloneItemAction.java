@@ -34,7 +34,7 @@ public final class CloneItemAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         ItemStack item = getArguments().getItem("item",new ItemStack(Material.WOODEN_SWORD,1),this);
         ItemStack result = item.clone();

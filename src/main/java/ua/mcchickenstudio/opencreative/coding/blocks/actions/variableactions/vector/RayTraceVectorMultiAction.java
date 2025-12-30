@@ -47,10 +47,10 @@ public final class RayTraceVectorMultiAction extends VariableAction {
         super(executor, target, x, args);
     }
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
         final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
-        final Location from = getArguments().getLocation("from", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Location from = getArguments().getLocation("from", new Location(getPlanet().getWorld(), 0, 0, 0), this);
         final List<Object> list = getArguments().getList("to", this);
         final List<Location> resultList = new ArrayList<>();
         AsyncScheduler.run(() -> {

@@ -35,7 +35,7 @@ public final class RemoveItemsAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         for (ItemStack item : getArguments().getItemList("items",this)) {
             removeItems(player, item);
         }

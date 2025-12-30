@@ -35,7 +35,7 @@ public final class MergeListsAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> variableList = new ArrayList<>(getArguments().getList("variable",this));
         List<Object> list = getArguments().getList("list",this);

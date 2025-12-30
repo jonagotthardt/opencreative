@@ -37,7 +37,7 @@ public final class CalculateFromListAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         List<Object> elements = getArguments().getList("list",this);
         final String type = getArguments().getText("calculation", "get-min", this);

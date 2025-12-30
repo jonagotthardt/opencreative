@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entitycondition
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,7 +36,7 @@ public class EntityNameEqualsCondition extends EntityCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean checkEntity(@NotNull Entity entity) {
         boolean requiredColor = getArguments().getBoolean("require-color",false,this);
         boolean requiredCaps = getArguments().getBoolean("require-caps",false,this);
         List<String> names = getArguments().getTextList("names",this);

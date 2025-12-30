@@ -35,7 +35,7 @@ public final class DivideVectorsAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         List<Vector> vectors = getArguments().getList("vectors",this);
         Vector result = vectors.getFirst();

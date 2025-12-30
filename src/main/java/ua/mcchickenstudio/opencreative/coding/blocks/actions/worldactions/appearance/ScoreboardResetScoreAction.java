@@ -33,7 +33,7 @@ public final class ScoreboardResetScoreAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getArguments().pathExists("name") || !getArguments().pathExists("object")) {
             return;
         }
