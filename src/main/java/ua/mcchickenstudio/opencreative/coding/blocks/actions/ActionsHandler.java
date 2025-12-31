@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * @see Executor
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 5.9
+ * @version 6.0
  * @author McChicken Studio
  */
 public class ActionsHandler {
@@ -64,6 +64,8 @@ public class ActionsHandler {
     private Entity lastSpawnedEntity;
     private boolean stopped = false;
     private long waitDelay = 0;
+
+    private static int MAX_DEPTH = 50;
 
     /**
      * Constructor of actions handler with executor.
@@ -290,13 +292,15 @@ public class ActionsHandler {
      * @return the main handler of actions.
      */
     public @NotNull ActionsHandler getMainActionHandler() {
-        ActionsHandler handler = this.getParentActionHandler();
-        ActionsHandler lastHandler = this;
-        while (handler != null) {
-            lastHandler = handler;
-            handler = handler.getParentActionHandler();
+        ActionsHandler handler = this;
+        for (int depth = 0; depth < MAX_DEPTH; depth++) {
+            ActionsHandler parent = handler.getParentActionHandler();
+            if (parent == null) {
+                return handler;
+            }
+            handler = parent;
         }
-        return lastHandler;
+        return handler;
     }
 
     /**
@@ -355,6 +359,44 @@ public class ActionsHandler {
      */
     public WorldEvent getEvent() {
         return event;
+    }
+
+    /**
+     * Stops code in all parent handlers.
+     */
+    public void stopAllParentHandlers() {
+        ActionsHandler handler = this;
+        for (int depth = 0; depth < MAX_DEPTH; depth++) {
+            ActionsHandler parent = handler.getParentActionHandler();
+            if (parent == null) {
+                return;
+            }
+            handler = parent;
+            handler.setStopped(true);
+            handler.removeAllActions();
+            if (handler.getAction() instanceof RepeatAction repeatAction) {
+                repeatAction.setMustStop(true);
+            }
+        }
+    }
+
+    /**
+     * Returns first parent action handler with specified category of action.
+     * <p>
+     * If it doesn't find an action handler, it will return null.
+     * @param category category of action.
+     * @return action handler with action category, or null - if not found.
+     */
+    public @Nullable ActionsHandler getFirstActionsHandler(@NotNull ActionCategory category) {
+        ActionsHandler handler = this;
+        for (int depth = 0; handler != null && depth < MAX_DEPTH; depth++) {
+            Action action = handler.getAction();
+            if (action != null && action.getActionCategory() == category) {
+                return handler;
+            }
+            handler = handler.getParentActionHandler();
+        }
+        return null;
     }
 
     /**

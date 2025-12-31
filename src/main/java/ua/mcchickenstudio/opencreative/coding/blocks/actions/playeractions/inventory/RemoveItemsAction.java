@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ public final class RemoveItemsAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         for (ItemStack item : getArguments().getItemList("items",this)) {
             removeItems(player, item);
         }

@@ -1,6 +1,6 @@
 #
-# OpenCreative+ 5.9.0 - Що ж, це можливо.
-# (C) McChicken Studio 2017-2025.
+# OpenCreative+ 6.0.0 - Що ж, це можливо.
+# (C) McChicken Studio 2017-2026.
 #
 
 #
@@ -415,7 +415,7 @@ coding-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворити&f у своїх світах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.9\n<green> Що ж, це можливо!\n <white>\n<gold> ⭐ <white>Оглянь всі <gold>світи<white> за допомогою компаса!\n<light_purple> ❤ <white>Створи свій світ і <light_purple>запроси <white>друзів!\n <yellow>⌚<white> Веселися і <yellow>твори <white>що завгодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>6.0\n<green> Що ж, це можливо!\n <white>\n<gold> ⭐ <white>Оглянь всі <gold>світи<white> за допомогою компаса!\n<light_purple> ❤ <white>Створи свій світ і <light_purple>запроси <white>друзів!\n <yellow>⌚<white> Веселися і <yellow>твори <white>що завгодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред створенням світу пограйте &6%time%&f у світах інших гравців."
   title: "&eСтворення світу ◌"
@@ -3849,6 +3849,7 @@ items:
           - " "
           - "&fВ скрині:"
           - "&f Розташування &7- Куди запускати"
+          - "&a Число &7- Сила запуску"
           - " "
           - "&eНатисни, щоб встановити дію."
       entity-teleport:
@@ -5955,6 +5956,22 @@ items:
           - " "
           - "&fУ скрині:"
           - " &6Тексти &7- Назва циклу"
+          - " "
+          - "&eНатисніть, щоб встановити дію."
+      control-break-repeat:
+        name: "&cЗупинити повторення"
+        lore:
+          - "&7Це зупинить повторення та"
+          - "&7виконає дію після"
+          - "&7поршнів повторення."
+          - " "
+          - "&eНатисніть, щоб встановити дію."
+      control-skip-repeat:
+        name: "&bПропустити повторення"
+        lore:
+          - "&7Це не виконає наступні"
+          - "&7дії в повторенні, але"
+          - "&7запустить наступну ітерацію."
           - " "
           - "&eНатисніть, щоб встановити дію."
       control-stop-code-line:
@@ -8610,6 +8627,7 @@ items:
           - " "
           - "&fУ скрині:"
           - "&f Місцезнаходження &7- Куди запускати"
+          - "&a Число &7- Сила запуску"
           - " "
           - "&eНатисни, щоб встановити дію."
       player-teleport:
@@ -13309,7 +13327,7 @@ menus:
           - "&7 кодом, який &aдозволяє&7 гравцям"
           - "&7 &bстворювати &7свої світи."
           - ""
-          - "&c McChicken Studio 2017-2025"
+          - "&c McChicken Studio 2017-2026"
           - "&3 Перекладачі: &7initzero, Nagibator6000LoL,"
           - "&7  DrakesWeb, kogtyv, Senmpai333."
           - ""
@@ -17593,8 +17611,8 @@ blocks:
   player_get_item_by_slot: "Отримати предмет"
   player_set_remaining_air: "Залиш. повітря"
   player_release_shoulders: "Звільнити плечі"
-  entity_set_bee_stingers: "Кількість жал"
-  player_set_bee_stingers: "Кількість жал"
+  entity_set_bee_stingers_in_body: "Кількість жал"
+  player_set_bee_stingers_in_body: "Кількість жал"
   entity_add_damage: "Завдати шкоди"
   entity_remove: "&cЗнищити"
   entity_set_adult: "У дорослого"
@@ -17719,6 +17737,8 @@ blocks:
   control_clear_global_variables: "&cВидал. глобал."
   control_launch_cycles: "&aЗапустити цикл"
   control_stop_cycles: "&3Зупинити цикл"
+  control_skip_repeat: "&bПропуск повтору"
+  control_break_repeat: "&cЗупин. повтор."
   var_set_value: "Присвоїти значення"
   var_get_type: "Отримати тип"
   var_set_random_value: "Випадк. значення"

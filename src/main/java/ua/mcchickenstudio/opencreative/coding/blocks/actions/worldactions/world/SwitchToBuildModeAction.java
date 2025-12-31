@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -29,8 +28,6 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.notifyBuildModeByCode;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getComponentWithPlaceholders;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 
 public final class SwitchToBuildModeAction extends WorldAction {
     public SwitchToBuildModeAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,7 +35,7 @@ public final class SwitchToBuildModeAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (getPlanet().getMode() != Planet.Mode.BUILD) {
             PlanetModeChangeEvent event = new PlanetModeChangeEvent(getPlanet(), getPlanet().getMode(), Planet.Mode.BUILD);
             event.callEvent();

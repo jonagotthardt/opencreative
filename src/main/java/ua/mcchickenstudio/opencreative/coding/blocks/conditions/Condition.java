@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -71,8 +72,9 @@ public abstract class Condition extends Action {
         boolean check = false;
         if (getTargets().isEmpty()) return;
         for (Entity entity : getTargets()) {
-            this.entity = entity;
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+            if (entity == null) continue;
+            if (entity.getWorld().equals(getPlanet().getWorld()) || !OpenCreative.getSettings().getCodingSettings().isIgnoreActionsIfEntityNotInWorld()) {
+                this.entity = entity;
                 if (check(entity)) {
                     check = true;
                 }

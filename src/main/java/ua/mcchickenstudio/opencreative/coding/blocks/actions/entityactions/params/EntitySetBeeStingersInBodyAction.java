@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,9 @@ public final class EntitySetBeeStingersInBodyAction extends EntityAction {
         int count = getArguments().getInt("count",0,this);
         if (add) {
             count = count + livingEntity.getArrowsInBody();
+        }
+        if (count > 1000) {
+            count = 1000;
         }
         livingEntity.setBeeStingersInBody(count);
     }

@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,8 @@ public abstract class PlayerCondition extends Condition {
 
     @Override
     public final boolean check(Entity entity) {
+        if (entity == null) return false;
+        if (!entity.getWorld().equals(getPlanet().getWorld())) return false;
         if (entity instanceof Player player) {
             return checkPlayer(player);
         }

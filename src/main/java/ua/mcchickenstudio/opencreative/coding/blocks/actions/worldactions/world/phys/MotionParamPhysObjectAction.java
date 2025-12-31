@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,10 +36,10 @@ public final class MotionParamPhysObjectAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getLocation("location", new Location(entity.getWorld(), 0, 0, 0), this),
+                        a.getLocation("location", new Location(getPlanet().getWorld(), 0, 0, 0), this),
                         a.getInt("speed", 3, this),
                         a.getDouble("weight", 0.4, this),
                         a.getDouble("acceleration-speed", 0.06, this),

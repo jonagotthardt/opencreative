@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import org.bukkit.entity.Entity;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
@@ -64,7 +65,8 @@ public abstract class MultiAction extends Action {
         this.event = getExecutor().getEvent();
         sendCodingDebugAction(this);
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+            if (entity == null) continue;
+            if (entity.getWorld().equals(getPlanet().getWorld()) || !OpenCreative.getSettings().getCodingSettings().isIgnoreActionsIfEntityNotInWorld()) {
                 this.entity = entity;
                 execute(entity);
             }

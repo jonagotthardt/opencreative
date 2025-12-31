@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,21 +40,25 @@ public final class TeleportListener implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL
                 || event.getCause() == PlayerTeleportEvent.TeleportCause.END_GATEWAY
-                || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+                || event.getCause() == PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
+        ) {
             if (!isPlanet(event.getTo().getWorld())) {
                 event.setCancelled(true);
+            }
+        }
+        if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
+            switch (event.getCause()) {
+                case UNKNOWN, PLUGIN, COMMAND -> {}
+                default -> {
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getFrom().getWorld());
         if (planet != null) {
             if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
                 new TeleportEvent(event.getPlayer()).callEvent();
-            } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.DISMOUNT
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.EXIT_BED) {
-                event.setCancelled(true);
             }
         }
     }

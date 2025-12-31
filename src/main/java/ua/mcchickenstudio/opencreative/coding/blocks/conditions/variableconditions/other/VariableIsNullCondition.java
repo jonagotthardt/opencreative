@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ public class VariableIsNullCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         List<Object> values = getArguments().getList("values",this);
         boolean requireAll = getArguments().getBoolean("all",false,this);
         boolean isNull = false;

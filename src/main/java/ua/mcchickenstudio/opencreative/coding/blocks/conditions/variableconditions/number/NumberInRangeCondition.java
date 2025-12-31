@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ public class NumberInRangeCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         double min = getArguments().getDouble("min",0.0d,this);
         boolean minEquals = getArguments().getBoolean("min-equals",false,this);
         double number = getArguments().getDouble("number",5.0d,this);

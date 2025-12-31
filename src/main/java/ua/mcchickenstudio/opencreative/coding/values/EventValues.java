@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -263,6 +263,9 @@ public final class EventValues {
     public @Nullable Object getValue(@NotNull Class<? extends EventValue> clazz, @NotNull ActionsHandler handler, @NotNull Action action, @NotNull Entity entity) {
         EventValue value = getByClass(clazz);
         if (value == null) return null;
+        if (value.getCategory() == MenusCategory.PLAYER || value.getCategory() == MenusCategory.ENTITY) {
+            if (!entity.getWorld().equals(action.getExecutor().getPlanet())) return null;
+        }
         return value.getValue(handler, action, entity);
     }
 

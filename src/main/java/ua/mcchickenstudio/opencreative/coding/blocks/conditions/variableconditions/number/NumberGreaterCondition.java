@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ public class NumberGreaterCondition extends VariableCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean check() {
         double first = getArguments().getDouble("first",2.0d,this);
         double second = getArguments().getDouble("second",1.0d,this);
         boolean equals = getArguments().getBoolean("equals",false,this);

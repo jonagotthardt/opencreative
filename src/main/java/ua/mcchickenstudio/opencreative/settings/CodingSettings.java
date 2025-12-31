@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ public final class CodingSettings {
 
     private boolean cancelChatOnValueSet = false;
     private boolean legacySelectionMenu = false;
+    private boolean ignoreActionsIfEntityNotInWorld = false;
 
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
@@ -67,6 +68,7 @@ public final class CodingSettings {
 
         legacySelectionMenu = section.getBoolean("old-selection-menu",false);
         cancelChatOnValueSet = section.getBoolean("cancel-chat-on-value-set", false);
+        ignoreActionsIfEntityNotInWorld = section.getBoolean("ignore-actions-if-entity-not-in-world", false);
 
         loadDisabledBlocks(section);
         setupPromptHandler(section);
@@ -235,4 +237,13 @@ public final class CodingSettings {
         return prompterTimeout;
     }
 
+    /**
+     * Checks whether any action will be not executed, if
+     * target entity is not in planet's world.
+     * @return true - all actions require entity in same world<p>
+     * false - only entity and player actions.
+     */
+    public boolean isIgnoreActionsIfEntityNotInWorld() {
+        return ignoreActionsIfEntityNotInWorld;
+    }
 }

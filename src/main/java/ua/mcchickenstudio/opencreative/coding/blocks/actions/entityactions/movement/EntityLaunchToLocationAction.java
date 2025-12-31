@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,9 +36,11 @@ public final class EntityLaunchToLocationAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         Location location = getArguments().getLocation("location",entity.getLocation(),this);
-        entity.setVelocity(
-                new Vector(location.getX(),location.getY(),location.getZ())
-        );
+        float power = getArguments().getFloat("power",1.0f,this);
+        Vector direction = location.toVector().subtract(entity.getLocation().toVector());
+        direction.normalize();
+        direction.multiply(power);
+        entity.setVelocity(entity.getVelocity().add(direction));
     }
 
     @Override

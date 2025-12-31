@@ -1,6 +1,6 @@
 #
-# OpenCreative+ 5.9.0 - Well, it's possible.
-# (C) McChicken Studio 2017-2025.
+# OpenCreative+ 6.0.0 - Well, it's possible.
+# (C) McChicken Studio 2017-2026.
 #
 
 #
@@ -143,7 +143,7 @@
 # Discord: https://discord.gg/sSFCXUeq63
 #
 
-version: 5.9.0
+version: 6.0.0
 hide-from-tab: spectator # Hides players, that aren't in same world: spectator - Transparent nickname (requires ProtocolLib), full - Full hide from tab list, none - Not hide.
 
 lobby:
@@ -196,9 +196,9 @@ messages:
   #
   locale: en
 
-  branding: "<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+" # Branding uses minimessage (https://webui.advntr.dev/)
+  branding: "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f" # Prefix, that will be used in many messages.
-  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2025\n &c"
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
 
   cc-prefix: "&6 Creative Chat &8| &7" # Creative Chat is global chat, accessed by ! in the beginning of message, or with /cc.
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders and MiniMessage here
@@ -231,6 +231,9 @@ coding:
     # To test them, use /world platformer [ID].
   cancel-chat-on-value-set: false # Cancels sending message to local chat, when player sets new value of text, number, vector,
                                   # variable, potion, color while holding item in hand.
+  ignore-actions-if-entity-not-in-world: false # If true, will cancel any action (player, entity, variable, world, control...)
+                                               # if target entity in action is not in world. By default, it's false to make
+                                               # possible to execute non-player and non-entity actions, that don't require entity.
 
   #
   # You can disable some coding blocks,

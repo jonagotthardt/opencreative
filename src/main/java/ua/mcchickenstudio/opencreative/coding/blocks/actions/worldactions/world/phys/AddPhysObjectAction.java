@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,13 +37,13 @@ public final class AddPhysObjectAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         final Arguments a = getArguments();
         final List<?>
         visual = a.getList("visual", this),
         motion = a.getList("motion", this),
         settings =  a.getList("settings", this);
-        final PhysObject physObject = new PhysObject(entity.getWorld(), visual, motion, settings);
+        final PhysObject physObject = new PhysObject(getPlanet().getWorld(), visual, motion, settings);
         PhysService.add(physObject,getPlanet().getLimits().getPhysicalObjectsLimit());
     }
 

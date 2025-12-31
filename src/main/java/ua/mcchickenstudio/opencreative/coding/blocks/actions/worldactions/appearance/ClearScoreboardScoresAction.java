@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public final class ClearScoreboardScoresAction extends WorldAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         if (!getArguments().pathExists("scoreboards")) {
             return;
         }

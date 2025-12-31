@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -38,14 +39,15 @@ public abstract class PlayerAction extends Action {
     }
     
     public final void execute(Entity entity) {
+        if (entity == null) return;
+        if (!entity.getWorld().equals(getPlanet().getWorld())) return;
         if (entity instanceof Player player) {
             executePlayer(player);
         } else {
-            if (entity == null) return;
             throw new UnsupportedEntityException(Player.class, entity);
         }
     }
     
-    public abstract void executePlayer(Player player);
+    public abstract void executePlayer(@NotNull Player player);
 
 }

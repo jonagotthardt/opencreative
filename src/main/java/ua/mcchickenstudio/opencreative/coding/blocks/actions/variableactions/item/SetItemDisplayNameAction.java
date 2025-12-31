@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ public final class SetItemDisplayNameAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable",this);
         ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
         ItemMeta meta = item.getItemMeta();

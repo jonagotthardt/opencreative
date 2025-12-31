@@ -1,6 +1,6 @@
 #
-# OpenCreative+ 5.9.0 - Well, it's possible.
-# (C) McChicken Studio 2017-2025.
+# OpenCreative+ 6.0.0 - Well, it's possible.
+# (C) McChicken Studio 2017-2026.
 #
 
 #
@@ -417,7 +417,7 @@ coding-debug:
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
-  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>5.9\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
+  message: "\n <white>\n<white>\n <white>\n <white>%branding% <dark_gray>6.0\n<green> Что-ж, это возможно!\n <white>\n<gold> ⭐ <white>Осмотри все <gold>миры<white> с помощью компаса!\n<light_purple> ❤ <white>Создай свой мир и <light_purple>пригласи <white>друзей!\n <yellow>⌚<white> Веселись и <yellow>твори <white>что угодно!\n \n<white>\n <white>"
 creating-world:
   not-enough-played: "%prefix%&fПеред созданием мира сыграйте &6%time%&f в мирах других игроков."
   title: "&eСоздание мира ◌"
@@ -3918,6 +3918,7 @@ items:
           - " "
           - "&fВ сундуке:"
           - "&f Местоположение &7- Куда запускать"
+          - "&a Число &7- Сила запуска"
           - " "
           - "&eНажми, чтобы установить действие."
       entity-teleport:
@@ -5958,6 +5959,22 @@ items:
           - " "
           - "&fВ сундуке:"
           - " &6Тексты &7- Название цикла"
+          - " "
+          - "&eНажми, чтобы установить действие."
+      control-break-repeat:
+        name: "&cОстановить повторение"
+        lore:
+          - "&7Это остановит повторение и"
+          - "&7выполнятся действие после"
+          - "&7поршней повторения."
+          - " "
+          - "&eНажми, чтобы установить действие."
+      control-skip-repeat:
+        name: "&bПропустить повторение"
+        lore:
+          - "&7Это не выполнит последующие"
+          - "&7действия в повторении, но запустит"
+          - "&7следующую итерацию."
           - " "
           - "&eНажми, чтобы установить действие."
       control-stop-code-line:
@@ -8694,6 +8711,7 @@ items:
           - " "
           - "&fВ сундуке:"
           - "&f Местоположение &7- Куда запускать"
+          - "&a Число &7- Сила запуска"
           - " "
           - "&eНажми, чтобы установить действие."
       player-teleport:
@@ -13477,7 +13495,7 @@ menus:
           - "&7 кодом, который &aпозволяет&7 игрокам"
           - "&7 &bсоздавать &7свои миры."
           - ""
-          - "&c McChicken Studio 2017-2025"
+          - "&c McChicken Studio 2017-2026"
           - "&3 Переводчики: &7initzero, Nagibator6000LoL,"
           - "&7  DrakesWeb, kogtyv, Senmpai333."
           - ""
@@ -17798,7 +17816,7 @@ blocks:
   player_set_remaining_air: "Остав. воздух"
   player_release_shoulders: "Освоб. плечи"
   player_set_visual_fire: "Визуал. огонь"
-  player_set_bee_stingers: "Количество жал"
+  player_set_bee_stingers_in_body: "Количество жал"
 
   entity_add_damage: "Нанести урон"
   entity_remove: "&cУничтожить"
@@ -17910,7 +17928,7 @@ blocks:
   entity_set_celebrating: "Праздник моба"
   entity_set_wandering_drink_milk: "Выпить молока"
   entity_set_wandering_drink_potion: "Выпить зелье"
-  entity_set_bee_stingers: "Количество жал"
+  entity_set_bee_stingers_in_body: "Количество жал"
 
   var_clone_list: "Клон. список"
   var_merge_lists: "Объед. списки"
@@ -17931,6 +17949,8 @@ blocks:
   control_clear_global_variables: "&cУдал. глобал."
   control_launch_cycles: "&aЗапустить цикл"
   control_stop_cycles: "&3Останов. цикл"
+  control_skip_repeat: "&bПропуск повтора"
+  control_break_repeat: "&cОстан. повтор"
 
   var_set_value: "Присв. значение"
   var_get_type: "Получить тип"

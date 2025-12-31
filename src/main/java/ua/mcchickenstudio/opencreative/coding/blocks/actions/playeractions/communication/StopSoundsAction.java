@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.comm
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -38,7 +39,7 @@ public final class StopSoundsAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         List<String> sounds = getArguments().getTextList("sounds",this);
         if (sounds.isEmpty()) {
             player.stopAllSounds();

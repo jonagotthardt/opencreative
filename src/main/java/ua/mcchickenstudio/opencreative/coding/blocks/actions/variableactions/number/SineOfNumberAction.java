@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ public final class SineOfNumberAction extends VariableAction {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable",this);
         double number = getArguments().getDouble("number",1.0d,this);
         double result = Math.sin(number);

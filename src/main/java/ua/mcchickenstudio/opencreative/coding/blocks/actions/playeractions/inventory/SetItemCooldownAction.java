@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -33,7 +34,7 @@ public final class SetItemCooldownAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         ItemStack item = getArguments().getItem("item",new ItemStack(Material.SHIELD),this);
         int ticks = getArguments().getInt("cooldown",100,this);
         player.setCooldown(item.getType(),ticks);

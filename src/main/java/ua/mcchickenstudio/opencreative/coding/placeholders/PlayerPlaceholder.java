@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ public final class PlayerPlaceholder extends KeyPlaceholder {
     @Override
     public @Nullable String parseKey(String key, ActionsHandler handler, Action action) {
         if (handler.getEvent().getSelection().getFirst() instanceof Player player) {
+            if (!player.getWorld().equals(action.getExecutor().getPlanet().getWorld())) return null;
             switch (key) {
                 case "player" -> {
                     return player.getName();

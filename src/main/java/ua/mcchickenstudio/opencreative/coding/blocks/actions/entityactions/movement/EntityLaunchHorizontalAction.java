@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public final class EntityLaunchHorizontalAction extends EntityAction {
         } else if (power > 20) {
             power = 20;
         }
-        entity.setVelocity(entity.getLocation().getDirection().multiply(power));
+        entity.setVelocity(entity.getVelocity().add(entity.getLocation().getDirection().multiply(power)));
     }
 
     @Override

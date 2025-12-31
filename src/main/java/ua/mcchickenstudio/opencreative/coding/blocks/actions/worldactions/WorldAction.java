@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,13 @@ public abstract class WorldAction extends Action {
     public WorldAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
+
+    @Override
+    protected void execute(Entity entity) {
+        execute();
+    }
+
+    protected abstract void execute();
 
     protected void setLastSpawnedEntity(@NotNull Entity entity) {
         getHandler().getMainActionHandler().setLastSpawnedEntity(entity);

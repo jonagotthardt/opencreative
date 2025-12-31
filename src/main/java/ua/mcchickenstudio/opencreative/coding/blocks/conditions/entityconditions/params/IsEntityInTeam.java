@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entitycondition
 import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -36,7 +37,7 @@ public class IsEntityInTeam extends EntityCondition {
     }
 
     @Override
-    public boolean check(Entity entity) {
+    public boolean checkEntity(@NotNull Entity entity) {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return false;
         }

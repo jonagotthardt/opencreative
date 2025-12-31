@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,11 +42,11 @@ public final class RayTraceVectorAction extends VariableAction {
         super(executor, target, x, args);
     }
     @Override
-    protected void execute(Entity entity) {
+    protected void execute() {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
         final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
-        final Location from = getArguments().getLocation("from", new Location(entity.getWorld(), 0, 0, 0), this);
-        final Location to = getArguments().getLocation("to", new Location(entity.getWorld(), 0, 0, 0), this);
+        final Location from = getArguments().getLocation("from", new Location(getPlanet().getWorld(), 0, 0, 0), this);
+        final Location to = getArguments().getLocation("to", new Location(getPlanet().getWorld(), 0, 0, 0), this);
         final double
         x = to.getX(),
         y = to.getY(),

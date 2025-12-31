@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -541,7 +541,7 @@ public final class Settings {
         if (debug) {
             announcer = new BukkitRunnable() {
                 private final Component actionbar = MiniMessage.miniMessage()
-                        .deserialize("<white>Open<gradient:#dbdbdb:#ffd4c2>Creative</gradient><green>+ <white>" + OpenCreative.getVersion() + "<gray> Debug Mode. <white>Shhh, let's not leak our hard work...");
+                        .deserialize("<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <white>" + OpenCreative.getVersion() + "<gray> Debug Mode. <white>Shhh, let's not leak our hard work...");
 
                 @Override
                 public void run() {

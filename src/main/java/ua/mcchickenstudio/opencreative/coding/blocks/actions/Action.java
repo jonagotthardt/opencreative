@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
@@ -86,9 +87,11 @@ public abstract class Action {
         sendCodingDebugAction(this);
         if (this instanceof SelectionAction) {
             execute(null);
+            return;
         }
         for (Entity entity : getTargets()) {
-            if (!getActionType().isSelectionMustBeInWorld() || (entity != null && entity.getWorld() == getPlanet().getTerritory().getWorld())) {
+            if (entity == null) continue;
+            if (entity.getWorld().equals(getPlanet().getWorld()) || !OpenCreative.getSettings().getCodingSettings().isIgnoreActionsIfEntityNotInWorld()) {
                 this.entity = entity;
                 execute(entity);
             }
@@ -264,7 +267,7 @@ public abstract class Action {
             default -> entities.addAll(eventEntities);
         }
         entities.removeIf(entity -> entity instanceof Player player && ChangedWorld.isPlayerWithLocation(player));
-        entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
+        //entities.removeIf(entity -> !entity.getWorld().equals(getPlanet().getWorld()));
         int selectionLimit = getPlanet().getLimits().getEntitiesLimit() + getPlanet().getPlayers().size(); // adding players count if entities limit is set to 0
         if (entities.size() > selectionLimit) {
             entities = entities.subList(0, selectionLimit);

@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
  * <p>Planet files are stored in ./planets/planetID folder.</p>
  * @author McChicken Studio
  * @since 1.0
- * @version 5.9
+ * @version 6.0
  */
 public class Planet {
 

@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -32,7 +33,7 @@ public final class HidePlayerAction extends PlayerAction {
     }
 
     @Override
-    public void executePlayer(Player player) {
+    public void executePlayer(@NotNull Player player) {
         String text = getArguments().getText("player"," ",this);
         for (Player p : getPlayersByNameOrUUID(text)) {
             player.hidePlayer(OpenCreative.getPlugin(), p);
