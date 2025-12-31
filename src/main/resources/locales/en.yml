@@ -3881,6 +3881,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location &7- Target destination"
+          - "&a Number &7- Launch power"
           - " "
           - "&eClick to set the action."
       entity-teleport:
@@ -8574,6 +8575,7 @@ items:
           - " "
           - "&fIn the chest:"
           - "&f Location &7- Where to launch"
+          - "&a Number &7- Launch power"
           - " "
           - "&eClick to set the action."
       player-teleport:

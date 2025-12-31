@@ -36,7 +36,11 @@ public final class LaunchToLocationAction extends PlayerAction {
     @Override
     public void executePlayer(@NotNull Player player) {
         Location location = getArguments().getLocation("location",player.getLocation(),this);
-        player.setVelocity(new Vector(location.getX(),location.getY(),location.getZ()));
+        float power = getArguments().getFloat("power",1.0f,this);
+        Vector direction = location.toVector().subtract(player.getLocation().toVector());
+        direction.normalize();
+        direction.multiply(power);
+        player.setVelocity(entity.getVelocity().add(direction));
     }
 
     @Override

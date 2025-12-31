@@ -148,7 +148,7 @@ public enum ActionType {
     PLAYER_SADDLE_ENTITY(               ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      SaddleEntityAction.class, Material.SADDLE,  new ArgumentSlot("entity", ValueType.TEXT)),
     PLAYER_LAUNCH_VERTICAL(             ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchVerticalAction.class, Material.PRISMARINE_SHARD,new ArgumentSlot("power",ValueType.NUMBER)),
     PLAYER_LAUNCH_HORIZONTAL(           ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchHorizontalAction.class, Material.FEATHER,         new ArgumentSlot("power",ValueType.NUMBER)),
-    PLAYER_LAUNCH_TO_LOCATION(          ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION)),
+    PLAYER_LAUNCH_TO_LOCATION(          ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT,      LaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION), new ArgumentSlot("power",ValueType.NUMBER)),
     //PLAYER_SET_SPECTATOR_TARGET(        ActionCategory.PLAYER_ACTION, MenusCategory.MOVEMENT, null, Material.SKELETON_SKULL, new ArgumentSlot("entity",VariableType.TEXT)),
 
     // Params
@@ -771,7 +771,7 @@ public enum ActionType {
     ENTITY_SADDLE_ENTITY(               ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntitySaddleEntityAction.class, Material.SADDLE,  new ArgumentSlot("entity", ValueType.TEXT)),
     ENTITY_LAUNCH_VERTICAL(             ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntityLaunchVerticalAction.class, Material.PRISMARINE_SHARD,new ArgumentSlot("power",ValueType.NUMBER)),
     ENTITY_LAUNCH_HORIZONTAL(           ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntityLaunchHorizontalAction.class, Material.FEATHER,         new ArgumentSlot("power",ValueType.NUMBER)),
-    ENTITY_LAUNCH_TO_LOCATION(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntityLaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION)),
+    ENTITY_LAUNCH_TO_LOCATION(          ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, EntityLaunchToLocationAction.class, Material.MAP,         new ArgumentSlot("location",ValueType.LOCATION), new ArgumentSlot("power",ValueType.NUMBER)),
     ENTITY_SET_VELOCITY(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_MOVEMENT, SetVelocityAction.class, Material.PRISMARINE_SHARD, new ArgumentSlot("vector", ValueType.VECTOR)),
 
     /**
