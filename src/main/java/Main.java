@@ -1,3 +1,21 @@
+/*
+ * OpenCreative+, Minecraft plugin.
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
+ *
+ * OpenCreative+ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OpenCreative+ is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -218,7 +236,7 @@ public class Main {
         String message = """
                 This is Open<b>Creative</b><span style='color: #2fb5ebff;'>+</span>""" + buildVersion + """
                 , a plugin for Minecraft servers.
-                Made by <span style='color: #fa5061;'>McChicken Studio 2017-2025</span>.
+                Made by <span style='color: #fa5061;'>McChicken Studio 2017-2026</span>.
                 
                 Installation:
                 To install plugin please download PaperMC server, then load it and accept EULA.
@@ -235,7 +253,7 @@ public class Main {
         return """
                 This is OpenCreative+""" + buildVersion + """
                 , a plugin for Minecraft servers.
-                Made by McChicken Studio 2017-2025.
+                Made by McChicken Studio 2017-2026.
                 
                 Installation:
                 To install plugin please download PaperMC server, then load it and accept EULA.

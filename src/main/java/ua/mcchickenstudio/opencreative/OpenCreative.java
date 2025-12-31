@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ public final class OpenCreative extends JavaPlugin {
     private DevPlatformer devPlatformer;
     private CodingPrompter prompter;
 
-    private static final String version = "5.9.0 Pre-release 3";
+    private static final String version = "6.0.0 Candidate 1";
     private static final String codename = "Well, it's possible";
 
     /**
@@ -108,7 +108,7 @@ public final class OpenCreative extends JavaPlugin {
             "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
             "",
             "Let us have fun, like players who create their worlds...",
-            "McChicken Studio 2017–2025",
+            "McChicken Studio 2017–2026",
             ""
         ));
     }
@@ -182,7 +182,7 @@ public final class OpenCreative extends JavaPlugin {
                     isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
                     isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
             "  " + codename,
-            "  Made by McChicken Studio 2017–2025",
+            "  Made by McChicken Studio 2017–2026",
             ""
         ));
         new Metrics(this, 22001);
@@ -209,7 +209,7 @@ public final class OpenCreative extends JavaPlugin {
             "Goodbye from OpenCreative+",
             "",
             " " + codename,
-            "  Made by McChicken Studio 2017–2025",
+            "  Made by McChicken Studio 2017–2026",
             ""
         ));
     }

@@ -1,6 +1,6 @@
 /*
  * OpenCreative+, Minecraft plugin.
- * (C) 2022-2025, McChicken Studio, mcchickenstudio@gmail.com
+ * (C) 2022-2026, McChicken Studio, mcchickenstudio@gmail.com
  *
  * OpenCreative+ is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1121,7 +1121,7 @@ public class CreativeCommand extends CommandHandler {
     }
 
     public Component getCopyrightMessage() {
-        return toComponent(OpenCreative.getPlugin().getConfig().getString("messages.version", "\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2025\n ")
+        return toComponent(OpenCreative.getPlugin().getConfig().getString("messages.version", "\n§7 Open§fCreative§b+ §7%version%§f: §f%codename% \n §cMcChicken Studio 2017-2026\n ")
                 .replace("%version%", OpenCreative.getVersion())
                 .replace("%codename%", OpenCreative.getCodename()));
     }
