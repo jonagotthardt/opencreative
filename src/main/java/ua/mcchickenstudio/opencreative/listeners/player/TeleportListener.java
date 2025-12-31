@@ -46,21 +46,19 @@ public final class TeleportListener implements Listener {
                 event.setCancelled(true);
             }
         }
-        if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
-            if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
-                event.setCancelled(true);
+        if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
+            switch (event.getCause()) {
+                case UNKNOWN, PLUGIN, COMMAND -> {}
+                default -> {
+                    event.setCancelled(true);
+                    return;
+                }
             }
         }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getFrom().getWorld());
         if (planet != null) {
             if (event.getTo().getWorld().equals(event.getFrom().getWorld())) {
                 new TeleportEvent(event.getPlayer()).callEvent();
-            } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.DISMOUNT
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT
-                    || event.getCause() == PlayerTeleportEvent.TeleportCause.EXIT_BED) {
-                event.setCancelled(true);
             }
         }
     }
