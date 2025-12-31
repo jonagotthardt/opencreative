@@ -469,12 +469,12 @@ public class CodingBlockPlacer {
             case LOCATION -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 double x, y ,z;
-                float yaw,pitch;
+                float yaw, pitch;
                 x = (double) data.getOrDefault("x", 0);
                 y = (double) data.getOrDefault("y", 0);
                 z = (double) data.getOrDefault("z", 0);
-                yaw = (float) data.getOrDefault("yaw", 0);
-                pitch = (float) data.getOrDefault("pitch", 0);
+                yaw = ((Double) data.getOrDefault("yaw", 0)).floatValue();
+                pitch = ((Double) data.getOrDefault("pitch", 0)).floatValue();
                 Location location = new Location(null, x, y, z, yaw, pitch);
                 setDisplayName(item, InteractListener.formatLocation(location));
                 setPersistentData(item,getCodingValueKey(),"LOCATION");
