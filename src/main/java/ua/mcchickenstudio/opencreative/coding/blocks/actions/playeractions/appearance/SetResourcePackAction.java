@@ -33,6 +33,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
+import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -48,6 +49,13 @@ public final class SetResourcePackAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
+
+        if (HookUtils.isPluginEnabled("ItemsAdder")) {
+            // ItemsAdder doesn't give details about its resource pack,
+            // so we have the only way: disable this action :(
+            return;
+        }
+
         String url = getArguments().getText("url","",this);
         if (url.isEmpty() || !isAllowed(url)) return;
 
@@ -83,7 +91,7 @@ public final class SetResourcePackAction extends PlayerAction {
                     .build();
             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
                 () -> {
-                    if (player != null && player.isOnline() && player.getWorld().equals(getWorld())) {
+                    if (player.isOnline() && player.getWorld().equals(getWorld())) {
                         player.sendResourcePacks(request);
                     }
                 }
