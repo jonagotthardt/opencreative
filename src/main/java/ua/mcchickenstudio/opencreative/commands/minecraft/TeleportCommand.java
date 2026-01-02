@@ -102,7 +102,6 @@ public class TeleportCommand extends CommandHandler {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return;
                 }
-
             }
             if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 if (!player.getWorld().equals(teleportToPlayer.getWorld())) {

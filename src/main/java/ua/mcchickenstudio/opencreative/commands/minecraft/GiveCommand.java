@@ -88,14 +88,13 @@ public class GiveCommand extends CommandHandler {
                 if (givePlayer == null) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return;
-                } else {
-                    Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
-                    if (!player.hasPermission("opencreative.give.bypass")) {
-                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                        if (planet == null || !planet.equals(givePlanet)) {
-                            player.sendMessage(getLocaleMessage("no-player-found"));
-                            return;
-                        }
+                }
+                Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
+                if (!player.hasPermission("opencreative.give.bypass")) {
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                    if (planet == null || !planet.equals(givePlanet)) {
+                        player.sendMessage(getLocaleMessage("no-player-found"));
+                        return;
                     }
                 }
                 try {
@@ -115,6 +114,14 @@ public class GiveCommand extends CommandHandler {
                     if (givePlayer == null) {
                         player.sendMessage(getLocaleMessage("no-player-found"));
                         return;
+                    }
+                    Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
+                    if (!player.hasPermission("opencreative.give.bypass")) {
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                        if (planet == null || !planet.equals(givePlanet)) {
+                            player.sendMessage(getLocaleMessage("no-player-found"));
+                            return;
+                        }
                     }
                     int amount = Integer.parseInt(args[2]);
                     ItemStack item = getItem(args[1], amount);
