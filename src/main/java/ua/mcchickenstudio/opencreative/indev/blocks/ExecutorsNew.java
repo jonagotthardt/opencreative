@@ -73,6 +73,17 @@ public class ExecutorsNew implements EventExecutor, Listener {
                             wrapped.execute(event);
                         }
                     }
+
+                    File historyFolder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "history");
+                    if (!historyFolder.exists()) {
+                        historyFolder.mkdirs();
+                    }
+                    String date = new SimpleDateFormat("dd-MM-yyyy--HH-mm-ss").format(time);
+                    File tempScript = new File(historyFolder.getPath() + File.separator
+                        + "codeScript-" + planet.getOwner() + "-" + planet.getId() + "--" + date + ".yml");
+                    FileUtils.copyFile(getPlanetScriptFile(planet), tempScript);
+
+
                 }*/
             }
         }

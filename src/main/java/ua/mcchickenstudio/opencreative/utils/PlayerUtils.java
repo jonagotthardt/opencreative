@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
@@ -85,7 +86,6 @@ public final class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         resetResourcePack(player);
-        player.removeResourcePacks();
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
         player.eject();
@@ -165,6 +165,9 @@ public final class PlayerUtils {
      * @param player player to reset resource pack.
      */
     public static void resetResourcePack(Player player) {
+        if (HookUtils.isPluginEnabled("ItemsAdder")) {
+            return;
+        }
         ResourcePack serverPack = Bukkit.getServerResourcePack();
         if (serverPack == null) {
             player.removeResourcePacks();

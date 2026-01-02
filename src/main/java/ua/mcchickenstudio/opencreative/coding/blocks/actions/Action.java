@@ -85,7 +85,7 @@ public abstract class Action {
         this.handler = handler;
         this.event = handler.getEvent();
         sendCodingDebugAction(this);
-        if (this instanceof SelectionAction) {
+        if (this instanceof SelectionAction || getActionType() == ActionType.CONTROL_LAUNCH_CYCLES) {
             execute(null);
             return;
         }

@@ -58,6 +58,10 @@ public final class EntitySetDisplayTranslationAction extends EntityAction {
             vector3f.x = display.getTransformation().getTranslation().x() + x;
             vector3f.y = display.getTransformation().getTranslation().y() + y;
             vector3f.z = display.getTransformation().getTranslation().z() + z;
+        } else {
+            vector3f.x = x;
+            vector3f.y = y;
+            vector3f.z = z;
         }
         display.setTransformation(new Transformation(
             vector3f,
