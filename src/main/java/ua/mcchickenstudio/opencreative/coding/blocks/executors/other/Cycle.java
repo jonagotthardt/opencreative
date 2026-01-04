@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
@@ -75,12 +76,12 @@ public class Cycle extends Executor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.CYCLE;
     }
 
     @Override
-    public ExecutorCategory getExecutorCategory() {
+    public @NotNull ExecutorCategory getExecutorCategory() {
         return ExecutorCategory.CYCLE;
     }
 }

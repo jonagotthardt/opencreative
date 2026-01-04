@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
@@ -37,12 +38,12 @@ public class Function extends Executor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.FUNCTION;
     }
 
     @Override
-    public ExecutorCategory getExecutorCategory() {
+    public @NotNull ExecutorCategory getExecutorCategory() {
         return ExecutorCategory.FUNCTION;
     }
 }

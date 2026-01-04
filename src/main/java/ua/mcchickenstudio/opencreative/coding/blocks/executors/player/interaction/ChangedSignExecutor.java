@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,7 +30,7 @@ public class ChangedSignExecutor extends WorldExecutor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_CHANGED_SIGN;
     }
 

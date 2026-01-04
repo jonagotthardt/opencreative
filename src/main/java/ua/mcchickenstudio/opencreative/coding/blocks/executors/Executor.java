@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
@@ -71,7 +72,7 @@ public abstract class Executor {
      * @param event Event that occurred in planet.
      */
     public void run(WorldEvent event) {
-        if (getExecutorType() != null && getExecutorType().isDisabled()) {
+        if (getExecutorType().isDisabled()) {
             return;
         }
         sendCodingDebugExecutor(this);
@@ -91,9 +92,9 @@ public abstract class Executor {
         actions.add(action);
     }
 
-    public abstract ExecutorType getExecutorType();
+    public abstract @NotNull ExecutorType getExecutorType();
 
-    public abstract ExecutorCategory getExecutorCategory();
+    public abstract @NotNull ExecutorCategory getExecutorCategory();
 
     @Override
     public String toString() {
@@ -126,8 +127,7 @@ public abstract class Executor {
 
     @Override
     public int hashCode() {
-        String type = getExecutorType() != null ? getExecutorType().name() : "null";
-        return (type + x + " " + y + " " + z).hashCode();
+        return (getExecutorType().name().toLowerCase() + x + " " + y + " " + z).hashCode();
     }
 
     @Override
