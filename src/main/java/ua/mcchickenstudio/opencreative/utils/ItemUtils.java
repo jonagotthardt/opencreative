@@ -151,6 +151,7 @@ public final class ItemUtils {
      **/
     public static ItemStack createItem(Material material, int amount, String localizationPath, String persistentData) {
 
+        amount = Math.max(1, amount);
         if (!material.isItem()) material = Material.REDSTONE;
         ItemStack itemStack = createItem(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -167,6 +168,7 @@ public final class ItemUtils {
      **/
     public static ItemStack createItem(Material material, int amount, String localizationPath) {
 
+        amount = Math.max(1, amount);
         if (!material.isItem()) material = Material.REDSTONE;
         ItemStack itemStack = createItem(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
