@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -36,15 +36,15 @@ public final class FormatUnixTimeAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        long unixTime = getArguments().getLong("time", 0L,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        long unixTime = getArguments().getLong("time", 0L, this);
         String format = getArguments().getText("format", "dd/MM/yyyy HH:mm:ss", this);
         String result = new SimpleDateFormat(format).format(new Date(unixTime));
         setVarValue(link, result);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_FORMAT_UNIX_TIME;
     }
 }

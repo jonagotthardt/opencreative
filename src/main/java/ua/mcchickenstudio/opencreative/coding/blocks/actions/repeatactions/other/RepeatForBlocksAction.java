@@ -20,6 +20,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other;
 
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -45,8 +46,8 @@ public final class RepeatForBlocksAction extends RepeatAction {
             return false;
         }
 
-        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location second = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
 
         int minX = Math.min(first.getBlockX(), second.getBlockX());
         int minY = Math.min(first.getBlockY(), second.getBlockY());
@@ -56,14 +57,14 @@ public final class RepeatForBlocksAction extends RepeatAction {
         int maxY = Math.max(first.getBlockY(), second.getBlockY());
         int maxZ = Math.max(first.getBlockZ(), second.getBlockZ());
 
-        int count = (maxX-minX+1) * (maxY - minY+1) * (maxZ - minZ+1);
+        int count = (maxX - minX + 1) * (maxY - minY + 1) * (maxZ - minZ + 1);
         if (count > getPlanet().getLimits().getModifyingBlocksLimit()) {
             return false;
         }
 
-        int currentX = arguments.getInt("current-x",minX,this);
-        int currentY = arguments.getInt("current-y",minY,this);
-        int currentZ = arguments.getInt("current-z",minZ-1,this);
+        int currentX = arguments.getInt("current-x", minX, this);
+        int currentY = arguments.getInt("current-y", minY, this);
+        int currentZ = arguments.getInt("current-z", minZ - 1, this);
 
         currentZ++;
         if (currentZ > maxZ) {
@@ -76,20 +77,20 @@ public final class RepeatForBlocksAction extends RepeatAction {
         }
 
         if (currentY > maxY) {
-            arguments.removeArgumentValue("current-x","current-y","current-z");
+            arguments.removeArgumentValue("current-x", "current-y", "current-z");
             return false;
         }
 
         setVarValue(link, new Location(getWorld(), currentX, currentY, currentZ));
-        arguments.setArgumentValue("current-x",ValueType.NUMBER,currentX);
-        arguments.setArgumentValue("current-y",ValueType.NUMBER,currentY);
-        arguments.setArgumentValue("current-z",ValueType.NUMBER,currentZ);
+        arguments.setArgumentValue("current-x", ValueType.NUMBER, currentX);
+        arguments.setArgumentValue("current-y", ValueType.NUMBER, currentY);
+        arguments.setArgumentValue("current-z", ValueType.NUMBER, currentZ);
 
         return true;
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.REPEAT_FOR_BLOCKS;
     }
 }

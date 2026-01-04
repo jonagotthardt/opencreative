@@ -64,35 +64,36 @@ public enum ItemsGroup {
      * Coding blocks and other coding items, that will be given, when
      * world's developer enters the coding world.
      */
-    CODING( new ItemPair(1, Items.EVENT_PLAYER),            new ItemPair(2, Items.PLAYER_ACTION),     new ItemPair(3, Items.PLAYER_CONDITION),
-            new ItemPair(4, Items.ELSE_CONDITION),          new ItemPair(8, Items.CODING_BOOK),       new ItemPair(9, Items.VARIABLES),
-            new ItemPair(10, Items.CYCLE),                  new ItemPair(11, Items.REPEAT_ACTION),    new ItemPair(12, Items.CONTROLLER_ACTION),
-            new ItemPair(13, Items.CONTROL_ACTION),         new ItemPair(14, Items.VARIABLE_ACTION),  new ItemPair(15, Items.VARIABLE_CONDITION),
-            new ItemPair(18, Items.FLY_SPEED_CHANGER),      new ItemPair(19, Items.EVENT_WORLD),      new ItemPair(20, Items.WORLD_CONDITION),
-            new ItemPair(21, Items.WORLD_ACTION),           new ItemPair(22, Items.METHOD),           new ItemPair(23, Items.LAUNCH_METHOD_ACTION),
-            new ItemPair(24, Items.SELECTION_ACTION),       new ItemPair(26, Items.DEBUG_TORCH),      new ItemPair(27, Items.LINES_CONTROLLER),
-            new ItemPair(28, Items.EVENT_ENTITY),           new ItemPair(29, Items.ENTITY_CONDITION), new ItemPair(30, Items.ENTITY_ACTION),
-            new ItemPair(31, Items.FUNCTION),               new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION), new ItemPair(36, Items.ARROW_NOT)),
+    CODING(new ItemPair(1, Items.EVENT_PLAYER), new ItemPair(2, Items.PLAYER_ACTION), new ItemPair(3, Items.PLAYER_CONDITION),
+            new ItemPair(4, Items.ELSE_CONDITION), new ItemPair(8, Items.CODING_BOOK), new ItemPair(9, Items.VARIABLES),
+            new ItemPair(10, Items.CYCLE), new ItemPair(11, Items.REPEAT_ACTION), new ItemPair(12, Items.CONTROLLER_ACTION),
+            new ItemPair(13, Items.CONTROL_ACTION), new ItemPair(14, Items.VARIABLE_ACTION), new ItemPair(15, Items.VARIABLE_CONDITION),
+            new ItemPair(18, Items.FLY_SPEED_CHANGER), new ItemPair(19, Items.EVENT_WORLD), new ItemPair(20, Items.WORLD_CONDITION),
+            new ItemPair(21, Items.WORLD_ACTION), new ItemPair(22, Items.METHOD), new ItemPair(23, Items.LAUNCH_METHOD_ACTION),
+            new ItemPair(24, Items.SELECTION_ACTION), new ItemPair(26, Items.DEBUG_TORCH), new ItemPair(27, Items.LINES_CONTROLLER),
+            new ItemPair(28, Items.EVENT_ENTITY), new ItemPair(29, Items.ENTITY_CONDITION), new ItemPair(30, Items.ENTITY_ACTION),
+            new ItemPair(31, Items.FUNCTION), new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION), new ItemPair(36, Items.ARROW_NOT)),
 
     /**
      * Coding blocks and other coding items, that will be given, when
      * world's owner enters the coding world. Should contain world settings item.
      */
-    CODING_OWNER( new ItemPair(1, Items.EVENT_PLAYER),            new ItemPair(2, Items.PLAYER_ACTION),     new ItemPair(3, Items.PLAYER_CONDITION),
-                  new ItemPair(4, Items.ELSE_CONDITION),          new ItemPair(8, Items.VARIABLES),         new ItemPair(9, Items.WORLD_SETTINGS),
-                  new ItemPair(10, Items.CYCLE),                  new ItemPair(11, Items.REPEAT_ACTION),    new ItemPair(12, Items.CONTROLLER_ACTION),
-                  new ItemPair(13, Items.CONTROL_ACTION),         new ItemPair(14, Items.VARIABLE_ACTION),  new ItemPair(15, Items.VARIABLE_CONDITION),
-                  new ItemPair(17, Items.FLY_SPEED_CHANGER),      new ItemPair(18, Items.CODING_BOOK),      new ItemPair(19, Items.EVENT_WORLD),
-                  new ItemPair(20, Items.WORLD_CONDITION),        new ItemPair(21, Items.WORLD_ACTION),     new ItemPair(22, Items.METHOD),
-                  new ItemPair(23, Items.LAUNCH_METHOD_ACTION),   new ItemPair(24, Items.SELECTION_ACTION), new ItemPair(26, Items.DEBUG_TORCH),
-                  new ItemPair(27, Items.LINES_CONTROLLER),       new ItemPair(28, Items.EVENT_ENTITY),     new ItemPair(29, Items.ENTITY_CONDITION),
-                  new ItemPair(30, Items.ENTITY_ACTION),          new ItemPair(31, Items.FUNCTION),         new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION),
-                  new ItemPair(36, Items.ARROW_NOT));
+    CODING_OWNER(new ItemPair(1, Items.EVENT_PLAYER), new ItemPair(2, Items.PLAYER_ACTION), new ItemPair(3, Items.PLAYER_CONDITION),
+            new ItemPair(4, Items.ELSE_CONDITION), new ItemPair(8, Items.VARIABLES), new ItemPair(9, Items.WORLD_SETTINGS),
+            new ItemPair(10, Items.CYCLE), new ItemPair(11, Items.REPEAT_ACTION), new ItemPair(12, Items.CONTROLLER_ACTION),
+            new ItemPair(13, Items.CONTROL_ACTION), new ItemPair(14, Items.VARIABLE_ACTION), new ItemPair(15, Items.VARIABLE_CONDITION),
+            new ItemPair(17, Items.FLY_SPEED_CHANGER), new ItemPair(18, Items.CODING_BOOK), new ItemPair(19, Items.EVENT_WORLD),
+            new ItemPair(20, Items.WORLD_CONDITION), new ItemPair(21, Items.WORLD_ACTION), new ItemPair(22, Items.METHOD),
+            new ItemPair(23, Items.LAUNCH_METHOD_ACTION), new ItemPair(24, Items.SELECTION_ACTION), new ItemPair(26, Items.DEBUG_TORCH),
+            new ItemPair(27, Items.LINES_CONTROLLER), new ItemPair(28, Items.EVENT_ENTITY), new ItemPair(29, Items.ENTITY_CONDITION),
+            new ItemPair(30, Items.ENTITY_ACTION), new ItemPair(31, Items.FUNCTION), new ItemPair(32, Items.LAUNCH_FUNCTION_ACTION),
+            new ItemPair(36, Items.ARROW_NOT));
 
     private final List<ItemPair> pairs;
 
     /**
      * Creates instance of items group with default pairs.
+     *
      * @param defaultPairs pairs of slots and items.
      */
     ItemsGroup(@NotNull ItemPair... defaultPairs) {
@@ -101,6 +102,7 @@ public enum ItemsGroup {
 
     /**
      * Returns items group by text.
+     *
      * @param id id to get items group.
      * @return items group, or null - if not exists.
      */
@@ -115,6 +117,7 @@ public enum ItemsGroup {
 
     /**
      * Returns list of pairs with slots and items.
+     *
      * @return pairs of items.
      */
     public @NotNull List<ItemPair> getPairs() {
@@ -124,6 +127,7 @@ public enum ItemsGroup {
     /**
      * Returns list of items, created for player to give manually.
      * Empty items are not included.
+     *
      * @param player player to get items.
      * @return list of items.
      */
@@ -157,6 +161,7 @@ public enum ItemsGroup {
      * Sets items in player inventory.
      * <p>
      * Recommended to clear player's inventory before doing this.
+     *
      * @param player player to set items.
      */
     public void setItems(@NotNull Player player) {
@@ -167,7 +172,7 @@ public enum ItemsGroup {
                 if (this == LOBBY) {
                     setPersistentData(item, getCodingDoNotDropMeKey(), "1");
                 }
-                player.getInventory().setItem(pair.slot()-1, item);
+                player.getInventory().setItem(pair.slot() - 1, item);
             }
             return;
         }
@@ -177,7 +182,7 @@ public enum ItemsGroup {
             if (this == LOBBY) {
                 setPersistentData(item, getCodingDoNotDropMeKey(), "1");
             }
-            player.getInventory().setItem(slot-1, item);
+            player.getInventory().setItem(slot - 1, item);
         }
     }
 
@@ -185,6 +190,7 @@ public enum ItemsGroup {
      * Sets items in player inventory, if player doesn't have them.
      * <p>
      * Recommended to clear player's inventory before doing this.
+     *
      * @param player player to set items.
      */
     public void setItemsIfAbsent(@NotNull Player player) {
@@ -192,19 +198,20 @@ public enum ItemsGroup {
         if (group == null) {
             for (ItemPair pair : pairs) {
                 ItemStack item = pair.item().get(player);
-                if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(pair.slot()-1, item);
+                if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(pair.slot() - 1, item);
             }
             return;
         }
         Map<Integer, SettingsItem> items = group.getItems();
         for (int slot : items.keySet()) {
             ItemStack item = items.get(slot).getItem(player);
-            if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(slot-1, item);
+            if (!player.getInventory().contains(item, 1)) player.getInventory().setItem(slot - 1, item);
         }
     }
 
     /**
      * Removes items from player inventory, if player has them.
+     *
      * @param player player to remove items.
      */
     public void removeItems(@NotNull Player player) {
@@ -225,8 +232,9 @@ public enum ItemsGroup {
 
     /**
      * Gives player an item, that was got from items group.
+     *
      * @param player player to give item.
-     * @param slot slot of item.
+     * @param slot   slot of item.
      * @return true - if given, false - if item not exists by slot.
      */
     public boolean giveItem(@NotNull Player player, int slot) {

@@ -23,4 +23,5 @@ package ua.mcchickenstudio.opencreative.utils.world.generators;
  * This interface is used in {@link WorldGenerator}, that supports choice
  * of Minecraft environments in {@link ua.mcchickenstudio.opencreative.menus.world.WorldGenerationMenu}.
  */
-public interface EnvironmentCapable {}
+public interface EnvironmentCapable {
+}

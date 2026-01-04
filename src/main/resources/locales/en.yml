@@ -11879,6 +11879,59 @@ items:
             choices:
               false: "Match Any"
               true: "Require All"
+      if-player-is-dead:
+        name: "&4Player is Dead"
+        lore:
+          - "&7Checks if the player"
+          - "&7is deceased and no longer alive."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-underwater:
+        name: "&9Is Underwater"
+        lore:
+          - "&7Checks if the player"
+          - "&7is underwater."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-in-rain:
+        name: "&3Is in Rain"
+        lore:
+          - "&7Checks if the player"
+          - "&7is exposed to rain."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-in-lava:
+        name: "&cIs in Lava"
+        lore:
+          - "&7Checks if the player"
+          - "&7is inside a lava pool."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-in-powdered-snow:
+        name: "&bIs in Powdered Snow"
+        lore:
+          - "&7Checks if the player"
+          - "&7is in powdered snow, where it can freeze."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-inside-vehicle:
+        name: "&3Is Inside Vehicle"
+        lore:
+          - "&7Checks if the player"
+          - "&7is inside a vehicle (minecart, boat)."
+          - " "
+          - "&eClick to set the condition."
+      if-player-is-in-team:
+        name: "&aIs in a Team"
+        lore:
+          - "&7Checks if the player"
+          - "&7is listed as a team member."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Text &7- Scoreboard"
+          - "&6 Text &7- Team"
+          - " "
+          - "&eClick to set the condition."
       if-player-is-inventory-full:
         name: "&6Inventory is full"
         lore:
@@ -17880,6 +17933,13 @@ blocks:
   if_player_boss_bar_equals: "Boss Bar Equals"
   if_player_has_resource_pack: "Has Resource Pack"
   if_player_in_area: "In Region"
+  if_player_is_in_team: "In Team"
+  if_player_is_dead: "Dead"
+  if_player_is_underwater: "Underwater"
+  if_player_is_in_rain: "In Rain"
+  if_player_is_in_lava: "In Lava"
+  if_player_is_in_powdered_snow: "In Powdered Snow"
+  if_player_is_inside_vehicle: "Inside Vehicle"
   world_set_difficulty: "Set Difficulty"
   world_spawn_arrow: "Spawn Arrow"
   world_spawn_firework: "Spawn Firework"

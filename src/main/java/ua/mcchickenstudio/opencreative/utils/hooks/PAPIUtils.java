@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.utils.hooks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
@@ -37,7 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet
 public final class PAPIUtils {
 
     public static String parsePlaceholdersAPI(OfflinePlayer offlinePlayer, String string) {
-        return PlaceholderAPI.setPlaceholders(offlinePlayer,string);
+        return PlaceholderAPI.setPlaceholders(offlinePlayer, string);
     }
 
     public static void registerPlaceholder() {
@@ -135,7 +135,7 @@ class Placeholder extends PlaceholderExpansion {
         }
         return parsePlanet(currentPlanet, identifier);
     }
-    
+
     private String parsePlanet(@NotNull Planet planet, @NotNull String identifier) {
         identifier = identifier.replace("planet_", "");
         switch (identifier) {

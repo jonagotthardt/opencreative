@@ -19,15 +19,16 @@
 package ua.mcchickenstudio.opencreative.events.player;
 
 import net.kyori.adventure.text.Component;
-import ua.mcchickenstudio.opencreative.commands.ChatCommand;
-import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
+import ua.mcchickenstudio.opencreative.commands.ChatCommand;
+import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 
 /**
  * Called when player or console sends message in creative chat.
  * <p>
  * If a Creative Chat event is cancelled, it will not send a message.
+ *
  * @see ChatCommand
  */
 public class CreativeChatEvent extends CreativeEvent implements Cancellable {

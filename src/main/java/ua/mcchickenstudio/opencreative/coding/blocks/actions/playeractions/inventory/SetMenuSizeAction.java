@@ -44,13 +44,13 @@ public final class SetMenuSizeAction extends PlayerAction {
             return;
         }
         InventoryView oldInventory = player.getOpenInventory();
-        int rows = getArguments().getInt("rows",6,this);
+        int rows = getArguments().getInt("rows", 6, this);
         if (rows > 6) rows = 6;
         else if (rows < 1) rows = 1;
-        Inventory newInventory = new CustomMenu(rows*9,oldInventory.getTitle()).getInventory();
+        Inventory newInventory = new CustomMenu(rows * 9, oldInventory.getTitle()).getInventory();
         for (int i = 0; i < newInventory.getSize(); i++) {
             if (i >= oldInventory.getTopInventory().getSize()) break;
-            newInventory.setItem(i,oldInventory.getTopInventory().getItem(i));
+            newInventory.setItem(i, oldInventory.getTopInventory().getItem(i));
         }
         if (getPlanet().getLimits().cantOpenMenu(player)) {
             /*
@@ -64,7 +64,7 @@ public final class SetMenuSizeAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_INVENTORY_VIEW_ROWS;
     }
 }

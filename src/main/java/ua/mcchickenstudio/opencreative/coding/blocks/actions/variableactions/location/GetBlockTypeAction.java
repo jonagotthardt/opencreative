@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,13 +34,13 @@ public final class GetBlockTypeAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
         setVarValue(link, location.getBlock().getType().name().toLowerCase());
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_GET_BLOCK_TYPE;
     }
 }

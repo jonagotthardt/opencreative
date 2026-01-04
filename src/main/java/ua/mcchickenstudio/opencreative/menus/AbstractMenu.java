@@ -39,18 +39,15 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
  */
 public abstract class AbstractMenu implements InventoryMenu {
 
+    protected final long creationTime;
+    protected final ItemStack AIR_ITEM = new ItemStack(Material.AIR);
+    protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS, 1);
+    protected final ItemStack DISABLED_ITEM = createItem(Material.RED_STAINED_GLASS, 1, "items.disabled");
+    protected final ItemStack DECORATION_ITEM = createItem(Material.LIGHT_GRAY_STAINED_GLASS, 1);
+    protected final ItemStack DECORATION_PANE_ITEM = createItem(Material.GRAY_STAINED_GLASS_PANE, 1);
+    protected Inventory inventory;
     private int rows;
     private String title;
-
-    protected final long creationTime;
-
-    protected final ItemStack AIR_ITEM = new ItemStack(Material.AIR);
-    protected final ItemStack NO_PERMS_ITEM = createItem(Material.RED_STAINED_GLASS,1);
-    protected final ItemStack DISABLED_ITEM = createItem(Material.RED_STAINED_GLASS,1, "items.disabled");
-    protected final ItemStack DECORATION_ITEM = createItem(Material.LIGHT_GRAY_STAINED_GLASS,1);
-    protected final ItemStack DECORATION_PANE_ITEM = createItem(Material.GRAY_STAINED_GLASS_PANE,1);
-
-    protected Inventory inventory;
 
     public AbstractMenu(int rows, String title) {
         this.rows = rows;
@@ -59,9 +56,9 @@ public abstract class AbstractMenu implements InventoryMenu {
     }
 
     public void setItem(int slot, ItemStack item) {
-        slot = Math.clamp(0,slot,getSize());
+        slot = Math.clamp(0, slot, getSize());
         if (item == null) item = ItemStack.empty();
-        getInventory().setItem(slot,item);
+        getInventory().setItem(slot, item);
     }
 
     public void setItem(ItemStack item, int... slots) {
@@ -76,13 +73,9 @@ public abstract class AbstractMenu implements InventoryMenu {
         return item == null ? AIR_ITEM.clone() : item;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public @NotNull Inventory getInventory() {
-        rows = Math.clamp(1,rows,6);
-        if (inventory == null || inventory.getSize() != rows*9) {
+        rows = Math.clamp(1, rows, 6);
+        if (inventory == null || inventory.getSize() != rows * 9) {
             inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
         }
         return inventory;
@@ -95,12 +88,14 @@ public abstract class AbstractMenu implements InventoryMenu {
             fillItems(player);
             player.openInventory(inventory);
         } catch (Exception e) {
-            sendPlayerErrorMessage(player,"Failed to open AbstractMenu with title " + title + ". ",e);
+            sendPlayerErrorMessage(player, "Failed to open AbstractMenu with title " + title + ". ", e);
         }
     }
 
     public abstract void fillItems(Player player);
+
     public abstract void onClick(@NotNull InventoryClickEvent event);
+
     public abstract void onOpen(@NotNull InventoryOpenEvent event);
 
     protected final boolean isClickedInMenuSlots(InventoryClickEvent event) {
@@ -113,9 +108,8 @@ public abstract class AbstractMenu implements InventoryMenu {
         return (event.getWhoClicked() instanceof Player);
     }
 
-
     public int getSize() {
-        return rows*9;
+        return rows * 9;
     }
 
     public int getRows() {
@@ -129,7 +123,7 @@ public abstract class AbstractMenu implements InventoryMenu {
             inventory = Bukkit.createInventory(this, rows * 9, Component.text(this.title));
             for (int slot = 0; slot < oldItems.length; slot++) {
                 if (slot >= inventory.getSize()) break;
-                inventory.setItem(slot,oldItems[slot]);
+                inventory.setItem(slot, oldItems[slot]);
             }
         }
     }
@@ -138,13 +132,17 @@ public abstract class AbstractMenu implements InventoryMenu {
         // 0  1  2  3   4    5  6  7  8
         // 9 10 11 12  13   14 15 16 17
         while (slot > 8) {
-            slot = slot-9;
+            slot = slot - 9;
         }
-        return 8-slot;
+        return 8 - slot;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

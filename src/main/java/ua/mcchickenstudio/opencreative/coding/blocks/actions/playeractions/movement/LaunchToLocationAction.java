@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 public final class LaunchToLocationAction extends PlayerAction {
     public LaunchToLocationAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,8 +35,8 @@ public final class LaunchToLocationAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        Location location = getArguments().getLocation("location",player.getLocation(),this);
-        float power = getArguments().getFloat("power",1.0f,this);
+        Location location = getArguments().getLocation("location", player.getLocation(), this);
+        float power = getArguments().getFloat("power", 1.0f, this);
         Vector direction = location.toVector().subtract(player.getLocation().toVector());
         direction.normalize();
         direction.multiply(power);
@@ -44,7 +44,7 @@ public final class LaunchToLocationAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_LAUNCH_TO_LOCATION;
     }
 }

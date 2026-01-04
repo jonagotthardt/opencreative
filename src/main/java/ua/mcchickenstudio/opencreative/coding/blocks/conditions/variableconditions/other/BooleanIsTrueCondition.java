@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.other;
 
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,7 +35,7 @@ public class BooleanIsTrueCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        List<Boolean> booleans = getArguments().getBooleanList("booleans",this);
+        List<Boolean> booleans = getArguments().getBooleanList("booleans", this);
         if (booleans.isEmpty()) {
             return false;
         }
@@ -52,7 +52,7 @@ public class BooleanIsTrueCondition extends VariableCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_VAR_BOOLEAN_IS_TRUE;
     }
 }

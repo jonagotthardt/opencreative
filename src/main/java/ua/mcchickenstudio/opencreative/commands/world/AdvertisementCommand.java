@@ -22,16 +22,15 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.AdvertisedEvent;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.AdvertisedEvent;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetAdvertisementEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetInviteEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -54,43 +53,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * Available: For all players.
  */
 public class AdvertisementCommand extends CommandHandler {
-
-    @Override
-    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(getLocaleMessage("only-players"));
-            return;
-        }
-
-        if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
-            player.sendMessage(getLocaleMessage("maintenance"));
-            return;
-        }
-
-        if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
-            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-            return;
-        }
-
-        switch (args.length) {
-            case 0:  // /ad
-                handlePlanetAdvertisement(player, OpenCreative.getPlanetsManager().getPlanetByPlayer(player));
-                break;
-            case 1:  // /ad [planet id]
-                if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
-                if (player.isDead()) {
-                    player.sendMessage(getLocaleMessage("only-alive"));
-                    return;
-                }
-                handlePlayerConnection(player, args[0]);
-                break;
-            case 2:  // /ad [planet id] [player]
-                handlePlanetInvitation(player, args[0], args[1]);
-                break;
-        }
-
-    }
 
     public static void handlePlanetAdvertisement(Player player, Planet planet) {
         if (planet == null) {
@@ -136,6 +98,59 @@ public class AdvertisementCommand extends CommandHandler {
         }
     }
 
+    private static Component createAdvertisementMessage(Player player, Planet planet) {
+        Component advertisement = getPlayerLocaleComponent("advertisement.message", player)
+                .replaceText(TextReplacementConfig.builder()
+                        .match("%world%")
+                        .replacement(planet.getInformation().displayName()
+                        ).build());
+        Component hoverComponent = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
+        String clickCommand = "/ad " + planet.getId();
+
+        advertisement = advertisement
+                .hoverEvent(HoverEvent.showText(hoverComponent))
+                .clickEvent(ClickEvent.runCommand(clickCommand));
+
+        return advertisement;
+    }
+
+    @Override
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(getLocaleMessage("only-players"));
+            return;
+        }
+
+        if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {
+            player.sendMessage(getLocaleMessage("maintenance"));
+            return;
+        }
+
+        if (OpenCreative.getStability().isVeryBad() && !player.hasPermission("opencreative.stability.bypass")) {
+            player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            return;
+        }
+
+        switch (args.length) {
+            case 0:  // /ad
+                handlePlanetAdvertisement(player, OpenCreative.getPlanetsManager().getPlanetByPlayer(player));
+                break;
+            case 1:  // /ad [planet id]
+                if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+                if (player.isDead()) {
+                    player.sendMessage(getLocaleMessage("only-alive"));
+                    return;
+                }
+                handlePlayerConnection(player, args[0]);
+                break;
+            case 2:  // /ad [planet id] [player]
+                handlePlanetInvitation(player, args[0], args[1]);
+                break;
+        }
+
+    }
+
     private void handlePlanetInvitation(Player player, String planetId, String inviteeName) {
         Player inviteReceiver = Bukkit.getPlayer(inviteeName);
 
@@ -178,22 +193,6 @@ public class AdvertisementCommand extends CommandHandler {
         Component advertisementMessage = createAdvertisementMessage(player, foundPlanet);
         inviteReceiver.sendMessage(advertisementMessage);
         player.sendMessage(advertisementMessage);
-    }
-
-    private static Component createAdvertisementMessage(Player player, Planet planet) {
-        Component advertisement = getPlayerLocaleComponent("advertisement.message", player)
-                .replaceText(TextReplacementConfig.builder()
-                        .match("%world%")
-                        .replacement(planet.getInformation().displayName()
-                        ).build());
-        Component hoverComponent = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
-        String clickCommand = "/ad " + planet.getId();
-
-        advertisement = advertisement
-                .hoverEvent(HoverEvent.showText(hoverComponent))
-                .clickEvent(ClickEvent.runCommand(clickCommand));
-
-        return advertisement;
     }
 
     @Override

@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.utils.world;
 
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import org.bukkit.*;
-import org.bukkit.entity.*;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getWorldsFolders;
 
 /**
  * <h1>WorldUtils</h1>
@@ -47,6 +47,7 @@ public final class WorldUtils {
     /**
      * Returns key, that will be used in entities, that
      * mustn't damage any entity.
+     *
      * @return namespaced key of not hurting anyone.
      */
     public static NamespacedKey getDoNotHurtAnyoneKey() {
@@ -56,7 +57,8 @@ public final class WorldUtils {
     /**
      * Summons fireworks around players in world.
      * They won't damage players or entities.
-     * @param world world to summon.
+     *
+     * @param world  world to summon.
      * @param amount amount of fireworks.
      */
     public static void summonFireworks(@NotNull World world, int amount) {
@@ -94,7 +96,8 @@ public final class WorldUtils {
     /**
      * Summons fireworks around players in world.
      * They won't damage players or entities.
-     * @param times how many times summon fireworks.
+     *
+     * @param times  how many times summon fireworks.
      * @param period period of time, that should pass before every time.
      */
     public static void summonFireworks(int times, int period) {
@@ -121,17 +124,19 @@ public final class WorldUtils {
      * Returns planet id from world's name
      * by splitting it and removing path to
      * planets folder.
+     *
      * @param world world to get id.
      * @return planet id.
      */
     public static @NotNull String getPlanetIdFromName(@NotNull World world) {
         return world.getName()
-                .replace(Bukkit.getServer().getWorldContainer() + "/","")
-                .replace("planets/planet","");
+                .replace(Bukkit.getServer().getWorldContainer() + "/", "")
+                .replace("planets/planet", "");
     }
 
     /**
      * Rounds location numbers: x, y, z, yaw, pitch.
+     *
      * @param location location to round.
      * @return location with rounded coordinates.
      */
@@ -155,7 +160,8 @@ public final class WorldUtils {
      * <p>
      * If it fails to get number from text, it will return
      * default value.
-     * @param text text with number to convert.
+     *
+     * @param text         text with number to convert.
      * @param defaultValue default value.
      * @return coordinate double value.
      */
@@ -173,6 +179,7 @@ public final class WorldUtils {
 
     /**
      * Converts location to map with x, y, z, yaw, pitch values.
+     *
      * @param location location to convert to map.
      * @return map with x, y, z, yaw, pitch values.
      */
@@ -190,6 +197,7 @@ public final class WorldUtils {
      * Checks if the world is a planet by
      * checking whether it's name contains
      * a typical planets folder path.
+     *
      * @param world world to check.
      * @return true - should be a planet, false - not a planet.
      */
@@ -201,6 +209,7 @@ public final class WorldUtils {
      * Checks if the world is a planet by
      * checking whether it's name contains
      * a typical planets folder path.
+     *
      * @param worldName name of world to check.
      * @return true - should be a planet, false - not a planet.
      */
@@ -212,6 +221,7 @@ public final class WorldUtils {
      * Checks if the world is a dev planet
      * by checking whether it's name ends
      * with "dev" word.
+     *
      * @param worldName world to check.
      * @return true - should be a dev planet, false - not a dev planet.
      */
@@ -222,6 +232,7 @@ public final class WorldUtils {
     /**
      * Checks if the world is a planet, or
      * dev planet, or lobby world.
+     *
      * @param world world to check.
      * @return true - it's spawn, planet, dev planet world, false - not plugin's world.
      */
@@ -232,6 +243,7 @@ public final class WorldUtils {
     /**
      * Checks if entity is a hostile one,
      * that can attack player.
+     *
      * @param entity entity to check.
      * @return true - entity is angry, false - entity is friendly or null.
      */
@@ -243,6 +255,7 @@ public final class WorldUtils {
      * Checks if the world is a dev planet
      * by checking whether it's name ends
      * with "dev" word.
+     *
      * @param world world to check.
      * @return true - should be a dev planet, false - not a dev planet.
      */
@@ -254,6 +267,7 @@ public final class WorldUtils {
      * Checks if the world is a lobby world,
      * where players will be teleported on
      * server connection or by /spawn command.
+     *
      * @param world world to check.
      * @return true - it's lobby world, false - not lobby world.
      */
@@ -267,10 +281,11 @@ public final class WorldUtils {
      * increases it while checking is number free.
      * Immediately will replace last numeric ID
      * with result.
+     *
      * @return unique numeric ID.
      */
     public static int generateWorldID() {
-        int newWorldID = OpenCreative.getPlugin().getConfig().getInt("last-world-id",1);
+        int newWorldID = OpenCreative.getPlugin().getConfig().getInt("last-world-id", 1);
         while (true) {
             newWorldID++;
             boolean exists = false;
@@ -284,7 +299,7 @@ public final class WorldUtils {
                 }
             }
             if (!exists) {
-                OpenCreative.getPlugin().getConfig().set("last-world-id",newWorldID);
+                OpenCreative.getPlugin().getConfig().set("last-world-id", newWorldID);
                 OpenCreative.getPlugin().saveConfig();
                 return newWorldID;
             }

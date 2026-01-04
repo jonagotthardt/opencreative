@@ -43,7 +43,8 @@ public final class DisabledEconomy implements Economy {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

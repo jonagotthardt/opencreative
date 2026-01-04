@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.block.sign.Side;
-import org.bukkit.entity.Entity;
 
 public final class GetSignLineAction extends WorldAction {
     public GetSignLineAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,19 +37,19 @@ public final class GetSignLineAction extends WorldAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        int number = getArguments().getInt("number",1,this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
+        int number = getArguments().getInt("number", 1, this);
         Block block = location.getBlock();
         if (!(block.getState() instanceof Sign sign)) return;
-        String sideString = getArguments().getText("side","front",this);
+        String sideString = getArguments().getText("side", "front", this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
         if (number <= 0 || number > sign.getSide(side).lines().size()) number = 1;
-        setVarValue(variable,sign.getSide(side).getLine(number-1));
+        setVarValue(variable, sign.getSide(side).getLine(number - 1));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_GET_SIGN_LINE;
     }
 }

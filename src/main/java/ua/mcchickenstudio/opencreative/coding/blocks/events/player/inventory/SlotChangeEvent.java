@@ -18,10 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
 
 public final class SlotChangeEvent extends WorldEvent implements Cancellable {
 
@@ -45,12 +45,12 @@ public final class SlotChangeEvent extends WorldEvent implements Cancellable {
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 }

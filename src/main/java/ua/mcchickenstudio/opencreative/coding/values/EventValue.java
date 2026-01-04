@@ -50,15 +50,16 @@ public abstract class EventValue implements ExtensionContent {
 
     /**
      * Constructor of event value.
-     * @param id short id of event value that will be used in signs and translations.
-     *           <p>
-     *           It must be lower-snake-cased, for example: "nickname", "entity_health".
-     *           If some of registered event values has same ID as new, it will be not added.
+     *
+     * @param id          short id of event value that will be used in signs and translations.
+     *                    <p>
+     *                    It must be lower-snake-cased, for example: "nickname", "entity_health".
+     *                    If some of registered event values has same ID as new, it will be not added.
      * @param displayIcon icon of event value that will be displayed in event values list.
-     * @param category category of event value for event values list.
+     * @param category    category of event value for event values list.
      */
     public EventValue(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull MenusCategory category) {
-        this.id = id.replace("-","_").toLowerCase();
+        this.id = id.replace("-", "_").toLowerCase();
         this.displayIcon = displayIcon;
         this.category = category;
     }
@@ -66,6 +67,7 @@ public abstract class EventValue implements ExtensionContent {
     /**
      * Returns an icon that will be used
      * in event values menus.
+     *
      * @return icon of event value to display.
      */
     public ItemStack getDisplayIcon() {
@@ -75,6 +77,7 @@ public abstract class EventValue implements ExtensionContent {
     /**
      * Returns a category, that event
      * value belongs to.
+     *
      * @return category where event value will be able.
      */
     public MenusCategory getCategory() {
@@ -84,9 +87,10 @@ public abstract class EventValue implements ExtensionContent {
     /**
      * Returns a value that will be set instead of
      * event value name tag item.
+     *
      * @param handler handler of action to get value.
-     * @param action action to get value.
-     * @param entity entity to get value, can be null.
+     * @param action  action to get value.
+     * @param entity  entity to get value, can be null.
      * @return string, number, boolean, item, location, vector, or null.
      */
     public abstract @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
@@ -94,15 +98,17 @@ public abstract class EventValue implements ExtensionContent {
     /**
      * Returns name of event value for displaying in
      * registry by converting id. Not used in menus.
+     *
      * @return display name of event value.
      */
     public @NotNull String getName() {
-        return StringUtils.capitalize(id.replace("_"," "));
+        return StringUtils.capitalize(id.replace("_", " "));
     }
 
     /**
      * Returns id of event value, that will be used
      * to find it in registry.
+     *
      * @return id of event value.
      */
     public final @NotNull String getID() {
@@ -112,10 +118,11 @@ public abstract class EventValue implements ExtensionContent {
     /**
      * Returns localized name of event value,
      * that will be used in menus.
+     *
      * @return localized name.
      */
     public @NotNull String getLocaleName() {
-        return getLocaleMessage("menus.developer.event-values.items." + this.getID().replace("_","-") + ".name" ,false);
+        return getLocaleMessage("menus.developer.event-values.items." + this.getID().replace("_", "-") + ".name", false);
     }
 
     @Override

@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public final class ChunkUnloadEvent extends WorldEvent {
 

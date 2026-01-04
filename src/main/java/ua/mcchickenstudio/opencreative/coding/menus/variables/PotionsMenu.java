@@ -44,7 +44,7 @@ public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
     private final Material potionMaterial;
 
     public PotionsMenu(Player player, Material material) {
-        super(player,getLocaleMessage("menus.developer.potions-list.title"),PlacementLayout.VALUE_CHOOSER);
+        super(player, getLocaleMessage("menus.developer.potions-list.title"), PlacementLayout.VALUE_CHOOSER);
         if (material != Material.POTION && material != Material.LINGERING_POTION && material != Material.SPLASH_POTION) {
             material = Material.POTION;
         }
@@ -53,16 +53,16 @@ public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
 
     @Override
     protected ItemStack getElementIcon(PotionEffectType type) {
-        ItemStack itemStack = new ItemStack(potionMaterial,1);
+        ItemStack itemStack = new ItemStack(potionMaterial, 1);
         PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
         PotionType potionType = PotionType.getByEffect(type);
-        String name = type.getName().toLowerCase().replace("minecraft:","");
+        String name = type.getName().toLowerCase().replace("minecraft:", "");
         meta.displayName(Component.text(getLocaleItemName("menus.developer.potions-list.potions." + name)));
         if (potionType != null) {
             meta.setBasePotionType(potionType);
         } else {
             meta.setBasePotionType(PotionType.WATER);
-            meta.addCustomEffect(new PotionEffect(type,3600,0),true);
+            meta.addCustomEffect(new PotionEffect(type, 3600, 0), true);
         }
         meta.setColor(type.getColor());
         itemStack.setItemMeta(meta);
@@ -70,13 +70,16 @@ public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
     }
 
     @Override
-    protected void fillDecorationItems() {}
+    protected void fillDecorationItems() {
+    }
 
     @Override
-    protected void fillOtherItems() {}
+    protected void fillOtherItems() {
+    }
 
     @Override
-    protected void onCharmsBarClick(InventoryClickEvent event) {}
+    protected void onCharmsBarClick(InventoryClickEvent event) {
+    }
 
     @Override
     protected void onElementClick(InventoryClickEvent event) {
@@ -95,19 +98,20 @@ public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.potions-list.items.next-page");
+        return createItem(Material.SPECTRAL_ARROW, 1, "menus.developer.potions-list.items.next-page");
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return createItem(Material.ARROW,1,"menus.developer.potions-list.items.previous-page");
+        return createItem(Material.ARROW, 1, "menus.developer.potions-list.items.previous-page");
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.developer.potions-list.items.no-elements");
+        return createItem(Material.BARRIER, 1, "menus.developer.potions-list.items.no-elements");
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+    }
 }

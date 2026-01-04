@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
-import org.bukkit.block.Block;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +34,11 @@ import java.util.List;
  * <h1>WorldEvent</h1>
  * This class represents event in Creative's planet.
  */
-public abstract class WorldEvent extends Event  {
+public abstract class WorldEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
-
-    protected List<Entity> selection = new ArrayList<>();
     protected final World world;
+    protected List<Entity> selection = new ArrayList<>();
 
     public WorldEvent(@NotNull Planet planet, @NotNull List<Entity> selection) {
         world = planet.getTerritory().getWorld();
@@ -65,6 +64,10 @@ public abstract class WorldEvent extends Event  {
         selection.add(entity);
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
+
     public List<Entity> getSelection() {
         return selection;
     }
@@ -76,12 +79,6 @@ public abstract class WorldEvent extends Event  {
     public Planet getPlanet() {
         if (getWorld() == null) return null;
         return OpenCreative.getPlanetsManager().getPlanetByWorld(getWorld());
-    }
-
-
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
     }
 
     @NotNull

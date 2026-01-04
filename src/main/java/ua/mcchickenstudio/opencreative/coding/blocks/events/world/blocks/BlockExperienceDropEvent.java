@@ -42,13 +42,13 @@ public final class BlockExperienceDropEvent extends WorldEvent implements BlockE
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        event.setExpToDrop(0);
+    public boolean isCancelled() {
+        return event.getExpToDrop() == 0;
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.getExpToDrop() == 0;
+    public void setCancelled(boolean cancel) {
+        event.setExpToDrop(0);
     }
 
     public int getExp() {

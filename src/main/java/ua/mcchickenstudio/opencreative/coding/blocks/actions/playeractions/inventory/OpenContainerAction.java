@@ -18,12 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,6 +27,12 @@ import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class OpenContainerAction extends PlayerAction {
@@ -42,8 +42,8 @@ public final class OpenContainerAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(),this);
-        boolean save = getArguments().getBoolean("save", true,this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
+        boolean save = getArguments().getBoolean("save", true, this);
 
         Block block = location.getBlock();
         Inventory inventory;
@@ -52,7 +52,7 @@ public final class OpenContainerAction extends PlayerAction {
             if (save) {
                 inventory = container.getInventory();
             } else {
-                inventory = copyInventory(container.getInventory(),container.customName());
+                inventory = copyInventory(container.getInventory(), container.customName());
             }
             if (getPlanet().getLimits().cantOpenMenu(player)) {
                 throw new TooManyOpenedMenusException(player.getName());
@@ -62,7 +62,7 @@ public final class OpenContainerAction extends PlayerAction {
             if (save) {
                 inventory = player.getEnderChest();
             } else {
-                inventory = copyInventory(player.getEnderChest(),null);
+                inventory = copyInventory(player.getEnderChest(), null);
             }
             if (getPlanet().getLimits().cantOpenMenu(player)) {
                 /*
@@ -74,26 +74,26 @@ public final class OpenContainerAction extends PlayerAction {
             }
             player.openInventory(inventory);
         } else if (block.getType() == Material.CRAFTING_TABLE) {
-            player.openWorkbench(location,false);
+            player.openWorkbench(location, false);
         } else if (block.getType() == Material.ANVIL || block.getType() == Material.DAMAGED_ANVIL || block.getType() == Material.CHIPPED_ANVIL) {
-            player.openAnvil(location,false);
+            player.openAnvil(location, false);
         } else if (block.getType() == Material.CARTOGRAPHY_TABLE) {
-            player.openCartographyTable(location,false);
+            player.openCartographyTable(location, false);
         } else if (block.getType() == Material.ENCHANTING_TABLE) {
-            player.openEnchanting(location,false);
+            player.openEnchanting(location, false);
         } else if (block.getType() == Material.LOOM) {
-            player.openLoom(location,false);
+            player.openLoom(location, false);
         } else if (block.getType() == Material.GRINDSTONE) {
-            player.openGrindstone(location,false);
+            player.openGrindstone(location, false);
         } else if (block.getType() == Material.SMITHING_TABLE) {
             player.openSmithingTable(location, false);
         } else if (block.getType() == Material.STONECUTTER) {
-            player.openStonecutter(location,false);
+            player.openStonecutter(location, false);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_OPEN_CONTAINER;
     }
 
@@ -102,14 +102,14 @@ public final class OpenContainerAction extends PlayerAction {
         if (customName != null) {
             title = customName;
         }
-        Inventory copiedInventory = Bukkit.createInventory(null,inventory.getSize(),title);
+        Inventory copiedInventory = Bukkit.createInventory(null, inventory.getSize(), title);
         for (byte slot = 0; slot < inventory.getSize(); slot++) {
             if (slot >= inventory.getContents().length) {
                 break;
             }
             ItemStack item = inventory.getItem(slot);
             if (item != null) {
-                copiedInventory.setItem(slot,item);
+                copiedInventory.setItem(slot, item);
             }
         }
         return copiedInventory;

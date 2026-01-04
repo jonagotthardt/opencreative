@@ -18,14 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state;
 
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -42,8 +43,8 @@ public class EqualsGameModeCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
-        String gm = getArguments().getText("game-mode","adventure",this);
+    public boolean checkPlayer(@NotNull Player player) {
+        String gm = getArguments().getText("game-mode", "adventure", this);
         GameMode gameMode;
         try {
             gameMode = GameMode.valueOf(gm.toUpperCase());
@@ -55,7 +56,7 @@ public class EqualsGameModeCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_GAME_MODE_EQUALS;
     }
 }

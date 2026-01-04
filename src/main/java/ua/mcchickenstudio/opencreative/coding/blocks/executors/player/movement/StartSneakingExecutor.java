@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.movement;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,9 +30,9 @@ public class StartSneakingExecutor extends PlayerExecutor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_SNEAKING;
     }
 
-    
+
 }

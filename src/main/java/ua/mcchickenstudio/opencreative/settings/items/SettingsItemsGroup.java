@@ -34,6 +34,7 @@ public class SettingsItemsGroup {
 
     /**
      * Sets settings item in slot.
+     *
      * @param slot slot of settings item.
      * @param item settings item.
      */
@@ -43,6 +44,7 @@ public class SettingsItemsGroup {
 
     /**
      * Returns map of slots and settings items.
+     *
      * @return map of slots and settings items.
      */
     public Map<Integer, SettingsItem> getItems() {
@@ -51,6 +53,7 @@ public class SettingsItemsGroup {
 
     /**
      * Removes settings item by slot.
+     *
      * @param slot slot to remove item.
      */
     public void removeItem(int slot) {

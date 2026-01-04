@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 public final class PlayerSetTimeAction extends PlayerAction {
     public PlayerSetTimeAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,12 +33,12 @@ public final class PlayerSetTimeAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        float time = getArguments().getFloat("time",6f,this);
-        player.setPlayerTime((long) (time*1000),false);
+        float time = getArguments().getFloat("time", 6f, this);
+        player.setPlayerTime((long) (time * 1000), false);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_TIME;
     }
 }

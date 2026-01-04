@@ -18,13 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory;
 
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.values.events.ClickedSlotValue;
 
 import java.util.List;
@@ -36,12 +37,12 @@ public class EqualsClickedSlotCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         if (!(getEventValue(ClickedSlotValue.class) instanceof Number number)) {
             return false;
         }
         int clickedSlot = number.intValue();
-        List<Double> slots = getArguments().getNumbersList("slots",this);
+        List<Double> slots = getArguments().getNumbersList("slots", this);
         for (double slot : slots) {
             if (clickedSlot == slot) return true;
         }
@@ -49,7 +50,7 @@ public class EqualsClickedSlotCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_CLICKED_SLOT_EQUALS;
     }
 }

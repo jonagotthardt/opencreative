@@ -30,6 +30,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
  * <h1>Placeholders</h1>
  * This class represents a placeholders storage, that
  * has methods to register custom placeholders.
+ *
  * @see Placeholder
  */
 public final class Placeholders {
@@ -39,6 +40,7 @@ public final class Placeholders {
 
     /**
      * Returns instance of placeholders controller class.
+     *
      * @return instance of placeholders.
      */
     public synchronized static @NotNull Placeholders getInstance() {
@@ -59,6 +61,7 @@ public final class Placeholders {
 
     /**
      * Registers placeholder, that will be parsed in text coding values.
+     *
      * @param placeholder placeholder to register.
      */
     public void registerPlaceholder(@NotNull Placeholder placeholder) {
@@ -69,9 +72,9 @@ public final class Placeholders {
             }
             for (Placeholder listedPlaceholder : placeholders) {
                 if (listedPlaceholder instanceof KeyPlaceholder key2) {
-                    Set<String> sameKeys = getSameKeys(key,key2);
+                    Set<String> sameKeys = getSameKeys(key, key2);
                     if (sameKeys.isEmpty()) break;
-                    sendWarningErrorMessage("[PLACEHOLDERS] Same placeholders keys conflict " + key + ", " + key2 +" in: " + String.join(", ",sameKeys));
+                    sendWarningErrorMessage("[PLACEHOLDERS] Same placeholders keys conflict " + key + ", " + key2 + " in: " + String.join(", ", sameKeys));
                 }
             }
         }
@@ -81,6 +84,7 @@ public final class Placeholders {
 
     /**
      * Unregisters placeholder if list contains it.
+     *
      * @param placeholder placeholder to unregister.
      */
     public void unregisterPlaceholder(@NotNull Placeholder placeholder) {
@@ -89,6 +93,7 @@ public final class Placeholders {
 
     /**
      * Returns a copy of list that contains all registered placeholders.
+     *
      * @return placeholders list.
      */
     public @NotNull List<Placeholder> getPlaceholders() {
@@ -107,17 +112,18 @@ public final class Placeholders {
 
     /**
      * Returns text with parsed placeholders.
-     * @param text text to parse.
+     *
+     * @param text    text to parse.
      * @param handler action handler.
-     * @param action action.
+     * @param action  action.
      * @return parsed text.
      */
     public @NotNull String parsePlaceholders(String text, ActionsHandler handler, Action action) {
-        text = text.replace("\\n","\n");
+        text = text.replace("\\n", "\n");
         try {
             for (Placeholder placeholder : placeholders) {
                 if (placeholder.matches(text)) {
-                    text = placeholder.parse(text,handler,action);
+                    text = placeholder.parse(text, handler, action);
                 }
             }
         } catch (Exception error) {

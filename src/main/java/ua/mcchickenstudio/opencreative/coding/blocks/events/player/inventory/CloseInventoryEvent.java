@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public final class CloseInventoryEvent extends WorldEvent {
 

@@ -44,7 +44,7 @@ public final class EntitySetBearStandingAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_BEAR_STANDING;
     }
 }

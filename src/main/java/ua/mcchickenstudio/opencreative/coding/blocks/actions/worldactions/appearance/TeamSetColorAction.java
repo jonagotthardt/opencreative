@@ -21,9 +21,9 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appea
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
-import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -40,10 +40,10 @@ public final class TeamSetColorAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
-        Color color = getArguments().getColor("color",Color.BLUE,this);
+        Color color = getArguments().getColor("color", Color.BLUE, this);
         if (scoreboard == null) {
             return;
         }
@@ -54,7 +54,7 @@ public final class TeamSetColorAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_TEAM_SET_COLOR;
     }
 }

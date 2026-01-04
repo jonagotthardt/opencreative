@@ -26,27 +26,30 @@ import java.util.function.Predicate;
 public class TryIgnore {
 
     public static ThrowableHandler throwableHandler = Throwable::printStackTrace;
+
     public static <T> T unchecked(SupplierThrows<T> supplier) {
         try {
             return supplier.get();
-        } catch(Exception e) {
+        } catch (Exception e) {
             doThrow0(e);
             throw new AssertionError();
         }
     }
+
     public static void unchecked(RunnableThrows runnable) {
         try {
             runnable.run();
-        } catch(Exception e) {
+        } catch (Exception e) {
             doThrow0(e);
             throw new AssertionError(); // до сюда код не дойдет
         }
     }
+
     public static <T> Predicate<T> unchecked(PredicateThrows<T> predicate) {
         return t -> {
             try {
                 return predicate.test(t);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 doThrow0(e);
                 throw new AssertionError(); // до сюда код не дойдет
             }
@@ -56,15 +59,16 @@ public class TryIgnore {
     public static <T> T ignore(SupplierThrows<T> supplier, T def) {
         try {
             return supplier.get();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             throwableHandler.handle(e);
             return def;
         }
     }
+
     public static Optional<Throwable> ignore(RunnableThrows runnable) {
         try {
             runnable.run();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             throwableHandler.handle(e);
             return Optional.of(e);
         }
@@ -74,7 +78,7 @@ public class TryIgnore {
     public static Optional<Throwable> ignore(RunnableThrows runnable, Consumer<Throwable> consumer) {
         try {
             runnable.run();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             consumer.accept(e);
             throwableHandler.handle(e);
             return Optional.of(e);
@@ -86,7 +90,7 @@ public class TryIgnore {
         return t -> {
             try {
                 return predicate.test(t);
-            } catch(Throwable e) {
+            } catch (Throwable e) {
                 throwableHandler.handle(e);
                 return def;
             }

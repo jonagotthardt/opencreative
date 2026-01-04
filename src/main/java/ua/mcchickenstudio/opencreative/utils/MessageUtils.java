@@ -18,16 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.modules.Module;
-import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
-import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -36,13 +29,23 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
+import ua.mcchickenstudio.opencreative.utils.hooks.PAPIUtils;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
@@ -53,16 +56,41 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
  * modify and format them. Uses translation files.
  */
 public final class MessageUtils {
-    
-    private static File localizationFile;
-    private static FileConfiguration localizationConfig;
 
     private static final Map<Integer, Long> recentPlanetMessages = new HashMap<>();
+    private static final Pattern CAMEL_TO_KEBAB = Pattern.compile("([a-z])([A-Z])");
+    private static final Map<Character, String> LEGACY_TO_MINI = Map.ofEntries(
+            Map.entry('0', "<black>"),
+            Map.entry('1', "<dark_blue>"),
+            Map.entry('2', "<dark_green>"),
+            Map.entry('3', "<dark_aqua>"),
+            Map.entry('4', "<dark_red>"),
+            Map.entry('5', "<dark_purple>"),
+            Map.entry('6', "<gold>"),
+            Map.entry('7', "<gray>"),
+            Map.entry('8', "<dark_gray>"),
+            Map.entry('9', "<blue>"),
+            Map.entry('a', "<green>"),
+            Map.entry('b', "<aqua>"),
+            Map.entry('c', "<red>"),
+            Map.entry('d', "<light_purple>"),
+            Map.entry('e', "<yellow>"),
+            Map.entry('f', "<white>"),
+            Map.entry('k', "<obfuscated>"),
+            Map.entry('l', "<bold>"),
+            Map.entry('m', "<strikethrough>"),
+            Map.entry('n', "<underlined>"),
+            Map.entry('o', "<italic>"),
+            Map.entry('r', "<reset>")
+    );
+    private static File localizationFile;
+    private static FileConfiguration localizationConfig;
 
     /**
      * Converts text into component by deserializing it with
      * legacy serializer (if message has & or § symbol), or with
      * minimessage format.
+     *
      * @param text text to convert.
      * @return text component.
      */
@@ -74,6 +102,7 @@ public final class MessageUtils {
      * Converts text into component by deserializing it with
      * legacy serializer (if message has & or § symbol), or with
      * minimessage format, but without hover and click events.
+     *
      * @param input text to convert.
      * @return text component without hover and click events.
      */
@@ -84,6 +113,7 @@ public final class MessageUtils {
 
     /**
      * Checks if text has & or § symbol.
+     *
      * @param text text to check.
      * @return true - if contains & or §, false - otherwise.
      */
@@ -101,14 +131,15 @@ public final class MessageUtils {
      * substring("World",0); // ""
      * }
      * </pre>
-     * @param text text to substring.
+     *
+     * @param text   text to substring.
      * @param length maximum length of text.
      * @return shortened text.
      */
     public static String substring(String text, int length) {
         if (text.length() <= length || length <= 0) return text;
         String dots = text.endsWith("...") ? "" : text.endsWith("..") ? "." : "...";
-        return text.substring(0,length-dots.length()) + dots;
+        return text.substring(0, length - dots.length()) + dots;
     }
 
     /**
@@ -122,12 +153,12 @@ public final class MessageUtils {
         } else {
             String defaultLanguage = getLanguage().equalsIgnoreCase("ru")
                     ? "ru" : getLanguage().equalsIgnoreCase("ua") ? "ua" : "en";
-            OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ua.yml",false);
+            OpenCreative.getPlugin().getConfig().set("messages.locale", defaultLanguage);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml", false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml", false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ua.yml", false);
             OpenCreative.getPlugin().reloadConfig();
-            localeFile = new File((OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator),  defaultLanguage + ".yml");
+            localeFile = new File((OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator), defaultLanguage + ".yml");
         }
 
         addMissingMessageLines();
@@ -135,7 +166,7 @@ public final class MessageUtils {
     }
 
     public static int addMissingMessageLines() {
-        String selectedLang = OpenCreative.getPlugin().getConfig().getString("messages.locale","en");
+        String selectedLang = OpenCreative.getPlugin().getConfig().getString("messages.locale", "en");
         File folder = new File(OpenCreative.getPlugin().getDataFolder() + File.separator + "locales" + File.separator);
         File file = new File(folder.getPath() + File.separator + selectedLang + ".yml");
         if (!file.exists()) {
@@ -166,7 +197,8 @@ public final class MessageUtils {
 
     /**
      * Sets message in localization file and saves changes.
-     * @param path path of message.
+     *
+     * @param path   path of message.
      * @param object message.
      */
     public static void setMessage(@NotNull String path, @Nullable Object object) {
@@ -180,6 +212,7 @@ public final class MessageUtils {
 
     /**
      * Checks if localization file exists in locales directory.
+     *
      * @param languageName name of language, without ".yml".
      * @return true - exists, false - not exists.
      */
@@ -190,13 +223,14 @@ public final class MessageUtils {
     /**
      * Returns prefix of plugin, that will be used for
      * sending some messages in game.
+     *
      * @return prefix of plugin.
      */
     private static @NotNull String getPrefix() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.prefix");
         if (prefix == null) {
-            prefix = ChatColor.translateAlternateColorCodes('&',"&6 Worlds &8| &f");
-            OpenCreative.getPlugin().getConfig().set("messages.prefix","&6 Worlds &8| &f");
+            prefix = ChatColor.translateAlternateColorCodes('&', "&6 Worlds &8| &f");
+            OpenCreative.getPlugin().getConfig().set("messages.prefix", "&6 Worlds &8| &f");
             OpenCreative.getPlugin().saveConfig();
             return prefix;
         } else {
@@ -207,17 +241,18 @@ public final class MessageUtils {
     /**
      * Returns creative chat prefix, that will be used
      * in creative chat messages.
+     *
      * @return prefix of creative chat.
      */
     private static String getCreativeChatPrefix() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix");
         if (prefix == null) {
-            prefix = ChatColor.translateAlternateColorCodes('&',"&6 Creative Chat &8| &7");
-            OpenCreative.getPlugin().getConfig().set("messages.cc-prefix","&6 Creative Chat &8| &7");
+            prefix = ChatColor.translateAlternateColorCodes('&', "&6 Creative Chat &8| &7");
+            OpenCreative.getPlugin().getConfig().set("messages.cc-prefix", "&6 Creative Chat &8| &7");
             OpenCreative.getPlugin().reloadConfig();
             return prefix;
         } else {
-            return ChatColor.translateAlternateColorCodes('&',prefix);
+            return ChatColor.translateAlternateColorCodes('&', prefix);
         }
     }
 
@@ -225,22 +260,24 @@ public final class MessageUtils {
      * Returns server branding, that should be changed by
      * server owners in plugin's config.yml. Used in lobby
      * message.
+     *
      * @return server branding.
      */
     private static String getBranding() {
         String prefix = OpenCreative.getPlugin().getConfig().getString("messages.branding");
         if (prefix == null) {
-            prefix = ChatColor.translateAlternateColorCodes('&',"&fOpen&7Creative&a+");
-            OpenCreative.getPlugin().getConfig().set("messages.branding","&fOpen&7Creative&a+");
+            prefix = ChatColor.translateAlternateColorCodes('&', "&fOpen&7Creative&a+");
+            OpenCreative.getPlugin().getConfig().set("messages.branding", "&fOpen&7Creative&a+");
             OpenCreative.getPlugin().reloadConfig();
             return prefix;
         } else {
-            return ChatColor.translateAlternateColorCodes('&',prefix);
+            return ChatColor.translateAlternateColorCodes('&', prefix);
         }
     }
 
     /**
      * Returns current language of OpenCreative+.
+     *
      * @return global language of plugin.
      */
     public static String getLanguage() {
@@ -249,10 +286,10 @@ public final class MessageUtils {
             return String.valueOf(language);
         } else {
             Object defaultLanguage = "en";
-            OpenCreative.getPlugin().getConfig().set("messages.locale",defaultLanguage);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml",false);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml",false);
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ua.yml",false);
+            OpenCreative.getPlugin().getConfig().set("messages.locale", defaultLanguage);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "en.yml", false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml", false);
+            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ua.yml", false);
             OpenCreative.getPlugin().reloadConfig();
             return "en";
         }
@@ -260,6 +297,7 @@ public final class MessageUtils {
 
     /**
      * Returns current localization file.
+     *
      * @return localization file.
      */
     private static File getLocalizationFile() {
@@ -268,6 +306,7 @@ public final class MessageUtils {
 
     /**
      * Returns translation stored in FileConfiguration.
+     *
      * @return translation config.
      */
     public static FileConfiguration getLocalization() {
@@ -276,6 +315,7 @@ public final class MessageUtils {
 
     /**
      * Returns component message from translation.
+     *
      * @param messageID id of message.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
@@ -286,8 +326,9 @@ public final class MessageUtils {
     /**
      * Returns component message from translation
      * with parsed player placeholders.
+     *
      * @param messageID id of message.
-     * @param player player to parse.
+     * @param player    player to parse.
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
     public static @NotNull Component getPlayerLocaleComponent(@NotNull String messageID, @NotNull OfflinePlayer player) {
@@ -297,16 +338,17 @@ public final class MessageUtils {
     /**
      * Returns component message from translation
      * with parsed player placeholders and custom placeholders.
-     * @param messageID id of message.
-     * @param player player to parse.
+     *
+     * @param messageID             id of message.
+     * @param player                player to parse.
      * @param placeholdersAndValues placeholders and values <p>
      *                              It must start with placeholder and end with value. <p>
      *                              {@code "placeholder", value, "placeholder-2", value-2}
      * @return component message, or "Error | Not found message.path...", if message was not found.
      */
     public static @NotNull Component getComponentWithPlaceholders(@NotNull String messageID,
-                                                         @NotNull OfflinePlayer player,
-                                                         @Nullable Object... placeholdersAndValues) {
+                                                                  @NotNull OfflinePlayer player,
+                                                                  @Nullable Object... placeholdersAndValues) {
         Component result = toComponent(getPlayerLocaleMessage(messageID, player));
         if (placeholdersAndValues == null || placeholdersAndValues.length == 0) return result;
 
@@ -336,7 +378,8 @@ public final class MessageUtils {
     /**
      * Returns component message from translation
      * with parsed player placeholders.
-     * @param messageID id of message.
+     *
+     * @param messageID           id of message.
      * @param returnDetailedError if true - returns detailed error when message
      *                            was not found, false - will return only path.
      * @return component message.
@@ -347,14 +390,16 @@ public final class MessageUtils {
 
     /**
      * Returns message from translation.
+     *
      * @param messageID id of message.
      * @return translated message, or "Error | Not found message.path...", if message was not found.
      */
     public static String getLocaleMessage(String messageID) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
-            return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages())
+                ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales" + File.separator + getLanguage() + ".yml";
         } else {
             return ChatColor.translateAlternateColorCodes('&',
                     originalMessage.replace("%prefix%", getPrefix())
@@ -366,20 +411,22 @@ public final class MessageUtils {
     /**
      * Returns message from translation
      * with parsed player placeholders.
+     *
      * @param messageID id of message.
-     * @param player player to parse.
+     * @param player    player to parse.
      * @return translated message, or "Error | Not found message.path...", if message was not found.
      */
     public static String getPlayerLocaleMessage(String messageID, OfflinePlayer player) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
-            return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages())
+                ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales" + File.separator + getLanguage() + ".yml";
         } else {
-            return ChatColor.translateAlternateColorCodes('&',parsePAPI(player, originalMessage
+            return ChatColor.translateAlternateColorCodes('&', parsePAPI(player, originalMessage
                     .replace("%prefix%", getPrefix())
                     .replace("%branding%", getBranding())
-                    .replace("%cc-prefix%",getCreativeChatPrefix())
+                    .replace("%cc-prefix%", getCreativeChatPrefix())
                     .replace("%player%", player.getName() == null ? "Unknown player" : player.getName())));
         }
     }
@@ -387,7 +434,8 @@ public final class MessageUtils {
     /**
      * Returns message from translation
      * with parsed player placeholders.
-     * @param messageID id of message.
+     *
+     * @param messageID           id of message.
      * @param returnDetailedError if true - returns detailed error when message
      *                            was not found, false - will return only path.
      * @return translated message.
@@ -395,35 +443,39 @@ public final class MessageUtils {
     public static String getLocaleMessage(String messageID, boolean returnDetailedError) {
         String originalMessage = getLocalization().getString(messageID);
         if (originalMessage == null || originalMessage.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages())
+                ErrorUtils.sendWarningErrorMessage("Not found " + messageID + " in localization file!");
             if (returnDetailedError) {
-                return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales"+File.separator+getLanguage()+".yml";
+                return "§6 Error §8| §fNot found §6" + messageID + "§f! Administration of server needs to fill that line in §6locales" + File.separator + getLanguage() + ".yml";
             } else {
                 return messageID;
             }
         } else {
-            return ChatColor.translateAlternateColorCodes('&',originalMessage.replace("%prefix%",getPrefix()).replace("%branding%",getBranding()).replace("%cc-prefix%",getCreativeChatPrefix()));
+            return ChatColor.translateAlternateColorCodes('&', originalMessage.replace("%prefix%", getPrefix()).replace("%branding%", getBranding()).replace("%cc-prefix%", getCreativeChatPrefix()));
         }
     }
 
     /**
      * Returns item name from translation.
+     *
      * @param nameID id of message.
      * @return translated item name, or "Not found: message.path", if message was not found.
      */
     public static String getLocaleItemName(String nameID) {
         String originalName = getLocalization().getString(nameID);
         if (originalName == null || originalName.equalsIgnoreCase("null")) {
-            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found item name " + nameID + " in localization file!");
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages())
+                ErrorUtils.sendWarningErrorMessage("Not found item name " + nameID + " in localization file!");
             return "§fNot found: " + nameID;
         } else {
-            if (originalName.length() > 50) originalName = originalName.substring(0,50);
-            return ChatColor.translateAlternateColorCodes('&',originalName.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%branding%",getBranding()));
+            if (originalName.length() > 50) originalName = originalName.substring(0, 50);
+            return ChatColor.translateAlternateColorCodes('&', originalName.replace("%prefix%", getPrefix()).replace("%cc-prefix%", getCreativeChatPrefix()).replace("%branding%", getBranding()));
         }
     }
 
     /**
      * Returns item description from translation
+     *
      * @param descriptionID id of message.
      * @return translated item description, or "Not found item description...", if message was not found.
      */
@@ -431,7 +483,8 @@ public final class MessageUtils {
         List<String> originalDescription = getLocalization().getStringList(descriptionID);
         List<String> parsedDescription = new ArrayList<>();
         if (originalDescription.isEmpty()) {
-            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found item description " + descriptionID);
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages())
+                ErrorUtils.sendWarningErrorMessage("Not found item description " + descriptionID);
             parsedDescription.add("§6Not found item description");
             parsedDescription.add("§6" + descriptionID);
             parsedDescription.add("§fPlease send this to server administration!");
@@ -439,7 +492,7 @@ public final class MessageUtils {
             parsedDescription.add("§f localization file: locales" + File.separator + getLanguage() + ".yml");
         } else {
             for (String descriptionLine : originalDescription) {
-                parsedDescription.add(ChatColor.translateAlternateColorCodes('&',descriptionLine.replace("%prefix%",getPrefix()).replace("%cc-prefix%",getCreativeChatPrefix()).replace("%branding%",getBranding())));
+                parsedDescription.add(ChatColor.translateAlternateColorCodes('&', descriptionLine.replace("%prefix%", getPrefix()).replace("%cc-prefix%", getCreativeChatPrefix()).replace("%branding%", getBranding())));
             }
         }
         return parsedDescription;
@@ -447,6 +500,7 @@ public final class MessageUtils {
 
     /**
      * Returns book pages from translation.
+     *
      * @param localizationID id of message.
      * @return translated book pages, or "Not found pages...", if message was not found.
      */
@@ -455,14 +509,15 @@ public final class MessageUtils {
         List<String> foundPages = getLocalization().getStringList(localizationID);
         List<Component> pages = new ArrayList<>();
         if (foundPages.isEmpty()) {
-            if (OpenCreative.getSettings().shouldLogNotFoundMessages()) ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
+            if (OpenCreative.getSettings().shouldLogNotFoundMessages())
+                ErrorUtils.sendWarningErrorMessage("Not found book pages " + localizationID);
             pages.add(Component.text("§4Not found pages: §0" + localizationID + " \nPlease report server administration, they need to fill this line in locales" + File.separator + getLanguage() + ".yml"));
         } else {
             for (String page : foundPages) {
                 pages.add(MiniMessage.miniMessage().deserialize(fromLegacyToMiniMessageBook(page)
-                    .replace("%prefix%",getPrefix())
-                    .replace("%cc-prefix%",getCreativeChatPrefix())
-                    .replace("%version%",OpenCreative.getVersion())
+                        .replace("%prefix%", getPrefix())
+                        .replace("%cc-prefix%", getCreativeChatPrefix())
+                        .replace("%version%", OpenCreative.getVersion())
                 ));
             }
         }
@@ -470,7 +525,7 @@ public final class MessageUtils {
     }
 
     /**
-     Returns elapsed time from old time to current with localized message. For example: if elapsed time is 2 seconds, it will return "2 sec ago".
+     * Returns elapsed time from old time to current with localized message. For example: if elapsed time is 2 seconds, it will return "2 sec ago".
      **/
     public static @NotNull String getElapsedTime(long currentTime, long oldTime) {
 
@@ -485,13 +540,17 @@ public final class MessageUtils {
         elapsedTimeInMinutes %= 60;
         elapsedTimeInHours %= 24;
 
-        if (elapsedTimeInDays > 0) elapsedTime = elapsedTime.concat(elapsedTimeInDays + " " + getLocaleMessage("time.days",false) + " ");
-        if (elapsedTimeInHours > 0) elapsedTime = elapsedTime.concat(elapsedTimeInHours + " "+ getLocaleMessage("time.hours",false) +" ");
-        if (elapsedTimeInMinutes > 0) elapsedTime = elapsedTime.concat(elapsedTimeInMinutes + " "+ getLocaleMessage("time.minutes",false) +" ");
-        if (elapsedTimeInSeconds > 0) elapsedTime = elapsedTime.concat(elapsedTimeInSeconds + " "+ getLocaleMessage("time.seconds",false) +" ");
-        if ((currentTime - oldTime) < 1000) elapsedTime = getLocaleMessage("time.less-second",false) + " ";
+        if (elapsedTimeInDays > 0)
+            elapsedTime = elapsedTime.concat(elapsedTimeInDays + " " + getLocaleMessage("time.days", false) + " ");
+        if (elapsedTimeInHours > 0)
+            elapsedTime = elapsedTime.concat(elapsedTimeInHours + " " + getLocaleMessage("time.hours", false) + " ");
+        if (elapsedTimeInMinutes > 0)
+            elapsedTime = elapsedTime.concat(elapsedTimeInMinutes + " " + getLocaleMessage("time.minutes", false) + " ");
+        if (elapsedTimeInSeconds > 0)
+            elapsedTime = elapsedTime.concat(elapsedTimeInSeconds + " " + getLocaleMessage("time.seconds", false) + " ");
+        if ((currentTime - oldTime) < 1000) elapsedTime = getLocaleMessage("time.less-second", false) + " ";
 
-        return elapsedTime + getLocaleMessage("time.ago",false);
+        return elapsedTime + getLocaleMessage("time.ago", false);
 
     }
 
@@ -505,6 +564,7 @@ public final class MessageUtils {
      * convertTime(121000); // 2 min 1 sec
      * }
      * </pre>
+     *
      * @param duration duration to convert
      * @return user-friendly duration text.
      */
@@ -521,11 +581,12 @@ public final class MessageUtils {
         minutes %= 60;
         hours %= 24;
 
-        if (days > 0) convertedTime = convertedTime.concat(days + " " + getLocaleMessage("time.days",false) + " ");
-        if (hours > 0) convertedTime = convertedTime.concat(hours + " "+ getLocaleMessage("time.hours",false) +" ");
-        if (minutes > 0) convertedTime = convertedTime.concat(minutes + " "+ getLocaleMessage("time.minutes",false) +" ");
-        if (seconds > 0) convertedTime = convertedTime.concat(seconds + " "+ getLocaleMessage("time.seconds",false));
-        if (duration < 1000) convertedTime = getLocaleMessage("time.less-second",false);
+        if (days > 0) convertedTime = convertedTime.concat(days + " " + getLocaleMessage("time.days", false) + " ");
+        if (hours > 0) convertedTime = convertedTime.concat(hours + " " + getLocaleMessage("time.hours", false) + " ");
+        if (minutes > 0)
+            convertedTime = convertedTime.concat(minutes + " " + getLocaleMessage("time.minutes", false) + " ");
+        if (seconds > 0) convertedTime = convertedTime.concat(seconds + " " + getLocaleMessage("time.seconds", false));
+        if (duration < 1000) convertedTime = getLocaleMessage("time.less-second", false);
         if (duration < 0) convertedTime = "∞";
 
         return convertedTime;
@@ -534,10 +595,11 @@ public final class MessageUtils {
 
     /**
      * Sends message by path for every player in planet, if it was not sent recently.
-     * @param planet planet to send message.
-     * @param path path of message.
-     * @param placeholder placeholder for message.
-     * @param clickCommand command for click.
+     *
+     * @param planet        planet to send message.
+     * @param path          path of message.
+     * @param placeholder   placeholder for message.
+     * @param clickCommand  command for click.
      * @param onceInSeconds cooldown of messages.
      */
     public static void sendMessageOnce(@NotNull Planet planet, @NotNull String path,
@@ -548,7 +610,7 @@ public final class MessageUtils {
 
         if (recentPlanetMessages.get(planet.getId()) != null) {
             long timeInMap = recentPlanetMessages.get(planet.getId());
-            long elapsedTime = currentTime-timeInMap;
+            long elapsedTime = currentTime - timeInMap;
             long elapsedSeconds = elapsedTime / 1000;
             if (elapsedSeconds < onceInSeconds) return;
         }
@@ -569,7 +631,7 @@ public final class MessageUtils {
     }
 
     /**
-     Returns string, that parsed planet lines: planet name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
+     * Returns string, that parsed planet lines: planet name, description, online, reputation, owner, id, category, uniques, last activity time, creation time.
      **/
     public static String parsePlanetLines(Planet planet, String string) {
         String planetReputation = String.valueOf(planet.getInformation().getReputation());
@@ -649,16 +711,16 @@ public final class MessageUtils {
                 .replace("%moduleDownloads%", String.valueOf(module.getInformation().getDownloads()))
                 .replace("%moduleReputation%", reputation)
                 .replace("%moduleCreationTime%", getElapsedTime(System.currentTimeMillis(), module.getInformation().getCreationTime()))
-                .replace("%moduleSharing%", getLocaleMessage("modules.sharing." + (module.getInformation().isPublic() ? "public" : "private"),false));
+                .replace("%moduleSharing%", getLocaleMessage("modules.sharing." + (module.getInformation().isPublic() ? "public" : "private"), false));
     }
 
     /**
-     Returns string, that parsed player's placeholders if PlaceholderAPI is working.
+     * Returns string, that parsed player's placeholders if PlaceholderAPI is working.
      **/
     public static String parsePAPI(OfflinePlayer player, String string) {
         if (HookUtils.isPlaceholderAPIEnabled) {
             try {
-                return PAPIUtils.parsePlaceholdersAPI(player,string);
+                return PAPIUtils.parsePlaceholdersAPI(player, string);
             } catch (Exception ignored) {
                 return string;
             }
@@ -675,7 +737,7 @@ public final class MessageUtils {
     public static @Nullable Double parseTicks(@NotNull String message) {
         if (message.isEmpty()) return null;
         double ticks;
-        double modifier = switch (message.toLowerCase().charAt(message.length()-1)) {
+        double modifier = switch (message.toLowerCase().charAt(message.length() - 1)) {
             case 's' -> 20;
             case 'm' -> 1200;
             case 'h' -> 72000;
@@ -695,6 +757,7 @@ public final class MessageUtils {
 
     /**
      * Checks whether message exists in localization file.
+     *
      * @param messageID id of message.
      * @return true - message exists, false - not found.
      */
@@ -702,8 +765,6 @@ public final class MessageUtils {
         String originalMessage = getLocalization().getString(messageID);
         return originalMessage != null && !originalMessage.equalsIgnoreCase("null");
     }
-
-    private static final Pattern CAMEL_TO_KEBAB = Pattern.compile("([a-z])([A-Z])");
 
     /**
      * Converts text from snake_case, camelCase and PascalCase
@@ -715,6 +776,7 @@ public final class MessageUtils {
      * toKebabCase("Creeper"); // "creeper"
      * }
      * </pre>
+     *
      * @param input text to convert.
      * @return kebab-cased text.
      */
@@ -724,31 +786,6 @@ public final class MessageUtils {
         }
         return CAMEL_TO_KEBAB.matcher(input).replaceAll("$1-$2").toLowerCase();
     }
-
-    private static final Map<Character, String> LEGACY_TO_MINI = Map.ofEntries(
-        Map.entry('0', "<black>"),
-        Map.entry('1', "<dark_blue>"),
-        Map.entry('2', "<dark_green>"),
-        Map.entry('3', "<dark_aqua>"),
-        Map.entry('4', "<dark_red>"),
-        Map.entry('5', "<dark_purple>"),
-        Map.entry('6', "<gold>"),
-        Map.entry('7', "<gray>"),
-        Map.entry('8', "<dark_gray>"),
-        Map.entry('9', "<blue>"),
-        Map.entry('a', "<green>"),
-        Map.entry('b', "<aqua>"),
-        Map.entry('c', "<red>"),
-        Map.entry('d', "<light_purple>"),
-        Map.entry('e', "<yellow>"),
-        Map.entry('f', "<white>"),
-        Map.entry('k', "<obfuscated>"),
-        Map.entry('l', "<bold>"),
-        Map.entry('m', "<strikethrough>"),
-        Map.entry('n', "<underlined>"),
-        Map.entry('o', "<italic>"),
-        Map.entry('r', "<reset>")
-    );
 
     /**
      * Converts legacy text with § or & to MiniMessage format,
@@ -760,12 +797,13 @@ public final class MessageUtils {
      * fromLegacyToMiniMessage("&rHello<red>"); // "<reset>Hello<red>"
      * }
      * </pre>
+     *
      * @param input text to convert.
      * @return text, that can be used as MiniMessage.
      */
     public static @NotNull String fromLegacyToMiniMessage(@NotNull String input) {
         if (input.contains("§")) {
-            input = input.replace('§','&');
+            input = input.replace('§', '&');
         }
         if (!input.contains("&")) return input;
         StringBuilder result = new StringBuilder();
@@ -853,12 +891,13 @@ public final class MessageUtils {
      * fromLegacyToMiniMessage("&rHello<red>"); // "<reset>Hello<red>"
      * }
      * </pre>
+     *
      * @param input text to convert.
      * @return text, that can be used as MiniMessage in books.
      */
     public static @NotNull String fromLegacyToMiniMessageBook(@NotNull String input) {
         if (input.contains("§")) {
-            input = input.replace('§','&');
+            input = input.replace('§', '&');
         }
         if (!input.contains("&")) return input;
         StringBuilder result = new StringBuilder();

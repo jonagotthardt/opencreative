@@ -18,11 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
-import org.bukkit.event.Cancellable;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public final class HungerChangeEvent extends WorldEvent implements Cancellable {
 

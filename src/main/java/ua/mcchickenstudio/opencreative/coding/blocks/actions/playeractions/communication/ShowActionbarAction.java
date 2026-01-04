@@ -21,13 +21,13 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.comm
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 
 import java.util.List;
@@ -39,13 +39,13 @@ public final class ShowActionbarAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        String separator = getArguments().getText("type","new-line",this);
-        List<Component> components = getArguments().getComponentList("actionbar",this);
+        String separator = getArguments().getText("type", "new-line", this);
+        List<Component> components = getArguments().getComponentList("actionbar", this);
         TextComponent.Builder builder = Component.text();
         Component separatorComponent = separator.equals("join-spaces") ? Component.space() : Component.empty();
         for (int i = 0; i < components.size(); i++) {
             builder.append(components.get(i));
-            if (i != components.size()-1) {
+            if (i != components.size() - 1) {
                 builder.append(separatorComponent);
             }
         }
@@ -59,7 +59,7 @@ public final class ShowActionbarAction extends PlayerAction {
 
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SHOW_ACTIONBAR;
     }
 }

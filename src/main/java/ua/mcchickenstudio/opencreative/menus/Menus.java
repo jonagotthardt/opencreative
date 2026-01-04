@@ -62,7 +62,7 @@ public final class Menus implements Listener {
                             inventoryMenu.getInventory().close();
                         }
                     }
-                    if (System.currentTimeMillis()-inventoryMenu.getCreationTime() > 600000L) {
+                    if (System.currentTimeMillis() - inventoryMenu.getCreationTime() > 600000L) {
                         if (inventoryMenu.getInventory().getViewers().isEmpty()) {
                             removeMenu(inventoryMenu);
                         }
@@ -71,7 +71,7 @@ public final class Menus implements Listener {
                 }
             }
         };
-        runnable.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
+        runnable.runTaskTimer(OpenCreative.getPlugin(), 20L, 20L);
     }
 
     public static void onBlockDestroy(Location location) {
@@ -88,6 +88,7 @@ public final class Menus implements Listener {
 
     /**
      * Registers menus in menus manager for handling inventory events.
+     *
      * @param menu menus to add.
      */
     public static void addMenu(InventoryMenu menu) {
@@ -97,6 +98,7 @@ public final class Menus implements Listener {
     /**
      * Unregisters menus from menus event listeners, required if menus is not more
      * useful because player closed it.
+     *
      * @param menu menus to remove.
      */
     public static void removeMenu(InventoryMenu menu) {
@@ -111,7 +113,7 @@ public final class Menus implements Listener {
                     menu.onClick(event);
                 } catch (Exception error) {
                     if (event.getWhoClicked() instanceof Player player) {
-                        sendPlayerErrorMessage(player,"Can't handle click event in " + menu.getClass().getSimpleName(), error);
+                        sendPlayerErrorMessage(player, "Can't handle click event in " + menu.getClass().getSimpleName(), error);
                     }
                 }
                 return;

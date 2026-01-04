@@ -40,36 +40,6 @@ public final class CooldownUtils {
     private static final HashMap<UUID, Long> modulesManipulationsCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> blocksDuplicationCooldown = new HashMap<>();
 
-    /**
-     * Represents type of cooldown.
-     */
-    public enum CooldownType {
-        /**
-         * Cooldown of generic commands.
-         */
-        GENERIC_COMMAND,
-        /**
-         * World Advertisement cooldown.
-         */
-        ADVERTISEMENT_COMMAND,
-        /**
-         * Cooldown of sending message in global chat.
-         */
-        CREATIVE_CHAT,
-        /**
-         * Cooldown of sending message in world chat.
-         */
-        WORLD_CHAT,
-        /**
-         * Cooldown of creating or installing module.
-         */
-        MODULE_MANIPULATION,
-        /**
-         * Cooldown of duplicating coding blocks with manipulator.
-         */
-        BLOCKS_DUPLICATION
-    }
-
     public static long getCooldownFromMap(Player player, CooldownType type) {
 
         HashMap<UUID, Long> cooldownMap = getCooldownMap(type);
@@ -79,10 +49,11 @@ public final class CooldownUtils {
     }
 
     /**
-     Sets player's cooldown.
-     @param player Player to set cooldown.
-     @param cooldown Cooldown to set, in seconds.
-     @param type Type of cooldown.
+     * Sets player's cooldown.
+     *
+     * @param player   Player to set cooldown.
+     * @param cooldown Cooldown to set, in seconds.
+     * @param type     Type of cooldown.
      **/
     public static void setCooldown(Player player, int cooldown, CooldownType type) {
 
@@ -96,15 +67,16 @@ public final class CooldownUtils {
     }
 
     /**
-     Returns player's cooldown.
-     @param player Player for getting cooldown.
-     @param type Type of cooldown.
-     @return cooldown - Remaining time for passing cooldown, in seconds. Returns 0, if player hasn't cooldown or player has bypass.
+     * Returns player's cooldown.
+     *
+     * @param player Player for getting cooldown.
+     * @param type   Type of cooldown.
+     * @return cooldown - Remaining time for passing cooldown, in seconds. Returns 0, if player hasn't cooldown or player has bypass.
      **/
     public static int getCooldown(Player player, CooldownType type) {
 
         if (player.hasPermission("opencreative.cooldown.bypass")) return 0;
-        long cooldownEndTime = getCooldownFromMap(player,type);
+        long cooldownEndTime = getCooldownFromMap(player, type);
         if (cooldownEndTime == 0L) return 0;
 
         long currentTime = System.currentTimeMillis();
@@ -112,7 +84,7 @@ public final class CooldownUtils {
         if (cooldownEndTime < currentTime) {
             return 0;
         } else {
-            return Math.round(cooldownEndTime - currentTime)/1000;
+            return Math.round(cooldownEndTime - currentTime) / 1000;
         }
     }
 
@@ -121,8 +93,8 @@ public final class CooldownUtils {
      * If cooldown is active, returns false.
      *
      * @param player Player to check and set cooldown
-     * @param group Group object for retrieving cooldown durations
-     * @param type Cooldown type to check/set
+     * @param group  Group object for retrieving cooldown durations
+     * @param type   Cooldown type to check/set
      * @return true if cooldown was not active and now set; false if still on cooldown
      */
     public static boolean checkAndSetCooldown(Player player, Group group, CooldownType type) {
@@ -176,5 +148,35 @@ public final class CooldownUtils {
             case MODULE_MANIPULATION -> group.getModuleManipulationCooldown();
             case BLOCKS_DUPLICATION -> group.getBlocksDuplicationCooldown();
         };
+    }
+
+    /**
+     * Represents type of cooldown.
+     */
+    public enum CooldownType {
+        /**
+         * Cooldown of generic commands.
+         */
+        GENERIC_COMMAND,
+        /**
+         * World Advertisement cooldown.
+         */
+        ADVERTISEMENT_COMMAND,
+        /**
+         * Cooldown of sending message in global chat.
+         */
+        CREATIVE_CHAT,
+        /**
+         * Cooldown of sending message in world chat.
+         */
+        WORLD_CHAT,
+        /**
+         * Cooldown of creating or installing module.
+         */
+        MODULE_MANIPULATION,
+        /**
+         * Cooldown of duplicating coding blocks with manipulator.
+         */
+        BLOCKS_DUPLICATION
     }
 }

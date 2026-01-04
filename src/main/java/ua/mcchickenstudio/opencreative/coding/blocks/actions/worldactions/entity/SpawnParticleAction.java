@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.entity.Entity;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -40,18 +40,18 @@ public final class SpawnParticleAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn particles action is cancelled.");
             return;
         }
-        Particle particle = getArguments().getParticle("particle",Particle.HEART,this);
-        int count = Math.min(30,getArguments().getInt("count",1,this));
-        double offsetX = getArguments().getDouble("offset-x",0.0d,this);
-        double offsetY = getArguments().getDouble("offset-y",0.0d,this);
-        double offsetZ = getArguments().getDouble("offset-z",0.0d,this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
-            getPlanet().getTerritory().getWorld().spawnParticle(particle,location,count,offsetX,offsetY,offsetZ);
+        Particle particle = getArguments().getParticle("particle", Particle.HEART, this);
+        int count = Math.min(30, getArguments().getInt("count", 1, this));
+        double offsetX = getArguments().getDouble("offset-x", 0.0d, this);
+        double offsetY = getArguments().getDouble("offset-y", 0.0d, this);
+        double offsetZ = getArguments().getDouble("offset-z", 0.0d, this);
+        for (Location location : getArguments().getLocationList("locations", this)) {
+            getPlanet().getTerritory().getWorld().spawnParticle(particle, location, count, offsetX, offsetY, offsetZ);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_PARTICLE;
     }
 }

@@ -48,10 +48,10 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     protected final Material additionalPane;
     protected final ItemStack mainItem;
     protected final String mainCategory;
-    protected ContentWithMenusCategoryMenu<?> contentMenu;
     protected final List<MenusCategory> menusCategories = new ArrayList<>();
     protected final Object frequency;
     protected final boolean legacy = OpenCreative.getSettings().getCodingSettings().isLegacySelectionMenu();
+    protected ContentWithMenusCategoryMenu<?> contentMenu;
 
     public MenusCategorySelectionMenu(@NotNull Player player,
                                       @NotNull ItemStack mainItem,
@@ -83,106 +83,106 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
         switch (menusCategories.size()) {
             case 0 -> {
                 setRows(4);
-                setItem(13,createItem(Material.BARRIER,1,"items.developer.categories." + mainCategory + ".empty"));
+                setItem(13, createItem(Material.BARRIER, 1, "items.developer.categories." + mainCategory + ".empty"));
             }
             case 1 -> {
                 setRows(4);
-                setItem(13,menusCategories.getFirst().getItem(mainCategory));
+                setItem(13, menusCategories.getFirst().getItem(mainCategory));
             }
             case 2 -> {
                 setRows(4);
-                setItem(11,menusCategories.getFirst().getItem(mainCategory));
-                setItem(15,menusCategories.get(1).getItem(mainCategory));
+                setItem(11, menusCategories.getFirst().getItem(mainCategory));
+                setItem(15, menusCategories.get(1).getItem(mainCategory));
             }
             case 3 -> {
                 setRows(4);
-                setItem(11,menusCategories.getFirst().getItem(mainCategory));
-                setItem(13,menusCategories.get(1).getItem(mainCategory));
-                setItem(15,menusCategories.get(2).getItem(mainCategory));
+                setItem(11, menusCategories.getFirst().getItem(mainCategory));
+                setItem(13, menusCategories.get(1).getItem(mainCategory));
+                setItem(15, menusCategories.get(2).getItem(mainCategory));
             }
             case 4 -> {
                 setRows(4);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(12,menusCategories.get(1).getItem(mainCategory));
-                setItem(14,menusCategories.get(2).getItem(mainCategory));
-                setItem(16,menusCategories.get(3).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(12, menusCategories.get(1).getItem(mainCategory));
+                setItem(14, menusCategories.get(2).getItem(mainCategory));
+                setItem(16, menusCategories.get(3).getItem(mainCategory));
             }
             case 5 -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(13,menusCategories.get(1).getItem(mainCategory));
-                setItem(16,menusCategories.get(2).getItem(mainCategory));
-                setItem(28,menusCategories.get(3).getItem(mainCategory));
-                setItem(31,menusCategories.get(4).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(13, menusCategories.get(1).getItem(mainCategory));
+                setItem(16, menusCategories.get(2).getItem(mainCategory));
+                setItem(28, menusCategories.get(3).getItem(mainCategory));
+                setItem(31, menusCategories.get(4).getItem(mainCategory));
             }
             case 6 -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(13,menusCategories.get(1).getItem(mainCategory));
-                setItem(16,menusCategories.get(2).getItem(mainCategory));
-                setItem(28,menusCategories.get(3).getItem(mainCategory));
-                setItem(31,menusCategories.get(4).getItem(mainCategory));
-                setItem(34,menusCategories.get(5).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(13, menusCategories.get(1).getItem(mainCategory));
+                setItem(16, menusCategories.get(2).getItem(mainCategory));
+                setItem(28, menusCategories.get(3).getItem(mainCategory));
+                setItem(31, menusCategories.get(4).getItem(mainCategory));
+                setItem(34, menusCategories.get(5).getItem(mainCategory));
             }
             case 7 -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(12,menusCategories.get(1).getItem(mainCategory));
-                setItem(14,menusCategories.get(2).getItem(mainCategory));
-                setItem(16,menusCategories.get(3).getItem(mainCategory));
-                setItem(28,menusCategories.get(4).getItem(mainCategory));
-                setItem(30,menusCategories.get(5).getItem(mainCategory));
-                setItem(32,menusCategories.get(6).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(12, menusCategories.get(1).getItem(mainCategory));
+                setItem(14, menusCategories.get(2).getItem(mainCategory));
+                setItem(16, menusCategories.get(3).getItem(mainCategory));
+                setItem(28, menusCategories.get(4).getItem(mainCategory));
+                setItem(30, menusCategories.get(5).getItem(mainCategory));
+                setItem(32, menusCategories.get(6).getItem(mainCategory));
             }
             case 8 -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(12,menusCategories.get(1).getItem(mainCategory));
-                setItem(14,menusCategories.get(2).getItem(mainCategory));
-                setItem(16,menusCategories.get(3).getItem(mainCategory));
-                setItem(28,menusCategories.get(4).getItem(mainCategory));
-                setItem(30,menusCategories.get(5).getItem(mainCategory));
-                setItem(32,menusCategories.get(6).getItem(mainCategory));
-                setItem(34,menusCategories.get(7).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(12, menusCategories.get(1).getItem(mainCategory));
+                setItem(14, menusCategories.get(2).getItem(mainCategory));
+                setItem(16, menusCategories.get(3).getItem(mainCategory));
+                setItem(28, menusCategories.get(4).getItem(mainCategory));
+                setItem(30, menusCategories.get(5).getItem(mainCategory));
+                setItem(32, menusCategories.get(6).getItem(mainCategory));
+                setItem(34, menusCategories.get(7).getItem(mainCategory));
             }
             case 9 -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(12,menusCategories.get(1).getItem(mainCategory));
-                setItem(14,menusCategories.get(2).getItem(mainCategory));
-                setItem(16,menusCategories.get(3).getItem(mainCategory));
-                setItem(28,menusCategories.get(4).getItem(mainCategory));
-                setItem(30,menusCategories.get(5).getItem(mainCategory));
-                setItem(32,menusCategories.get(6).getItem(mainCategory));
-                setItem(34,menusCategories.get(7).getItem(mainCategory));
-                setItem(20,menusCategories.get(8).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(12, menusCategories.get(1).getItem(mainCategory));
+                setItem(14, menusCategories.get(2).getItem(mainCategory));
+                setItem(16, menusCategories.get(3).getItem(mainCategory));
+                setItem(28, menusCategories.get(4).getItem(mainCategory));
+                setItem(30, menusCategories.get(5).getItem(mainCategory));
+                setItem(32, menusCategories.get(6).getItem(mainCategory));
+                setItem(34, menusCategories.get(7).getItem(mainCategory));
+                setItem(20, menusCategories.get(8).getItem(mainCategory));
             }
             case 10 -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(12,menusCategories.get(1).getItem(mainCategory));
-                setItem(14,menusCategories.get(2).getItem(mainCategory));
-                setItem(16,menusCategories.get(3).getItem(mainCategory));
-                setItem(28,menusCategories.get(4).getItem(mainCategory));
-                setItem(30,menusCategories.get(5).getItem(mainCategory));
-                setItem(32,menusCategories.get(6).getItem(mainCategory));
-                setItem(34,menusCategories.get(7).getItem(mainCategory));
-                setItem(20,menusCategories.get(8).getItem(mainCategory));
-                setItem(22,menusCategories.get(9).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(12, menusCategories.get(1).getItem(mainCategory));
+                setItem(14, menusCategories.get(2).getItem(mainCategory));
+                setItem(16, menusCategories.get(3).getItem(mainCategory));
+                setItem(28, menusCategories.get(4).getItem(mainCategory));
+                setItem(30, menusCategories.get(5).getItem(mainCategory));
+                setItem(32, menusCategories.get(6).getItem(mainCategory));
+                setItem(34, menusCategories.get(7).getItem(mainCategory));
+                setItem(20, menusCategories.get(8).getItem(mainCategory));
+                setItem(22, menusCategories.get(9).getItem(mainCategory));
             }
             default -> {
                 setRows(6);
-                setItem(10,menusCategories.getFirst().getItem(mainCategory));
-                setItem(12,menusCategories.get(1).getItem(mainCategory));
-                setItem(14,menusCategories.get(2).getItem(mainCategory));
-                setItem(16,menusCategories.get(3).getItem(mainCategory));
-                setItem(28,menusCategories.get(4).getItem(mainCategory));
-                setItem(30,menusCategories.get(5).getItem(mainCategory));
-                setItem(32,menusCategories.get(6).getItem(mainCategory));
-                setItem(34,menusCategories.get(7).getItem(mainCategory));
-                setItem(20,menusCategories.get(8).getItem(mainCategory));
-                setItem(22,menusCategories.get(9).getItem(mainCategory));
-                setItem(24,menusCategories.get(10).getItem(mainCategory));
+                setItem(10, menusCategories.getFirst().getItem(mainCategory));
+                setItem(12, menusCategories.get(1).getItem(mainCategory));
+                setItem(14, menusCategories.get(2).getItem(mainCategory));
+                setItem(16, menusCategories.get(3).getItem(mainCategory));
+                setItem(28, menusCategories.get(4).getItem(mainCategory));
+                setItem(30, menusCategories.get(5).getItem(mainCategory));
+                setItem(32, menusCategories.get(6).getItem(mainCategory));
+                setItem(34, menusCategories.get(7).getItem(mainCategory));
+                setItem(20, menusCategories.get(8).getItem(mainCategory));
+                setItem(22, menusCategories.get(9).getItem(mainCategory));
+                setItem(24, menusCategories.get(10).getItem(mainCategory));
             }
         }
         fillRow(getRows());
@@ -192,7 +192,7 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
         if (getItem(45).isEmpty()) {
             setRows(6);
             setTitle(contentMenu.getTitle());
-            setItem(DECORATION_PANE_ITEM,36,37,38,39,40,41,42,43,44);
+            setItem(DECORATION_PANE_ITEM, 36, 37, 38, 39, 40, 41, 42, 43, 44);
             int category = 0;
             for (int slot = 45; slot < 54; slot++) {
                 if (category == menusCategories.size()) {
@@ -256,16 +256,16 @@ public abstract class MenusCategorySelectionMenu extends AbstractMenu {
     private void fillRow(int row) {
         if (row < 1) row = 1;
         if (row > 6) row = 6;
-        int firstSlot = (row-1)*9;
-        setItem(firstSlot,DECORATION_PANE_ITEM);
-        setItem(firstSlot+1,DECORATION_PANE_ITEM);
-        setItem(firstSlot+2,createItem(additionalPane,1));
+        int firstSlot = (row - 1) * 9;
+        setItem(firstSlot, DECORATION_PANE_ITEM);
+        setItem(firstSlot + 1, DECORATION_PANE_ITEM);
+        setItem(firstSlot + 2, createItem(additionalPane, 1));
 
-        setItem(firstSlot+4, mainItem);
+        setItem(firstSlot + 4, mainItem);
 
-        setItem(firstSlot+6,createItem(additionalPane,1));
-        setItem(firstSlot+7,DECORATION_PANE_ITEM);
-        setItem(firstSlot+8,DECORATION_PANE_ITEM);
+        setItem(firstSlot + 6, createItem(additionalPane, 1));
+        setItem(firstSlot + 7, DECORATION_PANE_ITEM);
+        setItem(firstSlot + 8, DECORATION_PANE_ITEM);
     }
 
     @Override

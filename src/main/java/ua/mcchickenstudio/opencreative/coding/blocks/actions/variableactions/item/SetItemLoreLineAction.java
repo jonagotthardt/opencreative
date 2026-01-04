@@ -18,18 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +41,9 @@ public final class SetItemLoreLineAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
-        int index = getArguments().getInt("index",1,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE), this), this);
+        int index = getArguments().getInt("index", 1, this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -52,7 +52,7 @@ public final class SetItemLoreLineAction extends VariableAction {
         if (newLore == null) {
             newLore = new ArrayList<>();
         }
-        Component text = getArguments().getComponent("line",Component.text(""),this);
+        Component text = getArguments().getComponent("line", Component.text(""), this);
         if (newLore.size() > 64 || index > 64) {
             return;
         }
@@ -66,15 +66,15 @@ public final class SetItemLoreLineAction extends VariableAction {
         if (!text.hasDecoration(TextDecoration.ITALIC)) {
             text = text.decoration(TextDecoration.ITALIC, false);
         }
-        newLore.set(index-1,text);
+        newLore.set(index - 1, text);
         meta.lore(newLore);
         item.setItemMeta(meta);
         if (link == null) return;
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_SET_ITEM_LORE_LINE;
     }
 }

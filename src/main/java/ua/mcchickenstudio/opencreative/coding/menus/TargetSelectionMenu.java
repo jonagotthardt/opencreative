@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -48,12 +48,12 @@ public final class TargetSelectionMenu extends AbstractMenu {
     public void fillItems(Player player) {
         int slot = 0;
         for (Target target : Target.values()) {
-            setItem(slot,createItem(target.getIcon(),1,"menus.developer.selection.items."+ target.name().toLowerCase().replace("_","-")));
+            setItem(slot, createItem(target.getIcon(), 1, "menus.developer.selection.items." + target.name().toLowerCase().replace("_", "-")));
             slot++;
         }
         if (slot < getSize()) {
             while (slot < getSize()) {
-                setItem(slot,DECORATION_ITEM);
+                setItem(slot, DECORATION_ITEM);
                 slot++;
             }
         }
@@ -82,5 +82,6 @@ public final class TargetSelectionMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+    }
 }

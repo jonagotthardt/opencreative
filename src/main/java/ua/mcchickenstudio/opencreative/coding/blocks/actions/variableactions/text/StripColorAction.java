@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
+import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 
 public final class StripColorAction extends VariableAction {
     public StripColorAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,13 +34,13 @@ public final class StripColorAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getText("text", " ",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String text = getArguments().getText("text", " ", this);
         setVarValue(link, ChatColor.stripColor(text));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_STRIP_COLORS;
     }
 }

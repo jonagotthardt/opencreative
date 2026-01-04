@@ -36,14 +36,14 @@ public final class EntitySetGuardianLaserAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Guardian guardian)) {
-           throw new UnsupportedEntityException(Guardian.class, entity);
+            throw new UnsupportedEntityException(Guardian.class, entity);
         }
         boolean laser = getArguments().getBoolean("boolean", true, this);
         guardian.setLaser(laser);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_GUARDIAN_LASER;
     }
 }

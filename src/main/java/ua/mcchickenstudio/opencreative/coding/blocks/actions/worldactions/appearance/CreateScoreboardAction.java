@@ -18,18 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.scoreboard.Criteria;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -43,32 +43,33 @@ public final class CreateScoreboardAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getText("name","board",this);
-        Component displayName = getArguments().getComponent("display-name",Component.text("Scoreboard"),this);
+        String name = getArguments().getText("name", "board", this);
+        Component displayName = getArguments().getComponent("display-name", Component.text("Scoreboard"), this);
         try {
             if (getPlanet().getTerritory().getScoreboards().getAmount() >= getPlanet().getLimits().getScoreboardsLimit()) {
                 // FIXME: Replace with hard-coded message, sendMessageOnce()
-                sendCodingDebugLog(getPlanet(),"Limit of " + getPlanet().getLimits().getScoreboardsLimit() + " scoreboards reached.");
+                sendCodingDebugLog(getPlanet(), "Limit of " + getPlanet().getLimits().getScoreboardsLimit() + " scoreboards reached.");
                 return;
             }
             Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
             if (scoreboard != null) {
                 Objective objective = scoreboard.getObjective("score");
                 if (objective == null) {
-                    objective = scoreboard.registerNewObjective("score",Criteria.DUMMY,displayName);
+                    objective = scoreboard.registerNewObjective("score", Criteria.DUMMY, displayName);
                 }
                 objective.displayName(displayName);
             } else {
                 scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-                Objective objective = scoreboard.registerNewObjective("score",Criteria.DUMMY,displayName);
+                Objective objective = scoreboard.registerNewObjective("score", Criteria.DUMMY, displayName);
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             }
             getPlanet().getTerritory().getScoreboards().registerScoreboard(name.toLowerCase(), scoreboard);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_CREATE_SCOREBOARD;
     }
 }

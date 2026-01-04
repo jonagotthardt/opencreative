@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -38,20 +38,20 @@ public final class RotationToVectorAction extends VariableAction {
     protected void execute() {
         VariableLink link = getArguments().getVariableLink("variable", this);
         final float
-        yaw = getArguments().getInt("yaw", 0, this),
-        pitch = getArguments().getInt("pitch", 0, this);
+                yaw = getArguments().getInt("yaw", 0, this),
+                pitch = getArguments().getInt("pitch", 0, this);
         final double
-        yawRad = Math.toRadians(yaw),
-        pitchRad = Math.toRadians(pitch),
-        x = -Math.cos(pitchRad) * Math.sin(yawRad),
-        y = -Math.sin(pitchRad),
-        z = Math.cos(pitchRad) * Math.cos(yawRad);
+                yawRad = Math.toRadians(yaw),
+                pitchRad = Math.toRadians(pitch),
+                x = -Math.cos(pitchRad) * Math.sin(yawRad),
+                y = -Math.sin(pitchRad),
+                z = Math.cos(pitchRad) * Math.cos(yawRad);
         final Vector vector = new Vector(x, y, z);
         setVarValue(link, vector);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_ROTATION_TO_VECTOR;
     }
 }

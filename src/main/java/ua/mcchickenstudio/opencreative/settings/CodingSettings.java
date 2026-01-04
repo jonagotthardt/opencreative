@@ -39,16 +39,13 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
  */
 public final class CodingSettings {
 
-    private boolean enabled = true;
-
-    private boolean cancelChatOnValueSet = false;
-    private boolean legacySelectionMenu = false;
-    private boolean ignoreActionsIfEntityNotInWorld = false;
-
     private final Set<String> disabledEvents = new HashSet<>();
     private final Set<String> disabledActions = new HashSet<>();
     private final Set<String> disabledConditions = new HashSet<>();
-
+    private boolean enabled = true;
+    private boolean cancelChatOnValueSet = false;
+    private boolean legacySelectionMenu = false;
+    private boolean ignoreActionsIfEntityNotInWorld = false;
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
 
@@ -58,15 +55,15 @@ public final class CodingSettings {
     public void load() {
         FileConfiguration config = OpenCreative.getPlugin().getConfig();
         ConfigurationSection section = config.getConfigurationSection("coding");
-        
+
         if (section == null) {
             sendCriticalErrorMessage("Can't load coding settings, section `coding` in config.yml is empty.");
             return;
         }
-        
-        enabled = section.getBoolean("enabled",true);
 
-        legacySelectionMenu = section.getBoolean("old-selection-menu",false);
+        enabled = section.getBoolean("enabled", true);
+
+        legacySelectionMenu = section.getBoolean("old-selection-menu", false);
         cancelChatOnValueSet = section.getBoolean("cancel-chat-on-value-set", false);
         ignoreActionsIfEntityNotInWorld = section.getBoolean("ignore-actions-if-entity-not-in-world", false);
 
@@ -76,6 +73,7 @@ public final class CodingSettings {
 
     /**
      * Loads disabled coding blocks list.
+     *
      * @param config section with settings.
      */
     private void loadDisabledBlocks(@NotNull ConfigurationSection config) {
@@ -86,7 +84,7 @@ public final class CodingSettings {
         List<String> unknownBlocks = new ArrayList<>();
         for (String disabled : config.getStringList("disabled-actions")) {
             try {
-                disabled = disabled.toUpperCase().replace("-","_");
+                disabled = disabled.toUpperCase().replace("-", "_");
                 ActionType type = ActionType.valueOf(disabled);
                 disabledActions.add(type.name());
                 count++;
@@ -96,7 +94,7 @@ public final class CodingSettings {
         }
         for (String disabled : config.getStringList("disabled-conditions")) {
             try {
-                disabled = disabled.toUpperCase().replace("-","_");
+                disabled = disabled.toUpperCase().replace("-", "_");
                 ActionType type = ActionType.valueOf(disabled);
                 disabledConditions.add(type.name());
                 count++;
@@ -106,7 +104,7 @@ public final class CodingSettings {
         }
         for (String disabled : config.getStringList("disabled-events")) {
             try {
-                disabled = disabled.toUpperCase().replace("-","_");
+                disabled = disabled.toUpperCase().replace("-", "_");
                 ExecutorType type = ExecutorType.valueOf(disabled);
                 disabledEvents.add(type.name());
                 count++;
@@ -124,13 +122,14 @@ public final class CodingSettings {
 
     /**
      * Loads prompt handler.
+     *
      * @param config section with settings.
      */
     private void setupPromptHandler(@NotNull ConfigurationSection config) {
-        prompterTimeout = config.getInt("prompt-handler.timeout",120);
-        prompterMaxExecutors = config.getInt("prompt-handler.executors-limit",10);
+        prompterTimeout = config.getInt("prompt-handler.timeout", 120);
+        prompterMaxExecutors = config.getInt("prompt-handler.executors-limit", 10);
 
-        String type = config.getString("prompt-handler.type","none");
+        String type = config.getString("prompt-handler.type", "none");
         if (type.equalsIgnoreCase("none")) {
             OpenCreative.setCodingPrompter(new DisabledCodingPrompter());
             return;
@@ -161,7 +160,7 @@ public final class CodingSettings {
 
         CodingPrompter prompter = OpenCreative.getCodingPrompter();
         if (OpenCreative.getCodingPrompter().isEnabled()) {
-            sendDebug("[CODING PROMPT] Using prompter (" + prompter.getName() +")" +
+            sendDebug("[CODING PROMPT] Using prompter (" + prompter.getName() + ")" +
                     (prompter instanceof PrompterModelCapable model ? " with model: " + model.getModel() : "")
                     + " for /env make");
         }
@@ -169,6 +168,7 @@ public final class CodingSettings {
 
     /**
      * Checks whether executor is disabled.
+     *
      * @param event executor to check.
      * @return true - disabled, false - not.
      */
@@ -178,6 +178,7 @@ public final class CodingSettings {
 
     /**
      * Checks whether action is disabled.
+     *
      * @param action action to check.
      * @return true - disabled, false - not.
      */
@@ -187,6 +188,7 @@ public final class CodingSettings {
 
     /**
      * Checks whether condition is disabled.
+     *
      * @param condition condition to check.
      * @return true - disabled, false - not.
      */
@@ -196,6 +198,7 @@ public final class CodingSettings {
 
     /**
      * Checks whether coding should use legacy selection menu.
+     *
      * @return true - will use old menu, false - not.
      */
     public boolean isLegacySelectionMenu() {
@@ -205,6 +208,7 @@ public final class CodingSettings {
     /**
      * Checks whether coding mode is enabled and players
      * can enter it to develop worlds.
+     *
      * @return true - enabled, false - disabled.
      */
     public boolean isEnabled() {
@@ -214,6 +218,7 @@ public final class CodingSettings {
     /**
      * Checks whether messages, that changed values, should be
      * hidden for players in coding world.
+     *
      * @return true - hide these messages, false - let them show.
      */
     public boolean isCancelChatOnValueSet() {
@@ -222,6 +227,7 @@ public final class CodingSettings {
 
     /**
      * Returns maximum amount of event blocks for prompt handler.
+     *
      * @return limit of events.
      */
     public int getPrompterMaxExecutors() {
@@ -231,6 +237,7 @@ public final class CodingSettings {
     /**
      * Returns how much time prompt handler can think
      * before it will cancel and fail the request.
+     *
      * @return limit of thinking time.
      */
     public int getPrompterTimeout() {
@@ -240,6 +247,7 @@ public final class CodingSettings {
     /**
      * Checks whether any action will be not executed, if
      * target entity is not in planet's world.
+     *
      * @return true - all actions require entity in same world<p>
      * false - only entity and player actions.
      */

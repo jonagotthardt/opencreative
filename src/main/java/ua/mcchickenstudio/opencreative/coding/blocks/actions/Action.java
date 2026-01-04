@@ -18,22 +18,23 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -43,28 +44,28 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLo
 /**
  * <h1>Action</h1>
  * This class represents Action that will be executed in executor.
- * @since 5.0
- * @version 5.6
+ *
  * @author McChicken Studio
+ * @version 5.6
+ * @since 5.0
  */
 public abstract class Action {
 
+    protected final Arguments arguments;
     private final Executor executor;
     private final Target target;
     private final int x;
     protected Entity entity;
-
     protected WorldEvent event;
     protected ActionsHandler handler;
 
-    protected final Arguments arguments;
-
     /**
      * Creates an Action with linked executor and specified arguments.
+     *
      * @param executor Executor where this action will be added.
-     * @param target Target, that will execute this action.
-     * @param x X coordinate from Action's block location in developers planet.
-     * @param args List of arguments for action.
+     * @param target   Target, that will execute this action.
+     * @param x        X coordinate from Action's block location in developers planet.
+     * @param args     List of arguments for action.
      */
     public Action(Executor executor, Target target, int x, Arguments args) {
         this.executor = executor;
@@ -75,11 +76,12 @@ public abstract class Action {
 
     /**
      * Prepares action for executing, sets handler and event, and executes action with target.
+     *
      * @param handler ActionsHandler that stores event data and temporary variables.
      */
-    public void prepareAndExecute(ActionsHandler handler) {
-        if (getActionType() != null && getActionType().isDisabled()) {
-            sendCodingDebugLog(getPlanet(),"Action is disabled, cannot work: " + getActionType().getLocaleName());
+    public void prepareAndExecute(@NotNull ActionsHandler handler) {
+        if (getActionType().isDisabled()) {
+            sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
         }
         this.handler = handler;
@@ -100,22 +102,39 @@ public abstract class Action {
 
     /**
      * Executes action with specified entity.
+     *
      * @param entity Entity to execute action.
      */
-    protected abstract void execute(Entity entity);
-    public abstract ActionType getActionType();
-    public abstract ActionCategory getActionCategory();
+    protected abstract void execute(@Nullable Entity entity);
+
+    /**
+     * Returns type of action, that contains information
+     * about action: icon material, arguments list.
+     *
+     * @return Type of action.
+     */
+    public abstract @NotNull ActionType getActionType();
+
+    /**
+     * Returns category of action, that contains information
+     * about action: glass pane materials, block materials.
+     *
+     * @return Category of action.
+     */
+    public abstract @NotNull ActionCategory getActionCategory();
 
     /**
      * Returns arguments of action.
+     *
      * @return Arguments of action.
      */
-    protected final Arguments getArguments() {
+    protected final @NotNull Arguments getArguments() {
         return arguments;
     }
 
     /**
      * Returns executor, that stores this action.
+     *
      * @return Executor with this action.
      */
     public final Executor getExecutor() {
@@ -124,6 +143,7 @@ public abstract class Action {
 
     /**
      * Returns X coordinate of action coding block in developer's world.
+     *
      * @return X coordinate of coding block location.
      */
     public final int getX() {
@@ -132,6 +152,7 @@ public abstract class Action {
 
     /**
      * Returns a set of entities whose name or UUID is equal to specified text.
+     *
      * @param text Text to compare world's entities names and UUIDs.
      * @return Set of entities with same names or UUIDs, as text.
      */
@@ -159,6 +180,7 @@ public abstract class Action {
 
     /**
      * Returns planet's world, where action will be executed.
+     *
      * @return Planet's world.
      */
     protected World getWorld() {
@@ -171,6 +193,7 @@ public abstract class Action {
 
     /**
      * Returns involved entity in action from ActionsHandler.
+     *
      * @return Involved entity.
      */
     public Entity getEntity() {
@@ -178,7 +201,17 @@ public abstract class Action {
     }
 
     /**
+     * Sets entity involved in executor's event.
+     *
+     * @param entity New entity.
+     */
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    /**
      * Returns last stored event in action.
+     *
      * @return CreativeEvent, that called executor with this action.
      */
     public WorldEvent getEvent() {
@@ -186,7 +219,17 @@ public abstract class Action {
     }
 
     /**
+     * Sets new event.
+     *
+     * @param event new event of action.
+     */
+    public void setEvent(WorldEvent event) {
+        this.event = event;
+    }
+
+    /**
      * Returns current ActionsHandler in action.
+     *
      * @return Handler of this action.
      */
     public ActionsHandler getHandler() {
@@ -194,7 +237,17 @@ public abstract class Action {
     }
 
     /**
+     * Sets new ActionsHandler.
+     *
+     * @param handler New handler of action.
+     */
+    public void setHandler(ActionsHandler handler) {
+        this.handler = handler;
+    }
+
+    /**
      * Returns enum of target.
+     *
      * @return Enum of target.
      */
     public Target getTarget() {
@@ -203,6 +256,7 @@ public abstract class Action {
 
     /**
      * Returns list of entities that will execute this action.
+     *
      * @return List of entities to execute action.
      */
     protected List<Entity> getTargets() {
@@ -284,6 +338,7 @@ public abstract class Action {
 
     /**
      * Returns entity killer, that involved in damage event.
+     *
      * @return Killer, or null if there's no involved entity in damage event.
      */
     private Entity getKiller() {
@@ -295,7 +350,8 @@ public abstract class Action {
 
     /**
      * Sets value in local, global or saved variable in world.
-     * @param link Link of variable.
+     *
+     * @param link  Link of variable.
      * @param value New value.
      */
     protected void setVarValue(@Nullable VariableLink link, Object value) {
@@ -314,34 +370,11 @@ public abstract class Action {
     }
 
     /**
-     * Sets new ActionsHandler.
-     * @param handler New handler of action.
-     */
-    public void setHandler(ActionsHandler handler) {
-        this.handler = handler;
-    }
-
-    /**
-     * Sets new event.
-     * @param event new event of action.
-     */
-    public void setEvent(WorldEvent event) {
-        this.event = event;
-    }
-
-    /**
      * Returns a list of all arguments in this action.
+     *
      * @return List of action's arguments.
      */
     public List<Argument> getArgumentsList() {
         return getArguments().getArgumentList();
-    }
-
-    /**
-     * Sets entity involved in executor's event.
-     * @param entity New entity.
-     */
-    public void setEntity(Entity entity) {
-        this.entity = entity;
     }
 }

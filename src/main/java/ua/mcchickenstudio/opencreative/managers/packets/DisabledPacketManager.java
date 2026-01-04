@@ -32,25 +32,32 @@ import org.jetbrains.annotations.NotNull;
 public final class DisabledPacketManager implements PacketManager {
 
     @Override
-    public void displayGlowingBlock(@NotNull Player player, @NotNull Location location) {}
+    public void displayGlowingBlock(@NotNull Player player, @NotNull Location location) {
+    }
 
     @Override
-    public void sendChestOpenAnimation(@NotNull Player player, @NotNull Block block) {}
+    public void sendChestOpenAnimation(@NotNull Player player, @NotNull Block block) {
+    }
 
     @Override
-    public void sendChestCloseAnimation(@NotNull Player player, @NotNull Block block) {}
+    public void sendChestCloseAnimation(@NotNull Player player, @NotNull Block block) {
+    }
 
     @Override
-    public void displayAsSpectatorName(@NotNull Player player, @NotNull Player receiver) {}
+    public void displayAsSpectatorName(@NotNull Player player, @NotNull Player receiver) {
+    }
 
     @Override
-    public void removeSpectatorName(@NotNull Player player, @NotNull Player receiver) {}
+    public void removeSpectatorName(@NotNull Player player, @NotNull Player receiver) {
+    }
 
     @Override
-    public void showBlockForPlayer(@NotNull Player player, @NotNull Location location, @NotNull Material material) {}
+    public void showBlockForPlayer(@NotNull Player player, @NotNull Location location, @NotNull Material material) {
+    }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

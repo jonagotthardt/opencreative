@@ -19,12 +19,10 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
-import ua.mcchickenstudio.opencreative.coding.modules.BlocksManipulatorMenu;
-import ua.mcchickenstudio.opencreative.menus.EnderChestMenu;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,23 +31,32 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ua.mcchickenstudio.opencreative.planets.*;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory.*;
+import ua.mcchickenstudio.opencreative.coding.modules.BlocksManipulatorMenu;
+import ua.mcchickenstudio.opencreative.menus.EnderChestMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.addPlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.isPlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
-
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.spawnGlowingBlock;
 
 public final class ClickListener implements Listener {
 
+    private static void cantDev(Player player) {
+        player.closeInventory();
+        player.sendActionBar(getLocaleMessage("world.dev-mode.cant-dev"));
+    }
+
     @EventHandler
     public void onCraft(CraftItemEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        new PlayerItemCraftEvent(player,event).callEvent();
+        new PlayerItemCraftEvent(player, event).callEvent();
     }
 
     @EventHandler
@@ -74,12 +81,12 @@ public final class ClickListener implements Listener {
         if (planet == null) return;
         event.setCancelled(true);
         event.getInventory().close();
-        new EnderChestMenu(planet,event.getInventory().getLocation()).open(player);
+        new EnderChestMenu(planet, event.getInventory().getLocation()).open(player);
     }
 
     @EventHandler
     public void onItemDamage(PlayerItemDamageEvent event) {
-        new PlayerItemDamagedEvent(event.getPlayer(),event).callEvent();
+        new PlayerItemDamagedEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
@@ -88,11 +95,9 @@ public final class ClickListener implements Listener {
 
         Planet planet1 = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet1 != null) {
-            if (event.getCurrentItem() != null) {
-                new ItemClickEvent(player,event).callEvent();
-                if (event.getAction() == InventoryAction.PLACE_ALL) {
-                    new ItemMoveEvent(player,event).callEvent();
-                }
+            new ItemClickEvent(player, event).callEvent();
+            if (event.getAction().name().startsWith("PLACE")) {
+                new ItemMoveEvent(player, event).callEvent();
             }
         }
 
@@ -113,11 +118,6 @@ public final class ClickListener implements Listener {
             event.setCancelled(true);
             cantDev(player);
         }
-    }
-
-    private static void cantDev(Player player) {
-        player.closeInventory();
-        player.sendActionBar(getLocaleMessage("world.dev-mode.cant-dev"));
     }
 
     @EventHandler
@@ -158,17 +158,17 @@ public final class ClickListener implements Listener {
                             String[] locCoords = locationString.split(" ");
                             if (locCoords.length == 5) {
                                 try {
-                                    double x,y,z;
-                                    float yaw,pitch;
+                                    double x, y, z;
+                                    float yaw, pitch;
                                     x = Double.parseDouble(locCoords[0]);
                                     y = Double.parseDouble(locCoords[1]);
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    Location location = new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                                    Location location = new Location(planet.getTerritory().getWorld(), x, y, z, yaw, pitch);
                                     if (isOutOfBorders(location)) location = planet.getTerritory().getSpawnLocation();
                                     player.teleport(location);
-                                    spawnGlowingBlock(player,location);
+                                    spawnGlowingBlock(player, location);
                                 } catch (Exception error) {
                                     player.teleport(planet.getTerritory().getSpawnLocation());
                                 }
@@ -177,7 +177,7 @@ public final class ClickListener implements Listener {
                             player.teleport(planet.getTerritory().getSpawnLocation());
                         }
                         Sounds.DEV_LOCATION_TELEPORT.play(player);
-                        player.setCooldown(currentItem.getType(),60);
+                        player.setCooldown(currentItem.getType(), 60);
                     }
                 }
             } else if (currentItem.getType() == Material.COMPARATOR) {
@@ -208,22 +208,22 @@ public final class ClickListener implements Listener {
                             String[] locCoords = locationString.split(" ");
                             if (locCoords.length == 5) {
                                 try {
-                                    double x,y,z;
-                                    float yaw,pitch;
+                                    double x, y, z;
+                                    float yaw, pitch;
                                     x = Double.parseDouble(locCoords[0]);
                                     y = Double.parseDouble(locCoords[1]);
                                     z = Double.parseDouble(locCoords[2]);
                                     yaw = Float.parseFloat(locCoords[3]);
                                     pitch = Float.parseFloat(locCoords[4]);
-                                    player.teleport(new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch));
+                                    player.teleport(new Location(planet.getTerritory().getWorld(), x, y, z, yaw, pitch));
                                 } catch (Exception error) {
                                     player.teleport(planet.getTerritory().getSpawnLocation());
                                 }
                             } else {
                                 player.teleport(planet.getTerritory().getSpawnLocation());
                             }
-                        Sounds.DEV_LOCATION_TELEPORT.play(player);
-                        player.setCooldown(currentItem.getType(),60);
+                            Sounds.DEV_LOCATION_TELEPORT.play(player);
+                            player.setCooldown(currentItem.getType(), 60);
                         }
                     }
                 } else {
@@ -236,13 +236,13 @@ public final class ClickListener implements Listener {
     @EventHandler
     public void onBookWrite(PlayerEditBookEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new BookWriteEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new BookWriteEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
     public void onItemConsume(PlayerItemConsumeEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new ItemConsumeEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new ItemConsumeEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
@@ -250,7 +250,7 @@ public final class ClickListener implements Listener {
         ItemUtils.fixItem(event.getPlayer().getInventory().getItemInMainHand());
         ItemUtils.fixItem(event.getPlayer().getInventory().getItemInOffHand());
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new ItemBreakEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new ItemBreakEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
@@ -273,6 +273,6 @@ public final class ClickListener implements Listener {
             player.getInventory().setItem(newSlot, ItemUtils.fixItem(newItem));
         }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new SlotChangeEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new SlotChangeEvent(event.getPlayer(), event).callEvent();
     }
 }

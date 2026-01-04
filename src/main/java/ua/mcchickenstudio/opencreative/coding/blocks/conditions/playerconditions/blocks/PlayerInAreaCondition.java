@@ -37,9 +37,9 @@ public class PlayerInAreaCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(@NotNull Player player) {
-        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
         Location location = player.getLocation();
-        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
         double maxX = Math.max(first.getX(), second.getX());
         double maxY = Math.max(first.getY(), second.getY());
         double maxZ = Math.max(first.getZ(), second.getZ());
@@ -51,7 +51,7 @@ public class PlayerInAreaCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_IN_AREA;
     }
 }

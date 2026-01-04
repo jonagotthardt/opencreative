@@ -43,7 +43,7 @@ public final class WorldTemplate extends WorldGenerator {
      *                    It must be lower-snake-cased, for example: "flat", "nostalgia_world".
      *                    If some of registered generators has same ID as new, it will be not added.
      * @param displayIcon icon of world generator that will be displayed in world generation menu.
-     * @param folderName name of folder from /plugins/OpenCreative/templates/.
+     * @param folderName  name of folder from /plugins/OpenCreative/templates/.
      */
     public WorldTemplate(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull String folderName) {
         super(id, displayIcon);
@@ -57,11 +57,12 @@ public final class WorldTemplate extends WorldGenerator {
 
     @Override
     public @NotNull String getDescription() {
-        return "Copied " + folderName +  " world from templates directory";
+        return "Copied " + folderName + " world from templates directory";
     }
 
     /**
      * Returns name of world folder, located in /plugins/OpenCreative/templates directory.
+     *
      * @return name of world folder for copying and pasting.
      */
     public @NotNull String getFolderName() {
@@ -69,8 +70,10 @@ public final class WorldTemplate extends WorldGenerator {
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator) {}
+    public void modifyWorldCreator(@NotNull WorldCreator creator) {
+    }
 
     @Override
-    public void afterCreation(@NotNull World world) {}
+    public void afterCreation(@NotNull World world) {
+    }
 }

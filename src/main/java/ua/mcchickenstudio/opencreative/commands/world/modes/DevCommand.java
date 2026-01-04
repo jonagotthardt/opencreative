@@ -18,25 +18,24 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import org.bukkit.*;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 
 /**
  * <h1>DevCommand</h1>
@@ -94,7 +93,7 @@ public class DevCommand extends CommandHandler {
                         double x = Double.parseDouble(args[0]);
                         double y = Double.parseDouble(args[1]);
                         double z = Double.parseDouble(args[2]);
-                        planet.connectToDevPlanet(player,x,y,z);
+                        planet.connectToDevPlanet(player, x, y, z);
                     } catch (Exception error) {
                         planet.connectToDevPlanet(player);
                     }
@@ -125,7 +124,7 @@ public class DevCommand extends CommandHandler {
              * or trusted developers.
              */
             if (planet.getWorldPlayers().getDevelopersNotTrusted().contains(nickname)) {
-                planet.getWorldPlayers().addDeveloper(nickname,true);
+                planet.getWorldPlayers().addDeveloper(nickname, true);
                 sender.sendMessage(getLocaleMessage("world.players.developers.trusted").replace("%player%", nickname));
                 return;
             }
@@ -140,14 +139,14 @@ public class DevCommand extends CommandHandler {
              */
             int limit = planet.getLimits().getDevelopersLimit();
             if (planet.getWorldPlayers().getAllDevelopers().size() > limit) {
-                sender.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%",String.valueOf(limit)));
+                sender.sendMessage(getLocaleMessage("world.players.developers.limit").replace("%limit%", String.valueOf(limit)));
                 return;
             }
             if (onlinePlayer != null) {
                 Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
                 if (planet.equals(playerPlanet)) {
                     sender.sendMessage(getLocaleMessage("world.players.developers.added").replace("%player%", onlinePlayer.getName()));
-                    planet.getWorldPlayers().addDeveloper(onlinePlayer.getName(),false);
+                    planet.getWorldPlayers().addDeveloper(onlinePlayer.getName(), false);
                 } else {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                 }
@@ -168,7 +167,7 @@ public class DevCommand extends CommandHandler {
                 if (planet.isOwner(planetPlayer) || list.contains(planetPlayer.getName())) continue;
                 list.add(planetPlayer.getName());
             }
-            return list.subList(0,Math.min(10,list.size()));
+            return list.subList(0, Math.min(10, list.size()));
         }
         return null;
     }

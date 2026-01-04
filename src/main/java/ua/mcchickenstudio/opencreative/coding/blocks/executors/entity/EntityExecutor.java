@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,7 +30,7 @@ public abstract class EntityExecutor extends Executor {
     }
 
     @Override
-    public ExecutorCategory getExecutorCategory() {
+    public @NotNull ExecutorCategory getExecutorCategory() {
         return ExecutorCategory.EVENT_ENTITY;
     }
 }

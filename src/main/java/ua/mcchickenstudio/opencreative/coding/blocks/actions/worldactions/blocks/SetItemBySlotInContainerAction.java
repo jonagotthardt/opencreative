@@ -20,16 +20,15 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
@@ -42,9 +41,9 @@ public final class SetItemBySlotInContainerAction extends WorldAction {
 
     @Override
     protected void execute() {
-        List<Location> locations = getArguments().getLocationList("locations",this);
-        ItemStack item = getArguments().getItem("item",new ItemStack(Material.AIR),this);
-        int slot = getArguments().getInt("slot",1,this);
+        List<Location> locations = getArguments().getLocationList("locations", this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.AIR), this);
+        int slot = getArguments().getInt("slot", 1, this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -53,30 +52,30 @@ public final class SetItemBySlotInContainerAction extends WorldAction {
         };
         for (Location location : locations) {
             if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                 getPlanet().getTerritory().removeBukkitRunnable(runnable);
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
             }
             if (location.getBlock().getState() instanceof InventoryHolder container) {
                 if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                    runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                    runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                     getPlanet().getTerritory().removeBukkitRunnable(runnable);
                     new LimitReachedBlocksEvent(getPlanet()).callEvent();
                     return;
                 }
-                container.getInventory().setItem(slot-1,item);
-                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
+                container.getInventory().setItem(slot - 1, item);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
             }
-            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
+            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
 
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_PUT_ITEM_IN_CONTAINER;
     }
 }

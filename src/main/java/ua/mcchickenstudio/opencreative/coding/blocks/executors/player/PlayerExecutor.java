@@ -18,18 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public abstract class PlayerExecutor extends Executor {
-    
+
     public PlayerExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }
 
     @Override
-    public ExecutorCategory getExecutorCategory() {
+    public @NotNull ExecutorCategory getExecutorCategory() {
         return ExecutorCategory.EVENT_PLAYER;
     }
 }

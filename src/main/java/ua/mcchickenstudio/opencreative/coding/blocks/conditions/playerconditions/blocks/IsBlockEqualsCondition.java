@@ -19,14 +19,15 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.blocks;
 
 import org.bukkit.Material;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.values.events.BlockMaterialValue;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class IsBlockEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         if (!(getEventValue(BlockMaterialValue.class) instanceof String string)) {
             return false;
         }
@@ -46,7 +47,7 @@ public class IsBlockEqualsCondition extends PlayerCondition {
         if (material == null) {
             return false;
         }
-        List<ItemStack> blocks = getArguments().getItemList("blocks",this);
+        List<ItemStack> blocks = getArguments().getItemList("blocks", this);
         if (blocks.isEmpty()) return false;
         for (ItemStack checkBlock : blocks) {
             if (material == checkBlock.getType()) {
@@ -57,7 +58,7 @@ public class IsBlockEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_BLOCK_EQUALS;
     }
 }

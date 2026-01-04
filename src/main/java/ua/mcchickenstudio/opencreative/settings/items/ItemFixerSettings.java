@@ -37,7 +37,7 @@ public final class ItemFixerSettings {
     private boolean removeCustomSpawnEggs = true;
     private boolean removeClickableBooks = true;
     private boolean clearCommandBlocksData = true;
-    
+
     private int maxEnchantLevel = 10;
     private int entitiesMaxAmount = 3;
     private int maxBookPagesAmount = 50;
@@ -47,7 +47,7 @@ public final class ItemFixerSettings {
     private int displayNameMaxLength = 64;
     private int loreLineMaxLength = 100;
     private int loreLinesMaxAmount = 25;
-    
+
     /**
      * Loads settings of item fixer from configuration.
      */
@@ -58,32 +58,33 @@ public final class ItemFixerSettings {
             sendCriticalErrorMessage("Can't load item fixer, section `item-fixer` in config.yml is empty.");
             return;
         }
-        
+
         enabled = section.getBoolean("enabled", true);
 
         // Remove or ignore
-        removeAttributes = section.getBoolean("remove-attribute-modifiers",true);
-        removeClickableBooks = section.getBoolean("remove-clickable-in-books",true);
-        removeCustomSpawnEggs = section.getBoolean("remove-custom-spawn-eggs",true);
-        removeBossSpawnEggs = section.getBoolean("remove-boss-spawn-eggs",true);
-        clearCommandBlocksData = section.getBoolean("clear-command-blocks-data",true);
+        removeAttributes = section.getBoolean("remove-attribute-modifiers", true);
+        removeClickableBooks = section.getBoolean("remove-clickable-in-books", true);
+        removeCustomSpawnEggs = section.getBoolean("remove-custom-spawn-eggs", true);
+        removeBossSpawnEggs = section.getBoolean("remove-boss-spawn-eggs", true);
+        clearCommandBlocksData = section.getBoolean("clear-command-blocks-data", true);
 
         // Internal limits
-        maxEntityNameLength = section.getInt("entity-name-max-length",48);
-        maxPersistentDataSize = section.getInt("persistent-data-max-size",2048);
-        entitiesMaxAmount = section.getInt("entities-max-amount",3);
-        maxBookPagesAmount = section.getInt("books-pages-max-amount",50);
-        containerBigItemsLimit = section.getInt("container-big-items-max-amount",3);
-        loreLinesMaxAmount = section.getInt("container-lore-lines-max-amount",25);
+        maxEntityNameLength = section.getInt("entity-name-max-length", 48);
+        maxPersistentDataSize = section.getInt("persistent-data-max-size", 2048);
+        entitiesMaxAmount = section.getInt("entities-max-amount", 3);
+        maxBookPagesAmount = section.getInt("books-pages-max-amount", 50);
+        containerBigItemsLimit = section.getInt("container-big-items-max-amount", 3);
+        loreLinesMaxAmount = section.getInt("container-lore-lines-max-amount", 25);
 
         // Display limits
-        maxEnchantLevel = section.getInt("max-enchantment-level",10);
-        displayNameMaxLength = section.getInt("display-name-max-length",64);
-        loreLineMaxLength = section.getInt("lore-line-max-length",100);
+        maxEnchantLevel = section.getInt("max-enchantment-level", 10);
+        displayNameMaxLength = section.getInt("display-name-max-length", 64);
+        loreLineMaxLength = section.getInt("lore-line-max-length", 100);
     }
 
     /**
      * Returns maximum amount of heavy items inside container (chest, shulker).
+     *
      * @return limit of big  in container.
      */
     public int getContainerBigItemsLimit() {
@@ -92,6 +93,7 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum amount of pages in a book.
+     *
      * @return limit of pages in book.
      */
     public int getMaxBookPagesAmount() {
@@ -100,14 +102,16 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum level of enchantment in item.
+     *
      * @return maximum level of enchantment.
      */
     public int getMaxEnchantLevel() {
         return maxEnchantLevel;
     }
-    
+
     /**
      * Checks whether attribute modifiers should be removed from item.
+     *
      * @return true - will be removed, false - not.
      */
     public boolean isRemoveAttributes() {
@@ -116,6 +120,7 @@ public final class ItemFixerSettings {
 
     /**
      * Checks whether clickable components should be removed from book's content.
+     *
      * @return true - will be removed, false - not.
      */
     public boolean isRemoveClickableBooks() {
@@ -125,6 +130,7 @@ public final class ItemFixerSettings {
     /**
      * Checks whether custom eggs should be destroyed, because they may contain
      * malicious entity data.
+     *
      * @return true - will be removed, false - not.
      */
     public boolean isRemoveCustomSpawnEggs() {
@@ -134,6 +140,7 @@ public final class ItemFixerSettings {
     /**
      * Checks whether boss spawn eggs (for ender dragon and wither) should
      * be destroyed, because they're often used to grief worlds.
+     *
      * @return true - will be removed, false - not.
      */
     public boolean isRemoveBossSpawnEggs() {
@@ -142,6 +149,7 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum length of entity's name.
+     *
      * @return limit of entity's name length.
      */
     public int getMaxEntityNameLength() {
@@ -150,6 +158,7 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum size (symbols amount) of persistent data container.
+     *
      * @return limit of persistent data container's size.
      */
     public int getMaxPersistentDataSize() {
@@ -159,6 +168,7 @@ public final class ItemFixerSettings {
     /**
      * Returns maximum amount of entities inside block, that can
      * spawn a lot of entities.
+     *
      * @return limit of entities inside block.
      */
     public int getEntitiesMaxAmount() {
@@ -167,6 +177,7 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum length of item's display name.
+     *
      * @return limit of display name's length.
      */
     public int getDisplayNameMaxLength() {
@@ -175,6 +186,7 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum length of item's lore one line length.
+     *
      * @return limit of item lore line's length
      */
     public int getLoreLineMaxLength() {
@@ -183,6 +195,7 @@ public final class ItemFixerSettings {
 
     /**
      * Returns maximum amount of lines in item's lore.
+     *
      * @return limit of item lore lines amount.
      */
     public int getLoreLinesMaxAmount() {
@@ -191,6 +204,7 @@ public final class ItemFixerSettings {
 
     /**
      * Checks whether command blocks data should be cleared.
+     *
      * @return true - will be removed, false - not.
      */
     public boolean isClearCommandBlocksData() {
@@ -199,6 +213,7 @@ public final class ItemFixerSettings {
 
     /**
      * Checks whether item fixer is enabled.
+     *
      * @return true - enabled, false - disabled.
      */
     public boolean isEnabled() {

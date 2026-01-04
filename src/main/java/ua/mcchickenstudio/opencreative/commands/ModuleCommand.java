@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parseModuleLines;
 
@@ -124,7 +124,7 @@ public class ModuleCommand extends CommandHandler {
                 sender.sendMessage(getLocaleMessage("modules.list.amount")
                         .replace("%amount%", String.valueOf(modules.size())));
                 for (Module module : modules) {
-                    sender.sendMessage(parseModuleLines(module,getLocaleMessage("modules.list.module")));
+                    sender.sendMessage(parseModuleLines(module, getLocaleMessage("modules.list.module")));
                 }
             }
             case "like" -> {
@@ -208,7 +208,7 @@ public class ModuleCommand extends CommandHandler {
         if (!(sender instanceof Player player)) {
             if (args.length == 1) {
                 return List.of("delete", "list", "info");
-            } else if (args.length == 2 && List.of("delete","info","load","like","dislike").contains(args[0].toLowerCase())) {
+            } else if (args.length == 2 && List.of("delete", "info", "load", "like", "dislike").contains(args[0].toLowerCase())) {
                 return OpenCreative.getModuleManager().getModules().stream()
                         .map(module -> String.valueOf(module.getId()))
                         .toList();
@@ -233,7 +233,7 @@ public class ModuleCommand extends CommandHandler {
         } else if (args.length == 2) {
             if (player.hasPermission("opencreative.modules.delete")
                     && args[0].equalsIgnoreCase("delete") || (devPlanet != null
-                    && List.of("like","dislike","load").contains(args[0].toLowerCase()))) {
+                    && List.of("like", "dislike", "load").contains(args[0].toLowerCase()))) {
                 return OpenCreative.getModuleManager().getModules().stream()
                         .map(module -> String.valueOf(module.getId()))
                         .toList();

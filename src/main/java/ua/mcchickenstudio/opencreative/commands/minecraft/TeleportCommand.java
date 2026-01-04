@@ -18,25 +18,26 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.settings.Sounds;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.removePassengers;
 
 /**
  * <h1>TeleportCommand</h1>
@@ -102,7 +103,6 @@ public class TeleportCommand extends CommandHandler {
                     player.sendMessage(getLocaleMessage("only-in-world"));
                     return;
                 }
-
             }
             if (!player.hasPermission("opencreative.teleport.clear-bypass")) {
                 if (!player.getWorld().equals(teleportToPlayer.getWorld())) {
@@ -113,9 +113,11 @@ public class TeleportCommand extends CommandHandler {
                     if (teleportPlanet != null) {
                         teleportPlanet.connectPlayer(player);
                     } else {
+                        removePassengers(player);
                         player.teleport(teleportToPlayer.getLocation());
                     }
                 } else {
+                    removePassengers(player);
                     player.teleport(teleportToPlayer.getLocation());
                 }
             } else {
@@ -157,6 +159,7 @@ public class TeleportCommand extends CommandHandler {
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
+            removePassengers(firstPlayer);
             firstPlayer.teleport(secondPlayer.getLocation());
             player.sendMessage(getLocaleMessage("commands.teleport.teleported-player")
                     .replace("%first%", firstPlayer.getName())
@@ -171,8 +174,8 @@ public class TeleportCommand extends CommandHandler {
             /*
              * Example: /tp 30 4 30
              */
-            double x,y,z;
-            float yaw,pitch;
+            double x, y, z;
+            float yaw, pitch;
             Location location = player.getLocation();
             yaw = location.getYaw();
             pitch = location.getPitch();
@@ -186,8 +189,9 @@ public class TeleportCommand extends CommandHandler {
                 if (args.length >= 5) {
                     pitch = parseCoordinate(args[3], location.getPitch());
                 }
-                Location newLocation = new Location(location.getWorld(),x,y,z,yaw,pitch);
+                Location newLocation = new Location(location.getWorld(), x, y, z, yaw, pitch);
                 if (!isOutOfBorders(newLocation)) {
+                    removePassengers(player);
                     player.teleport(newLocation);
                     player.sendMessage(getLocaleMessage("commands.teleport.teleported-coords")
                             .replace("%x%", String.valueOf(Math.round(x)))
@@ -227,7 +231,8 @@ public class TeleportCommand extends CommandHandler {
     @Override
     public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length >= 3) return null;
-        if (!(sender instanceof Player player)) return new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        if (!(sender instanceof Player player))
+            return new ArrayList<>(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         return player.getWorld().getPlayers().stream().map(Player::getName).toList();
     }
 

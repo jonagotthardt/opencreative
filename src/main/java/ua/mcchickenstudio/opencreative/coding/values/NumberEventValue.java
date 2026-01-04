@@ -40,6 +40,7 @@ public abstract class NumberEventValue extends EventValue {
     /**
      * Returns a number that can be got from
      * player, event, action, or null.
+     *
      * @return number, or null.
      */
     public abstract @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);

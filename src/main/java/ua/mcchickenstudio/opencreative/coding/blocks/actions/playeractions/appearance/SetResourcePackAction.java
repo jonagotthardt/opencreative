@@ -23,15 +23,15 @@ import net.kyori.adventure.resource.ResourcePackRequest;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.packs.ResourcePack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
@@ -56,7 +56,7 @@ public final class SetResourcePackAction extends PlayerAction {
             return;
         }
 
-        String url = getArguments().getText("url","",this);
+        String url = getArguments().getText("url", "", this);
         if (url.isEmpty() || !isAllowed(url)) return;
 
         List<ResourcePackInfo> packs = new ArrayList<>();
@@ -90,11 +90,11 @@ public final class SetResourcePackAction extends PlayerAction {
                     .required(false)
                     .build();
             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(),
-                () -> {
-                    if (player.isOnline() && player.getWorld().equals(getWorld())) {
-                        player.sendResourcePacks(request);
+                    () -> {
+                        if (player.isOnline() && player.getWorld().equals(getWorld())) {
+                            player.sendResourcePacks(request);
+                        }
                     }
-                }
             );
         });
     }
@@ -116,7 +116,7 @@ public final class SetResourcePackAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_RESOURCE_PACK;
     }
 }

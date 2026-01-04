@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -30,7 +31,7 @@ public class StartSpectatingExecutor extends PlayerExecutor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_SPECTATING;
     }
 }

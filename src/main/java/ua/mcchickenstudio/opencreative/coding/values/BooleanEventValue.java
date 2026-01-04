@@ -40,6 +40,7 @@ public abstract class BooleanEventValue extends EventValue {
     /**
      * Returns a boolean that can be got from
      * player, event, action, or null.
+     *
      * @return boolean, or null.
      */
     public abstract @Nullable Boolean getBoolean(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);

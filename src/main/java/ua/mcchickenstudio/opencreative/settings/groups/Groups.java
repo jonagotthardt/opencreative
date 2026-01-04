@@ -59,7 +59,7 @@ public final class Groups {
                 return group;
             }
         }
-        return new Group("default",OpenCreative.getPlugin().getConfig());
+        return new Group("default", OpenCreative.getPlugin().getConfig());
     }
 
     public @NotNull Group getGroup(String name) {
@@ -113,7 +113,7 @@ public final class Groups {
     public boolean setLimit(@NotNull String groupName, @NotNull LimitType type, int value) {
         Group found = getGroupOrNull(groupName);
         if (found == null) return false;
-        OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() +  "  in player group " + groupName + " to: " + value);
+        OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() + "  in player group " + groupName + " to: " + value);
         groups.remove(found);
         groups.add(new Group(found.getName(), OpenCreative.getPlugin().getConfig()));
         OpenCreative.getPlugin().getConfig().set("groups." + groupName + ".world.limits." + type.getPath(), value);
@@ -124,7 +124,7 @@ public final class Groups {
     public boolean setLimitModifier(@NotNull String groupName, @NotNull LimitType type, int value) {
         Group found = getGroupOrNull(groupName);
         if (found == null) return false;
-        OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() +  "  in player group " + groupName + " to: " + value);
+        OpenCreative.getPlugin().getLogger().info("Changed limit " + type.getPath() + "  in player group " + groupName + " to: " + value);
         groups.remove(found);
         groups.add(new Group(found.getName(), OpenCreative.getPlugin().getConfig()));
         OpenCreative.getPlugin().getConfig().set("groups." + groupName + ".world.per-player-limit-modifiers." + type.getPath(), value);

@@ -54,6 +54,7 @@ public class SettingsCustomItem implements SettingsItem {
     /**
      * Sets bytes array data of item, that will be used for
      * recovering saved item.
+     *
      * @param data bytes array of item.
      */
     public void setData(String data) {
@@ -63,6 +64,7 @@ public class SettingsCustomItem implements SettingsItem {
     /**
      * Sets preset of item, that will be used for
      * recovering prepared system item.
+     *
      * @param preset type of system item.
      */
     public void setPreset(@NotNull Items preset) {
@@ -71,6 +73,7 @@ public class SettingsCustomItem implements SettingsItem {
 
     /**
      * Sets amount of item.
+     *
      * @param amount amount of item.
      */
     public void setAmount(int amount) {
@@ -79,6 +82,7 @@ public class SettingsCustomItem implements SettingsItem {
 
     /**
      * Sets whether item should be glowing or not.
+     *
      * @param glowing true - will glow, false - not.
      */
     public void setGlowing(boolean glowing) {
@@ -87,6 +91,7 @@ public class SettingsCustomItem implements SettingsItem {
 
     /**
      * Sets material of item.
+     *
      * @param material material of item.
      */
     public void setMaterial(@NotNull Material material) {
@@ -95,6 +100,7 @@ public class SettingsCustomItem implements SettingsItem {
 
     /**
      * Sets display name of item.
+     *
      * @param name display name of item.
      */
     public void setName(@NotNull String name) {
@@ -103,6 +109,7 @@ public class SettingsCustomItem implements SettingsItem {
 
     /**
      * Sets description of item.
+     *
      * @param description lore of item.
      */
     public void setDescription(@NotNull String description) {
@@ -112,6 +119,7 @@ public class SettingsCustomItem implements SettingsItem {
     /**
      * Sets translation key from localization file (without "items."),
      * that will be used to set display name and description.
+     *
      * @param translationKey translation key.
      */
     public void setTranslationKey(@NotNull String translationKey) {

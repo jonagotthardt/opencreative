@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +58,8 @@ public final class JoinListener implements Listener {
             public void run() {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (event.getPlayer().getWorld() != onlinePlayer.getWorld()) {
-                        hidePlayerInTab(onlinePlayer,event.getPlayer());
-                        hidePlayerInTab(event.getPlayer(),onlinePlayer);
+                        hidePlayerInTab(onlinePlayer, event.getPlayer());
+                        hidePlayerInTab(event.getPlayer(), onlinePlayer);
                     }
                 }
             }
@@ -76,7 +76,7 @@ public final class JoinListener implements Listener {
                                     " Please change your nickname to continue playing server using" +
                                     " OpenCreative+ software.").color(NamedTextColor.GRAY)));
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),40L);
+            }.runTaskLater(OpenCreative.getPlugin(), 40L);
         } else if (Experiments.isEnabled("wanders")) {
             OpenCreative.getPlugin().registerWander(event.getPlayer());
         }
@@ -85,6 +85,7 @@ public final class JoinListener implements Listener {
     /**
      * Checks whether player is blocked from using OpenCreative+ or not.
      * Blocked players are people, who violated GNU GPL v3 license.
+     *
      * @param nickname Nickname of player that has to be checked.
      * @return true - if this player is blocked, false - is not blocked.
      */

@@ -18,16 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.settings;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.menus.AbstractListMenu;
-import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.menus.AbstractListMenu;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -49,8 +49,8 @@ public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> 
 
     public WorldEnvironmentColorMenu(Player player, DevPlanet devPlanet, DevPlatform devPlatform, String type) {
         super(player, getLocaleMessage("menus.developer.environment.colors.title"),
-                new int[]{10,11,12,13,14,15,16,19,20,21,22,23,24,25}, new int[]{36},
-                new int[]{37,38,42,43,44}
+                new int[]{10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25}, new int[]{36},
+                new int[]{37, 38, 42, 43, 44}
         );
         this.devPlanet = devPlanet;
         this.platform = devPlatform;
@@ -74,7 +74,7 @@ public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> 
         materials.add(Material.GLASS);
         materials.add(Material.BARRIER);
         if (devPlatform == null) {
-            devPlatform = new DevPlatform(devPlanet, 1,1);
+            devPlatform = new DevPlatform(devPlanet, 1, 1);
         }
         switch (type.toLowerCase()) {
             case "floor" -> {
@@ -103,13 +103,13 @@ public final class WorldEnvironmentColorMenu extends AbstractListMenu<Material> 
 
     @Override
     protected ItemStack getElementIcon(Material material) {
-        return new ItemStack(material,1);
+        return new ItemStack(material, 1);
     }
 
     @Override
     protected void fillOtherItems() {
-        setItem(36,createItem(Material.ARROW,1,"menus.developer.environment.items.back"));
-        setItem(40,createItem(currentMaterial,1));
+        setItem(36, createItem(Material.ARROW, 1, "menus.developer.environment.items.back"));
+        setItem(40, createItem(currentMaterial, 1));
     }
 
     @Override

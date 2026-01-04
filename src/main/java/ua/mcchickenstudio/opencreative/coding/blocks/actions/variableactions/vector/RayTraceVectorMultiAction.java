@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -46,6 +46,7 @@ public final class RayTraceVectorMultiAction extends VariableAction {
     public RayTraceVectorMultiAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
+
     @Override
     protected void execute() {
         VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
@@ -57,24 +58,24 @@ public final class RayTraceVectorMultiAction extends VariableAction {
             for (final Object o : list) {
                 if (o instanceof Location to) {
                     final double
-                    x = to.getX(),
-                    y = to.getY(),
-                    z = to.getZ();
+                            x = to.getX(),
+                            y = to.getY(),
+                            z = to.getZ();
                     final double range = getArguments().getDouble("range", 3.0, this);
                     final double
-                    xSize = getArguments().getDouble("xSize", 0.3, this) / 2.0,
-                    ySize = getArguments().getDouble("ySize", 1.8, this) / 2.0,
-                    zSize = getArguments().getDouble("zSize", 0.3, this) / 2.0;
+                            xSize = getArguments().getDouble("xSize", 0.3, this) / 2.0,
+                            ySize = getArguments().getDouble("ySize", 1.8, this) / 2.0,
+                            zSize = getArguments().getDouble("zSize", 0.3, this) / 2.0;
                     final BuildSpeed buildSpeed =
-                                    (getArguments().getText("calculation", "vanilla-java", this)
-                                     .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
+                            (getArguments().getText("calculation", "vanilla-java", this)
+                                    .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
                     final Vec2f rotation = getYawPitch(vector);
                     final AxisAlignedBB aabb = new AxisAlignedBB(
-                                    x - xSize, y - ySize, z - zSize,
-                                    x + xSize, y + ySize, z + zSize
+                            x - xSize, y - ySize, z - zSize,
+                            x + xSize, y + ySize, z + zSize
                     );
                     final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
-                                    aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
+                            aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
                     if (result != null) {
                         final Vec3 hit = result.hitVec;
                         resultList.add(new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
@@ -84,8 +85,9 @@ public final class RayTraceVectorMultiAction extends VariableAction {
             setVarValue(hitVec, resultList);
         }, AsyncScheduler.getScheduler());
     }
+
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_DO_RAY_TRACE_MULTI;
     }
 }

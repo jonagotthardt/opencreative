@@ -36,13 +36,13 @@ public final class EntityEndermanTeleportAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Enderman enderman)) {
-           throw new UnsupportedEntityException(Enderman.class, entity);
+            throw new UnsupportedEntityException(Enderman.class, entity);
         }
         enderman.teleport();
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_ENDERMAN_TELEPORT;
     }
 }

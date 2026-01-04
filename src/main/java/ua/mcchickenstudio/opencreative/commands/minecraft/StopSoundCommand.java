@@ -18,11 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -30,11 +25,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -50,7 +50,7 @@ public class StopSoundCommand extends CommandHandler {
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            Bukkit.getServer().dispatchCommand(sender,"minecraft:stopsound " + String.join(" ",args));
+            Bukkit.getServer().dispatchCommand(sender, "minecraft:stopsound " + String.join(" ", args));
         } else {
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
@@ -67,7 +67,7 @@ public class StopSoundCommand extends CommandHandler {
             }
             if (args.length == 0) {
                 player.stopAllSounds();
-                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-all").replace("%player%",player.getName()));
+                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-all").replace("%player%", player.getName()));
                 return;
             }
             Player target = player;
@@ -98,19 +98,21 @@ public class StopSoundCommand extends CommandHandler {
             SoundCategory category = null;
             try {
                 sound = Sound.valueOf(soundOrCategory);
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException ignored) {
+            }
             try {
                 category = SoundCategory.valueOf(soundOrCategory);
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException ignored) {
+            }
             if (sound != null) {
                 target.stopSound(sound);
-                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-sound").replace("%sound%",soundOrCategory).replace("%player%",target.getName()));
+                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-sound").replace("%sound%", soundOrCategory).replace("%player%", target.getName()));
             } else if (category != null) {
                 target.stopSound(category);
-                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-category").replace("%category%",soundOrCategory).replace("%player%",target.getName()));
+                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-category").replace("%category%", soundOrCategory).replace("%player%", target.getName()));
             } else {
                 target.stopAllSounds();
-                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-all").replace("%player%",target.getName()));
+                sender.sendMessage(getLocaleMessage("commands.stop-sound.stopped-all").replace("%player%", target.getName()));
             }
         }
     }

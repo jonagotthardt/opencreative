@@ -41,12 +41,12 @@ public final class BlockBrewingEndEvent extends WorldEvent implements BlockEvent
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        event.setCancelled(cancel);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancel);
     }
 }

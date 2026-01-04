@@ -46,14 +46,14 @@ public final class SetMenuItemsRowAction extends PlayerAction {
              */
             return;
         }
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         Inventory inventory = player.getOpenInventory().getTopInventory();
         if (inventory.getType() != InventoryType.CHEST && inventory.getType() != InventoryType.ENDER_CHEST) return;
-        int row = getArguments().getInt("row",1,this);
+        int row = getArguments().getInt("row", 1, this);
         if (row > 6) row = 6;
         else if (row < 1) row = 1;
-        if (inventory.getSize() < row*9) {
-            inventory = new CustomMenu(row*9,player.getOpenInventory().getTitle()).getInventory();
+        if (inventory.getSize() < row * 9) {
+            inventory = new CustomMenu(row * 9, player.getOpenInventory().getTitle()).getInventory();
             if (getPlanet().getLimits().cantOpenMenu(player)) {
                 /*
                  * This check prevents player from opening
@@ -64,19 +64,19 @@ public final class SetMenuItemsRowAction extends PlayerAction {
             }
             player.openInventory(inventory);
         }
-        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",true,this);
-        for (int slot = (row*9)-9; slot < row*9; slot++) {
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air", true, this);
+        for (int slot = (row * 9) - 9; slot < row * 9; slot++) {
             int i = slot % 9;
             if (i >= items.size()) break;
-            ItemStack item = items.get(slot%9);
+            ItemStack item = items.get(slot % 9);
             if (replaceWithAir || !item.isEmpty()) {
-                player.getOpenInventory().getTopInventory().setItem(slot,item);
+                player.getOpenInventory().getTopInventory().setItem(slot, item);
             }
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_INVENTORY_VIEW_ROW_ITEMS;
     }
 }

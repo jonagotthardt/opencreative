@@ -63,7 +63,8 @@ public final class EnderChestMenu extends AbstractMenu implements WorldMenu, Blo
     }
 
     @Override
-    public void onClick(@NotNull InventoryClickEvent event) {}
+    public void onClick(@NotNull InventoryClickEvent event) {
+    }
 
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
@@ -72,10 +73,10 @@ public final class EnderChestMenu extends AbstractMenu implements WorldMenu, Blo
                 @Override
                 public void run() {
                     for (Player player : location.getWorld().getPlayers()) {
-                        PlayerUtils.sendOpenedChestAnimation(player,location.getBlock());
+                        PlayerUtils.sendOpenedChestAnimation(player, location.getBlock());
                     }
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),10L);
+            }.runTaskLater(OpenCreative.getPlugin(), 10L);
         } else {
             event.getPlayer().playSound(Sound.sound(Key.key("block.ender_chest.open"), Sound.Source.BLOCK, 100f, 1f));
         }
@@ -86,7 +87,7 @@ public final class EnderChestMenu extends AbstractMenu implements WorldMenu, Blo
         event.getPlayer().playSound(Sound.sound(Key.key("block.ender_chest.close"), Sound.Source.BLOCK, 100f, 1f));
         if (location != null) {
             for (Player player : location.getWorld().getPlayers()) {
-                PlayerUtils.sendClosedChestAnimation(player,location.getBlock());
+                PlayerUtils.sendClosedChestAnimation(player, location.getBlock());
             }
         }
         if (!(event.getPlayer() instanceof Player player)) return;

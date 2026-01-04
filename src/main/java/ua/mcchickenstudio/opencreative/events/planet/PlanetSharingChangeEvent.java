@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
  * Called when planet's sharing mode will be changed.
@@ -72,13 +72,13 @@ public class PlanetSharingChangeEvent extends PlanetEvent implements Cancellable
         return cancel;
     }
 
-    public Cause getCause() {
-        return cause;
-    }
-
     @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
+    }
+
+    public Cause getCause() {
+        return cause;
     }
 
     public enum Cause {

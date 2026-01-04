@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.blocks;
 
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.WorldCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class IsWorldBlockSolidCondition extends WorldCondition {
 
     @Override
     public boolean check() {
-        List<Location> blockLocations = getArguments().getLocationList("blocks",this);
-        boolean requireAll = getArguments().getBoolean("all",true,this);
+        List<Location> blockLocations = getArguments().getLocationList("blocks", this);
+        boolean requireAll = getArguments().getBoolean("all", true, this);
         boolean isSolid = false;
         for (Location location : blockLocations) {
             if (getWorld().getBlockAt(location).isSolid()) {
@@ -56,7 +56,7 @@ public class IsWorldBlockSolidCondition extends WorldCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_WORLD_BLOCK_IS_SOLID;
     }
 }

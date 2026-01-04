@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EnderSignal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -45,13 +46,13 @@ public final class SpawnEnderEyeAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
 
-        String dropType  = getArguments().getText("drop","random",this);
+        String dropType = getArguments().getText("drop", "random", this);
         int despawnTimer = getArguments().getInt("despawn-time", 80, this);
-        Location targetLocation = getArguments().getLocation("target",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location targetLocation = getArguments().getLocation("target", getPlanet().getTerritory().getSpawnLocation(), this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.EYE_OF_ENDER);
 
             if (spawnedEntity instanceof EnderSignal eye) {
@@ -69,7 +70,7 @@ public final class SpawnEnderEyeAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_END_CRYSTAL;
     }
 }

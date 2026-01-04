@@ -29,6 +29,10 @@ public final class NewWorldScreenExperiment extends Experiment {
 
     private static ScreenType type = ScreenType.NORMAL;
 
+    public static ScreenType getType() {
+        return type;
+    }
+
     @Override
     public @NotNull String getId() {
         return "new_world_screen";
@@ -69,10 +73,6 @@ public final class NewWorldScreenExperiment extends Experiment {
     @Override
     public @NotNull List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         return List.of("normal", "percents", "darkness");
-    }
-
-    public static ScreenType getType() {
-        return type;
     }
 
     public enum ScreenType {

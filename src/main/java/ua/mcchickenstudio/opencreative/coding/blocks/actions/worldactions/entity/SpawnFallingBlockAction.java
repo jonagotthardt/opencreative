@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -50,12 +51,12 @@ public final class SpawnFallingBlockAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
-        Material block = getArguments().getMaterial("block",Material.GRASS_BLOCK,this);
-        float damagePerBlock = getArguments().getFloat("damage",0.0f,this);
-        boolean cancelDrop = !getArguments().getBoolean("drop",true,this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
+        Material block = getArguments().getMaterial("block", Material.GRASS_BLOCK, this);
+        float damagePerBlock = getArguments().getFloat("damage", 0.0f, this);
+        boolean cancelDrop = !getArguments().getBoolean("drop", true, this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.FALLING_BLOCK);
 
             if (spawnedEntity instanceof FallingBlock falling) {
@@ -71,7 +72,7 @@ public final class SpawnFallingBlockAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_FALLING_BLOCK;
     }
 }

@@ -48,13 +48,13 @@ public final class ConfirmationMenu extends AbstractMenu {
 
     @Override
     public void fillItems(Player player) {
-        ItemStack info = createItem(infoMaterial,1);
-        setDisplayName(info,infoName);
-        setLore(info,infoLore);
-        setItem(13,info);
-        setItem(37,createItem(Material.RED_STAINED_GLASS,1,"menus.confirmation.items.cancel"));
-        player.setCooldown(Material.LIME_SHULKER_BOX,60);
-        setItem(43,createItem(Material.LIME_SHULKER_BOX,1,"menus.confirmation.items.confirm"));
+        ItemStack info = createItem(infoMaterial, 1);
+        setDisplayName(info, infoName);
+        setLore(info, infoLore);
+        setItem(13, info);
+        setItem(37, createItem(Material.RED_STAINED_GLASS, 1, "menus.confirmation.items.cancel"));
+        player.setCooldown(Material.LIME_SHULKER_BOX, 60);
+        setItem(43, createItem(Material.LIME_SHULKER_BOX, 1, "menus.confirmation.items.confirm"));
 
     }
 
@@ -66,7 +66,7 @@ public final class ConfirmationMenu extends AbstractMenu {
         }
         Player player = (Player) event.getWhoClicked();
         if (event.getSlot() == 43) {
-            event.getClickedInventory().setItem(43,AIR_ITEM);
+            event.getClickedInventory().setItem(43, AIR_ITEM);
             player.closeInventory();
             yesRunnable.run();
         } else if (event.getSlot() == 37) {

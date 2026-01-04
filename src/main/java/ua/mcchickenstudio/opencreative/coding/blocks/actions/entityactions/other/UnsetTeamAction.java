@@ -38,8 +38,8 @@ public final class UnsetTeamAction extends EntityAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
         if (scoreboard == null) {
             return;
@@ -51,7 +51,7 @@ public final class UnsetTeamAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_UNSET_TEAM;
     }
 }

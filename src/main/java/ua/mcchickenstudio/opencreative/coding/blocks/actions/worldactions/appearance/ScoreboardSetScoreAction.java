@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 public final class ScoreboardSetScoreAction extends WorldAction {
     public ScoreboardSetScoreAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,9 +37,9 @@ public final class ScoreboardSetScoreAction extends WorldAction {
         if (!getArguments().pathExists("name") || !getArguments().pathExists("object")) {
             return;
         }
-        String name = getArguments().getText("name","board",this);
-        String object = getArguments().getText("object","board",this);
-        int score = getArguments().getInt("score",0,this);
+        String name = getArguments().getText("name", "board", this);
+        String object = getArguments().getText("object", "board", this);
+        int score = getArguments().getInt("score", 0, this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
         if (scoreboard == null) {
             return;
@@ -51,7 +51,7 @@ public final class ScoreboardSetScoreAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SCOREBOARD_SET_SCORE;
     }
 }

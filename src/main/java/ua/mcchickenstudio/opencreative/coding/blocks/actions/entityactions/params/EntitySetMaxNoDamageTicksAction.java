@@ -38,8 +38,8 @@ public final class EntitySetMaxNoDamageTicksAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        int ticks = getArguments().getInt("ticks",0,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int ticks = getArguments().getInt("ticks", 0, this);
         if (add) {
             ticks = ticks + livingEntity.getMaximumNoDamageTicks();
         }
@@ -47,7 +47,7 @@ public final class EntitySetMaxNoDamageTicksAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_MAXIMUM_NO_DAMAGE_TICKS;
     }
 }

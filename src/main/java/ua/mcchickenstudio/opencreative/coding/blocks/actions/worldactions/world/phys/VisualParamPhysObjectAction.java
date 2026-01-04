@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
 import org.bukkit.Particle;
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -39,19 +39,19 @@ public final class VisualParamPhysObjectAction extends WorldAction {
     protected void execute() {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getParticle("particle", Particle.CLOUD, this),
-                        a.getValue("particle2", this),
-                        a.getInt("param1", 1, this),
-                        a.getInt("param2", 0, this),
-                        a.getInt("param3", 0, this),
-                        a.getInt("param4", 0, this),
-                        a.getParticle("hit-particle", Particle.EXPLOSION, this),
-                        a.getInt("hit-param1", 1, this)
+                a.getParticle("particle", Particle.CLOUD, this),
+                a.getValue("particle2", this),
+                a.getInt("param1", 1, this),
+                a.getInt("param2", 0, this),
+                a.getInt("param3", 0, this),
+                a.getInt("param4", 0, this),
+                a.getParticle("hit-particle", Particle.EXPLOSION, this),
+                a.getInt("hit-param1", 1, this)
         ));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_VISUAL_PARAM_PHYS_OBJECT;
     }
 }

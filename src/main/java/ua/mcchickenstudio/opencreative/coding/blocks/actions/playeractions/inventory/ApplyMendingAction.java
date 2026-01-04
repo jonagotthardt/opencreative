@@ -33,13 +33,13 @@ public final class ApplyMendingAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        int amount = getArguments().getInt("amount",1,this);
+        int amount = getArguments().getInt("amount", 1, this);
         player.applyMending(amount);
     }
 
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_APPLY_MENDING;
     }
 }

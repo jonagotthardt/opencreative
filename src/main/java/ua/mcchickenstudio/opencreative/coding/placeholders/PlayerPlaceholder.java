@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 public final class PlayerPlaceholder extends KeyPlaceholder {
 
     public PlayerPlaceholder() {
-        super("player","player_uuid","display_name");
+        super("player", "player_uuid", "display_name");
     }
 
     @Override

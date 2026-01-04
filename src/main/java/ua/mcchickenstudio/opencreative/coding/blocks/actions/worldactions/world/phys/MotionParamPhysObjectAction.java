@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -39,18 +39,18 @@ public final class MotionParamPhysObjectAction extends WorldAction {
     protected void execute() {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getLocation("location", new Location(getPlanet().getWorld(), 0, 0, 0), this),
-                        a.getInt("speed", 3, this),
-                        a.getDouble("weight", 0.4, this),
-                        a.getDouble("acceleration-speed", 0.06, this),
-                        a.getInt("speed-limit", 5, this),
-                        a.getDouble("acceleration-weight", 0.02, this),
-                        a.getDouble("weight-limit", 1.5, this)
+                a.getLocation("location", new Location(getPlanet().getWorld(), 0, 0, 0), this),
+                a.getInt("speed", 3, this),
+                a.getDouble("weight", 0.4, this),
+                a.getDouble("acceleration-speed", 0.06, this),
+                a.getInt("speed-limit", 5, this),
+                a.getDouble("acceleration-weight", 0.02, this),
+                a.getDouble("weight-limit", 1.5, this)
         ));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_MOTION_PARAM_PHYS_OBJECT;
     }
 }

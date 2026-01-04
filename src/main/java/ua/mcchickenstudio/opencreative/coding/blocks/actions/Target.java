@@ -32,9 +32,10 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * This enum represents targets, that can be specified
  * for executing actions and conditions. Target is a
  * list of entities in world.
- * @since 5.0
- * @version 5.0
+ *
  * @author McChicken Studio
+ * @version 5.0
+ * @since 5.0
  */
 public enum Target {
 
@@ -54,18 +55,6 @@ public enum Target {
     Target(Material icon, boolean supportsEventValue) {
         this.icon = icon;
         this.supportsEventValue = supportsEventValue;
-    }
-
-    public Material getIcon() {
-        return icon;
-    }
-
-    public boolean isSupportsEventValue() {
-        return supportsEventValue;
-    }
-
-    public @NotNull String getLocaleName() {
-        return getLocaleMessage("menus.developer.selection.targets." + this.name().toLowerCase().replace("_","-"), false);
     }
 
     public static @NotNull Target getByMaterial(Material material) {
@@ -97,5 +86,17 @@ public enum Target {
             }
         }
         return DEFAULT;
+    }
+
+    public Material getIcon() {
+        return icon;
+    }
+
+    public boolean isSupportsEventValue() {
+        return supportsEventValue;
+    }
+
+    public @NotNull String getLocaleName() {
+        return getLocaleMessage("menus.developer.selection.targets." + this.name().toLowerCase().replace("_", "-"), false);
     }
 }

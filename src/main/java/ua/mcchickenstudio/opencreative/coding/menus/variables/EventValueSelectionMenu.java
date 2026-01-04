@@ -46,14 +46,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 public final class EventValueSelectionMenu extends ContentWithMenusCategoryMenu<EventValue> {
 
     public EventValueSelectionMenu(@NotNull Player player) {
-        super(player, "event-values", getLocaleMessage("menus.developer.event-values.title",false),
+        super(player, "event-values", getLocaleMessage("menus.developer.event-values.title", false),
                 Material.ORANGE_STAINED_GLASS_PANE, MenusCategory.WORLD);
     }
 
     @Override
     protected ItemStack getElementIcon(EventValue value) {
         ItemStack icon = createItem(value.getDisplayIcon(), "menus.developer.event-values.items."
-                + value.getID().toLowerCase().replace("_","-"));
+                + value.getID().toLowerCase().replace("_", "-"));
         setPersistentData(icon, getCodingValueKey(), "EVENT_VALUE");
         setPersistentData(icon, getCodingVariableTypeKey(), value.getID().toUpperCase());
         return icon;

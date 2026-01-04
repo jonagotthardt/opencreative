@@ -33,9 +33,10 @@ public interface CodingPrompter extends Manager {
 
     /**
      * Generates a code by player's prompt. Returns
-     * @param nickname name of player.
-     * @param uuid uuid of player.
-     * @param prompt prompt to generate code.
+     *
+     * @param nickname     name of player.
+     * @param uuid         uuid of player.
+     * @param prompt       prompt to generate code.
      * @param actionsLimit limit of actions per executor.
      * @return code script YAML, or reason why code refused to generate.
      */
@@ -46,6 +47,7 @@ public interface CodingPrompter extends Manager {
 
     /**
      * Sets the token for coding prompter.
+     *
      * @param token new token.
      */
     void setToken(@NotNull String token);

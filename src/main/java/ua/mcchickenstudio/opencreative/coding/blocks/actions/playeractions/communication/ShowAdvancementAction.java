@@ -18,16 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.utils.Advancement;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.utils.Advancement;
 
 public final class ShowAdvancementAction extends PlayerAction {
     public ShowAdvancementAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,20 +36,21 @@ public final class ShowAdvancementAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        ItemStack itemStack = getArguments().getItem("icon",new ItemStack(Material.DIAMOND),this);
+        ItemStack itemStack = getArguments().getItem("icon", new ItemStack(Material.DIAMOND), this);
         Advancement.AdvancementStyle style = Advancement.AdvancementStyle.GOAL;
-        String styleString = getArguments().getText("style","goal",this);
-        String title = getArguments().getText("title","You got Advancement!",this);
-        String message = getArguments().getText("message","Good job.",this);
+        String styleString = getArguments().getText("style", "goal", this);
+        String title = getArguments().getText("title", "You got Advancement!", this);
+        String message = getArguments().getText("message", "Good job.", this);
         try {
             style = Advancement.AdvancementStyle.valueOf(styleString.toUpperCase());
-        } catch (IllegalArgumentException ignored) {}
-        Advancement advancement = Advancement.make(itemStack, style,title,message);
+        } catch (IllegalArgumentException ignored) {
+        }
+        Advancement advancement = Advancement.make(itemStack, style, title, message);
         advancement.show(player);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SHOW_ADVANCEMENT;
     }
 }

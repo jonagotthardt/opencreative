@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -38,16 +38,16 @@ public final class SettingsParamPhysObjectAction extends WorldAction {
     protected void execute() {
         final Arguments a = getArguments();
         setVarValue(getArguments().getVariableLink("variable", this), Arrays.asList(
-                        a.getInt("damage", 5, this),
-                        a.getInt("explosion", 0, this),
-                        a.getValue("potion", this),
-                        a.getInt("shockwave-range", 0, this),
-                        a.getInt("shockwave-power", 0, this)
+                a.getInt("damage", 5, this),
+                a.getInt("explosion", 0, this),
+                a.getValue("potion", this),
+                a.getInt("shockwave-range", 0, this),
+                a.getInt("shockwave-power", 0, this)
         ));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SETTINGS_PARAM_PHYS_OBJECT;
     }
 }

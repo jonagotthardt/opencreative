@@ -39,6 +39,7 @@ public interface Updater extends Manager {
     /**
      * Returns updates availability for OpenCreative+.
      * It gets saved value from {@link #checkUpdates()}.
+     *
      * @return true - if updates are available, false - if not.
      */
     boolean canBeUpdated();

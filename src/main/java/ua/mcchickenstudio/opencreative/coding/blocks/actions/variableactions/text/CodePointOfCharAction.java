@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -33,13 +33,13 @@ public final class CodePointOfCharAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String character = getArguments().getText("char","A",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String character = getArguments().getText("char", "A", this);
         setVarValue(link, character.codePointAt(0));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_CODE_POINT_OF_CHAR;
     }
 }

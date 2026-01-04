@@ -18,15 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.SpectralArrow;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.ItemStack;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -41,16 +45,16 @@ public final class SpawnArrowAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        ItemStack arrowItem = getArguments().getItem("arrow",new ItemStack(Material.ARROW,1),this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        ItemStack arrowItem = getArguments().getItem("arrow", new ItemStack(Material.ARROW, 1), this);
+        for (Location location : getArguments().getLocationList("locations", this)) {
             if (arrowItem.getType() == Material.ARROW) {
-                Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.ARROW);
+                Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location, EntityType.ARROW);
                 if (spawnedEntity instanceof Arrow arrow) {
                     arrow.setItemStack(arrowItem);
                     setLastSpawnedEntity(arrow);
                 }
             } else if (arrowItem.getType() == Material.SPECTRAL_ARROW) {
-                Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.SPECTRAL_ARROW);
+                Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location, EntityType.SPECTRAL_ARROW);
                 if (spawnedEntity instanceof SpectralArrow arrow) {
                     arrow.setItemStack(arrowItem);
                     setLastSpawnedEntity(arrow);
@@ -61,7 +65,7 @@ public final class SpawnArrowAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_ARROW;
     }
 }

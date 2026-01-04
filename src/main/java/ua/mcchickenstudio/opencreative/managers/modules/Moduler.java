@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.events.module.ModuleCreationEvent;
 import ua.mcchickenstudio.opencreative.events.module.ModuleDeletionEvent;
@@ -33,19 +34,38 @@ import ua.mcchickenstudio.opencreative.events.module.ModuleRegisterEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 import java.io.File;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModuleConfigFile;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModulesFiles;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public final class Moduler implements ModuleManager {
-    
+
     private final Map<Integer, Module> modules = new HashMap<>();
+
+    public static int generateModuleId() {
+        int newModuleId = OpenCreative.getPlugin().getConfig().getInt("last-module-id", 1);
+        while (true) {
+            newModuleId++;
+            boolean exists = false;
+            for (File file : getModulesFiles()) {
+                if (file.getName().equalsIgnoreCase("module" + newModuleId + ".yml")) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                OpenCreative.getPlugin().getConfig().set("last-module-id", newModuleId);
+                OpenCreative.getPlugin().saveConfig();
+                return newModuleId;
+            }
+        }
+    }
 
     public @Nullable Module getModuleById(@NotNull String id) {
         int moduleID = Integer.parseInt(id);
@@ -78,9 +98,9 @@ public final class Moduler implements ModuleManager {
             owner.sendMessage(getLocaleMessage("modules.error"));
             return;
         }
-        configuration.set("owner",owner.getUniqueId().toString());
-        configuration.set("name", MessageUtils.getPlayerLocaleMessage("modules.default-name",owner));
-        configuration.set("description", MessageUtils.getPlayerLocaleMessage("modules.default-description",owner));
+        configuration.set("owner", owner.getUniqueId().toString());
+        configuration.set("name", MessageUtils.getPlayerLocaleMessage("modules.default-name", owner));
+        configuration.set("description", MessageUtils.getPlayerLocaleMessage("modules.default-description", owner));
         configuration.set("icon", Material.CHEST.name());
         configuration.set("creation-time", System.currentTimeMillis());
         try {
@@ -94,9 +114,10 @@ public final class Moduler implements ModuleManager {
             }
             OpenCreative.getModuleManager().registerModule(module);
             owner.sendMessage(getLocaleMessage("modules.created"));
+            new ModuleSettingsMenu(module, owner).open(owner);
             Sounds.DEV_MODULE_CREATED.play(owner);
         } catch (Exception e) {
-            sendPlayerErrorMessage(owner,"Can't create a module",e);
+            sendPlayerErrorMessage(owner, "Can't create a module", e);
             Sounds.PLAYER_FAIL.play(owner);
         }
 
@@ -117,27 +138,9 @@ public final class Moduler implements ModuleManager {
         }
     }
 
-    public static int generateModuleId() {
-        int newModuleId = OpenCreative.getPlugin().getConfig().getInt("last-module-id",1);
-        while (true) {
-            newModuleId++;
-            boolean exists = false;
-            for (File file : getModulesFiles()) {
-                if (file.getName().equalsIgnoreCase("module" + newModuleId + ".yml")) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                OpenCreative.getPlugin().getConfig().set("last-module-id",newModuleId);
-                OpenCreative.getPlugin().saveConfig();
-                return newModuleId;
-            }
-        }
-    }
-
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

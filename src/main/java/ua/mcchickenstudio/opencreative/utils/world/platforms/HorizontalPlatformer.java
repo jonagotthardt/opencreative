@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.platforms;
 
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +48,7 @@ public final class HorizontalPlatformer extends DevPlatformer {
         World world = devPlanet.getWorld();
         world.getWorldBorder().setWarningDistance(0);
 
-        world.getWorldBorder().setCenter(50,50);
+        world.getWorldBorder().setCenter(50, 50);
         world.getWorldBorder().setSize(120);
 
         DevPlatform platformZ = getFarPlatformByZ(devPlanet);
@@ -58,14 +60,14 @@ public final class HorizontalPlatformer extends DevPlatformer {
          * most far platform end coordinate by 2.
          * (the start coordinate is 0)
          */
-        double centerZ = endZ/2;
-        double centerX = endX/2;
-        world.getWorldBorder().setCenter(centerX,centerZ);
+        double centerZ = endZ / 2;
+        double centerX = endX / 2;
+        world.getWorldBorder().setCenter(centerX, centerZ);
         /*
          * We find size by subtracting most far
          * coordinate with center coordinate.
          */
-        double size = ((Math.max(endX, endZ))-(Math.max(centerX, centerZ))) * 2 + 20;
+        double size = ((Math.max(endX, endZ)) - (Math.max(centerX, centerZ))) * 2 + 20;
         world.getWorldBorder().setSize(size);
 
     }
@@ -88,10 +90,10 @@ public final class HorizontalPlatformer extends DevPlatformer {
 
     @Override
     public @NotNull DevPlatform getFarPlatformByX(@NotNull DevPlanet devPlanet) {
-        DevPlatform farPlatform = new DevPlatform(devPlanet,1,1);
+        DevPlatform farPlatform = new DevPlatform(devPlanet, 1, 1);
         if (!devPlanet.isLoaded()) return farPlatform;
         for (int x = 2; x <= 5; x++) {
-            DevPlatform current = new DevPlatform(devPlanet, x,1);
+            DevPlatform current = new DevPlatform(devPlanet, x, 1);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -101,10 +103,10 @@ public final class HorizontalPlatformer extends DevPlatformer {
 
     @Override
     public @NotNull DevPlatform getFarPlatformByZ(@NotNull DevPlanet devPlanet) {
-        DevPlatform farPlatform = new DevPlatform(devPlanet,1,1);
+        DevPlatform farPlatform = new DevPlatform(devPlanet, 1, 1);
         if (!devPlanet.isLoaded()) return farPlatform;
         for (int z = 2; z <= 5; z++) {
-            DevPlatform current = new DevPlatform(devPlanet,1,z);
+            DevPlatform current = new DevPlatform(devPlanet, 1, z);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -118,7 +120,7 @@ public final class HorizontalPlatformer extends DevPlatformer {
         if (!devPlanet.isLoaded()) return platforms;
         for (int x = 1; x <= getFarPlatformByX(devPlanet).getX(); x++) {
             for (int z = 1; z <= getFarPlatformByZ(devPlanet).getZ(); z++) {
-                DevPlatform platform = new DevPlatform(devPlanet,x,z);
+                DevPlatform platform = new DevPlatform(devPlanet, x, z);
                 if (platform.exists()) {
                     platforms.add(platform);
                 }
@@ -146,10 +148,10 @@ public final class HorizontalPlatformer extends DevPlatformer {
         int endX = end.getBlockX();
         int beginZ = begin.getBlockZ();
         int endZ = end.getBlockZ();
-        int executorX = beginX+4;
+        int executorX = beginX + 4;
         for (int x = beginX; x <= endX; x++) {
             for (int z = beginZ; z <= endZ; z++) {
-                Block block = platform.getWorld().getBlockAt(x,0,z);
+                Block block = platform.getWorld().getBlockAt(x, 0, z);
                 if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
                     block.setType(eventMaterial);
                 } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
@@ -164,13 +166,13 @@ public final class HorizontalPlatformer extends DevPlatformer {
     }
 
     public @NotNull Location getPlatformBeginLocation(@NotNull DevPlatform platform) {
-        return new Location(platform.getWorld(), (platform.getX()-1) * 102, 0, (platform.getZ()-1) * 102);
+        return new Location(platform.getWorld(), (platform.getX() - 1) * 102, 0, (platform.getZ() - 1) * 102);
     }
 
 
     @Override
     public @NotNull Location getPlatformEndLocation(@NotNull DevPlatform platform) {
-        return getPlatformBeginLocation(platform).clone().add(100,0,100);
+        return getPlatformBeginLocation(platform).clone().add(100, 0, 100);
     }
 
     @Override

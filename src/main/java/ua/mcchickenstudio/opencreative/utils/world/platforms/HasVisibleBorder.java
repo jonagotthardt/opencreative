@@ -18,4 +18,5 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.platforms;
 
-public interface HasVisibleBorder {}
+public interface HasVisibleBorder {
+}

@@ -18,11 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -30,13 +25,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -52,7 +51,7 @@ public class GiveCommand extends CommandHandler {
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            Bukkit.getServer().dispatchCommand(sender,"minecraft:give " + String.join(" ",args));
+            Bukkit.getServer().dispatchCommand(sender, "minecraft:give " + String.join(" ", args));
         } else {
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
@@ -88,14 +87,13 @@ public class GiveCommand extends CommandHandler {
                 if (givePlayer == null) {
                     player.sendMessage(getLocaleMessage("no-player-found"));
                     return;
-                } else {
-                    Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
-                    if (!player.hasPermission("opencreative.give.bypass")) {
-                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                        if (planet == null || !planet.equals(givePlanet)) {
-                            player.sendMessage(getLocaleMessage("no-player-found"));
-                            return;
-                        }
+                }
+                Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
+                if (!player.hasPermission("opencreative.give.bypass")) {
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                    if (planet == null || !planet.equals(givePlanet)) {
+                        player.sendMessage(getLocaleMessage("no-player-found"));
+                        return;
                     }
                 }
                 try {
@@ -115,6 +113,14 @@ public class GiveCommand extends CommandHandler {
                     if (givePlayer == null) {
                         player.sendMessage(getLocaleMessage("no-player-found"));
                         return;
+                    }
+                    Planet givePlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(givePlayer);
+                    if (!player.hasPermission("opencreative.give.bypass")) {
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+                        if (planet == null || !planet.equals(givePlanet)) {
+                            player.sendMessage(getLocaleMessage("no-player-found"));
+                            return;
+                        }
                     }
                     int amount = Integer.parseInt(args[2]);
                     ItemStack item = getItem(args[1], amount);

@@ -79,7 +79,7 @@ public class DevPlatform {
     }
 
     public boolean exists() {
-        Location begin = platformer.getPlatformBeginLocation(this).add(4,0,4);
+        Location begin = platformer.getPlatformBeginLocation(this).add(4, 0, 4);
         if (!ChunkCache.isChunkGenerated(world, begin.getBlockX() >> 4, begin.getBlockZ() >> 4)) {
             return false;
         }
@@ -88,16 +88,18 @@ public class DevPlatform {
 
     /**
      * Checks if specified column doesn't have any block.
+     *
      * @param column from 1 to 24.
      * @return true - column is empty, false - column has blocks.
      */
     public boolean isEmptyColumn(int column) {
-        if (column < 1 || column > 24) throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
+        if (column < 1 || column > 24)
+            throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
-        int z = begin.getBlockZ() + (column*4);
+        int z = begin.getBlockZ() + (column * 4);
         for (int x = begin.getBlockX() + 4; x <= end.getBlockX() - 3; x++) {
-            Block block = world.getBlockAt(x,begin.getBlockY()+1,z);
+            Block block = world.getBlockAt(x, begin.getBlockY() + 1, z);
             if (!block.isEmpty()) {
                 return false;
             }
@@ -110,7 +112,7 @@ public class DevPlatform {
         for (int column = 1; column <= 24; column++) {
             if (isEmptyColumn(column)) {
                 columns.add(platformer.getPlatformBeginLocation(this).clone()
-                        .add(4,0,column * 4));
+                        .add(4, 0, column * 4));
             }
         }
         return columns;
@@ -118,11 +120,12 @@ public class DevPlatform {
 
     public List<Location> getFreeColumns(int begin) {
         List<Location> columns = new ArrayList<>();
-        if (begin < 1 || begin > 24) throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
+        if (begin < 1 || begin > 24)
+            throw new IllegalArgumentException("Developer platform column must be in range from 1 to 24.");
         for (int column = begin; column <= 24; column++) {
             if (isEmptyColumn(column)) {
                 columns.add(platformer.getPlatformBeginLocation(this).clone()
-                        .add(4,0,column * 4));
+                        .add(4, 0, column * 4));
             }
         }
         return columns;
@@ -141,17 +144,17 @@ public class DevPlatform {
 
     public Material getFloorMaterial() {
         return world.getBlockAt(platformer.getPlatformBeginLocation(this)
-                .clone().add(5,0,4)).getType();
+                .clone().add(5, 0, 4)).getType();
     }
 
     public Material getEventMaterial() {
         return world.getBlockAt(platformer.getPlatformBeginLocation(this)
-                .clone().add(4,0,4)).getType();
+                .clone().add(4, 0, 4)).getType();
     }
 
     public Material getActionMaterial() {
         return world.getBlockAt(platformer.getPlatformBeginLocation(this)
-                .clone().add(6,0,4)).getType();
+                .clone().add(6, 0, 4)).getType();
     }
 
     public boolean cantBePlatformMaterial(Material material) {
@@ -162,7 +165,8 @@ public class DevPlatform {
     }
 
     public boolean setMaterials(Material floor, Material event, Material action) {
-        if (cantBePlatformMaterial(floor) || cantBePlatformMaterial(event) || cantBePlatformMaterial(action)) return false;
+        if (cantBePlatformMaterial(floor) || cantBePlatformMaterial(event) || cantBePlatformMaterial(action))
+            return false;
         if (floor == event || floor == action || event == action) return false;
         return platformer.buildPlatform(this, floor, event, action);
     }
@@ -191,9 +195,9 @@ public class DevPlatform {
     public void setContainerMaterial(Material containerMaterial) {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
-        int y = begin.getBlockY()+2;
-        for (int z = begin.getBlockZ()+4; z <= end.getBlockZ()-4; z = z + 4) {
-            for (int x = begin.getBlockX()+6; x <= end.getBlockX()-4; x = x + 2) {
+        int y = begin.getBlockY() + 2;
+        for (int z = begin.getBlockZ() + 4; z <= end.getBlockZ() - 4; z = z + 4) {
+            for (int x = begin.getBlockX() + 6; x <= end.getBlockX() - 4; x = x + 2) {
                 Block containerBlock = new Location(getWorld(), x, y, z).getBlock();
                 if (containerBlock.getState() instanceof InventoryHolder container) {
                     ItemStack[] data = container.getInventory().getContents();
@@ -211,16 +215,16 @@ public class DevPlatform {
     public void setSignMaterial(Material signMaterial) {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
-        int y = begin.getBlockY()+1;
+        int y = begin.getBlockY() + 1;
         for (int z = begin.getBlockZ() + 5; z <= end.getBlockZ() - 4; z = z + 4) {
-            for (int x = begin.getBlockX()+4; x <= end.getBlockX() - 4; x = x + 2) {
+            for (int x = begin.getBlockX() + 4; x <= end.getBlockX() - 4; x = x + 2) {
                 Block signBlock = new Location(getWorld(), x, y, z).getBlock();
                 if (signBlock.getType().name().contains("WALL_SIGN")) {
                     Sign oldSign = (Sign) signBlock.getState();
                     signBlock.setType(signMaterial);
                     Sign sign = (Sign) signBlock.getState();
                     for (byte i = 0; i < oldSign.getSide(Side.FRONT).lines().size(); i++) {
-                        sign.getSide(Side.FRONT).line(i,oldSign.getSide(Side.FRONT).line(i));
+                        sign.getSide(Side.FRONT).line(i, oldSign.getSide(Side.FRONT).line(i));
                     }
                     sign.getSide(Side.FRONT).setGlowingText(oldSign.getSide(Side.FRONT).isGlowingText());
                     BlockData blockData = signBlock.getBlockData();
@@ -236,10 +240,10 @@ public class DevPlatform {
     public List<Location> getPlacedExecutors(ExecutorCategory category) {
         Location begin = platformer.getPlatformBeginLocation(this);
         Location end = platformer.getPlatformEndLocation(this);
-        int y = begin.getBlockY()+1;
+        int y = begin.getBlockY() + 1;
         List<Location> locations = new ArrayList<>();
-        for (int z = begin.getBlockZ()+4; z <= end.getBlockZ()-4; z =z+4) {
-            Block block = getWorld().getBlockAt(begin.getBlockX()+4,y,z);
+        for (int z = begin.getBlockZ() + 4; z <= end.getBlockZ() - 4; z = z + 4) {
+            Block block = getWorld().getBlockAt(begin.getBlockX() + 4, y, z);
             ExecutorCategory blockCategory = ExecutorCategory.getByMaterial(block.getType());
             if (blockCategory == category) {
                 locations.add(block.getLocation());
@@ -250,7 +254,8 @@ public class DevPlatform {
 
     /**
      * Destroys all coding blocks in line.
-     * @param location location of executor block.
+     *
+     * @param location  location of executor block.
      * @param dropItems drop items from upper containers or not.
      */
     public void destroyCodingLine(@NotNull Location location,
@@ -274,7 +279,8 @@ public class DevPlatform {
      * Destroys event, action or condition block,
      * its sign, additional block and container.
      * Closes opened menus related to them.
-     * @param location location of coding block.
+     *
+     * @param location  location of coding block.
      * @param dropItems drop items from upper container or not.
      */
     public void destroyCodingBlock(@NotNull Location location,
@@ -291,7 +297,7 @@ public class DevPlatform {
         if (additionalBlock.getType() == Material.PISTON) {
             int closingBracketX = getClosingBracketX(this, block);
             if (closingBracketX != -1) {
-                block.getWorld().getBlockAt(closingBracketX,block.getY(),block.getZ()).setType(Material.AIR);
+                block.getWorld().getBlockAt(closingBracketX, block.getY(), block.getZ()).setType(Material.AIR);
             }
         }
 
@@ -305,7 +311,7 @@ public class DevPlatform {
             for (ItemStack item : container.getInventory().getContents()) {
                 if (item != null) {
                     if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
-                        containerBlock.getWorld().dropItem(containerBlock.getLocation(),item);
+                        containerBlock.getWorld().dropItem(containerBlock.getLocation(), item);
                     }
                 }
             }
@@ -336,7 +342,7 @@ public class DevPlatform {
 
     public Location getSpawnLocation() {
         Location spawn = platformer.getPlatformBeginLocation(this).clone();
-        spawn.add(2.5,1,2.5);
+        spawn.add(2.5, 1, 2.5);
         spawn.setYaw(-45);
         spawn.setPitch(0);
         return spawn;

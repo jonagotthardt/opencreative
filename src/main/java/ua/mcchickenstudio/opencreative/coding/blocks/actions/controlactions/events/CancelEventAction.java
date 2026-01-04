@@ -18,14 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Cancellable;
 
 public final class CancelEventAction extends ControlAction {
     public CancelEventAction(Executor executor, Target target, int x, Arguments args) {
@@ -41,7 +42,7 @@ public final class CancelEventAction extends ControlAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.CONTROL_CANCEL_EVENT;
     }
 }

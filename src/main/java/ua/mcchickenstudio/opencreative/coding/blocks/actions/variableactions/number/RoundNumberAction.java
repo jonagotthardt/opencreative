@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.number;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class RoundNumberAction extends VariableAction {
     public RoundNumberAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,10 +33,10 @@ public final class RoundNumberAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getDouble("number",0.7,this);
-        int digits = getArguments().getInt("digits",0,this);
-        String type  = getArguments().getText("type","ceil",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        double number = getArguments().getDouble("number", 0.7, this);
+        int digits = getArguments().getInt("digits", 0, this);
+        String type = getArguments().getText("type", "ceil", this);
 
         double result = (type.equalsIgnoreCase("floor")) ? Math.floor(number) : Math.ceil(number);
         if (digits <= 0) {
@@ -52,7 +52,7 @@ public final class RoundNumberAction extends VariableAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_ROUND_NUMBER;
     }
 }

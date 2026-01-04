@@ -36,14 +36,14 @@ public final class EntitySetPandaOnBackAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (!(entity instanceof Panda panda)) {
-           throw new UnsupportedEntityException(Panda.class, entity);
+            throw new UnsupportedEntityException(Panda.class, entity);
         }
         boolean value = getArguments().getBoolean("boolean", true, this);
         panda.setOnBack(value);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_PANDA_ON_BACK;
     }
 }

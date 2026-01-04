@@ -30,6 +30,7 @@ public interface BlockEvent {
 
     /**
      * Returns block involved in block event.
+     *
      * @return block from event.
      */
     @NotNull Block getBlock();

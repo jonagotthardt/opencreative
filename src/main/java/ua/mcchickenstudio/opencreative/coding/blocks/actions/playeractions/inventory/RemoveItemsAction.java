@@ -18,27 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 
 public final class RemoveItemsAction extends PlayerAction {
     public RemoveItemsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
-    }
-
-    @Override
-    public void executePlayer(@NotNull Player player) {
-        for (ItemStack item : getArguments().getItemList("items",this)) {
-            removeItems(player, item);
-        }
     }
 
     public static void removeItems(@NotNull Player player, ItemStack item) {
@@ -64,9 +57,15 @@ public final class RemoveItemsAction extends PlayerAction {
         player.getInventory().setContents(contents);
     }
 
+    @Override
+    public void executePlayer(@NotNull Player player) {
+        for (ItemStack item : getArguments().getItemList("items", this)) {
+            removeItems(player, item);
+        }
+    }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_REMOVE_ITEMS;
     }
 }

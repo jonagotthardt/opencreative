@@ -39,8 +39,8 @@ public final class EntitySetAgeAction extends EntityAction {
         if (!(entity instanceof Ageable ageable)) {
             throw new UnsupportedEntityException(Ageable.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        int age = getArguments().getInt("age",0,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int age = getArguments().getInt("age", 0, this);
         if (add) age += ageable.getAge();
         ageable.setAge(age);
 
@@ -52,7 +52,7 @@ public final class EntitySetAgeAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_AGE;
     }
 }

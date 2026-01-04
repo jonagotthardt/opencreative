@@ -48,12 +48,12 @@ public final class ValueTargetSelectionMenu extends AbstractMenu {
         int slot = 0;
         for (Target target : Target.values()) {
             if (!target.isSupportsEventValue()) continue;
-            setItem(slot,createItem(target.getIcon(),1,"menus.developer.selection.items."+ target.name().toLowerCase().replace("_","-")));
+            setItem(slot, createItem(target.getIcon(), 1, "menus.developer.selection.items." + target.name().toLowerCase().replace("_", "-")));
             slot++;
         }
         if (slot < getSize()) {
             while (slot < getSize()) {
-                setItem(slot,DECORATION_ITEM);
+                setItem(slot, DECORATION_ITEM);
                 slot++;
             }
         }
@@ -85,5 +85,6 @@ public final class ValueTargetSelectionMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+    }
 }

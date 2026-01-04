@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface PrompterModelCapable {
 
-    void setModel(@NotNull String model);
-
     @NotNull String getModel();
+
+    void setModel(@NotNull String model);
 
 }

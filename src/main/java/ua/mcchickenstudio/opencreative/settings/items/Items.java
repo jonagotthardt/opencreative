@@ -115,8 +115,9 @@ public enum Items {
 
     /**
      * Creates main item with material and prefix group in localization file.
+     *
      * @param material material of item.
-     * @param group group in localization file (lobby, developer).
+     * @param group    group in localization file (lobby, developer).
      */
     Items(@NotNull Material material, @NotNull String group, @NotNull String persistentData) {
         this.material = material;
@@ -126,8 +127,9 @@ public enum Items {
 
     /**
      * Creates main item with material and prefix group in localization file.
+     *
      * @param material material of item.
-     * @param group group in localization file (lobby, developer).
+     * @param group    group in localization file (lobby, developer).
      */
     Items(@NotNull Material material, @NotNull String group) {
         this.material = material;
@@ -137,6 +139,7 @@ public enum Items {
 
     /**
      * Creates main item by action block.
+     *
      * @param group group of action.
      */
     Items(@NotNull ActionCategory group) {
@@ -147,6 +150,7 @@ public enum Items {
 
     /**
      * Creates main item by executor block.
+     *
      * @param group group of executor.
      */
     Items(@NotNull ExecutorCategory group) {
@@ -156,33 +160,8 @@ public enum Items {
     }
 
     /**
-     * Returns material of main item.
-     * @return material.
-     */
-    public Material getMaterial() {
-        return material;
-    }
-
-    /**
-     * Creates and returns item, that can be given to player.
-     * @return item to give to player.
-     */
-    @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
-    public ItemStack get(@NotNull Player player) {
-        String path = "items." + group + "." + name().toLowerCase().replace("_","-");
-        ItemStack item = createItem(material, 1, path);
-        if (item.getItemMeta() instanceof BookMeta bookMeta) {
-            bookMeta.pages(getBookPages(player, path + ".pages"));
-            item.setItemMeta(bookMeta);
-        }
-        if (persistentData != null) {
-            setPersistentData(item, ItemUtils.getItemTypeKey(), persistentData);
-        }
-        return item;
-    }
-
-    /**
      * Returns items enum by text.
+     *
      * @param id id to get items enum.
      * @return items type, or null - if not exists.
      */
@@ -206,5 +185,33 @@ public enum Items {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns material of main item.
+     *
+     * @return material.
+     */
+    public Material getMaterial() {
+        return material;
+    }
+
+    /**
+     * Creates and returns item, that can be given to player.
+     *
+     * @return item to give to player.
+     */
+    @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
+    public ItemStack get(@NotNull Player player) {
+        String path = "items." + group + "." + name().toLowerCase().replace("_", "-");
+        ItemStack item = createItem(material, 1, path);
+        if (item.getItemMeta() instanceof BookMeta bookMeta) {
+            bookMeta.pages(getBookPages(player, path + ".pages"));
+            item.setItemMeta(bookMeta);
+        }
+        if (persistentData != null) {
+            setPersistentData(item, ItemUtils.getItemTypeKey(), persistentData);
+        }
+        return item;
     }
 }

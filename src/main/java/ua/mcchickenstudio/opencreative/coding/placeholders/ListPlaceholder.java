@@ -31,7 +31,7 @@ import java.util.List;
 public final class ListPlaceholder extends KeyValuePlaceholder {
 
     public ListPlaceholder() {
-        super("list","list_local","list_game","list_global","list_saved","list_save");
+        super("list", "list_local", "list_game", "list_global", "list_saved", "list_save");
     }
 
     @Override
@@ -49,23 +49,20 @@ public final class ListPlaceholder extends KeyValuePlaceholder {
         if (listIndex < 1) return null;
         WorldVariables variables = action.getExecutor().getPlanet().getVariables();
         VariableLink link = switch (key) {
-            case "list_local" ->
-                    new VariableLink(listName, VariableLink.VariableType.LOCAL);
-            case "list", "list_global", "list_game" ->
-                    new VariableLink(listName, VariableLink.VariableType.GLOBAL);
-            case "list_save", "list_saved" ->
-                    new VariableLink(listName, VariableLink.VariableType.SAVED);
+            case "list_local" -> new VariableLink(listName, VariableLink.VariableType.LOCAL);
+            case "list", "list_global", "list_game" -> new VariableLink(listName, VariableLink.VariableType.GLOBAL);
+            case "list_save", "list_saved" -> new VariableLink(listName, VariableLink.VariableType.SAVED);
             default -> null;
         };
         if (link == null) return null;
-        WorldVariable variable = variables.getVariable(link,action);
+        WorldVariable variable = variables.getVariable(link, action);
         String replacement = "null! " + value + " - " + link.getVariableType().name();
         if (variable == null) return replacement;
         if (!(variable.getValue() instanceof List<?> list)) return replacement;
         if (listIndex > list.size()) return replacement;
-        Object listValue = list.get(listIndex-1);
+        Object listValue = list.get(listIndex - 1);
         return String.valueOf(listValue)
-                .substring(0,Math.min(100,String.valueOf(listValue).length()));
+                .substring(0, Math.min(100, String.valueOf(listValue).length()));
     }
 
     @Override

@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public abstract class PlayerAction extends Action {
@@ -34,10 +34,10 @@ public abstract class PlayerAction extends Action {
         super(executor, target, x, args);
     }
 
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.PLAYER_ACTION;
     }
-    
+
     public final void execute(Entity entity) {
         if (entity == null) return;
         if (!entity.getWorld().equals(getPlanet().getWorld())) return;
@@ -47,7 +47,7 @@ public abstract class PlayerAction extends Action {
             throw new UnsupportedEntityException(Player.class, entity);
         }
     }
-    
+
     public abstract void executePlayer(@NotNull Player player);
 
 }

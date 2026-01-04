@@ -45,6 +45,7 @@ public final class WorldGenerators {
 
     /**
      * Returns instance of world generators controller class.
+     *
      * @return instance of world generators.
      */
     public synchronized static @NotNull WorldGenerators getInstance() {
@@ -56,6 +57,7 @@ public final class WorldGenerators {
 
     /**
      * Registers world generator, that can be used for world generation.
+     *
      * @param generator world generator to register.
      */
     public void registerWorldGenerator(@NotNull WorldGenerator generator) {
@@ -72,6 +74,7 @@ public final class WorldGenerators {
 
     /**
      * Registers world generators, that can be used for world generation.
+     *
      * @param generator world generators to register.
      */
     public void registerWorldGenerator(@NotNull WorldGenerator... generator) {
@@ -82,6 +85,7 @@ public final class WorldGenerators {
 
     /**
      * Unregisters world generator if list contains it.
+     *
      * @param generator world generator to unregister.
      */
     @SuppressWarnings("unused")
@@ -98,6 +102,7 @@ public final class WorldGenerators {
 
     /**
      * Returns a copy of list that contains all registered world generators.
+     *
      * @return world generators list.
      */
     public @NotNull List<WorldGenerator> getWorldGenerators() {
@@ -106,6 +111,7 @@ public final class WorldGenerators {
 
     /**
      * Returns a list of all registered generators IDs.
+     *
      * @return generators ID list.
      */
     public @NotNull List<Object> getGeneratorsIDs() {
@@ -118,6 +124,7 @@ public final class WorldGenerators {
 
     /**
      * Returns a list of all registered generators materials.
+     *
      * @return generators materials list.
      */
     public @NotNull List<Material> getGeneratorsMaterials() {
@@ -131,6 +138,7 @@ public final class WorldGenerators {
     /**
      * Returns world generator from registry by specified id
      * if it exists, otherwise will return null.
+     *
      * @param id id to get world generator.
      * @return world generator - if exists, or null - not exists.
      */

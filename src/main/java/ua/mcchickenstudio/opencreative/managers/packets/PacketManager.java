@@ -40,7 +40,8 @@ public interface PacketManager extends Manager {
      * be invisible and not physical. As block entity
      * can be used {@link org.bukkit.entity.Shulker},
      * {@link org.bukkit.entity.BlockDisplay}, {@link org.bukkit.entity.FallingBlock}.
-     * @param player player, that will see glowing block.
+     *
+     * @param player   player, that will see glowing block.
      * @param location location, where block will be seen.
      */
     void displayGlowingBlock(@NotNull Player player, @NotNull Location location);
@@ -50,8 +51,9 @@ public interface PacketManager extends Manager {
      * <p>
      * If specified block is not chest, then animation
      * will be not played and will be ignored.
+     *
      * @param player player, that can see this animation.
-     * @param block block where animation can be played.
+     * @param block  block where animation can be played.
      */
     void sendChestOpenAnimation(@NotNull Player player, @NotNull Block block);
 
@@ -60,8 +62,9 @@ public interface PacketManager extends Manager {
      * <p>
      * If specified block is not chest, then animation
      * will be not played and will be ignored.
+     *
      * @param player player, that can see this animation.
-     * @param block block where animation can be played.
+     * @param block  block where animation can be played.
      */
     void sendChestCloseAnimation(@NotNull Player player, @NotNull Block block);
 
@@ -70,7 +73,8 @@ public interface PacketManager extends Manager {
      * with usual spectator's transparent gray color. Used to
      * separate players in same world and players in different
      * worlds.
-     * @param player player to change display name.
+     *
+     * @param player   player to change display name.
      * @param receiver player that will see this change.
      */
     void displayAsSpectatorName(@NotNull Player player, @NotNull Player receiver);
@@ -78,14 +82,16 @@ public interface PacketManager extends Manager {
     /**
      * Player's name in players list will be seen by receiver
      * as default player's name.
-     * @param player player to change display name.
+     *
+     * @param player   player to change display name.
      * @param receiver player that will see this change.
      */
     void removeSpectatorName(@NotNull Player player, @NotNull Player receiver);
 
     /**
      * Shows fake phantom block for player.
-     * @param player player to change display name.
+     *
+     * @param player   player to change display name.
      * @param location player that will see this change.
      * @param material type of block.
      */

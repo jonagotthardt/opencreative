@@ -18,18 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.settings;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
-import ua.mcchickenstudio.opencreative.planets.DevPlatform;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -45,13 +45,13 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
     private final DevPlanet devPlanet;
     private final DevPlatform devPlatform;
 
-    private final ItemStack back = createItem(Material.ARROW,1,"menus.developer.environment.items.back");
+    private final ItemStack back = createItem(Material.ARROW, 1, "menus.developer.environment.items.back");
 
     private final ParameterButton debug;
 
-    private final ItemStack variablesSize = createItem(Material.MAGMA_CREAM,1,"menus.developer.environment.items.variables-size");
-    private final ItemStack variablesList = createItem(Material.BOOKSHELF,1,"menus.developer.environment.items.variables-list");
-    private final ItemStack clearVariables = createItem(Material.BRUSH,1,"menus.developer.environment.items.clear-variables");
+    private final ItemStack variablesSize = createItem(Material.MAGMA_CREAM, 1, "menus.developer.environment.items.variables-size");
+    private final ItemStack variablesList = createItem(Material.BOOKSHELF, 1, "menus.developer.environment.items.variables-list");
+    private final ItemStack clearVariables = createItem(Material.BRUSH, 1, "menus.developer.environment.items.clear-variables");
 
     private final ItemStack info;
     private final ItemStack createPlatform;
@@ -68,32 +68,32 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
         this.player = player;
         this.devPlanet = devPlanet;
         this.devPlatform = isDevPlanet(player.getWorld()) ? devPlanet.getPlatformInLocation(player.getLocation()) : null;
-        debug = new ParameterButton(devPlanet.getPlanet().isDebug() ? "all" : "disabled", List.of("disabled","all"),"debug","menus.developer.environment","menus.developer.environment.items.debug",List.of(Material.PUFFERFISH_BUCKET,Material.PUFFERFISH));
-        containers = new ParameterButton(devPlanet.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest","barrel"),"containers","menus.developer.environment","menus.developer.environment.items.containers",List.of(Material.CHEST,Material.BARREL));
+        debug = new ParameterButton(devPlanet.getPlanet().isDebug() ? "all" : "disabled", List.of("disabled", "all"), "debug", "menus.developer.environment", "menus.developer.environment.items.debug", List.of(Material.PUFFERFISH_BUCKET, Material.PUFFERFISH));
+        containers = new ParameterButton(devPlanet.getContainerMaterial() == Material.CHEST ? "chest" : "barrel", List.of("chest", "barrel"), "containers", "menus.developer.environment", "menus.developer.environment.items.containers", List.of(Material.CHEST, Material.BARREL));
         info = createInfoItem();
         createPlatform = createPlatformsItem();
         long currentTime = devPlanet.getWorld() == null ? 0 : devPlanet.getWorld().getTime();
         boolean isMorning = currentTime >= 0L && currentTime < 6000L;
         boolean isNight = currentTime >= 15000L && currentTime <= 23000L;
         boolean isEvening = currentTime >= 12500L && currentTime < 15000L;
-        time = new ParameterButton(isMorning ? "morning" : isNight ? "night" : isEvening ? "evening" : "day", List.of("morning","day","evening","night"),"time","menus.developer.environment","menus.developer.environment.items.time",Material.CLOCK);
-        floorMaterial = createItem(devPlatform != null ? devPlatform.getFloorMaterial() : DevPlanet.getDefaultFloorMaterial(),1,"menus.developer.environment.items.floor-material");
-        eventMaterial = createItem(devPlatform != null ? devPlatform.getEventMaterial() : DevPlanet.getDefaultEventMaterial(),1,"menus.developer.environment.items.event-material");
-        actionMaterial = createItem(devPlatform != null ? devPlatform.getActionMaterial() : DevPlanet.getDefaultActionMaterial(),1,"menus.developer.environment.items.action-material");
+        time = new ParameterButton(isMorning ? "morning" : isNight ? "night" : isEvening ? "evening" : "day", List.of("morning", "day", "evening", "night"), "time", "menus.developer.environment", "menus.developer.environment.items.time", Material.CLOCK);
+        floorMaterial = createItem(devPlatform != null ? devPlatform.getFloorMaterial() : DevPlanet.getDefaultFloorMaterial(), 1, "menus.developer.environment.items.floor-material");
+        eventMaterial = createItem(devPlatform != null ? devPlatform.getEventMaterial() : DevPlanet.getDefaultEventMaterial(), 1, "menus.developer.environment.items.event-material");
+        actionMaterial = createItem(devPlatform != null ? devPlatform.getActionMaterial() : DevPlanet.getDefaultActionMaterial(), 1, "menus.developer.environment.items.action-material");
     }
 
     private ItemStack createInfoItem() {
-        ItemStack info = createItem(Material.AMETHYST_CLUSTER,1,"menus.developer.environment.items.info");
-        replacePlaceholderInLore(info,"%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
-        replacePlaceholderInLore(info,"%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().getAmount());
-        replacePlaceholderInLore(info,"%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
-        replacePlaceholderInLore(info,"%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
-        replacePlaceholderInLore(info,"%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
-        replacePlaceholderInLore(info,"%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
-        replacePlaceholderInLore(info,"%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
-        replacePlaceholderInLore(info,"%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
-        replacePlaceholderInLore(info,"%planetID%", devPlanet.getPlanet().getId());
-        replacePlaceholderInLore(info,"%version%", OpenCreative.getVersion());
+        ItemStack info = createItem(Material.AMETHYST_CLUSTER, 1, "menus.developer.environment.items.info");
+        replacePlaceholderInLore(info, "%executors%", devPlanet.getPlanet().getTerritory().getScript().getExecutors().getExecutorsList().size());
+        replacePlaceholderInLore(info, "%scoreboards%", devPlanet.getPlanet().getTerritory().getScoreboards().getAmount());
+        replacePlaceholderInLore(info, "%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
+        replacePlaceholderInLore(info, "%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
+        replacePlaceholderInLore(info, "%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
+        replacePlaceholderInLore(info, "%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
+        replacePlaceholderInLore(info, "%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
+        replacePlaceholderInLore(info, "%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());
+        replacePlaceholderInLore(info, "%planetID%", devPlanet.getPlanet().getId());
+        replacePlaceholderInLore(info, "%version%", OpenCreative.getVersion());
         return info;
     }
 
@@ -101,10 +101,10 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
         if (devPlanet.isLoaded()) {
             int amount = devPlanet.getPlatforms().size();
             int limit = devPlanet.getPlanet().getLimits().getCodingPlatformsLimit();
-            ItemStack item = createItem(Material.NETHER_STAR,1,"menus.developer.environment.items." +
-                     (amount >= limit ? "create-platform-limit" : "create-platform"), (amount >= limit ? "" : "platform"));
-            replacePlaceholderInLore(item,"%limit%", limit);
-            replacePlaceholderInLore(item,"%amount%", amount);
+            ItemStack item = createItem(Material.NETHER_STAR, 1, "menus.developer.environment.items." +
+                    (amount >= limit ? "create-platform-limit" : "create-platform"), (amount >= limit ? "" : "platform"));
+            replacePlaceholderInLore(item, "%limit%", limit);
+            replacePlaceholderInLore(item, "%amount%", amount);
             return item;
         } else {
             return DECORATION_ITEM;
@@ -128,9 +128,9 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
         setItem(45, devPlanet.getPlanet().isOwner(player) ? back : DECORATION_PANE_ITEM);
         setItem(46, DECORATION_PANE_ITEM);
 
-        setItem(47, createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
+        setItem(47, createItem(Material.MAGENTA_STAINED_GLASS_PANE, 1));
         setItem(49, info);
-        setItem(51, createItem(Material.MAGENTA_STAINED_GLASS_PANE,1));
+        setItem(51, createItem(Material.MAGENTA_STAINED_GLASS_PANE, 1));
         setItem(52, DECORATION_PANE_ITEM);
         setItem(53, devPlanet.getWorld() != null ? createPlatform : DECORATION_ITEM);
     }
@@ -143,23 +143,23 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
         event.setCancelled(true);
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null || currentItem.equals(DECORATION_ITEM)) return;
-        if (itemEquals(currentItem,variablesList)) {
+        if (itemEquals(currentItem, variablesList)) {
             player.performCommand("env vars list");
             player.closeInventory();
-        } else if (itemEquals(currentItem,variablesSize)) {
+        } else if (itemEquals(currentItem, variablesSize)) {
             player.performCommand("env vars size");
             player.closeInventory();
-        } else if (itemEquals(currentItem,clearVariables)) {
+        } else if (itemEquals(currentItem, clearVariables)) {
             player.performCommand("env vars clear");
             player.closeInventory();
         } else if (getItemType(currentItem).equals("platform")) {
             player.performCommand("env platform");
             player.closeInventory();
-        } else if (itemEquals(currentItem,time.getItem())) {
+        } else if (itemEquals(currentItem, time.getItem())) {
             if (devPlanet.getWorld() == null) return;
             time.next();
             Sounds.WORLD_SETTINGS_TIME_CHANGE.play(player);
-            setItem(event.getRawSlot(),time.getItem());
+            setItem(event.getRawSlot(), time.getItem());
             if ("night".equals(time.getCurrentValue().toString())) {
                 devPlanet.getWorld().setTime(15000L);
             } else if ("evening".equals(time.getCurrentValue().toString())) {
@@ -169,23 +169,23 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
             } else {
                 devPlanet.getWorld().setTime(0L);
             }
-        } else if (itemEquals(currentItem,containers.getItem())) {
+        } else if (itemEquals(currentItem, containers.getItem())) {
             if (devPlanet.getWorld() == null) return;
             player.performCommand("env barrel");
             player.closeInventory();
-        } else if (itemEquals(currentItem,debug.getItem())) {
+        } else if (itemEquals(currentItem, debug.getItem())) {
             player.performCommand("env debug " + (debug.getCurrentValue().toString().equals("all") ? "disable" : "enable"));
             player.closeInventory();
-        } else if (itemEquals(currentItem,back)) {
+        } else if (itemEquals(currentItem, back)) {
             if (devPlanet.getPlanet().isOwner(player)) {
-                new WorldSettingsMenu(devPlanet.getPlanet(),player).open(player);
+                new WorldSettingsMenu(devPlanet.getPlanet(), player).open(player);
             }
-        } else if (itemEquals(currentItem,eventMaterial)) {
-            new WorldEnvironmentColorMenu(player, devPlanet,devPlatform,"event").open(player);
-        } else if (itemEquals(currentItem,actionMaterial)) {
-            new WorldEnvironmentColorMenu(player, devPlanet,devPlatform,"action").open(player);
-        } else if (itemEquals(currentItem,floorMaterial)) {
-            new WorldEnvironmentColorMenu(player, devPlanet,devPlatform,"floor").open(player);
+        } else if (itemEquals(currentItem, eventMaterial)) {
+            new WorldEnvironmentColorMenu(player, devPlanet, devPlatform, "event").open(player);
+        } else if (itemEquals(currentItem, actionMaterial)) {
+            new WorldEnvironmentColorMenu(player, devPlanet, devPlatform, "action").open(player);
+        } else if (itemEquals(currentItem, floorMaterial)) {
+            new WorldEnvironmentColorMenu(player, devPlanet, devPlatform, "floor").open(player);
         }
     }
 

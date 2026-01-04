@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 public final class PlanetPlaceholder extends KeyPlaceholder {
 
     public PlanetPlaceholder() {
-        super("online","players_amount","entities_amount");
+        super("online", "players_amount", "entities_amount");
     }
 
     @Override
@@ -37,7 +37,8 @@ public final class PlanetPlaceholder extends KeyPlaceholder {
         return switch (key) {
             case "online" -> String.valueOf(Bukkit.getOnlinePlayers().size());
             case "players_amount" -> String.valueOf(planet.getPlayers().size());
-            case "entities_amount" -> String.valueOf(planet.getTerritory().getWorld().getEntityCount() + (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null ? planet.getDevPlanet().getWorld().getEntityCount() : 0));
+            case "entities_amount" ->
+                    String.valueOf(planet.getTerritory().getWorld().getEntityCount() + (planet.getDevPlanet() != null && planet.getDevPlanet().getWorld() != null ? planet.getDevPlanet().getWorld().getEntityCount() : 0));
             default -> null;
         };
     }

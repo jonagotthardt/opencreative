@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location;
 
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
 public final class ModifyLocationAction extends VariableAction {
     public ModifyLocationAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,36 +34,36 @@ public final class ModifyLocationAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",getDefaultLocation(),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Location location = getArguments().getLocation("location", getDefaultLocation(), this);
         location = location.clone();
-        boolean add = getArguments().getBoolean("add",false,this);
+        boolean add = getArguments().getBoolean("add", false, this);
         double x = (add ? 0.0d : location.getX());
         double y = (add ? 0.0d : location.getY());
         double z = (add ? 0.0d : location.getZ());
         float yaw = (add ? 0.0f : location.getYaw());
         float pitch = (add ? 0.0f : location.getPitch());
         if (getArguments().pathExists("x")) {
-            x = getArguments().getDouble("x",x,this);
+            x = getArguments().getDouble("x", x, this);
         }
         if (getArguments().pathExists("y")) {
-            y = getArguments().getDouble("y",y,this);
+            y = getArguments().getDouble("y", y, this);
         }
         if (getArguments().pathExists("z")) {
-            z = getArguments().getDouble("z",z,this);
+            z = getArguments().getDouble("z", z, this);
         }
         if (getArguments().pathExists("yaw")) {
-            yaw = getArguments().getFloat("yaw",yaw,this);
+            yaw = getArguments().getFloat("yaw", yaw, this);
         }
         if (getArguments().pathExists("pitch")) {
-            pitch = getArguments().getFloat("pitch",pitch,this);
+            pitch = getArguments().getFloat("pitch", pitch, this);
         }
         if (add) {
-            location.setX(location.getX()+x);
-            location.setY(location.getY()+y);
-            location.setZ(location.getZ()+z);
-            location.setYaw(location.getYaw()+yaw);
-            location.setPitch(location.getPitch()+pitch);
+            location.setX(location.getX() + x);
+            location.setY(location.getY() + y);
+            location.setZ(location.getZ() + z);
+            location.setYaw(location.getYaw() + yaw);
+            location.setPitch(location.getPitch() + pitch);
         } else {
             location.setX(x);
             location.setY(y);
@@ -71,11 +71,11 @@ public final class ModifyLocationAction extends VariableAction {
             location.setYaw(yaw);
             location.setPitch(pitch);
         }
-        setVarValue(link,location);
+        setVarValue(link, location);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_MODIFY_LOCATION;
     }
 }

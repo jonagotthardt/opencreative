@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.number;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -35,17 +35,17 @@ public final class MultiplyNumberAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        List<Double> doubles = getArguments().getNumbersList("numbers",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        List<Double> doubles = getArguments().getNumbersList("numbers", this);
         double result = doubles.getFirst();
-        for (Double number : doubles.subList(1,doubles.size())) {
+        for (Double number : doubles.subList(1, doubles.size())) {
             result *= number;
         }
-        setVarValue(link,result);
+        setVarValue(link, result);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_MULTIPLY_NUMBER;
     }
 }

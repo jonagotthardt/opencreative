@@ -18,31 +18,33 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.PlaceBlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.*;
-import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.inventory.InventoryHolder;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.copySignData;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -50,6 +52,142 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
 public final class PlaceBlockListener implements Listener {
+
+    public static void placeDevBlock(Location location, Material material, Material additionalBlockMaterial, Material signMaterial, String signText) {
+        Block block = location.getBlock();
+        block.setType(material);
+        Block eastBlock = block.getRelative(BlockFace.EAST);
+        eastBlock.setType(additionalBlockMaterial);
+        if (eastBlock.getType() == Material.PISTON) {
+            Directional data = (Directional) eastBlock.getBlockData();
+            data.setFacing(BlockFace.EAST);
+            eastBlock.setBlockData(data);
+            Block farEastBlock = eastBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
+            move(eastBlock.getLocation(), BlockFace.EAST);
+            farEastBlock.setType(Material.PISTON);
+            data = (Directional) farEastBlock.getBlockData();
+            data.setFacing(BlockFace.WEST);
+            farEastBlock.setBlockData(data);
+        }
+
+        Block wallSign = block.getRelative(BlockFace.SOUTH);
+        wallSign.setType(signMaterial);
+
+        Sign sign = (Sign) wallSign.getState();
+        sign.setLine(1, signText);
+        if (block.getType() == Material.OXIDIZED_COPPER) {
+            sign.setLine(2, "20");
+        }
+        if (block.getType() == Material.PURPUR_BLOCK) {
+            sign.setLine(1, "");
+            sign.setLine(3, "selection_set");
+        }
+        sign.update();
+
+        translateBlockSign(wallSign);
+
+        Directional data = (Directional) wallSign.getBlockData();
+        data.setFacing(BlockFace.SOUTH);
+        wallSign.setBlockData(data);
+    }
+
+    public static void placeDebugTorch(@NotNull Location location) {
+        Block block = location.getBlock();
+        block.setType(Material.REDSTONE_WALL_TORCH);
+        if (block.getBlockData() instanceof Directional directional) {
+            directional.setFacing(BlockFace.WEST);
+            block.setBlockData(directional);
+        }
+        if (block.getBlockData() instanceof Powerable powerable) {
+            powerable.setPowered(true);
+            block.setBlockData(powerable);
+        }
+    }
+
+    public static boolean move(Location location, BlockFace face) {
+        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(location.getWorld());
+        if (devPlanet == null) return false;
+        DevPlatform platform = devPlanet.getPlatformInLocation(location);
+        if (platform == null) return false;
+        Location begin = devPlanet.getDevPlatformer().getPlatformBeginLocation(platform);
+        Location end = devPlanet.getDevPlatformer().getPlatformEndLocation(platform);
+        if (face == BlockFace.EAST) {
+            /*
+             Moves blocks to right
+             */
+            if (location.getX() >= end.getBlockX() - 4) return false;
+            Set<Block> movedBlocks = new HashSet<>();
+            for (double x = end.getBlockX() - 5; x > location.getX(); x--) {
+                Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
+                if (oldBlock.getType() == Material.AIR) continue;
+                if (!movedBlocks.contains(oldBlock)) {
+                    Block newBlock = location.getWorld().getBlockAt((int) x + 2, location.getBlockY(), location.getBlockZ());
+                    moveCodingBlock(oldBlock, newBlock);
+                    movedBlocks.add(newBlock);
+                }
+            }
+        } else if (face == BlockFace.WEST) {
+            /*
+             Moves blocks to left.
+             */
+            if (location.getX() <= begin.getBlockX() + 5) return false;
+            if (!location.getBlock().isEmpty()) return false;
+            //if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
+            Set<Block> movedBlocks = new HashSet<>();
+            for (double x = location.getX() + 1; x < end.getBlockX(); x++) {
+                Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
+                if (oldBlock.getType() == Material.AIR) continue;
+                if (!movedBlocks.contains(oldBlock)) {
+                    Block newBlock = location.getWorld().getBlockAt((int) x - 2, location.getBlockY(), location.getBlockZ());
+                    moveCodingBlock(oldBlock, newBlock);
+                    movedBlocks.add(oldBlock);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Moves coding block with wall sign and container to next block.
+     *
+     * @param oldBlock Block to move and replace with air.
+     * @param newBlock Block where to move.
+     */
+    public static void moveCodingBlock(Block oldBlock, Block newBlock) {
+        Block oldSignBlock = oldBlock.getRelative(BlockFace.SOUTH);
+        Block oldContainerBlock = oldBlock.getRelative(BlockFace.UP);
+
+        Block newSignBlock = newBlock.getRelative(BlockFace.SOUTH);
+        Block newContainerBlock = newBlock.getRelative(BlockFace.UP);
+
+        newBlock.setType(oldBlock.getType());
+        newBlock.setBlockData(oldBlock.getBlockData());
+
+        if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
+            newSignBlock.setType(oldSignBlock.getType());
+            copySignData((Sign) oldSignBlock.getState(), (Sign) newSignBlock.getState());
+            translateBlockSign(newSignBlock);
+        }
+        if (oldContainerBlock.getState() instanceof InventoryHolder container) {
+            newContainerBlock.setType(oldContainerBlock.getType());
+            newContainerBlock.setBlockData(oldContainerBlock.getBlockData());
+            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(oldContainerBlock.getWorld());
+            if (devPlanet != null) {
+                Layout layout = devPlanet.getOpenedMenu(oldContainerBlock.getLocation());
+                if (layout != null) {
+                    for (Player player : layout.getViewers()) {
+                        player.closeInventory();
+                    }
+                }
+            }
+            if (newContainerBlock.getState() instanceof InventoryHolder newContainer) {
+                newContainer.getInventory().setContents(container.getInventory().getContents());
+            }
+        }
+        oldSignBlock.setType(Material.AIR);
+        oldBlock.setType(Material.AIR);
+        oldContainerBlock.setType(Material.AIR);
+    }
 
     @EventHandler
     public void onChestPlace(BlockPlaceEvent event) {
@@ -84,7 +222,7 @@ public final class PlaceBlockListener implements Listener {
                 return;
             }
             if (blockAgainst.getType() == platform.getFloorMaterial()) {
-                if (block.getType() == Material.PISTON && ((blockAgainst.getZ()-devPlanet.getDevPlatformer().getPlatformBeginLocation(platform).getBlockZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
+                if (block.getType() == Material.PISTON && ((blockAgainst.getZ() - devPlanet.getDevPlatformer().getPlatformBeginLocation(platform).getBlockZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
                     Directional directional = (Directional) block.getBlockData();
                     if (directional.getFacing() != BlockFace.EAST && directional.getFacing() != BlockFace.WEST) {
                         directional.setFacing(player.getFacing().getOppositeFace());
@@ -165,147 +303,12 @@ public final class PlaceBlockListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            new PlaceBlockEvent(event.getPlayer(),event).callEvent();
+            new PlaceBlockEvent(event.getPlayer(), event).callEvent();
         } else if (isEntityInLobby(player) && OpenCreative.getSettings().getLobbySettings().isPlacingBlocksDisallowed()
                 && !player.hasPermission("opencreative.lobby.placing-blocks.bypass")) {
             event.setCancelled(true);
             player.sendActionBar(getLocaleMessage("not-for-lobby"));
         }
-    }
-
-    public static void placeDevBlock(Location location, Material material, Material additionalBlockMaterial, Material signMaterial, String signText) {
-        Block block = location.getBlock();
-        block.setType(material);
-        Block eastBlock = block.getRelative(BlockFace.EAST);
-        eastBlock.setType(additionalBlockMaterial);
-        if (eastBlock.getType() == Material.PISTON) {
-            Directional data = (Directional) eastBlock.getBlockData();
-            data.setFacing(BlockFace.EAST);
-            eastBlock.setBlockData(data);
-            Block farEastBlock = eastBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
-            move(eastBlock.getLocation(),BlockFace.EAST);
-            farEastBlock.setType(Material.PISTON);
-            data = (Directional) farEastBlock.getBlockData();
-            data.setFacing(BlockFace.WEST);
-            farEastBlock.setBlockData(data);
-        }
-
-        Block wallSign = block.getRelative(BlockFace.SOUTH);
-        wallSign.setType(signMaterial);
-
-        Sign sign = (Sign) wallSign.getState();
-        sign.setLine(1, signText);
-        if (block.getType() == Material.OXIDIZED_COPPER) {
-            sign.setLine(2,"20");
-        }
-        if (block.getType() == Material.PURPUR_BLOCK) {
-            sign.setLine(1,"");
-            sign.setLine(3,"selection_set");
-        }
-        sign.update();
-
-        translateBlockSign(wallSign);
-
-        Directional data = (Directional) wallSign.getBlockData();
-        data.setFacing(BlockFace.SOUTH);
-        wallSign.setBlockData(data);
-    }
-
-    public static void placeDebugTorch(@NotNull Location location) {
-        Block block = location.getBlock();
-        block.setType(Material.REDSTONE_WALL_TORCH);
-        if (block.getBlockData() instanceof Directional directional) {
-            directional.setFacing(BlockFace.WEST);
-            block.setBlockData(directional);
-        }
-        if (block.getBlockData() instanceof Powerable powerable) {
-            powerable.setPowered(true);
-            block.setBlockData(powerable);
-        }
-    }
-
-    public static boolean move(Location location, BlockFace face) {
-        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(location.getWorld());
-        if (devPlanet == null) return false;
-        DevPlatform platform = devPlanet.getPlatformInLocation(location);
-        if (platform == null) return false;
-        Location begin = devPlanet.getDevPlatformer().getPlatformBeginLocation(platform);
-        Location end = devPlanet.getDevPlatformer().getPlatformEndLocation(platform);
-        if (face == BlockFace.EAST) {
-            /*
-             Moves blocks to right
-             */
-            if (location.getX() >= end.getBlockX()-4) return false;
-            Set<Block> movedBlocks = new HashSet<>();
-            for (double x = end.getBlockX()-5; x > location.getX(); x--) {
-                Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
-                if (oldBlock.getType() == Material.AIR) continue;
-                if (!movedBlocks.contains(oldBlock)) {
-                    Block newBlock = location.getWorld().getBlockAt((int) x + 2, location.getBlockY(), location.getBlockZ());
-                    moveCodingBlock(oldBlock,newBlock);
-                    movedBlocks.add(newBlock);
-                }
-            }
-        } else if (face == BlockFace.WEST) {
-            /*
-             Moves blocks to left.
-             */
-            if (location.getX() <= begin.getBlockX()+5) return false;
-            if (!location.getBlock().isEmpty()) return false;
-            //if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
-            Set<Block> movedBlocks = new HashSet<>();
-            for (double x = location.getX()+1; x < end.getBlockX(); x++) {
-                Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());
-                if (oldBlock.getType() == Material.AIR) continue;
-                if (!movedBlocks.contains(oldBlock)) {
-                    Block newBlock = location.getWorld().getBlockAt((int) x-2, location.getBlockY(), location.getBlockZ());
-                    moveCodingBlock(oldBlock,newBlock);
-                    movedBlocks.add(oldBlock);
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Moves coding block with wall sign and container to next block.
-     * @param oldBlock Block to move and replace with air.
-     * @param newBlock Block where to move.
-     */
-    public static void moveCodingBlock(Block oldBlock, Block newBlock) {
-        Block oldSignBlock = oldBlock.getRelative(BlockFace.SOUTH);
-        Block oldContainerBlock = oldBlock.getRelative(BlockFace.UP);
-
-        Block newSignBlock = newBlock.getRelative(BlockFace.SOUTH);
-        Block newContainerBlock = newBlock.getRelative(BlockFace.UP);
-
-        newBlock.setType(oldBlock.getType());
-        newBlock.setBlockData(oldBlock.getBlockData());
-
-        if (oldSignBlock.getType().toString().contains("WALL_SIGN")) {
-            newSignBlock.setType(oldSignBlock.getType());
-            copySignData((Sign) oldSignBlock.getState(),(Sign) newSignBlock.getState());
-            translateBlockSign(newSignBlock);
-        }
-        if (oldContainerBlock.getState() instanceof InventoryHolder container) {
-            newContainerBlock.setType(oldContainerBlock.getType());
-            newContainerBlock.setBlockData(oldContainerBlock.getBlockData());
-            DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(oldContainerBlock.getWorld());
-            if (devPlanet != null) {
-                Layout layout = devPlanet.getOpenedMenu(oldContainerBlock.getLocation());
-                if (layout != null) {
-                    for (Player player : layout.getViewers()) {
-                        player.closeInventory();
-                    }
-                }
-            }
-            if (newContainerBlock.getState() instanceof InventoryHolder newContainer) {
-                newContainer.getInventory().setContents(container.getInventory().getContents());
-            }
-        }
-        oldSignBlock.setType(Material.AIR);
-        oldBlock.setType(Material.AIR);
-        oldContainerBlock.setType(Material.AIR);
     }
 }
 

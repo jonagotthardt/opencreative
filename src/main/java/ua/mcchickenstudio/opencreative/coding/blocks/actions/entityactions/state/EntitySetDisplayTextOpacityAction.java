@@ -35,7 +35,7 @@ public final class EntitySetDisplayTextOpacityAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        int opacity = getArguments().getInt("opacity", -1,this);
+        int opacity = getArguments().getInt("opacity", -1, this);
         if (entity instanceof TextDisplay display) {
             display.setTextOpacity((byte) opacity);
         } else {
@@ -44,7 +44,7 @@ public final class EntitySetDisplayTextOpacityAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_TEXT_DISPLAY_OPACITY;
     }
 }

@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.state;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 public final class SetGlowingAction extends PlayerAction {
     public SetGlowingAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,11 +33,11 @@ public final class SetGlowingAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        player.setGlowing(getArguments().getBoolean("glowing",true,this));
+        player.setGlowing(getArguments().getBoolean("glowing", true, this));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_GLOWING;
     }
 }

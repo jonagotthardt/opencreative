@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -35,14 +35,14 @@ public final class ClearItemEnchantmentsAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE), this), this);
         item.removeEnchantments();
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_CLEAR_ITEM_ENCHANTMENTS;
     }
 }

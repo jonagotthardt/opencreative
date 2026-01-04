@@ -36,14 +36,14 @@ public final class EntitySetDisplayShadowedAction extends EntityAction {
     @Override
     public void executeEntity(@NotNull Entity entity) {
         if (entity instanceof TextDisplay display) {
-            display.setShadowed(getArguments().getBoolean("shadow",true,this));
+            display.setShadowed(getArguments().getBoolean("shadow", true, this));
         } else {
             throw new UnsupportedEntityException(TextDisplay.class, entity);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_TEXT_DISPLAY_SHADOW;
     }
 }

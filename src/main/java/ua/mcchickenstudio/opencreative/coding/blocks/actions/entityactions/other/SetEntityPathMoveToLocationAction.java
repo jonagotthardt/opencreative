@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Mob;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetEntityPathMoveToLocationAction extends EntityAction {
@@ -39,12 +39,12 @@ public final class SetEntityPathMoveToLocationAction extends EntityAction {
         if (!(entity instanceof Mob mob)) {
             throw new UnsupportedEntityException(Mob.class, entity);
         }
-        Location location = getArguments().getLocation("location",entity.getLocation(),this);
+        Location location = getArguments().getLocation("location", entity.getLocation(), this);
         mob.getPathfinder().moveTo(location);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_TARGET;
     }
 }

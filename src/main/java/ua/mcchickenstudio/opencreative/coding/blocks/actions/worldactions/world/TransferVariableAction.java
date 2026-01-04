@@ -18,16 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.VariableTransferEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.entity.Entity;
 
 public final class TransferVariableAction extends WorldAction {
     public TransferVariableAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,19 +35,20 @@ public final class TransferVariableAction extends WorldAction {
 
     @Override
     protected void execute() {
-        if (!getArguments().pathExists("world") || !getArguments().pathExists("key") || !getArguments().pathExists("value")) return;
-        String worldId = getArguments().getText("world","0",this);
+        if (!getArguments().pathExists("world") || !getArguments().pathExists("key") || !getArguments().pathExists("value"))
+            return;
+        String worldId = getArguments().getText("world", "0", this);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetById(worldId);
         if (planet == null) return;
         if (!planet.isLoaded()) return;
         if (!planet.isOwner(getPlanet().getOwner())) return;
-        String key = getArguments().getText("key","key",this);
-        String value = getArguments().getText("value","value",this);
-        new VariableTransferEvent(planet,key,value).callEvent();
+        String key = getArguments().getText("key", "key", this);
+        String value = getArguments().getText("value", "value", this);
+        new VariableTransferEvent(planet, key, value).callEvent();
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_TRANSFER_VARIABLE;
     }
 }

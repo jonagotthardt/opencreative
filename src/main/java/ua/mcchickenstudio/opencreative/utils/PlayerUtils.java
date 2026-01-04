@@ -20,40 +20,43 @@ package ua.mcchickenstudio.opencreative.utils;
 
 import net.kyori.adventure.resource.ResourcePackInfo;
 import net.kyori.adventure.resource.ResourcePackRequest;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.packs.ResourcePack;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
-import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.async.AsyncScheduler;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.title.Title;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.net.URI;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 
@@ -70,6 +73,7 @@ public final class PlayerUtils {
     /**
      * Clears player from modifications made by world
      * and resets his states, parameters and attributes.
+     *
      * @param player player to clear.
      */
     public static void clearPlayer(Player player) {
@@ -86,18 +90,16 @@ public final class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         resetResourcePack(player);
-        player.releaseLeftShoulderEntity();
-        player.releaseRightShoulderEntity();
-        player.eject();
+        removePassengers(player);
         player.setSimulationDistance(Bukkit.getSimulationDistance());
-        player.setViewDistance(Math.min(player.getClientViewDistance(),Bukkit.getViewDistance()));
+        player.setViewDistance(Math.min(player.getClientViewDistance(), Bukkit.getViewDistance()));
         player.setWorldBorder(player.getWorld().getWorldBorder());
         player.stopAllSounds();
         for (Entity entity : player.getWorld().getEntities()) {
-            player.showEntity(OpenCreative.getPlugin(),entity);
+            player.showEntity(OpenCreative.getPlugin(), entity);
         }
         for (Player p : player.getWorld().getPlayers()) {
-            player.showEntity(OpenCreative.getPlugin(),p);
+            player.showEntity(OpenCreative.getPlugin(), p);
         }
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         clearBossBars(player);
@@ -105,8 +107,17 @@ public final class PlayerUtils {
         player.setGameMode(GameMode.ADVENTURE);
     }
 
+    public static void removePassengers(@NotNull Player player) {
+        player.releaseLeftShoulderEntity();
+        player.releaseRightShoulderEntity();
+        for (Entity passenger : new ArrayList<>(player.getPassengers())) {
+            player.eject();
+        }
+    }
+
     /**
      * Resets changeable attributes for player.
+     *
      * @param player player to clear attributes.
      */
     public static void resetAttributes(Player player) {
@@ -147,6 +158,7 @@ public final class PlayerUtils {
 
     /**
      * Clears and removes displayed boss bars for player.
+     *
      * @param player player to clear boss bars.
      */
     public static void clearBossBars(Player player) {
@@ -156,12 +168,14 @@ public final class PlayerUtils {
                 bar.removePlayer(player);
             }
             player.activeBossBars().forEach(player::hideBossBar);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     /**
      * Removes other resource packs and replaces with
      * server's resource pack, or vanilla.
+     *
      * @param player player to reset resource pack.
      */
     public static void resetResourcePack(Player player) {
@@ -186,6 +200,7 @@ public final class PlayerUtils {
 
     /**
      * Teleports player to lobby.
+     *
      * @param player specified player to teleport.
      **/
     public static void teleportToLobby(Player player) {
@@ -217,6 +232,7 @@ public final class PlayerUtils {
 
     /**
      * Returns a lobby world, where player will get lobby items.
+     *
      * @return lobby world.
      */
     public static World getLobbyWorld() {
@@ -230,6 +246,7 @@ public final class PlayerUtils {
     /**
      * Returns a spawn location in lobby world, where players
      * will be connected to on server join.
+     *
      * @return spawn location in lobby world.
      */
     public static Location getLobbyLocation() {
@@ -251,6 +268,7 @@ public final class PlayerUtils {
      * Checks if entity is probably in developers planet.
      * <p>
      * <b>Note: Can return true, even if planet will be not registered in base.</b>
+     *
      * @param entity entity to check.
      * @return true - if entity is probably in developers planet, false - in planet world or lobby.
      */
@@ -260,6 +278,7 @@ public final class PlayerUtils {
 
     /**
      * Checks if entity is in lobby.
+     *
      * @param entity entity to check.
      * @return true - if entity in lobby, false - in planet or dev planet.
      */
@@ -279,6 +298,7 @@ public final class PlayerUtils {
 
     /**
      * Registers player's permission attachment to memory.
+     *
      * @param player player to load permissions.
      */
     public static void loadPermissions(@NotNull Player player) {
@@ -288,6 +308,7 @@ public final class PlayerUtils {
 
     /**
      * Removes stored player's permission attachment from memory.
+     *
      * @param player player to remove attachment.
      */
     public static void removeFromPermissionsMap(@NotNull Player player) {
@@ -297,6 +318,7 @@ public final class PlayerUtils {
 
     /**
      * Allows player to see local chat message from other worlds.
+     *
      * @param player player, that will see messages.
      */
     public static boolean enableSpying(@NotNull Player player) {
@@ -305,6 +327,7 @@ public final class PlayerUtils {
 
     /**
      * Disallows player to see local chat message from other worlds.
+     *
      * @param player player, that won't see messages anymore.
      */
     public static boolean disableSpying(@NotNull Player player) {
@@ -313,6 +336,7 @@ public final class PlayerUtils {
 
     /**
      * Checks whether player can see local chat messages from other worlds.
+     *
      * @param player player to check.
      * @return true - can see, false - not.
      */
@@ -323,6 +347,7 @@ public final class PlayerUtils {
     /**
      * Returns set of players, who can see local chat messages
      * from other worlds.
+     *
      * @return set of players, who can see local chat.
      */
     public static Set<Player> getPlayersWithEnabledSpying() {
@@ -341,6 +366,7 @@ public final class PlayerUtils {
 
     /**
      * Sets player's permissions when they enter developers planet.
+     *
      * @param player player to give permissions.
      */
     public static void giveDevPermissions(@NotNull Player player) {
@@ -353,6 +379,7 @@ public final class PlayerUtils {
 
     /**
      * Sets player's permissions when they enter planet in play mode.
+     *
      * @param player player to give permissions.
      */
     public static void givePlayPermissions(@NotNull Player player) {
@@ -365,6 +392,7 @@ public final class PlayerUtils {
 
     /**
      * Sets player's permissions when they enter planet in build mode.
+     *
      * @param player player to give permissions.
      */
     public static void giveBuildPermissions(@NotNull Player player) {
@@ -377,6 +405,7 @@ public final class PlayerUtils {
 
     /**
      * Sets player's permissions when they enter lobby.
+     *
      * @param player player to give permissions.
      */
     public static void giveLobbyPermissions(@NotNull Player player) {
@@ -389,6 +418,7 @@ public final class PlayerUtils {
 
     /**
      * Removes player's permissions that he got in world in Build, Play, Dev mode, or in lobby.
+     *
      * @param player player to remove permissions.
      */
     public static void clearWorldModePermissions(@NotNull Player player) {
@@ -405,6 +435,7 @@ public final class PlayerUtils {
 
     /**
      * Translates sign text on code block.
+     *
      * @param block block with sign that will be translated.
      */
     public static void translateBlockSign(Block block) {
@@ -420,7 +451,7 @@ public final class PlayerUtils {
                 } else if (!messageExists(path)) {
                     newLines.add(Component.text(content));
                 } else {
-                    newLines.add(toComponent(getLocaleMessage(path,false)));
+                    newLines.add(toComponent(getLocaleMessage(path, false)));
                 }
             }
             AsyncScheduler.later(() -> {
@@ -433,6 +464,7 @@ public final class PlayerUtils {
 
     /**
      * Translates sign text on code block.
+     *
      * @param block block with sign that will be translated.
      */
     public static void translateBlockSign(Block block, Player player) {
@@ -448,7 +480,7 @@ public final class PlayerUtils {
             } else if (!messageExists(path)) {
                 newLines.add(Component.text(content));
             } else {
-                newLines.add(toComponent(getLocaleMessage(path,false)));
+                newLines.add(toComponent(getLocaleMessage(path, false)));
             }
         }
         new BukkitRunnable() {
@@ -456,22 +488,22 @@ public final class PlayerUtils {
             public void run() {
                 player.sendSignChange(block.getLocation(), newLines);
             }
-        }.runTaskLater(OpenCreative.getPlugin(),10L);
+        }.runTaskLater(OpenCreative.getPlugin(), 10L);
     }
 
     public static void translateSigns(Player player, int radius) {
         if (radius <= 0) return;
         if (radius > 50) radius = 50;
-        int minX = player.getLocation().getBlockX()-radius;
-        int maxX = player.getLocation().getBlockX()+radius;
-        int minZ = player.getLocation().getBlockZ()-radius;
-        int maxZ = player.getLocation().getBlockZ()+radius;
+        int minX = player.getLocation().getBlockX() - radius;
+        int maxX = player.getLocation().getBlockX() + radius;
+        int minZ = player.getLocation().getBlockZ() - radius;
+        int maxZ = player.getLocation().getBlockZ() + radius;
         int y = player.getLocation().getBlockY();
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                Block block = player.getWorld().getBlockAt(x,y,z);
+                Block block = player.getWorld().getBlockAt(x, y, z);
                 if (block.getType().name().contains("WALL_SIGN")) {
-                    translateBlockSign(block,player);
+                    translateBlockSign(block, player);
                 }
             }
         }
@@ -482,7 +514,7 @@ public final class PlayerUtils {
             try {
                 OpenCreative.getPacketManager().displayGlowingBlock(player, location);
             } catch (Exception error) {
-                sendPlayerErrorMessage(player,"Failed to spawn glowing block",error);
+                sendPlayerErrorMessage(player, "Failed to spawn glowing block", error);
             }
         }
     }
@@ -492,7 +524,7 @@ public final class PlayerUtils {
             try {
                 OpenCreative.getPacketManager().sendChestOpenAnimation(player, block);
             } catch (Exception error) {
-                sendPlayerErrorMessage(player,"Failed to display opened chest animation",error);
+                sendPlayerErrorMessage(player, "Failed to display opened chest animation", error);
             }
         }
     }
@@ -502,7 +534,7 @@ public final class PlayerUtils {
             try {
                 OpenCreative.getPacketManager().sendChestCloseAnimation(player, block);
             } catch (Exception error) {
-                sendPlayerErrorMessage(player,"Failed to display closed chest animation",error);
+                sendPlayerErrorMessage(player, "Failed to display closed chest animation", error);
             }
         }
     }
@@ -512,16 +544,16 @@ public final class PlayerUtils {
         Settings.PlayerListChanger changer = OpenCreative.getSettings().getListChanger();
         if (changer == Settings.PlayerListChanger.SPECTATOR) {
             if (OpenCreative.getPacketManager().isEnabled()) {
-                    try {
-                        OpenCreative.getPacketManager().displayAsSpectatorName(spectator, receiver);
-                    } catch (Exception error) {
-                        sendWarningMessage("Failed to mark player " + spectator.getName() + "as hidden in tab",error);
-                    }
+                try {
+                    OpenCreative.getPacketManager().displayAsSpectatorName(spectator, receiver);
+                } catch (Exception error) {
+                    sendWarningMessage("Failed to mark player " + spectator.getName() + "as hidden in tab", error);
+                }
             } else {
-                receiver.hidePlayer(OpenCreative.getPlugin(),spectator);
+                receiver.hidePlayer(OpenCreative.getPlugin(), spectator);
             }
         } else if (changer == Settings.PlayerListChanger.FULL) {
-            receiver.hidePlayer(OpenCreative.getPlugin(),spectator);
+            receiver.hidePlayer(OpenCreative.getPlugin(), spectator);
         }
     }
 
@@ -531,10 +563,10 @@ public final class PlayerUtils {
             try {
                 OpenCreative.getPacketManager().removeSpectatorName(spectator, receiver);
             } catch (Exception error) {
-                sendWarningMessage("Failed send uncolored spectator name " + spectator.getName(),error);
+                sendWarningMessage("Failed send uncolored spectator name " + spectator.getName(), error);
             }
         } else {
-            receiver.showPlayer(OpenCreative.getPlugin(),spectator);
+            receiver.showPlayer(OpenCreative.getPlugin(), spectator);
         }
     }
 

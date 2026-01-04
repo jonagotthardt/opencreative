@@ -18,16 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 public final class PlayerSetWorldBorderAction extends PlayerAction {
     public PlayerSetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,24 +36,24 @@ public final class PlayerSetWorldBorderAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        double radius = getArguments().getDouble("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
-        int time = getArguments().getInt("time",0,this);
-        int warningDistance = getArguments().getInt("warning-distance",5,this);
-        int warningTime = getArguments().getInt("warning-time",15,this);
-        int safeDistance = getArguments().getInt("safe-distance",5,this);
+        double radius = getArguments().getDouble("radius", (getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()), this);
+        int time = getArguments().getInt("time", 0, this);
+        int warningDistance = getArguments().getInt("warning-distance", 5, this);
+        int warningTime = getArguments().getInt("warning-time", 15, this);
+        int safeDistance = getArguments().getInt("safe-distance", 5, this);
         WorldBorder border = Bukkit.createWorldBorder();
-        border.setSize(radius,time);
+        border.setSize(radius, time);
         border.setWarningTime(warningTime);
         border.setWarningDistance(warningDistance);
         border.setDamageBuffer(safeDistance);
-        Location center = getArguments().getLocation("center",player.getLocation(),this);
+        Location center = getArguments().getLocation("center", player.getLocation(), this);
         border.setCenter(center);
         player.setWorldBorder(border);
     }
 
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_WORLD_BORDER;
     }
 }

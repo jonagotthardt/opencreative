@@ -16,28 +16,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.state;
+package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.blocks;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
-public final class SetCanPickupItemAction extends PlayerAction {
-    public SetCanPickupItemAction(Executor executor, Target target, int x, Arguments args) {
-        super(executor, target, x, args);
+import java.util.List;
+
+public class IsInLava extends PlayerCondition {
+    public IsInLava(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
+        super(executor, target, x, args, actions, reactions, isOpposed);
     }
 
     @Override
-    public void executePlayer(@NotNull Player player) {
-        player.setCanPickupItems(getArguments().getBoolean("boolean",true,this));
+    public boolean checkPlayer(@NotNull Player player) {
+        return player.isInLava();
     }
 
     @Override
-    public ActionType getActionType() {
-        return ActionType.PLAYER_SET_CAN_PICKUP_ITEM;
+    public @NotNull ActionType getActionType() {
+        return ActionType.IF_PLAYER_IS_IN_LAVA;
     }
 }

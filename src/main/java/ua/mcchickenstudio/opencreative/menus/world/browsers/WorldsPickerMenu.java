@@ -18,12 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.Set;
@@ -38,12 +38,12 @@ public final class WorldsPickerMenu extends WorldsBrowserMenu {
     protected void onPlanetClick(Player player, Planet downloadablePlanet) {
         if (downloadablePlanet.getInformation().isDownloadable()) {
             int id = WorldUtils.generateWorldID();
-            FileUtils.copyFilesToDirectory(FileUtils.getPlanetFolder(downloadablePlanet),new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id));
+            FileUtils.copyFilesToDirectory(FileUtils.getPlanetFolder(downloadablePlanet), new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id));
             if (downloadablePlanet.getDevPlanet().exists()) {
-                FileUtils.copyFilesToDirectory(FileUtils.getDevPlanetFolder(downloadablePlanet.getDevPlanet()),new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + "dev"));
+                FileUtils.copyFilesToDirectory(FileUtils.getDevPlanetFolder(downloadablePlanet.getDevPlanet()), new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + "dev"));
             }
             Planet newPlanet = new Planet(id);
-            FileUtils.setPlanetConfigParameter(newPlanet,"creation-time",System.currentTimeMillis());
+            FileUtils.setPlanetConfigParameter(newPlanet, "creation-time", System.currentTimeMillis());
             newPlanet.setOwner(player.getName());
             newPlanet.getInformation().setCustomID(String.valueOf(id));
             newPlanet.getInformation().setDownloadable(false);

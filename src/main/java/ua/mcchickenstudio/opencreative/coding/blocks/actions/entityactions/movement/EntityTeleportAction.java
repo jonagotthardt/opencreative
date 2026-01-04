@@ -34,8 +34,8 @@ public final class EntityTeleportAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        String consider = getArguments().getText("consider","all",this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
+        String consider = getArguments().getText("consider", "all", this);
         if (consider.equals("only-coordinates")) {
             location.setYaw(entity.getYaw());
             location.setPitch(entity.getPitch());
@@ -48,7 +48,7 @@ public final class EntityTeleportAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_TELEPORT;
     }
 }

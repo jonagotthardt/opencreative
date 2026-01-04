@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inve
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -36,28 +35,6 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
 public final class EntityRemoveItemsAction extends EntityAction {
     public EntityRemoveItemsAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
-    }
-
-    @Override
-    public void executeEntity(@NotNull Entity entity) {
-        if (entity instanceof InventoryHolder holder) {
-            for (ItemStack item : getArguments().getItemList("items",this)) {
-                removeItems(holder, item);
-            }
-        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
-            ItemStack[] armor = living.getEquipment().getArmorContents();
-            for (ItemStack item : getArguments().getItemList("items", this)) {
-                for (int i = 0; i < armor.length; i++) {
-                    if (armor[i] != null && armor[i].isSimilar(item)) {
-                        armor[i] = null;
-                    }
-                }
-            }
-            living.getEquipment().setArmorContents(armor);
-        } else {
-            throw new UnsupportedEntityException(InventoryHolder.class, entity);
-        }
-
     }
 
     public static void removeItems(@NotNull InventoryHolder holder, ItemStack item) {
@@ -84,7 +61,29 @@ public final class EntityRemoveItemsAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public void executeEntity(@NotNull Entity entity) {
+        if (entity instanceof InventoryHolder holder) {
+            for (ItemStack item : getArguments().getItemList("items", this)) {
+                removeItems(holder, item);
+            }
+        } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
+            ItemStack[] armor = living.getEquipment().getArmorContents();
+            for (ItemStack item : getArguments().getItemList("items", this)) {
+                for (int i = 0; i < armor.length; i++) {
+                    if (armor[i] != null && armor[i].isSimilar(item)) {
+                        armor[i] = null;
+                    }
+                }
+            }
+            living.getEquipment().setArmorContents(armor);
+        } else {
+            throw new UnsupportedEntityException(InventoryHolder.class, entity);
+        }
+
+    }
+
+    @Override
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_REMOVE_ITEMS;
     }
 }

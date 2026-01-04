@@ -18,6 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -30,13 +37,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.*;
@@ -55,6 +55,7 @@ public final class ErrorUtils {
 
     /**
      * Cuts common packages paths from stack trace text.
+     *
      * @param text stack trace to cut.
      * @return stack trace without package paths,
      * or Error message is not available, if text is null.
@@ -64,20 +65,21 @@ public final class ErrorUtils {
             return "Error message is not available";
         }
         String newText = text;
-        newText = newText.replace("ua.mcchickenstudio.opencreative.coding.","");
-        newText = newText.replace("ua.mcchickenstudio.opencreative.","");
-        newText = newText.replace("org.bukkit.","");
-        newText = newText.replace("io.papermc.","");
-        newText = newText.replace("com.destroystokyo.","");
-        newText = newText.replace("java.lang.","java.");
-        newText = newText.replace("blocks.","");
+        newText = newText.replace("ua.mcchickenstudio.opencreative.coding.", "");
+        newText = newText.replace("ua.mcchickenstudio.opencreative.", "");
+        newText = newText.replace("org.bukkit.", "");
+        newText = newText.replace("io.papermc.", "");
+        newText = newText.replace("com.destroystokyo.", "");
+        newText = newText.replace("java.lang.", "java.");
+        newText = newText.replace("blocks.", "");
         return newText;
     }
 
     /**
      * Parses exception into user-friendly message, that can be
      * printed into console or sent to player.
-     * @param error exception to parse.
+     *
+     * @param error   exception to parse.
      * @param colored true - for player, false - for console.
      * @return user-friendly exception.
      */
@@ -98,12 +100,12 @@ public final class ErrorUtils {
                 "☹ Exception has occurred..." +
                 "\n" +
                 (!colored ?
-                """
-                \\|/ _____ \\|/
-                "@'/ . . \\`@"\s""" + OpenCreative.getVersion() + """
-                \n/_| \\___/ |_\\\s""" + getRandomPhrase() + """
-                \n   \\___U_/
-                """ : "") +
+                        """
+                                \\|/ _____ \\|/
+                                "@'/ . . \\`@"\s""" + OpenCreative.getVersion() + """
+                                \n/_| \\___/ |_\\\s""" + getRandomPhrase() + """
+                                \n   \\___U_/
+                                """ : "") +
                 (colored ? "§4 " : " ") +
                 error.getClass().getSimpleName() +
                 ": " +
@@ -114,6 +116,7 @@ public final class ErrorUtils {
 
     /**
      * Returns random phrase for displaying error log.
+     *
      * @return random phrase.
      */
     private static @NotNull String getRandomPhrase() {
@@ -143,12 +146,13 @@ public final class ErrorUtils {
     /**
      * Notifies player about error by sending message with error
      * description in chat and sends warning log in console.
-     * @param player player to send error message.
+     *
+     * @param player       player to send error message.
      * @param errorMessage message of exception.
      */
     public static void sendPlayerErrorMessage(Player player, String errorMessage) {
         OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage);
-        player.sendMessage(getLocaleMessage("player-error").replace("%error%",errorMessage));
+        player.sendMessage(getLocaleMessage("player-error").replace("%error%", errorMessage));
         Sounds.PLAYER_ERROR.play(player);
     }
 
@@ -156,15 +160,17 @@ public final class ErrorUtils {
      * Notifies player about error by sending message with error
      * description in chat and sends warning log in console
      * with stack traces to find line, where error has occurred.
-     * @param player player to send error message.
+     *
+     * @param player       player to send error message.
      * @param errorMessage description of error.
-     * @param error exception, that has occurred.
+     * @param error        exception, that has occurred.
      */
     public static void sendPlayerErrorMessage(Player player, String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().shouldLogWarnings()) OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().shouldLogWarnings())
+            OpenCreative.getPlugin().getLogger().warning("An player error has occurred for " + player.getName() + ": " + errorMessage + " " + parseException(error, false));
         Component message = Component
-                .text(getLocaleMessage("player-error").replace("%error%",errorMessage))
-                .hoverEvent(HoverEvent.showText(Component.text(parseException(error,true))));
+                .text(getLocaleMessage("player-error").replace("%error%", errorMessage))
+                .hoverEvent(HoverEvent.showText(Component.text(parseException(error, true))));
         player.sendMessage(message);
         Sounds.PLAYER_ERROR.play(player);
     }
@@ -174,13 +180,15 @@ public final class ErrorUtils {
      * with error description in chat and sends warning log in console.
      * <p>
      * Not related to coding errors.
+     *
      * @param planet planet to send error message.
-     * @param error description of error.
+     * @param error  description of error.
      */
     public static void sendPlanetErrorMessage(@NotNull Planet planet, @NotNull String error) {
-        if (OpenCreative.getSettings().shouldLogWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + error);
+        if (OpenCreative.getSettings().shouldLogWarnings())
+            OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + error);
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("planet-error").replace("%error%",error));
+            player.sendMessage(getLocaleMessage("planet-error").replace("%error%", error));
             Sounds.PLAYER_ERROR.play(player);
         }
     }
@@ -191,16 +199,18 @@ public final class ErrorUtils {
      * with stack traces to find line, where error has occurred.
      * <p>
      * Not related to coding errors.
-     * @param planet planet to send error message.
+     *
+     * @param planet       planet to send error message.
      * @param errorMessage description of error.
-     * @param error exception, that has occurred.
+     * @param error        exception, that has occurred.
      */
     public static void sendPlanetErrorMessage(Planet planet, String errorMessage, Exception error) {
-        if (OpenCreative.getSettings().shouldLogWarnings()) OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage + " " + parseException(error,false));
+        if (OpenCreative.getSettings().shouldLogWarnings())
+            OpenCreative.getPlugin().getLogger().warning("An error has occurred in planet " + planet.getWorldName() + ": " + errorMessage + " " + parseException(error, false));
         for (Player player : planet.getPlayers()) {
             Component message = Component
-                    .text(getLocaleMessage("planet-error").replace("%error%",errorMessage))
-                    .hoverEvent(HoverEvent.showText(Component.text(parseException(error,true))));
+                    .text(getLocaleMessage("planet-error").replace("%error%", errorMessage))
+                    .hoverEvent(HoverEvent.showText(Component.text(parseException(error, true))));
             player.sendMessage(message);
             Sounds.PLAYER_ERROR.play(player);
         }
@@ -212,9 +222,10 @@ public final class ErrorUtils {
      * <p>
      * Warnings don't stop executing the code, they just
      * send notification, that something can be improved.
+     *
      * @param executor executor, that executed action.
-     * @param action action, that produced warning.
-     * @param warning description of warning.
+     * @param action   action, that produced warning.
+     * @param warning  description of warning.
      */
     public static void sendPlanetCodeWarningMessage(@NotNull Executor executor, @NotNull Action action,
                                                     @NotNull String warning) {
@@ -224,11 +235,11 @@ public final class ErrorUtils {
             Component message = Component
                     .text(getLocaleMessage("planet-code-warning.message")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
-                            .replace("%action%",action.getActionType().getLocaleName())
-                            .replace("%warning%",warning)
-                            .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(executor.getY()))
-                            .replace("%z%",String.valueOf(executor.getZ())))
+                            .replace("%action%", action.getActionType().getLocaleName())
+                            .replace("%warning%", warning)
+                            .replace("%x%", String.valueOf(action.getX()))
+                            .replace("%y%", String.valueOf(executor.getY()))
+                            .replace("%z%", String.valueOf(executor.getZ())))
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
@@ -244,10 +255,11 @@ public final class ErrorUtils {
      * happening new errors in same coding line. They
      * tell that something went wrong, and it needs
      * to be fixed.
-     * @param executor executor, that executed action.
-     * @param action action, that produced error.
+     *
+     * @param executor     executor, that executed action.
+     * @param action       action, that produced error.
      * @param errorMessage description of error.
-     * @param error exception, that has occurred.
+     * @param error        exception, that has occurred.
      */
     public static void sendPlanetCodeErrorMessage(Executor executor, Action action, String errorMessage, Exception error) {
         Planet planet = executor.getPlanet();
@@ -256,13 +268,13 @@ public final class ErrorUtils {
             Component message = Component
                     .text(getLocaleMessage("coding-error.message")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
-                            .replace("%action%",action.getActionType().getLocaleName())
-                            .replace("%error%",errorMessage)
-                            .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(action.getExecutor().getY()))
-                            .replace("%z%",String.valueOf(action.getExecutor().getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message") + "\n" + parseException(error,true))))
-                    .clickEvent(ClickEvent.runCommand("/dev " + (action.getX()-0.5) + " " + action.getExecutor().getY() + " " + (action.getExecutor().getZ()-0.5)));
+                            .replace("%action%", action.getActionType().getLocaleName())
+                            .replace("%error%", errorMessage)
+                            .replace("%x%", String.valueOf(action.getX()))
+                            .replace("%y%", String.valueOf(action.getExecutor().getY()))
+                            .replace("%z%", String.valueOf(action.getExecutor().getZ())))
+                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message") + "\n" + parseException(error, true))))
+                    .clickEvent(ClickEvent.runCommand("/dev " + (action.getX() - 0.5) + " " + action.getExecutor().getY() + " " + (action.getExecutor().getZ() - 0.5)));
             player.sendMessage(message);
             Sounds.WORLD_CODE_ERROR.play(player);
         }
@@ -280,7 +292,7 @@ public final class ErrorUtils {
                     "y", action.getExecutor().getY(),
                     "z", action.getExecutor().getZ())
                     .hoverEvent(HoverEvent.showText(getLocaleComponent("coding-error.hover-message")))
-                    .clickEvent(ClickEvent.runCommand("/dev " + (action.getX()-0.5) + " " + action.getExecutor().getY() + " " + (action.getExecutor().getZ()-0.5)));
+                    .clickEvent(ClickEvent.runCommand("/dev " + (action.getX() - 0.5) + " " + action.getExecutor().getY() + " " + (action.getExecutor().getZ() - 0.5)));
             player.sendMessage(message);
         }
     }
@@ -293,9 +305,10 @@ public final class ErrorUtils {
      * happening new errors in same coding line. They
      * tell that something went wrong, and it needs
      * to be fixed.
-     * @param executor executor, that executed action.
-     * @param action action, that produced error.
-     * @param entity target of action.
+     *
+     * @param executor     executor, that executed action.
+     * @param action       action, that produced error.
+     * @param entity       target of action.
      * @param errorMessage description of error.
      */
     public static void sendPlanetCodeErrorMessage(Executor executor, Action action, Entity entity, String errorMessage) {
@@ -304,12 +317,12 @@ public final class ErrorUtils {
         for (Player player : planet.getPlayers()) {
             player.sendMessage(
                     getLocaleMessage("coding-error.message")
-                            .replace("%event%",executor.getExecutorType().getLocaleName())
+                            .replace("%event%", executor.getExecutorType().getLocaleName())
                             .replace("%action%", action.getActionType().toString())
-                            .replace("%error%",errorMessage)
-                            .replace("%x%",String.valueOf(action.getX()))
-                            .replace("%y%",String.valueOf(executor.getY()))
-                            .replace("%z%",String.valueOf(executor.getZ())));
+                            .replace("%error%", errorMessage)
+                            .replace("%x%", String.valueOf(action.getX()))
+                            .replace("%y%", String.valueOf(executor.getY()))
+                            .replace("%z%", String.valueOf(executor.getZ())));
             Sounds.WORLD_CODE_ERROR.play(player);
         }
     }
@@ -320,8 +333,9 @@ public final class ErrorUtils {
      * <p>
      * Critical errors stop entire code in planet,
      * and change its mode to Build.
-     * @param planet planet to send error message.
-     * @param executor executor, that executed action.
+     *
+     * @param planet       planet to send error message.
+     * @param executor     executor, that executed action.
      * @param errorMessage description of error.
      */
     public static void sendPlanetCodeCriticalErrorMessage(Planet planet, Executor executor, String errorMessage) {
@@ -331,10 +345,10 @@ public final class ErrorUtils {
             Component message = Component
                     .text(getLocaleMessage("coding-error.message-event-critical")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
-                            .replace("%error%",errorMessage)
-                            .replace("%x%",String.valueOf(executor.getX()))
-                            .replace("%y%",String.valueOf(executor.getY()))
-                            .replace("%z%",String.valueOf(executor.getZ())))
+                            .replace("%error%", errorMessage)
+                            .replace("%x%", String.valueOf(executor.getX()))
+                            .replace("%y%", String.valueOf(executor.getY()))
+                            .replace("%z%", String.valueOf(executor.getZ())))
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
@@ -349,8 +363,9 @@ public final class ErrorUtils {
      * happening new errors in same coding line. They
      * tell that something went wrong, and it needs
      * to be fixed.
-     * @param planet planet to send error message.
-     * @param executor executor, that executed action.
+     *
+     * @param planet       planet to send error message.
+     * @param executor     executor, that executed action.
      * @param errorMessage description of error.
      */
     public static void sendPlanetCodeErrorMessage(Planet planet, Executor executor, String errorMessage) {
@@ -359,10 +374,10 @@ public final class ErrorUtils {
             Component message = Component
                     .text(getLocaleMessage("coding-error.message-event")
                             .replace("%event%", executor.getExecutorType().getLocaleName())
-                            .replace("%error%",errorMessage)
-                            .replace("%x%",String.valueOf(executor.getX()))
-                            .replace("%y%",String.valueOf(executor.getY()))
-                            .replace("%z%",String.valueOf(executor.getZ())))
+                            .replace("%error%", errorMessage)
+                            .replace("%x%", String.valueOf(executor.getX()))
+                            .replace("%y%", String.valueOf(executor.getY()))
+                            .replace("%z%", String.valueOf(executor.getZ())))
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + executor.getX() + " " + executor.getY() + " " + executor.getZ()));
             player.sendMessage(message);
@@ -373,8 +388,9 @@ public final class ErrorUtils {
     /**
      * Notifies planet players about coding issue, that has
      * happened while compiling new code from dev planet.
-     * @param planet planet to send error message.
-     * @param block block, that caused issue.
+     *
+     * @param planet       planet to send error message.
+     * @param block        block, that caused issue.
      * @param errorMessage description of error.
      */
     public static void sendPlanetCompileErrorMessage(Planet planet, Block block, String errorMessage) {
@@ -382,10 +398,10 @@ public final class ErrorUtils {
         for (Player player : planet.getPlayers()) {
             Component message = Component
                     .text(getLocaleMessage("coding-error.message-compile")
-                            .replace("%error%",errorMessage)
-                            .replace("%x%",String.valueOf(block.getX()))
-                            .replace("%y%",String.valueOf(block.getY()))
-                            .replace("%z%",String.valueOf(block.getZ())))
+                            .replace("%error%", errorMessage)
+                            .replace("%x%", String.valueOf(block.getX()))
+                            .replace("%y%", String.valueOf(block.getY()))
+                            .replace("%z%", String.valueOf(block.getZ())))
                     .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
                     .clickEvent(ClickEvent.runCommand("/dev " + block.getX() + " " + block.getY() + " " + block.getZ()));
             player.sendMessage(message);
@@ -397,17 +413,18 @@ public final class ErrorUtils {
      * Notifies planet players about unknown coding blocks,
      * that were found while compiling a new code from
      * dev planet.
-     * @param planet planet to send error message.
+     *
+     * @param planet        planet to send error message.
      * @param unknownBlocks list of unknown blocks.
      */
     public static void sendPlanetCompileErrorMessage(Planet planet, List<Block> unknownBlocks) {
         if (planet == null) return;
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-error.unknown-block-detected").replace("%error%",getLocaleMessage("coding-error.unknown-blocks",false)));
+            player.sendMessage(getLocaleMessage("coding-error.unknown-block-detected").replace("%error%", getLocaleMessage("coding-error.unknown-blocks", false)));
             for (Block block : unknownBlocks) {
                 NamedTextColor color = NamedTextColor.GRAY;
                 String category = "???";
-                String type = getSignLine(block.getLocation(),(byte) 3);
+                String type = getSignLine(block.getLocation(), (byte) 3);
                 if (type == null || type.isEmpty()) type = "???";
                 ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(block.getType());
                 ActionCategory actionCategory = ActionCategory.getByMaterial(block.getType());
@@ -422,11 +439,11 @@ public final class ErrorUtils {
 
                 Component blockCoordinatesMessage = Component
                         .text(getLocaleMessage("coding-error.unknown-block-coords")
-                            .replace("%x%", String.valueOf(block.getLocation().getX()))
-                            .replace("%y%", String.valueOf(block.getLocation().getY()))
-                            .replace("%z%", String.valueOf(block.getLocation().getZ()))
-                            .replace("%category%",category)
-                            .replace("%type%",type))
+                                .replace("%x%", String.valueOf(block.getLocation().getX()))
+                                .replace("%y%", String.valueOf(block.getLocation().getY()))
+                                .replace("%z%", String.valueOf(block.getLocation().getZ()))
+                                .replace("%category%", category)
+                                .replace("%type%", type))
                         .color(color)
                         .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
                         .clickEvent(ClickEvent.runCommand("/dev " + block.getLocation().getX() + " " + block.getLocation().getY() + " " + block.getLocation().getZ()));
@@ -439,6 +456,7 @@ public final class ErrorUtils {
 
     /**
      * Sends warning log in console about issue with plugin.
+     *
      * @param warning description of warning.
      */
     public static void sendWarningErrorMessage(String warning) {
@@ -450,8 +468,9 @@ public final class ErrorUtils {
     /**
      * Sends warning log in console with stack traces
      * to find line, that produced not too serious error.
+     *
      * @param errorMessage description of warning.
-     * @param error exception, that has occurred.
+     * @param error        exception, that has occurred.
      */
     public static void sendWarningMessage(String errorMessage, Exception error) {
         if (OpenCreative.getSettings().shouldLogWarnings()) {
@@ -461,6 +480,7 @@ public final class ErrorUtils {
 
     /**
      * Sends error log in console about problem with plugin.
+     *
      * @param errorMessage description of error.
      */
     public static void sendCriticalErrorMessage(String errorMessage) {
@@ -472,18 +492,20 @@ public final class ErrorUtils {
     /**
      * Sends error log in console with stack traces
      * to find line, that produced critical error.
+     *
      * @param errorMessage description of critical error.
-     * @param error exception, that has occurred.
+     * @param error        exception, that has occurred.
      */
     public static void sendCriticalErrorMessage(String errorMessage, Exception error) {
         if (OpenCreative.getSettings().shouldLogCriticalErrors()) {
-            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
+            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error, false));
         }
     }
 
     /**
      * Sends debug log in console, only if debug mode
      * is enabled in plugin's settings.
+     *
      * @param message debug log.
      */
     public static void sendDebug(String message) {
@@ -498,12 +520,13 @@ public final class ErrorUtils {
      * settings.
      * <p>
      * Used for not serious errors for server owners.
+     *
      * @param errorMessage description of critical error.
-     * @param error exception, that has occurred.
+     * @param error        exception, that has occurred.
      */
     public static void sendDebugError(String errorMessage, Exception error) {
         if (OpenCreative.getSettings().isDebug()) {
-            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error,false));
+            OpenCreative.getPlugin().getLogger().severe("CRITICAL ERROR has occurred: " + errorMessage + " " + parseException(error, false));
         }
     }
 
@@ -514,8 +537,9 @@ public final class ErrorUtils {
      * <p>
      * Happens when player forgets to fill items
      * in coding container.
+     *
      * @param planet planet to send error message.
-     * @param name name of value.
+     * @param name   name of value.
      */
     public static void sendCodingDebugNotFoundVariable(Planet planet, String name) {
         if (true) {
@@ -525,7 +549,7 @@ public final class ErrorUtils {
         Object value = null;
         if (value == null) value = "null";
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-debug.variable-not-found",false).replace("%name%",name).replace("%value%", value.toString()));
+            player.sendMessage(getLocaleMessage("coding-debug.variable-not-found", false).replace("%name%", name).replace("%value%", value.toString()));
         }
     }
 
@@ -536,14 +560,15 @@ public final class ErrorUtils {
      * <p>
      * Happens when player uses wrong coding block
      * in event.
-     * @param planet planet to send message.
+     *
+     * @param planet   planet to send message.
      * @param executor executor, that stores event.
-     * @param clazz class of event value, that was not found.
+     * @param clazz    class of event value, that was not found.
      */
     public static void sendCodingNotFoundEventValue(Planet planet, Executor executor, Class<? extends EventValue> clazz) {
         if (planet == null) return;
         EventValue eventValue = EventValues.getInstance().getByClass(clazz);
-        sendPlanetCodeErrorMessage(planet,executor, getLocaleMessage("coding-error.temp-var-not-exists",false)
+        sendPlanetCodeErrorMessage(planet, executor, getLocaleMessage("coding-error.temp-var-not-exists", false)
                 .replace("%variable%", eventValue != null ? eventValue.getLocaleName() : clazz.getSimpleName()));
     }
 
@@ -554,13 +579,14 @@ public final class ErrorUtils {
      * Used to describe some reasons of
      * events cancellations, actions fails
      * or processes.
+     *
      * @param planet planet to send log.
-     * @param log debug log.
+     * @param log    debug log.
      */
     public static void sendCodingDebugLog(Planet planet, String log) {
         if (!planet.isDebug()) return;
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-debug.log",false).replace("%log%",log));
+            player.sendMessage(getLocaleMessage("coding-debug.log", false).replace("%log%", log));
         }
     }
 
@@ -568,9 +594,10 @@ public final class ErrorUtils {
      * Sends notification to planet players about
      * found value while filling arguments in action,
      * only if planet's debug mode is enabled.
+     *
      * @param planet planet to send message.
-     * @param name executor, that stores event.
-     * @param value value.
+     * @param name   executor, that stores event.
+     * @param value  value.
      */
     public static void sendCodingDebugVariable(Planet planet, String name, Object value) {
         if (true) {
@@ -579,13 +606,14 @@ public final class ErrorUtils {
         if (!planet.isDebug()) return;
         if (value == null) value = "null";
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-debug.variable-found",false).replace("%name%",name).replace("%value%",value.toString()));
+            player.sendMessage(getLocaleMessage("coding-debug.variable-found", false).replace("%name%", name).replace("%value%", value.toString()));
         }
     }
 
     /**
      * Sends notification to planet players about
      * calling executor.
+     *
      * @param executor executor, that has activated.
      */
     public static void sendCodingDebugExecutor(Executor executor) {
@@ -593,7 +621,7 @@ public final class ErrorUtils {
         if (!executor.isDebug()) return;
         if (planet == null || !planet.isDebug()) return;
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-debug.executor-message",false).replace("%type%",executor.getExecutorType().getLocaleName()).replace("%x%",String.valueOf(executor.getX())).replace("%y%",String.valueOf(executor.getY())).replace("%z%",String.valueOf(executor.getZ())));
+            player.sendMessage(getLocaleMessage("coding-debug.executor-message", false).replace("%type%", executor.getExecutorType().getLocaleName()).replace("%x%", String.valueOf(executor.getX())).replace("%y%", String.valueOf(executor.getY())).replace("%z%", String.valueOf(executor.getZ())));
         }
     }
 
@@ -601,6 +629,7 @@ public final class ErrorUtils {
      * Sends notification to planet players about
      * action information, that will be executed.
      * Only if planet's debug mode is enabled.
+     *
      * @param action action, that will be executed.
      */
     public static void sendCodingDebugAction(Action action) {
@@ -610,20 +639,20 @@ public final class ErrorUtils {
         if (planet == null || !planet.isDebug()) return;
         List<Argument> arguments = action.getArgumentsList();
         String message = getLocaleMessage("coding-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
-        message = message.replace("%category%",action.getActionCategory().getLocaleName());
-        message = message.replace("%type%",action.getActionType().getLocaleName());
+        message = message.replace("%category%", action.getActionCategory().getLocaleName());
+        message = message.replace("%type%", action.getActionType().getLocaleName());
         if (action instanceof Condition condition) {
-            message = message.replace("%opposed%",getLocaleMessage("coding-debug.condition.opposed." + condition.isOpposed()));
+            message = message.replace("%opposed%", getLocaleMessage("coding-debug.condition.opposed." + condition.isOpposed()));
         }
         List<String> argumentsString = new ArrayList<>();
         for (Argument arg : arguments) {
             argumentsString.add(getLocaleMessage("coding-debug.hover.argument")
-                    .replace("%name%",arg.getPath())
-                    .replace("%type%",arg.getType().getLocaleName())
-                    .replace("%value%",arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+                    .replace("%name%", arg.getPath())
+                    .replace("%type%", arg.getType().getLocaleName())
+                    .replace("%value%", arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
         }
-        message = message.replace("%arguments%",String.join(" \n",argumentsString));
-        String actionMessage = getLocaleMessage("coding-debug.action-message",false).replace("%type%",action.getActionType().getLocaleName()).replace("%x%",String.valueOf(action.getX())).replace("%y%",String.valueOf(action.getExecutor().getY())).replace("%z%",String.valueOf(action.getExecutor().getZ()));
+        message = message.replace("%arguments%", String.join(" \n", argumentsString));
+        String actionMessage = getLocaleMessage("coding-debug.action-message", false).replace("%type%", action.getActionType().getLocaleName()).replace("%x%", String.valueOf(action.getX())).replace("%y%", String.valueOf(action.getExecutor().getY())).replace("%z%", String.valueOf(action.getExecutor().getZ()));
         for (Player player : planet.getPlayers()) {
             player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(message))));
         }

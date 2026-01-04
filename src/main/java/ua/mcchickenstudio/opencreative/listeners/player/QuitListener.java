@@ -19,21 +19,20 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import org.bukkit.GameMode;
-import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
-import ua.mcchickenstudio.opencreative.commands.ChatCommand;
-import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
-import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
-import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
+import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.commands.ChatCommand;
+import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
+import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -50,7 +49,7 @@ public final class QuitListener implements Listener {
         Player player = event.getPlayer();
         player.spigot().respawn();
 
-        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName(player.getWorld().getName().replace("dev",""));
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName(player.getWorld().getName().replace("dev", ""));
         if (planet != null) {
             new QuitEvent(player).callEvent();
             PlanetPlayer planetPlayer = planet.getWorldPlayers().getPlanetPlayer(player);
@@ -64,7 +63,7 @@ public final class QuitListener implements Listener {
                         planet.getTerritory().unload();
                     }
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),20L);
+            }.runTaskLater(OpenCreative.getPlugin(), 20L);
 
         }
         player.setGameMode(GameMode.ADVENTURE);

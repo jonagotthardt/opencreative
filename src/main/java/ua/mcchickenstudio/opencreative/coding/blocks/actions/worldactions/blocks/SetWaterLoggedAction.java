@@ -21,8 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Waterlogged;
-import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -40,8 +40,8 @@ public final class SetWaterLoggedAction extends WorldAction {
 
     @Override
     protected void execute() {
-        List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean water = getArguments().getBoolean("water",true,this);
+        List<Location> locations = getArguments().getLocationList("locations", this);
+        boolean water = getArguments().getBoolean("water", true, this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -51,7 +51,7 @@ public final class SetWaterLoggedAction extends WorldAction {
         getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
             if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                 getPlanet().getTerritory().removeBukkitRunnable(runnable);
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
@@ -60,16 +60,16 @@ public final class SetWaterLoggedAction extends WorldAction {
             if (block.getState() instanceof Waterlogged waterlogged) {
                 waterlogged.setWaterlogged(water);
                 block.setBlockData(waterlogged);
-                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
 
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SET_BLOCK_WATERLOGGED;
     }
 }

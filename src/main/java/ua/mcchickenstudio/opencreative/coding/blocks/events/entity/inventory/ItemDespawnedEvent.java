@@ -40,12 +40,12 @@ public final class ItemDespawnedEvent extends WorldEvent implements Cancellable,
     }
 
     @Override
-    public @NotNull ItemStack getItem() {
-        return event.getEntity().getItemStack();
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public @NotNull ItemStack getItem() {
+        return event.getEntity().getItemStack();
     }
 }

@@ -33,17 +33,17 @@ public final class PlayerSetMaximumAirAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        boolean add = getArguments().getBoolean("add",false,this);
-        int ticks = getArguments().getInt("ticks",0,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int ticks = getArguments().getInt("ticks", 0, this);
         if (!add) {
             player.setMaximumAir(ticks);
         } else {
-            player.setMaximumAir(player.getMaximumAir()+ticks);
+            player.setMaximumAir(player.getMaximumAir() + ticks);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_MAXIMUM_AIR;
     }
 }

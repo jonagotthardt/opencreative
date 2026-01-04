@@ -23,6 +23,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TextDisplay;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -49,10 +50,10 @@ public final class SpawnTextDisplayAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
-        Component text = getArguments().getComponent("text",Component.text(""),this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
+        Component text = getArguments().getComponent("text", Component.text(""), this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);
 
             if (spawnedEntity instanceof TextDisplay display) {
@@ -66,7 +67,7 @@ public final class SpawnTextDisplayAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_TEXT_DISPLAY;
     }
 }

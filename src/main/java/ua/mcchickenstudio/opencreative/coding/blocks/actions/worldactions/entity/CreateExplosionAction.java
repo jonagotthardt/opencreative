@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -39,16 +39,16 @@ public final class CreateExplosionAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: create explosion action is cancelled.");
             return;
         }
-        float power = Math.min(10f,getArguments().getFloat("power",0f,this));
-        boolean setFire = getArguments().getBoolean("fire",false,this);
-        boolean breakBlocks = getArguments().getBoolean("damage",false,this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
-            getPlanet().getTerritory().getWorld().createExplosion(location,power,setFire,breakBlocks);
+        float power = Math.min(10f, getArguments().getFloat("power", 0f, this));
+        boolean setFire = getArguments().getBoolean("fire", false, this);
+        boolean breakBlocks = getArguments().getBoolean("damage", false, this);
+        for (Location location : getArguments().getLocationList("locations", this)) {
+            getPlanet().getTerritory().getWorld().createExplosion(location, power, setFire, breakBlocks);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_CREATE_EXPLOSION;
     }
 }

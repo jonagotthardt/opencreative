@@ -18,11 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
@@ -30,6 +25,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
@@ -44,14 +44,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 
 public final class RecommendedWorldsMenu extends AbstractMenu {
 
-    private final int[] featuredWorldsSlots = {10,11,12,13,14,15,16, 19,20,21,22,23,24,25, 28,29,30,31,32,33,34};
-    private final ItemStack OWN_WORLDS = createItem(Material.REPEATING_COMMAND_BLOCK,1,"menus.all-worlds.items.own-worlds");
-    private final ItemStack DECORATION_OWN_WORLDS = createItem(Material.PURPLE_STAINED_GLASS_PANE,1);
-    private final ItemStack SEARCH = createItem(Material.SPYGLASS,1,"menus.all-worlds.items.search");
-    private final ItemStack ALL_WORLDS = createItem(Material.ARROW,1,"menus.recommended-worlds.items.all-worlds");
+    private final int[] featuredWorldsSlots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
+    private final ItemStack OWN_WORLDS = createItem(Material.REPEATING_COMMAND_BLOCK, 1, "menus.all-worlds.items.own-worlds");
+    private final ItemStack DECORATION_OWN_WORLDS = createItem(Material.PURPLE_STAINED_GLASS_PANE, 1);
+    private final ItemStack SEARCH = createItem(Material.SPYGLASS, 1, "menus.all-worlds.items.search");
+    private final ItemStack ALL_WORLDS = createItem(Material.ARROW, 1, "menus.recommended-worlds.items.all-worlds");
 
     public RecommendedWorldsMenu() {
-        super(6, getLocaleMessage("menus.recommended-worlds.title",false));
+        super(6, getLocaleMessage("menus.recommended-worlds.title", false));
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
         List<Planet> featuredPlanets = OpenCreative.getPlanetsManager().getRecommendedPlanets();
         if (featuredPlanets.isEmpty()) {
             for (int slot : featuredWorldsSlots) {
-                setItem(slot,DECORATION_ITEM);
+                setItem(slot, DECORATION_ITEM);
             }
             return;
         }
@@ -77,7 +77,7 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
                 setItem(slot, featuredPlanets.get(index).getInformation().getIcon());
                 index++;
             } else {
-                setItem(slot,DECORATION_ITEM);
+                setItem(slot, DECORATION_ITEM);
             }
         }
     }
@@ -93,7 +93,7 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
         if (currentItem == null) {
             return;
         }
-        if (itemEquals(currentItem,SEARCH)) {
+        if (itemEquals(currentItem, SEARCH)) {
             PlayerConfirmation request = switch (event.getClick()) {
                 case LEFT -> PlayerConfirmation.FIND_PLANETS_BY_NAME;
                 case RIGHT, SHIFT_RIGHT -> PlayerConfirmation.FIND_PLANETS_BY_ID;
@@ -115,12 +115,12 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
             ));
             player.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
             Sounds.MENU_WORLD_SEARCH.play(player);
-            ChatListener.confirmation.put(player,request);
-        } else if (itemEquals(currentItem,ALL_WORLDS)) {
+            ChatListener.confirmation.put(player, request);
+        } else if (itemEquals(currentItem, ALL_WORLDS)) {
             new WorldsBrowserMenu(player, OpenCreative.getPlanetsManager().getPlanets()).open(player);
-        } else if (itemEquals(currentItem,OWN_WORLDS)) {
+        } else if (itemEquals(currentItem, OWN_WORLDS)) {
             new OwnWorldsBrowserMenu(player).open(player);
-        } else if (!itemEquals(currentItem,DECORATION_ITEM) && Arrays.stream(featuredWorldsSlots).anyMatch(i -> i == event.getRawSlot())) {
+        } else if (!itemEquals(currentItem, DECORATION_ITEM) && Arrays.stream(featuredWorldsSlots).anyMatch(i -> i == event.getRawSlot())) {
             String worldID = getPersistentData(currentItem, getItemIdKey());
             if (worldID.isEmpty()) {
                 return;

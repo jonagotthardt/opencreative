@@ -70,28 +70,28 @@ public class Group {
         /*
          * Registering constant values.
          */
-        worldSize = config.getInt(path + "world.size",25);
-        likeReward = config.getInt(path + "world.like-reward",1);
-        advertisementPrice = config.getInt(path + "world.advertisement-cost",0);
+        worldSize = config.getInt(path + "world.size", 25);
+        likeReward = config.getInt(path + "world.like-reward", 1);
+        advertisementPrice = config.getInt(path + "world.advertisement-cost", 0);
         canUsePrompter = config.getBoolean(path + "world.coding-prompter", false);
 
         /*
          * Registering specific limits, that don't require modifiers.
          */
-        worldsLimit = config.getInt(path + "creating-world.limit",1);
-        modulesLimit = config.getInt(path + "creating-module.limit",1);
-        codingPlatformsLimit = config.getInt(path + "world.limits.coding-platforms",1);
-        scriptSizeLimit = config.getInt(path + "world.limits.script-size",10);
+        worldsLimit = config.getInt(path + "creating-world.limit", 1);
+        modulesLimit = config.getInt(path + "creating-module.limit", 1);
+        codingPlatformsLimit = config.getInt(path + "world.limits.coding-platforms", 1);
+        scriptSizeLimit = config.getInt(path + "world.limits.script-size", 10);
 
         /*
          * Registering cooldowns.
          */
-        genericCommandCooldown = config.getInt(path + "cooldowns.generic-command",5);
-        advertisementCooldown = config.getInt(path + "cooldowns.advertisement",120);
-        creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat",5);
-        modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage",7);
-        blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage",7);
-        chatCooldown = config.getInt(path + "cooldowns.world-chat",2);
+        genericCommandCooldown = config.getInt(path + "cooldowns.generic-command", 5);
+        advertisementCooldown = config.getInt(path + "cooldowns.advertisement", 120);
+        creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat", 5);
+        modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage", 7);
+        blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage", 7);
+        chatCooldown = config.getInt(path + "cooldowns.world-chat", 2);
 
         /*
          * Registering sets of permissions.
@@ -106,10 +106,10 @@ public class Group {
             String limitPath = path + "world.limits." + type.getPath();
             String modifierPath = path + "world.per-player-limit-modifiers." + type.getPath();
             limits.put(type,
-                new LimitModifier(
-                    config.getInt(limitPath, type.getDefaultLimit()),
-                    config.getInt(modifierPath, type.getDefaultModifier())
-            ));
+                    new LimitModifier(
+                            config.getInt(limitPath, type.getDefaultLimit()),
+                            config.getInt(modifierPath, type.getDefaultModifier())
+                    ));
 
             if (!config.contains(limitPath)) {
                 OpenCreative.getPlugin().getConfig().set(limitPath, type.getDefaultLimit());
@@ -125,6 +125,7 @@ public class Group {
 
     /**
      * Returns ID of group, that was specified in settings.
+     *
      * @return ID of group.
      */
     public String getName() {
@@ -133,6 +134,7 @@ public class Group {
 
     /**
      * Returns how much time needs to pass to advertise worlds.
+     *
      * @return cooldown of advertising worlds.
      */
     public int getAdvertisementCooldown() {
@@ -141,6 +143,7 @@ public class Group {
 
     /**
      * Returns how much time needs to pass to chat in world.
+     *
      * @return cooldown of using local chat.
      */
     public int getChatCooldown() {
@@ -149,6 +152,7 @@ public class Group {
 
     /**
      * Returns how much time needs to pass to chat on server.
+     *
      * @return cooldown of using creative chat.
      */
     public int getCreativeChatCooldown() {
@@ -157,6 +161,7 @@ public class Group {
 
     /**
      * Returns how much time needs to pass to duplicate coding lines.
+     *
      * @return cooldown of duplicating coding lines.
      */
     public int getBlocksDuplicationCooldown() {
@@ -165,6 +170,7 @@ public class Group {
 
     /**
      * Returns how much time needs to pass to install, or create a module.
+     *
      * @return cooldown of module operations.
      */
     public int getModuleManipulationCooldown() {
@@ -173,6 +179,7 @@ public class Group {
 
     /**
      * Returns how much time needs to pass to use command.
+     *
      * @return cooldown of command usage.
      */
     public int getGenericCommandCooldown() {
@@ -182,6 +189,7 @@ public class Group {
     /**
      * Returns size of world, that will be used for setting
      * worlds borders.
+     *
      * @return size of world.
      */
     public int getWorldSize() {
@@ -190,6 +198,7 @@ public class Group {
 
     /**
      * Returns how many worlds player can create.
+     *
      * @return limit of worlds.
      */
     public int getWorldsLimit() {
@@ -198,6 +207,7 @@ public class Group {
 
     /**
      * Returns how many modules player can create.
+     *
      * @return limit of modules.
      */
     public int getModulesLimit() {
@@ -207,6 +217,7 @@ public class Group {
     /**
      * Returns set of permissions, that will be given when player is
      * a builder of world and the world is in build mode.
+     *
      * @return set of build permissions.
      */
     public Set<String> getBuildPermissions() {
@@ -216,6 +227,7 @@ public class Group {
     /**
      * Returns set of permissions, that will be given when player is
      * a developer of world, and they entered coding world.
+     *
      * @return set of coding permissions.
      */
     public Set<String> getDevPermissions() {
@@ -225,6 +237,7 @@ public class Group {
     /**
      * Returns set of permissions, that will be given when player is
      * a developer of world and the world is in play mode.
+     *
      * @return set of build permissions.
      */
     public Set<String> getPlayPermissions() {
@@ -234,6 +247,7 @@ public class Group {
     /**
      * Returns set of permissions, that will be given when player
      * connects the lobby world.
+     *
      * @return set of lobby permissions.
      */
     public Set<String> getLobbyPermissions() {
@@ -243,6 +257,7 @@ public class Group {
     /**
      * Returns permission node, that player must to have
      * to get this group.
+     *
      * @return permission node of group.
      */
     public String getPermission() {
@@ -252,6 +267,7 @@ public class Group {
     /**
      * Returns limit instance for group, that will be used
      * to calculate and check limits.
+     *
      * @param type type of limit.
      * @return instance of limit.
      */
@@ -266,6 +282,7 @@ public class Group {
 
     /**
      * Returns maximum amount of coding platforms.
+     *
      * @return coding platforms limit.
      */
     public int getCodingPlatformsLimit() {
@@ -274,6 +291,7 @@ public class Group {
 
     /**
      * Returns amount of money required to advertise world.
+     *
      * @return price of world advertisement.
      */
     public double getAdvertisementPrice() {
@@ -283,6 +301,7 @@ public class Group {
     /**
      * Returns amount of money, that will be given to world's owner,
      * when someone likes their world.
+     *
      * @return reward for world's owner for like.
      */
     public double getLikeReward() {
@@ -291,6 +310,7 @@ public class Group {
 
     /**
      * Checks whether player can use prompt handler with /env make.
+     *
      * @return true - allowed to use, false - not enough permissions.
      */
     public boolean canUsePrompter() {
@@ -299,6 +319,7 @@ public class Group {
 
     /**
      * Returns maximum size of code script in megabytes.
+     *
      * @return script's size limit.
      */
     public int getScriptSizeLimit() {

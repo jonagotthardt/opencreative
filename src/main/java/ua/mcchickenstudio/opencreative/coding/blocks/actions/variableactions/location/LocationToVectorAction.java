@@ -19,7 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,13 +34,13 @@ public final class LocationToVectorAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",getDefaultLocation(),this);
-        setVarValue(link,location.toVector());
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Location location = getArguments().getLocation("location", getDefaultLocation(), this);
+        setVarValue(link, location.toVector());
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_LOCATION_TO_VECTOR;
     }
 }

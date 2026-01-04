@@ -19,14 +19,14 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.time.Duration;
 
@@ -37,11 +37,11 @@ public final class ShowTitleAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        Component title = getArguments().getComponent("title", Component.text(""),this);
-        Component subtitle = getArguments().getComponent("subtitle", Component.text(""),this);
-        int fadeIn = getArguments().getInt("fade-in",20,this);
-        int stay = getArguments().getInt("stay",60,this);
-        int fadeOut = getArguments().getInt("stay-out",10,this);
+        Component title = getArguments().getComponent("title", Component.text(""), this);
+        Component subtitle = getArguments().getComponent("subtitle", Component.text(""), this);
+        int fadeIn = getArguments().getInt("fade-in", 20, this);
+        int stay = getArguments().getInt("stay", 60, this);
+        int fadeOut = getArguments().getInt("stay-out", 10, this);
         /*
          * We multiply ticks by 50L to
          * convert them into milliseconds.
@@ -54,7 +54,7 @@ public final class ShowTitleAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SHOW_TITLE;
     }
 }

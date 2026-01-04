@@ -41,12 +41,14 @@ public final class EntityExplodeAction extends EntityAction {
             case Creeper creeper -> creeper.explode();
             case ExplosiveMinecart minecart -> minecart.explode();
             case AbstractWindCharge charge -> charge.explode();
-            default -> {throw new UnsupportedEntityException(Creeper.class, entity);}
+            default -> {
+                throw new UnsupportedEntityException(Creeper.class, entity);
+            }
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_EXPLODE;
     }
 }

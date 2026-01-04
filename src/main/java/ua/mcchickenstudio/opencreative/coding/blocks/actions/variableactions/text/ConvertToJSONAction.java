@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
 import com.google.gson.*;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -40,7 +39,7 @@ public final class ConvertToJSONAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
         Object value = getArguments().getValue("variable", this);
         boolean pretty = getArguments().getBoolean("pretty", false, this);
         Gson gson = pretty ? new GsonBuilder().setPrettyPrinting().create() : new GsonBuilder().create();
@@ -49,7 +48,7 @@ public final class ConvertToJSONAction extends VariableAction {
         if (value instanceof List<?> list) {
             JsonArray array = new JsonArray();
             for (Object element : list) {
-                if (element instanceof List<?> || element instanceof Map<?,?>) {
+                if (element instanceof List<?> || element instanceof Map<?, ?>) {
                     throw new CollectionWithCollectionException(List.class, element instanceof List<?> ? List.class : Map.class);
                 }
                 array.add(getPrimitive(element));
@@ -59,7 +58,7 @@ public final class ConvertToJSONAction extends VariableAction {
             JsonObject object = new JsonObject();
             for (Object key : map.keySet()) {
                 Object element = map.get(key);
-                if (element instanceof List<?> || element instanceof Map<?,?>) {
+                if (element instanceof List<?> || element instanceof Map<?, ?>) {
                     throw new CollectionWithCollectionException(List.class, element instanceof List<?> ? List.class : Map.class);
                 }
                 JsonPrimitive primitiveKey = getPrimitive(key);
@@ -94,7 +93,7 @@ public final class ConvertToJSONAction extends VariableAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_CONVERT_TO_JSON;
     }
 }

@@ -41,17 +41,17 @@ public final class EntitySetItemsAction extends EntityAction {
         if (!(entity instanceof InventoryHolder holder)) {
             throw new UnsupportedEntityException(InventoryHolder.class, entity);
         }
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         for (byte slot = 9; slot < 36; slot++) {
-            if (slot-9 == items.size()) {
+            if (slot - 9 == items.size()) {
                 return;
             }
-            holder.getInventory().setItem(slot,items.get(slot-9));
+            holder.getInventory().setItem(slot, items.get(slot - 9));
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_ITEMS;
     }
 }

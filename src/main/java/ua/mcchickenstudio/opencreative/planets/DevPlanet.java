@@ -18,8 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
-import org.bukkit.block.*;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -27,10 +30,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.DevPlanetChunkGenerator;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
-import org.bukkit.*;
-
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HasVisibleBorder;
@@ -59,28 +58,25 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateSigns;
  */
 public class DevPlanet {
 
+    private final static Material DEFAULT_EVENT_MATERIAL = Material.BLUE_STAINED_GLASS;
+    private final static Material DEFAULT_ACTION_MATERIAL = Material.GRAY_STAINED_GLASS;
+    private final static Material DEFAULT_FLOOR_MATERIAL = Material.WHITE_STAINED_GLASS;
     private final Planet planet;
-
+    private final Map<Player, Location> lastLocations = new HashMap<>();
+    private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
+    private final Map<Player, Set<Location>> selectedExecutors = new HashMap<>();
     private String platformerID = "";
     private Material signMaterial = Material.BIRCH_WALL_SIGN;
     private Material containerMaterial = Material.CHEST;
-
     private boolean dropItems = true;
     private boolean saveLocation = true;
     private boolean nightVision = true;
     private boolean isCodeChanged = false;
 
-    private final Map<Player, Location> lastLocations = new HashMap<>();
-    private final Map<Location, Layout> openedBlocksMenus = new HashMap<>();
-    private final Map<Player, Set<Location>> selectedExecutors = new HashMap<>();
-
-    private final static Material DEFAULT_EVENT_MATERIAL = Material.BLUE_STAINED_GLASS;
-    private final static Material DEFAULT_ACTION_MATERIAL = Material.GRAY_STAINED_GLASS;
-    private final static Material DEFAULT_FLOOR_MATERIAL = Material.WHITE_STAINED_GLASS;
-
     /**
      * Constructor of developer planet, that
      * loads settings from config.
+     *
      * @param planet planet, that owns this developer planet.
      */
     public DevPlanet(@NotNull Planet planet) {
@@ -89,22 +85,63 @@ public class DevPlanet {
     }
 
     /**
+     * Returns default action block material,
+     * used for creating new coding platforms.
+     * <p>
+     * This material must be solid, so players
+     * will be able to place action blocks on it.
+     *
+     * @return default action block material.
+     */
+    public static Material getDefaultActionMaterial() {
+        return DEFAULT_ACTION_MATERIAL;
+    }
+
+    /**
+     * Returns default event block material,
+     * used for creating new coding platforms.
+     * <p>
+     * This material must be solid, so players
+     * will be able to place event blocks on it.
+     *
+     * @return default event block material.
+     */
+    public static Material getDefaultEventMaterial() {
+        return DEFAULT_EVENT_MATERIAL;
+    }
+
+    /**
+     * Returns default floor block material,
+     * used for creating new coding platforms.
+     * <p>
+     * This material must be solid, so players
+     * will be able to place allowed blocks on it.
+     *
+     * @return default floor block material.
+     */
+    public static Material getDefaultFloorMaterial() {
+        return DEFAULT_FLOOR_MATERIAL;
+    }
+
+    /**
      * Loads settings of developer planet.
      */
     private void loadInformation() {
         FileConfiguration config = getPlanetConfig(planet);
         try {
-            containerMaterial = Material.getMaterial(config.getString("dev.container","CHEST"));
+            containerMaterial = Material.getMaterial(config.getString("dev.container", "CHEST"));
             if (containerMaterial == null || !containerMaterial.isBlock()) {
                 containerMaterial = Material.CHEST;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         try {
-            signMaterial = Material.getMaterial(config.getString("dev.sign","BIRCH_WALL_SIGN"));
+            signMaterial = Material.getMaterial(config.getString("dev.sign", "BIRCH_WALL_SIGN"));
             if (signMaterial == null || !signMaterial.isBlock()) {
                 signMaterial = Material.BIRCH_WALL_SIGN;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         dropItems = config.getBoolean("dev.drops", true);
         saveLocation = config.getBoolean("dev.save-location", true);
         nightVision = config.getBoolean("dev.night-vision", true);
@@ -125,11 +162,11 @@ public class DevPlanet {
             return;
         }
         if (existed) {
-            if (world.getBlockAt(4,0,4).isEmpty()) {
-                createPlatform(1,1);
+            if (world.getBlockAt(4, 0, 4).isEmpty()) {
+                createPlatform(1, 1);
             }
         } else {
-            createPlatform(1,1);
+            createPlatform(1, 1);
             world.setTime(12500);
         }
         setupWorld();
@@ -150,7 +187,7 @@ public class DevPlanet {
             teleportToLobby(player);
         }
 
-        Bukkit.unloadWorld(getWorldName(),true);
+        Bukkit.unloadWorld(getWorldName(), true);
 
         long endTime = System.currentTimeMillis();
         OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
@@ -161,22 +198,23 @@ public class DevPlanet {
      * sets game rules and world border.
      */
     public void setupWorld() {
-        this.getWorld().setSpawnLocation(2,1,2);
-        this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
-        this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE,false);
-        this.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
-        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING,false);
-        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING,false);
-        this.getWorld().setGameRule(GameRule.MOB_GRIEFING,false);
-        this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING,false);
-        this.getWorld().setGameRule(GameRule.DO_FIRE_TICK,false);
-        this.getWorld().setGameRule(GameRule.GLOBAL_SOUND_EVENTS,false);
+        this.getWorld().setSpawnLocation(2, 1, 2);
+        this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        this.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        this.getWorld().setGameRule(GameRule.MOB_GRIEFING, false);
+        this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING, false);
+        this.getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);
+        this.getWorld().setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
         getDevPlatformer().setWorldBorder(this);
         isCodeChanged = false;
     }
 
     /**
      * Checks whether developer planet was generated before.
+     *
      * @return true - exists, false - not created yet.
      */
     public boolean exists() {
@@ -192,6 +230,7 @@ public class DevPlanet {
 
     /**
      * Translates coding blocks for player.
+     *
      * @param player player to translate coding blocks.
      */
     public void translateCodingBlocks(@NotNull Player player) {
@@ -220,6 +259,7 @@ public class DevPlanet {
      * By default, it generates floor with white stained-glass,
      * and fills executor sections with blue stained-glass,
      * action sections with gray stained-glass.</p>
+     *
      * @param platformX X number of platform.
      * @param platformZ Z number of platform.
      * @return true - if successfully created, false - if failed.
@@ -234,8 +274,9 @@ public class DevPlanet {
 
     /**
      * Claims new platform and teleports player to it.
+     *
      * @param platform platform to claim.
-     * @param player player, who will be teleported.
+     * @param player   player, who will be teleported.
      * @return true - claimed coding platform, false - already built and exists.
      */
     @SuppressWarnings("UnusedReturnValue")
@@ -332,7 +373,7 @@ public class DevPlanet {
         List<Location> locations = new ArrayList<>();
         for (Location location : getPlacedExecutors(ExecutorCategory.FUNCTION)) {
             Block block = location.getBlock();
-            String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
             if (line != null && !line.isEmpty()) {
                 locations.add(block.getLocation());
             }
@@ -344,7 +385,7 @@ public class DevPlanet {
         List<Location> locations = new ArrayList<>();
         for (Location location : getPlacedExecutors(ExecutorCategory.METHOD)) {
             Block block = location.getBlock();
-            String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            String line = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
             if (line != null && !line.isEmpty()) {
                 locations.add(block.getLocation());
             }
@@ -375,7 +416,7 @@ public class DevPlanet {
     }
 
     public void registerOpenedMenu(Location location, Layout menu) {
-        openedBlocksMenus.put(location,menu);
+        openedBlocksMenus.put(location, menu);
     }
 
     public void unregisterOpenedMenu(Location location) {
@@ -394,38 +435,38 @@ public class DevPlanet {
         return nightVision;
     }
 
+    public void setNightVision(boolean nightVision) {
+        this.nightVision = nightVision;
+        setPlanetConfigParameter(planet, "dev.night-vision", nightVision);
+    }
+
     public boolean isSaveLocation() {
         return saveLocation;
+    }
+
+    public void setSaveLocation(boolean saveLocation) {
+        this.saveLocation = saveLocation;
+        setPlanetConfigParameter(planet, "dev.save-location", saveLocation);
     }
 
     public boolean isDropItems() {
         return dropItems;
     }
 
-    public void setPlatformerID(String platformer) {
-        this.platformerID = platformer;
-        setPlanetConfigParameter(planet,"dev.platformer",platformerID);
-    }
-
-    public void setNightVision(boolean nightVision) {
-        this.nightVision = nightVision;
-        setPlanetConfigParameter(planet,"dev.night-vision",nightVision);
-    }
-
-    public void setSaveLocation(boolean saveLocation) {
-        this.saveLocation = saveLocation;
-        setPlanetConfigParameter(planet,"dev.save-location",saveLocation);
-    }
-
     public void setDropItems(boolean dropItems) {
         this.dropItems = dropItems;
-        setPlanetConfigParameter(planet,"dev.drops",dropItems);
+        setPlanetConfigParameter(planet, "dev.drops", dropItems);
+    }
+
+    public void setPlatformerID(String platformer) {
+        this.platformerID = platformer;
+        setPlanetConfigParameter(planet, "dev.platformer", platformerID);
     }
 
     public boolean setContainerMaterial(Material containerMaterial) {
         if (containerMaterial == Material.BARREL || containerMaterial == Material.CHEST || containerMaterial.name().endsWith("SHULKER_BOX")) {
             this.containerMaterial = containerMaterial;
-            setPlanetConfigParameter(planet,"dev.container",containerMaterial.name());
+            setPlanetConfigParameter(planet, "dev.container", containerMaterial.name());
             return true;
         }
         return false;
@@ -439,19 +480,20 @@ public class DevPlanet {
                 signMaterial == Material.BIRCH_WALL_SIGN || signMaterial == Material.JUNGLE_WALL_SIGN ||
                 (paleSign != null && signMaterial == paleSign)) {
             this.signMaterial = signMaterial;
-            setPlanetConfigParameter(planet,"dev.sign",signMaterial.name());
+            setPlanetConfigParameter(planet, "dev.sign", signMaterial.name());
             return true;
         }
         return false;
     }
 
     public String getWorldName() {
-        return planet.getWorldName()+"dev";
+        return planet.getWorldName() + "dev";
     }
 
     /**
      * Returns list of existing coding platforms, that
      * can be used to place coding blocks.
+     *
      * @return list of developer platforms.
      */
     public List<DevPlatform> getPlatforms() {
@@ -460,6 +502,7 @@ public class DevPlanet {
 
     /**
      * Returns coding platform by location.
+     *
      * @param location location to get platform.
      * @return coding platform - if location contains coding platform, otherwise - null.
      */
@@ -478,7 +521,7 @@ public class DevPlanet {
         for (Player player : getWorld().getPlayers()) {
             WorldBorder border = Bukkit.createWorldBorder();
             border.setCenter(getWorld().getWorldBorder().getCenter());
-            border.setSize(getWorld().getWorldBorder().getSize()*5);
+            border.setSize(getWorld().getWorldBorder().getSize() * 5);
             player.setWorldBorder(border);
         }
     }
@@ -488,42 +531,6 @@ public class DevPlanet {
         DevPlatformer platformer = DevPlatformers.getInstance().getById(platformerID);
         if (platformer == null) return OpenCreative.getDevPlatformer();
         return platformer;
-    }
-
-    /**
-     * Returns default action block material,
-     * used for creating new coding platforms.
-     * <p>
-     * This material must be solid, so players
-     * will be able to place action blocks on it.
-     * @return default action block material.
-     */
-    public static Material getDefaultActionMaterial() {
-        return DEFAULT_ACTION_MATERIAL;
-    }
-
-    /**
-     * Returns default event block material,
-     * used for creating new coding platforms.
-     * <p>
-     * This material must be solid, so players
-     * will be able to place event blocks on it.
-     * @return default event block material.
-     */
-    public static Material getDefaultEventMaterial() {
-        return DEFAULT_EVENT_MATERIAL;
-    }
-
-    /**
-     * Returns default floor block material,
-     * used for creating new coding platforms.
-     * <p>
-     * This material must be solid, so players
-     * will be able to place allowed blocks on it.
-     * @return default floor block material.
-     */
-    public static Material getDefaultFloorMaterial() {
-        return DEFAULT_FLOOR_MATERIAL;
     }
 
     public Map<Player, Location> getLastLocations() {
@@ -537,7 +544,8 @@ public class DevPlanet {
     /**
      * Adds executor to marked list for player,
      * when they click it with manipulator item.
-     * @param player player, who just marked executor.
+     *
+     * @param player   player, who just marked executor.
      * @param location location of executor block.
      */
     public void markExecutorAsSelected(@NotNull Player player, @NotNull Location location) {
@@ -549,7 +557,8 @@ public class DevPlanet {
     /**
      * Removes marked executor for player,
      * who selected it with manipulator item.
-     * @param player player, who marked executor before.
+     *
+     * @param player   player, who marked executor before.
      * @param location location of executor block.
      */
     public void unselectMarkedExecutor(@NotNull Player player, @NotNull Location location) {
@@ -565,6 +574,7 @@ public class DevPlanet {
     /**
      * Removes marked executor for all players,
      * who selected it with manipulator item.
+     *
      * @param location location of executor block.
      */
     public void clearMarkedExecutors(@NotNull Location location) {
@@ -579,6 +589,7 @@ public class DevPlanet {
     /**
      * Returns whether code was changed after
      * last parsing and saving.
+     *
      * @return true - code was changed, false - not changed.
      */
     public boolean isCodeChanged() {
@@ -591,6 +602,7 @@ public class DevPlanet {
      * <p>
      * If true, code will be saved and parsed
      * when world owner or developer types /play command.
+     *
      * @param codeChanged true - changed, false - not.
      */
     public void setCodeChanged(boolean codeChanged) {

@@ -42,7 +42,8 @@ public final class DevPlatformers {
     private static DevPlatformers instance;
     private final List<DevPlatformer> platformers = new LinkedList<>();
 
-    private DevPlatformers() {}
+    private DevPlatformers() {
+    }
 
     public synchronized static DevPlatformers getInstance() {
         if (instance == null) {
@@ -56,6 +57,7 @@ public final class DevPlatformers {
 
     /**
      * Registers coding platform generator.
+     *
      * @param platformer dev platformer to register.
      */
     public void registerDevPlatformer(@NotNull DevPlatformer platformer) {
@@ -73,6 +75,7 @@ public final class DevPlatformers {
     /**
      * Returns coding platform generator from registry
      * by specified id, if it exists, otherwise - null.
+     *
      * @param id id to get dev platformer.
      * @return dev platform - if found, otherwise - null.
      */
@@ -87,6 +90,7 @@ public final class DevPlatformers {
 
     /**
      * Returns a list of all registered platformers IDs.
+     *
      * @return platformers ID list.
      */
     public @NotNull List<String> getPlatformersIDs() {

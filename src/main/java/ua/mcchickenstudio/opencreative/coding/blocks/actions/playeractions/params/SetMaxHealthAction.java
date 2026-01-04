@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 public final class SetMaxHealthAction extends PlayerAction {
     public SetMaxHealthAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,8 +33,8 @@ public final class SetMaxHealthAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        boolean add = getArguments().getBoolean("add",false,this);
-        double health = getArguments().getDouble("health",30.0d,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        double health = getArguments().getDouble("health", 30.0d, this);
         if (add) {
             health = health + player.getMaxHealth();
         }
@@ -42,7 +42,7 @@ public final class SetMaxHealthAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_MAX_HEALTH;
     }
 }

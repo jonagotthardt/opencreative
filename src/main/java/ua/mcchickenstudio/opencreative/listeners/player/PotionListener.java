@@ -20,7 +20,10 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.LingeringPotionSplashEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 
@@ -29,6 +32,19 @@ import java.util.List;
 public final class PotionListener implements Listener {
 
     private final static int POTION_AMPLIFIER_LIMIT = 100;
+
+    public static boolean isCorrupted(List<PotionEffect> effects) {
+        for (PotionEffect effect : effects) {
+            if (effect.getAmplifier() > POTION_AMPLIFIER_LIMIT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isCorrupted(PotionMeta potionMeta) {
+        return isCorrupted(potionMeta.getCustomEffects());
+    }
 
     @EventHandler
     public void onEvent(AreaEffectCloudApplyEvent event) {
@@ -60,19 +76,6 @@ public final class PotionListener implements Listener {
         if (event.getNewEffect() != null && event.getNewEffect().getAmplifier() > POTION_AMPLIFIER_LIMIT) {
             event.setCancelled(true);
         }
-    }
-
-    public static boolean isCorrupted(List<PotionEffect> effects) {
-        for (PotionEffect effect : effects) {
-            if (effect.getAmplifier() > POTION_AMPLIFIER_LIMIT) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isCorrupted(PotionMeta potionMeta) {
-        return isCorrupted(potionMeta.getCustomEffects());
     }
 
 }

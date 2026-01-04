@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -41,19 +41,19 @@ public final class DropItemAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        ItemStack item = getArguments().getItem("item",new ItemStack(Material.BREAD,1),this);
-        boolean naturally = getArguments().getBoolean("naturally",true,this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.BREAD, 1), this);
+        boolean naturally = getArguments().getBoolean("naturally", true, this);
+        for (Location location : getArguments().getLocationList("locations", this)) {
             if (naturally) {
-                setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItemNaturally(location,item));
+                setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItemNaturally(location, item));
             } else {
-                setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItem(location,item));
+                setLastSpawnedEntity(getPlanet().getTerritory().getWorld().dropItem(location, item));
             }
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_DROP_ITEM;
     }
 }

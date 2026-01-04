@@ -41,12 +41,12 @@ public final class BlockFluidChangeEvent extends WorldEvent implements BlockEven
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        event.setCancelled(cancel);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancel);
     }
 }

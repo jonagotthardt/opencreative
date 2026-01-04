@@ -39,8 +39,8 @@ public final class EntitySetLastDamageAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        double damage = getArguments().getDouble("damage",1.0d,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        double damage = getArguments().getDouble("damage", 1.0d, this);
         if (add) {
             damage = damage + livingEntity.getLastDamage();
         }
@@ -48,7 +48,7 @@ public final class EntitySetLastDamageAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_LAST_DAMAGE;
     }
 }

@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.CollectionWithCollectionException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,16 +39,16 @@ public final class AddToListAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> list = new ArrayList<>(getArguments().getList("variable",this));
-        List<Object> elements = getArguments().getList("elements",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> list = new ArrayList<>(getArguments().getList("variable", this));
+        List<Object> elements = getArguments().getList("elements", this);
         if (cannotChangeListElements(elements.size())) {
             return;
         }
         changeListElementsChangesAmount(list.size());
         for (Object element : elements) {
-            if (element instanceof Collection<?> || element instanceof Map<?,?>) {
-                throw new CollectionWithCollectionException(list.getClass(),element.getClass());
+            if (element instanceof Collection<?> || element instanceof Map<?, ?>) {
+                throw new CollectionWithCollectionException(list.getClass(), element.getClass());
             }
             list.add(element);
         }
@@ -56,7 +56,7 @@ public final class AddToListAction extends VariableAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_ADD_TO_LIST;
     }
 }

@@ -25,10 +25,10 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
 import ua.mcchickenstudio.opencreative.coding.placeholders.Placeholders;
+import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
  * This class represents an argument, a field that
  * has id, name (path) and value. It's used to
  * get values, like text, numbers, locations etc.
+ *
  * @see Arguments
  */
 public class Argument {
@@ -53,10 +54,11 @@ public class Argument {
 
     /**
      * Creates instance of argument.
+     *
      * @param planet associated planet.
-     * @param type type of value.
-     * @param path name of argument.
-     * @param value value.
+     * @param type   type of value.
+     * @param path   name of argument.
+     * @param value  value.
      */
     public Argument(@NotNull Planet planet, @NotNull ValueType type, @NotNull String path, @NotNull Object value) {
         this.planet = planet;
@@ -66,7 +68,20 @@ public class Argument {
     }
 
     /**
+     * Replaces placeholders in text with values.
+     *
+     * @param text    text to parse.
+     * @param handler handler to get some values.
+     * @param action  action to get some values.
+     * @return parsed text.
+     */
+    public static @NotNull String parseEntity(String text, ActionsHandler handler, Action action) {
+        return Placeholders.getInstance().parsePlaceholders(text, handler, action);
+    }
+
+    /**
      * Returns a name of argument.
+     *
      * @return name of argument.
      */
     public @NotNull String getPath() {
@@ -75,6 +90,7 @@ public class Argument {
 
     /**
      * Returns type of value.
+     *
      * @return type of value.
      */
     public @NotNull ValueType getType() {
@@ -86,6 +102,7 @@ public class Argument {
      * <p>If value is a link to variable or event value
      * with null value, it will return link instead of
      * null. That prevents from null pointer problems.
+     *
      * @param action action, that will be used, to parse text placeholders.
      * @return value of argument.
      */
@@ -154,25 +171,15 @@ public class Argument {
 
     /**
      * Checks whether variable is a list.
+     *
      * @return true - is list, false - not a list.
      */
     public boolean isList() {
         return (this.type == ValueType.LIST);
     }
 
-    /**
-     * Replaces placeholders in text with values.
-     * @param text text to parse.
-     * @param handler handler to get some values.
-     * @param action action to get some values.
-     * @return parsed text.
-     */
-    public static @NotNull String parseEntity(String text, ActionsHandler handler, Action action) {
-        return Placeholders.getInstance().parsePlaceholders(text,handler,action);
-    }
-
     @Override
     public String toString() {
-        return path + " - " + type.name() + ": " + substring(value.toString(),30);
+        return path + " - " + type.name() + ": " + substring(value.toString(), 30);
     }
 }

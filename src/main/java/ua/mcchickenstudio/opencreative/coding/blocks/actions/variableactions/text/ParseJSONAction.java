@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
 import com.google.gson.*;
-import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -43,8 +42,8 @@ public final class ParseJSONAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getText("text", " ",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String text = getArguments().getText("text", " ", this);
         if (text.length() > 1024) {
             throw new TooLongTextException(1024);
         }
@@ -107,7 +106,7 @@ public final class ParseJSONAction extends VariableAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_PARSE_JSON;
     }
 }

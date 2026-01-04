@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.state;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import net.kyori.adventure.util.TriState;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 public final class SetFlyingFallDamageAction extends PlayerAction {
 
@@ -35,11 +35,11 @@ public final class SetFlyingFallDamageAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        player.setFlyingFallDamage((getArguments().getBoolean("boolean",false,this) ? TriState.TRUE : TriState.FALSE));
+        player.setFlyingFallDamage((getArguments().getBoolean("boolean", false, this) ? TriState.TRUE : TriState.FALSE));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_FLYING_FALL_DAMAGE;
     }
 }

@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public final class SetItemDamageAction extends VariableAction {
     public SetItemDamageAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,10 +37,10 @@ public final class SetItemDamageAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE,1),this),this);
-        int durability = getArguments().getInt("damage",10,this);
-        boolean add = getArguments().getBoolean("add",false,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE, 1), this), this);
+        int durability = getArguments().getInt("damage", 10, this);
+        boolean add = getArguments().getBoolean("add", false, this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -49,11 +49,11 @@ public final class SetItemDamageAction extends VariableAction {
             damageable.setDamage(add ? damageable.getDamage() + durability : durability);
             item.setItemMeta(meta);
         }
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_SET_ITEM_DAMAGE;
     }
 }

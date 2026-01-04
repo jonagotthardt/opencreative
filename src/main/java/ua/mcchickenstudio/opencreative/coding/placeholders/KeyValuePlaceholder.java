@@ -29,9 +29,9 @@ import java.util.regex.Pattern;
 
 public abstract class KeyValuePlaceholder extends Placeholder {
 
-    private final String[] keys;
     private static final Pattern PATTERN = Pattern.compile("%([A-Za-z0-9_]+)\\(([^)]+)\\)");
     private static final int limit = 20;
+    private final String[] keys;
 
     public KeyValuePlaceholder(String... keys) {
         this.keys = keys;
@@ -69,7 +69,7 @@ public abstract class KeyValuePlaceholder extends Placeholder {
             if (count >= limit) break;
             String key = matcher.group(1);
             String value = matcher.group(2);
-            String replacement = parseKeyValue(key,value,handler,action);
+            String replacement = parseKeyValue(key, value, handler, action);
             if (replacement == null) {
                 replacement = "%" + key + "(" + value + ")";
             }

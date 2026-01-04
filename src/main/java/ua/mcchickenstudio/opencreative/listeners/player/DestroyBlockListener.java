@@ -18,15 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DamageBlockEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DestroyBlockEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.menus.Menus;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -36,6 +27,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.InventoryHolder;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DamageBlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.DestroyBlockEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.menus.Menus;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -92,7 +91,7 @@ public final class DestroyBlockListener implements Listener {
                     move(block.getLocation(), BlockFace.WEST);
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null
-                        && player.isSneaking()) {
+                            && player.isSneaking()) {
                         platform.destroyCodingLine(block.getLocation(), devPlanet.isDropItems());
                         devPlanet.setCodeChanged(true);
                     } else {
@@ -129,7 +128,7 @@ public final class DestroyBlockListener implements Listener {
                 }
                 return;
             }
-            new DestroyBlockEvent(event.getPlayer(),event).callEvent();
+            new DestroyBlockEvent(event.getPlayer(), event).callEvent();
             if (!event.isCancelled()) {
                 Menus.onBlockDestroy(event.getBlock().getLocation());
             }
@@ -143,7 +142,7 @@ public final class DestroyBlockListener implements Listener {
     @EventHandler
     public void onStartDamaging(BlockDamageEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new DamageBlockEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new DamageBlockEvent(event.getPlayer(), event).callEvent();
     }
 
 }

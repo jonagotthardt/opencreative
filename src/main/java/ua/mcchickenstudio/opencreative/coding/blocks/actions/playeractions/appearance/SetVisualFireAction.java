@@ -33,11 +33,11 @@ public final class SetVisualFireAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        player.setVisualFire(getArguments().getBoolean("boolean",true,this));
+        player.setVisualFire(getArguments().getBoolean("boolean", true, this));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_VISUAL_FIRE;
     }
 }

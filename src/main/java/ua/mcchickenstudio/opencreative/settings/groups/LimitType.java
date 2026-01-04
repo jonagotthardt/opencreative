@@ -69,6 +69,7 @@ public enum LimitType {
 
     /**
      * Returns default modifier of limit type.
+     *
      * @return default limit.
      */
     public int getDefaultLimit() {
@@ -77,6 +78,7 @@ public enum LimitType {
 
     /**
      * Returns default modifier of limit type.
+     *
      * @return default modifier.
      */
     public int getDefaultModifier() {
@@ -86,6 +88,7 @@ public enum LimitType {
     /**
      * Returns path for getting limit and
      * modifier from config.
+     *
      * @return path in config.
      */
     public @NotNull String getPath() {

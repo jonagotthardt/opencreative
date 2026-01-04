@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.number;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class CosineOfNumberAction extends VariableAction {
     public CosineOfNumberAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,14 +33,14 @@ public final class CosineOfNumberAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getDouble("number",1.0d,this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        double number = getArguments().getDouble("number", 1.0d, this);
         double result = Math.cos(number);
         setVarValue(variable, result);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_COSINE_OF_NUMBER;
     }
 }

@@ -22,11 +22,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 import ua.mcchickenstudio.opencreative.managers.Manager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -42,6 +42,7 @@ public interface PlanetsManager extends Manager {
 
     /**
      * Returns a set of all stable planets in base.
+     *
      * @return set of planets.
      */
     @NotNull Set<Planet> getPlanets();
@@ -50,6 +51,7 @@ public interface PlanetsManager extends Manager {
      * Returns a set of all corrupted planets in base.
      * They will be not displayed in worlds browser
      * menu or even in search orders.
+     *
      * @return set of planets.
      */
     @NotNull Set<Planet> getCorruptedPlanets();
@@ -57,6 +59,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a planet, that has same
      * original ID as specified one.
+     *
      * @param id to get planet.
      * @return if exists - planet, else - null.
      */
@@ -65,6 +68,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a developers planet, where player
      * currently is connected.
+     *
      * @param player to get dev planet.
      * @return if player is in dev planet - returns dev planet, else - null.
      */
@@ -73,6 +77,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a developers planet, that has
      * same world as specified one.
+     *
      * @param world to get dev planet.
      * @return if exists - dev planet, else - null.
      */
@@ -81,6 +86,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a planet, where player currently is connected.
      * Should return planet even if player is in dev planet.
+     *
      * @param player to get planet.
      * @return if player is in planet - returns planet, else - null.
      */
@@ -89,6 +95,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a planet, that has same
      * world as specified one.
+     *
      * @param world to get planet.
      * @return if exists - planet, else - null.
      */
@@ -97,6 +104,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a set of planets, that are owned
      * by specified player name.
+     *
      * @param owner owner of planets.
      * @return set of player's created planets.
      */
@@ -105,6 +113,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a set of planets, that are owned
      * by specified player.
+     *
      * @param owner owner of planets.
      * @return set of player's created planets.
      */
@@ -113,6 +122,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a planet, that has same Minecraft
      * world name as specified one.
+     *
      * @param name world name to get planet.
      * @return if exists - planet, else - null.
      */
@@ -121,6 +131,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a planet, that has same
      * numeric or custom ID as specified one.
+     *
      * @param id to get planet.
      * @return if exists - planet, else - null.
      */
@@ -129,6 +140,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a planet, that has same
      * custom ID as specified one.
+     *
      * @param id to get planet.
      * @return if exists - planet, else - null.
      */
@@ -137,6 +149,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a list of planets, that are
      * marked in config.yml as recommended.
+     *
      * @return list of recommended planets.
      */
     @NotNull List<Planet> getRecommendedPlanets();
@@ -144,6 +157,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a set of planets, that contain
      * specified custom ID.
+     *
      * @param id custom id.
      * @return set of planets with similar custom IDs.
      */
@@ -152,6 +166,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Returns a set of planets, that contain
      * specified display name.
+     *
      * @param name display name.
      * @return set of planets with similar display names.
      */
@@ -159,27 +174,30 @@ public interface PlanetsManager extends Manager {
 
     /**
      * Copies template world folder and creates a new planet for player.
-     * @param owner owner of planet.
-     * @param id ID of planet.
+     *
+     * @param owner    owner of planet.
+     * @param id       ID of planet.
      * @param template template of world.
      */
     void createPlanet(@NotNull Player owner, int id, @NotNull WorldTemplate template);
 
     /**
      * Creates and loads a new planet for player with specified world generator.
-     * @param owner Owner of planet.
-     * @param id ID of planet.
+     *
+     * @param owner     Owner of planet.
+     * @param id        ID of planet.
      * @param generator Generator of world.
      */
     void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator);
 
     /**
      * Creates and loads a new planet for player with specified world generator, environment, seed and generate sturctures option.
-     * @param owner Owner of planet.
-     * @param id ID of planet.
-     * @param generator Generator of world.
-     * @param environment Environment of world.
-     * @param seed Seed for generation.
+     *
+     * @param owner              Owner of planet.
+     * @param id                 ID of planet.
+     * @param generator          Generator of world.
+     * @param environment        Environment of world.
+     * @param seed               Seed for generation.
      * @param generateStructures Generate or not generate structures.
      */
     void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator, @NotNull World.Environment environment, long seed, boolean generateStructures);
@@ -187,6 +205,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Unregisters planet, teleports planet players to lobby,
      * unloads world and removes planet folders.
+     *
      * @param planet planet to delete.
      */
     boolean deletePlanet(@NotNull Planet planet);
@@ -194,6 +213,7 @@ public interface PlanetsManager extends Manager {
     /**
      * Registers planet to base, for example if plugin
      * found planet data while loading planets.
+     *
      * @param planet planet to register.
      */
     void registerPlanet(@NotNull Planet planet);
@@ -201,12 +221,14 @@ public interface PlanetsManager extends Manager {
     /**
      * Unregisters planet from base, so it will
      * be not displayed in worlds browser menu.
+     *
      * @param planet planet to unregister.
      */
     void unregisterPlanet(@NotNull Planet planet);
 
     /**
      * Check if connection with database is stable.
+     *
      * @return true - if connection is normal, false - not stable.
      */
     boolean isStableConnection();

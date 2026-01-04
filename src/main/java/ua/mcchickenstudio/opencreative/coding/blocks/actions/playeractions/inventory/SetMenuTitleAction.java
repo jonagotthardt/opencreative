@@ -42,12 +42,12 @@ public final class SetMenuTitleAction extends PlayerAction {
             return;
         }
         InventoryView inventory = player.getOpenInventory();
-        String title = getArguments().getText("title",inventory.getOriginalTitle(),this);
+        String title = getArguments().getText("title", inventory.getOriginalTitle(), this);
         inventory.setTitle(title);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_INVENTORY_VIEW_TITLE;
     }
 }

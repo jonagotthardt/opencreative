@@ -18,22 +18,25 @@
 
 package ua.mcchickenstudio.opencreative.managers.space;
 
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
-import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
-import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.*;
-import net.kyori.adventure.title.Title;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
+import ua.mcchickenstudio.opencreative.utils.FileUtils;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
+import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
+import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 
 import java.io.File;
 import java.time.Duration;
@@ -41,7 +44,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.createWorldSettings;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
@@ -50,7 +53,7 @@ public final class Space implements PlanetsManager {
 
     private final Map<Integer, Planet> planets = new HashMap<>();
     private final Set<Planet> corruptedPlanets = new HashSet<>();
-    
+
     @Override
     public @NotNull Set<Planet> getPlanets() {
         return new HashSet<>(planets.values());
@@ -80,7 +83,7 @@ public final class Space implements PlanetsManager {
 
     @Override
     public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator) {
-        createPlanet(owner, id, generator, World.Environment.NORMAL, new Random().nextInt(),false);
+        createPlanet(owner, id, generator, World.Environment.NORMAL, new Random().nextInt(), false);
     }
 
     @Override
@@ -88,7 +91,7 @@ public final class Space implements PlanetsManager {
         File worldTemplateFolder = new File(OpenCreative.getPlugin().getDataPath()
                 + File.separator + "templates" + File.separator + template.getFolderName());
         if (!worldTemplateFolder.exists() || !worldTemplateFolder.isDirectory()) {
-            sendPlayerErrorMessage(owner,"Failed to create world by template " + template.getID() + ", because folder doesn't exist.");
+            sendPlayerErrorMessage(owner, "Failed to create world by template " + template.getID() + ", because folder doesn't exist.");
             sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". Folder " + template.getFolderName()
                     + " doesn't exist, or it's not directory.");
             return;
@@ -116,13 +119,13 @@ public final class Space implements PlanetsManager {
         createWorldSettings(id, owner, environment, generator.getID());
         Planet planet = new Planet(id);
 
-        if (planet.getTerritory().generateWorld(generator,environment,seed,generateStructures) != null) {
+        if (planet.getTerritory().generateWorld(generator, environment, seed, generateStructures) != null) {
             long endTime = System.currentTimeMillis();
             OpenCreative.getPlugin().getLogger().info("World for planet " + id + " successfully generated in " + (endTime - startTime) + " ms");
             planet.connectPlayer(owner);
         } else {
             ErrorUtils.sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". World is null.");
-            sendPlayerErrorMessage(owner,"Failed to create world, world is null.");
+            sendPlayerErrorMessage(owner, "Failed to create world, world is null.");
         }
     }
 
@@ -148,9 +151,9 @@ public final class Space implements PlanetsManager {
             }
             unregisterPlanet(planet);
             if (planet.isLoaded()) {
-                Bukkit.unloadWorld(planet.getWorldName(),false);
+                Bukkit.unloadWorld(planet.getWorldName(), false);
                 if (planet.getDevPlanet().isLoaded()) {
-                    Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(),false);
+                    Bukkit.unloadWorld(planet.getDevPlanet().getWorldName(), false);
                 }
             }
             FileUtils.deleteFolder(FileUtils.getPlanetFolder(planet));
@@ -212,8 +215,8 @@ public final class Space implements PlanetsManager {
         World world = player.getWorld();
         if (!isPlanet(world)) return null;
         String worldID = world.getName()
-                .replace("./planets/planet","")
-                .replace("dev","");
+                .replace("./planets/planet", "")
+                .replace("dev", "");
         return getPlanetById(worldID);
     }
 
@@ -228,9 +231,9 @@ public final class Space implements PlanetsManager {
     public DevPlanet getDevPlanet(@NotNull World world) {
         if (!isDevPlanet(world)) return null;
         String worldID = world.getName()
-                .replace("./planets/planet","")
-                .replace("dev","");
-        Planet planet =  getPlanetById(worldID);
+                .replace("./planets/planet", "")
+                .replace("dev", "");
+        Planet planet = getPlanetById(worldID);
         if (planet == null) return null;
         return planet.getDevPlanet();
     }
@@ -239,8 +242,8 @@ public final class Space implements PlanetsManager {
     public Planet getPlanetByWorld(@NotNull World world) {
         if (!isPlanet(world) && !isDevPlanet(world)) return null;
         String worldID = world.getName()
-                .replace("./planets/planet","")
-                .replace("dev","");
+                .replace("./planets/planet", "")
+                .replace("dev", "");
         return getPlanetById(worldID);
     }
 
@@ -248,8 +251,8 @@ public final class Space implements PlanetsManager {
     public Planet getPlanetByWorldName(@NotNull String worldName) {
         if (!isPlanet(worldName) && !isDevPlanet(worldName)) return null;
         String worldID = worldName
-                .replace("./planets/planet","")
-                .replace("dev","");
+                .replace("./planets/planet", "")
+                .replace("dev", "");
         return getPlanetById(worldID);
     }
 
@@ -281,7 +284,8 @@ public final class Space implements PlanetsManager {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

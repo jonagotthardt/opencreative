@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
  * Called when player tries to advertise planet.

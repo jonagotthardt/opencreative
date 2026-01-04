@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -37,8 +37,8 @@ public final class DeleteTeamAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
         if (scoreboard == null) {
             return;
@@ -50,7 +50,7 @@ public final class DeleteTeamAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_DELETE_TEAM;
     }
 }

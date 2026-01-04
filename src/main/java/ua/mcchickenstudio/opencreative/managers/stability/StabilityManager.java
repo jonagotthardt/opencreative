@@ -25,36 +25,42 @@ public interface StabilityManager extends Manager {
 
     /**
      * Returns stability state of storage.
+     *
      * @return state of storage.
      */
     @NotNull StabilityState getStorageState();
 
     /**
      * Returns stability state of database connection.
+     *
      * @return state of database.
      */
     @NotNull StabilityState getDatabaseState();
 
     /**
      * Returns stability state of memory.
+     *
      * @return state of RAM.
      */
     @NotNull StabilityState getMemoryState();
 
     /**
      * Returns stability state of ticks.
+     *
      * @return state of TPS.
      */
     @NotNull StabilityState getTicksState();
 
     /**
      * Returns stability state of all systems.
+     *
      * @return state of plugin
      */
     @NotNull StabilityState getState();
 
     /**
      * Checks if plugin's stability is fine.
+     *
      * @return true - stability is fine, false - not stable.
      */
     default boolean isFine() {
@@ -63,6 +69,7 @@ public interface StabilityManager extends Manager {
 
     /**
      * Checks if plugin's stability is very unstable.
+     *
      * @return true - stability is bad, false - normal.
      */
     default boolean isVeryBad() {

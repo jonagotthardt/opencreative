@@ -33,7 +33,7 @@ public final class EntityLaunchHorizontalAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        float power = getArguments().getFloat("power",1.0f,this);
+        float power = getArguments().getFloat("power", 1.0f, this);
         if (power < -20) {
             power = -20;
         } else if (power > 20) {
@@ -43,7 +43,7 @@ public final class EntityLaunchHorizontalAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_LAUNCH_HORIZONTAL;
     }
 }

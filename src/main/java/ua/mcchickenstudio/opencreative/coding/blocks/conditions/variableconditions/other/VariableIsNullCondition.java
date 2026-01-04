@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.other;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -26,7 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditio
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class VariableIsNullCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        List<Object> values = getArguments().getList("values",this);
-        boolean requireAll = getArguments().getBoolean("all",false,this);
+        List<Object> values = getArguments().getList("values", this);
+        boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean isNull = false;
         for (Object value : values) {
             if (value instanceof EventValueLink || value instanceof VariableLink) {
@@ -56,7 +56,7 @@ public class VariableIsNullCondition extends VariableCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_VAR_IS_NULL;
     }
 }

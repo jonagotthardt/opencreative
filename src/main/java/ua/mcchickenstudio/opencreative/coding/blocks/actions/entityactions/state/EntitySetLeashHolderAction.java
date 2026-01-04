@@ -35,7 +35,7 @@ public final class EntitySetLeashHolderAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String text = getArguments().getText("entity","",this);
+        String text = getArguments().getText("entity", "", this);
         if (entity instanceof LivingEntity livingEntity) {
             if (text.isEmpty()) {
                 livingEntity.setLeashHolder(null);
@@ -50,7 +50,7 @@ public final class EntitySetLeashHolderAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_LEASH_HOLDER;
     }
 }

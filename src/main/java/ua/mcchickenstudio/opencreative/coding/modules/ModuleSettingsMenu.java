@@ -48,44 +48,24 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public final class ModuleSettingsMenu extends AbstractMenu {
 
+    private static final Map<UUID, Integer> settingsSessions = new HashMap<>();
     private final Module module;
     private final Player player;
-
-    private final ItemStack name = createItem(Material.JUNGLE_SIGN,1,"menus.module-settings.items.change-name","name");
-    private final ItemStack description = createItem(Material.WRITABLE_BOOK,1,"menus.module-settings.items.change-description","description");
-    private final ItemStack install = createItem(Material.CHERRY_CHEST_BOAT,1,"menus.module-settings.items.install","install");
-    private final ItemStack delete = createItem(Material.TNT_MINECART,1,"menus.module-settings.items.delete","delete");
-
+    private final ItemStack name = createItem(Material.JUNGLE_SIGN, 1, "menus.module-settings.items.change-name", "name");
+    private final ItemStack description = createItem(Material.WRITABLE_BOOK, 1, "menus.module-settings.items.change-description", "description");
+    private final ItemStack install = createItem(Material.CHERRY_CHEST_BOAT, 1, "menus.module-settings.items.install", "install");
+    private final ItemStack delete = createItem(Material.TNT_MINECART, 1, "menus.module-settings.items.delete", "delete");
     private final ParameterButton access;
     private ItemStack moduleIcon;
 
-    private static final Map<UUID, Integer> settingsSessions = new HashMap<>();
-
     public ModuleSettingsMenu(Module module, Player player) {
-        super(4, getLocaleMessage("menus.module-settings.title",false));
+        super(4, getLocaleMessage("menus.module-settings.title", false));
         this.module = module;
         this.player = player;
         moduleIcon = getModuleIcon();
         access = new ParameterButton(module.getInformation().isPublic() ? "public" : "private",
-                List.of("public","private"),"access","menus.module-settings","menus.module-settings.items.change-sharing",
-                List.of(Material.LIME_DYE,Material.GRAY_DYE));
-    }
-
-    @Override
-    public void fillItems(Player player) {
-        setItem(10, name);
-        setItem(11, description);
-        setItem(16, access.getItem());
-
-        setItem(27, install);
-        setItem(28, DECORATION_PANE_ITEM);
-        setItem(29, createItem(Material.BROWN_STAINED_GLASS_PANE,1));
-
-        setItem(31, moduleIcon);
-
-        setItem(33, createItem(Material.BROWN_STAINED_GLASS_PANE,1));
-        setItem(34, DECORATION_PANE_ITEM);
-        setItem(35, delete);
+                List.of("public", "private"), "access", "menus.module-settings", "menus.module-settings.items.change-sharing",
+                List.of(Material.LIME_DYE, Material.GRAY_DYE));
     }
 
     public static void setCurrentEditingModule(@NotNull Player player, @NotNull Module module) {
@@ -111,6 +91,23 @@ public final class ModuleSettingsMenu extends AbstractMenu {
         settingsSessions.values().removeIf(i -> i.equals(module.getId()));
     }
 
+    @Override
+    public void fillItems(Player player) {
+        setItem(10, name);
+        setItem(11, description);
+        setItem(16, access.getItem());
+
+        setItem(27, install);
+        setItem(28, DECORATION_PANE_ITEM);
+        setItem(29, createItem(Material.BROWN_STAINED_GLASS_PANE, 1));
+
+        setItem(31, moduleIcon);
+
+        setItem(33, createItem(Material.BROWN_STAINED_GLASS_PANE, 1));
+        setItem(34, DECORATION_PANE_ITEM);
+        setItem(35, delete);
+    }
+
     public ItemStack getModuleIcon() {
         ItemStack item = clearItemMeta(module.getInformation().getIcon().clone());
         ItemMeta meta = item.getItemMeta();
@@ -121,10 +118,10 @@ public final class ModuleSettingsMenu extends AbstractMenu {
             if (loreLine.contains("%moduleDescription%")) {
                 String[] newLines = module.getInformation().getDescription().split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&', newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parseModuleLines(module,loreLine));
+                lore.add(MessageUtils.parseModuleLines(module, loreLine));
             }
         }
         meta.setLore(lore);
@@ -143,7 +140,7 @@ public final class ModuleSettingsMenu extends AbstractMenu {
         if (currentItem == null) {
             return;
         }
-        if (itemEquals(currentItem,name)) {
+        if (itemEquals(currentItem, name)) {
             player.showTitle(Title.title(
                     toComponent(getLocaleMessage("settings.module-name.title")), toComponent(getLocaleMessage("settings.module-name.subtitle")),
                     Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
@@ -154,19 +151,20 @@ public final class ModuleSettingsMenu extends AbstractMenu {
                 ChatListener.confirmation.put(player, PlayerConfirmation.MODULE_NAME_CHANGE);
                 setCurrentEditingModule(player, module);
             }
-        } else if (itemEquals(currentItem,description)) {
+        } else if (itemEquals(currentItem, description)) {
             player.showTitle(Title.title(
                     toComponent(getLocaleMessage("settings.module-description.title")), toComponent(getLocaleMessage("settings.module-description.subtitle")),
                     Title.Times.times(Duration.ofMillis(100), Duration.ofSeconds(30), Duration.ofMillis(130))
-            ));            player.sendMessage(getLocaleMessage("settings.module-description.usage"));
+            ));
+            player.sendMessage(getLocaleMessage("settings.module-description.usage"));
             player.closeInventory();
             if (!(ChatListener.confirmation.containsKey(player))) {
                 ChatListener.confirmation.put(player, PlayerConfirmation.MODULE_DESCRIPTION_CHANGE);
                 setCurrentEditingModule(player, module);
             }
-        } else if (itemEquals(currentItem,access.getItem())) {
+        } else if (itemEquals(currentItem, access.getItem())) {
             access.next();
-            setItem(event.getRawSlot(),access.getItem());
+            setItem(event.getRawSlot(), access.getItem());
             if ("public".equals(access.getCurrentValue().toString())) {
                 module.getInformation().setPublic(true);
                 player.sendMessage(getLocaleMessage("settings.module-sharing.enabled"));
@@ -207,7 +205,7 @@ public final class ModuleSettingsMenu extends AbstractMenu {
             player.closeInventory();
             Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),
                     () -> new ConfirmationMenu(
-                            getLocaleMessage("menus.confirmation.delete-module", false).replace("%name%", substring(ChatColor.stripColor(module.getInformation().getDisplayName()),20)),
+                            getLocaleMessage("menus.confirmation.delete-module", false).replace("%name%", substring(ChatColor.stripColor(module.getInformation().getDisplayName()), 20)),
                             Material.TNT,
                             getLocaleItemName("menus.confirmation.items.delete-module.name"),
                             getLocaleItemDescription("menus.confirmation.items.delete-module.lore"),

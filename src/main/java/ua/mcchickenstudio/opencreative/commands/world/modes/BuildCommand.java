@@ -18,11 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -30,21 +25,25 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-
-
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
@@ -104,7 +103,7 @@ public class BuildCommand extends CommandHandler {
                         clearPlayer(player);
                         player.teleport(planet.getTerritory().getSpawnLocation());
                         if (planet.isOwner(sender.getName())) {
-                            player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                            player.getInventory().setItem(8, createItem(Material.COMPASS, 1, "items.developer.world-settings"));
                         }
                         planet.getTerritory().showBorders(player);
                         giveBuildPermissions(player);
@@ -169,7 +168,7 @@ public class BuildCommand extends CommandHandler {
              * or trusted builders.
              */
             if (planet.getWorldPlayers().getBuildersNotTrusted().contains(nickname)) {
-                planet.getWorldPlayers().addBuilder(nickname,true);
+                planet.getWorldPlayers().addBuilder(nickname, true);
                 sender.sendMessage(getLocaleMessage("world.players.builders.trusted").replace("%player%", nickname));
                 return;
             }
@@ -184,14 +183,14 @@ public class BuildCommand extends CommandHandler {
              */
             int limit = planet.getLimits().getBuildersLimit();
             if (planet.getWorldPlayers().getAllBuilders().size() > limit) {
-                sender.sendMessage(getLocaleMessage("world.players.builders.limit").replace("%limit%",String.valueOf(limit)));
+                sender.sendMessage(getLocaleMessage("world.players.builders.limit").replace("%limit%", String.valueOf(limit)));
                 return;
             }
             if (onlinePlayer != null) {
                 Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(onlinePlayer);
                 if (planet.equals(playerPlanet)) {
                     sender.sendMessage(getLocaleMessage("world.players.builders.added").replace("%player%", onlinePlayer.getName()));
-                    planet.getWorldPlayers().addBuilder(onlinePlayer.getName(),false);
+                    planet.getWorldPlayers().addBuilder(onlinePlayer.getName(), false);
                 } else {
                     sender.sendMessage(getLocaleMessage("no-player-found"));
                 }
@@ -212,7 +211,7 @@ public class BuildCommand extends CommandHandler {
                 if (planet.isOwner(planetPlayer) || list.contains(planetPlayer.getName())) continue;
                 list.add(planetPlayer.getName());
             }
-            return list.subList(0,Math.min(10,list.size()));
+            return list.subList(0, Math.min(10, list.size()));
         }
         return null;
     }

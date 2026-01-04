@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.number;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -37,34 +37,34 @@ public final class PerlinNoiseAction extends VariableAction {
     @Override
     protected void execute() {
 
-        VariableLink link = getArguments().getVariableLink("variable",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
         if (link == null) return;
 
-        long seed = getArguments().getLong("seed",1L,this);
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        double lacunarity = getArguments().getDouble("lacunarity",1.0d,this);
-        int octaves = getArguments().getInt("octaves",7,this);
-        double frequency = getArguments().getDouble("frequency",0.5d,this);
-        double amplitude = getArguments().getDouble("amplitude",-3.0d,this);
-        boolean normalize = getArguments().getBoolean("normalize",true,this);
+        long seed = getArguments().getLong("seed", 1L, this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
+        double lacunarity = getArguments().getDouble("lacunarity", 1.0d, this);
+        int octaves = getArguments().getInt("octaves", 7, this);
+        double frequency = getArguments().getDouble("frequency", 0.5d, this);
+        double amplitude = getArguments().getDouble("amplitude", -3.0d, this);
+        boolean normalize = getArguments().getBoolean("normalize", true, this);
 
         PerlinNoiseGenerator generator = new PerlinNoiseGenerator(seed);
 
         double result = generator.noise(
-                location.getX()*lacunarity,
-                location.getY()*lacunarity,
-                location.getZ()*lacunarity,
+                location.getX() * lacunarity,
+                location.getY() * lacunarity,
+                location.getZ() * lacunarity,
                 octaves,
                 frequency,
                 amplitude,
                 normalize);
 
-        setVarValue(link,result);
+        setVarValue(link, result);
 
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_NOISE_PERLIN;
     }
 }

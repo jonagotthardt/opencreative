@@ -40,20 +40,22 @@ public abstract class CommandHandler implements CommandExecutor, TabCompleter {
 
     /**
      * Executes command for sender.
-     * @param sender sender of command, can be player or console.
+     *
+     * @param sender  sender of command, can be player or console.
      * @param command command, that was executed.
-     * @param label label of command (name of command after slash /).
-     * @param args arguments of command.
+     * @param label   label of command (name of command after slash /).
+     * @param args    arguments of command.
      */
     public abstract void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args);
 
     /**
      * Returns list of tab completions, that can suggest
      * arguments for command sender, or null.
-     * @param sender sender of command.
+     *
+     * @param sender  sender of command.
      * @param command command, that was requested.
-     * @param alias label of command (name of command after slash /).
-     * @param args arguments of command.
+     * @param alias   label of command (name of command after slash /).
+     * @param args    arguments of command.
      * @return list of suggestions for arguments, or null.
      */
     public abstract @Nullable List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args);
@@ -64,9 +66,9 @@ public abstract class CommandHandler implements CommandExecutor, TabCompleter {
             onExecute(sender, command, label, args);
         } catch (Exception error) {
             if (sender instanceof Player player) {
-                sendPlayerErrorMessage(player, "Error while executing /" + label + " " + String.join(" ",args), error);
+                sendPlayerErrorMessage(player, "Error while executing /" + label + " " + String.join(" ", args), error);
             } else {
-                sendCriticalErrorMessage("Error while executing /" + label + " " + String.join(" ",args), error);
+                sendCriticalErrorMessage("Error while executing /" + label + " " + String.join(" ", args), error);
             }
         }
         return true;
@@ -76,7 +78,7 @@ public abstract class CommandHandler implements CommandExecutor, TabCompleter {
     public final @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         List<String> tabCompleter = onTab(sender, command, alias, args);
         if (tabCompleter == null) return null;
-        return tabCompleter.stream().filter(s -> s.toLowerCase().startsWith(args[args.length-1].toLowerCase())).toList();
+        return tabCompleter.stream().filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).toList();
     }
 
 }

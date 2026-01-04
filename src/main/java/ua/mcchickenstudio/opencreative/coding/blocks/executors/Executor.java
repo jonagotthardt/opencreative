@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
@@ -34,9 +35,10 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
  * <h1>Executor</h1>
  * This class represents Executor that has actions to run.
  * Executor will be executed on events in planet.
- * @since 5.0
- * @version 6.0
+ *
  * @author McChicken Studio
+ * @version 6.0
+ * @since 5.0
  */
 public abstract class Executor {
 
@@ -51,10 +53,11 @@ public abstract class Executor {
 
     /**
      * Creates an Executor @NotNullwith specified planet and block's location in developers planet.
+     *
      * @param planet Planet where executor will work.
-     * @param x X from Executor's block location in developers planet.
-     * @param y Y from Executor's block location in developers planet.
-     * @param z Z from Executor's block location in developers planet.
+     * @param x      X from Executor's block location in developers planet.
+     * @param y      Y from Executor's block location in developers planet.
+     * @param z      Z from Executor's block location in developers planet.
      */
     public Executor(Planet planet, int x, int y, int z) {
         this.planet = planet;
@@ -65,10 +68,11 @@ public abstract class Executor {
 
     /**
      * Executes all actions with specified event.
+     *
      * @param event Event that occurred in planet.
      */
     public void run(WorldEvent event) {
-        if (getExecutorType() != null && getExecutorType().isDisabled()) {
+        if (getExecutorType().isDisabled()) {
             return;
         }
         sendCodingDebugExecutor(this);
@@ -84,21 +88,13 @@ public abstract class Executor {
         handler.executeActions(actions);
     }
 
-    /**
-     * Sets actions list for executor.
-     * @param actions List of actions.
-     */
-    public final void setActions(List<Action> actions) {
-        this.actions.clear();
-        actions.forEach(this::addAction);
-    }
-
     private void addAction(Action action) {
         actions.add(action);
     }
 
-    public abstract ExecutorType getExecutorType();
-    public abstract ExecutorCategory getExecutorCategory();
+    public abstract @NotNull ExecutorType getExecutorType();
+
+    public abstract @NotNull ExecutorCategory getExecutorCategory();
 
     @Override
     public String toString() {
@@ -121,18 +117,17 @@ public abstract class Executor {
         return planet;
     }
 
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-
     public boolean isDebug() {
         return debug;
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     @Override
     public int hashCode() {
-        String type = getExecutorType() != null ? getExecutorType().name() : "null";
-        return (type + x + " " + y + " " + z).hashCode();
+        return (getExecutorType().name().toLowerCase() + x + " " + y + " " + z).hashCode();
     }
 
     @Override
@@ -155,5 +150,15 @@ public abstract class Executor {
 
     public List<Action> getActions() {
         return actions;
+    }
+
+    /**
+     * Sets actions list for executor.
+     *
+     * @param actions List of actions.
+     */
+    public final void setActions(List<Action> actions) {
+        this.actions.clear();
+        actions.forEach(this::addAction);
     }
 }

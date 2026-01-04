@@ -19,10 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
@@ -42,7 +43,7 @@ public abstract class VariableCondition extends Condition {
     public abstract boolean check();
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.VARIABLE_CONDITION;
     }
 

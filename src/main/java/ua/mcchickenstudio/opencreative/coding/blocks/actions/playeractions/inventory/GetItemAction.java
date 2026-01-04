@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -25,7 +26,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Player;
 
 public final class GetItemAction extends PlayerAction {
     public GetItemAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,13 +34,13 @@ public final class GetItemAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        int index = getArguments().getInt("slot",1,this);
-        setVarValue(link,player.getInventory().getItem(index-1));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        int index = getArguments().getInt("slot", 1, this);
+        setVarValue(link, player.getInventory().getItem(index - 1));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_GET_ITEM_BY_SLOT;
     }
 }

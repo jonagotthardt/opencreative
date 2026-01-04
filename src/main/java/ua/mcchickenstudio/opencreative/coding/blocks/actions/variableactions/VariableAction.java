@@ -22,9 +22,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
@@ -42,7 +42,7 @@ public abstract class VariableAction extends Action {
     protected abstract void execute();
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.VARIABLE_ACTION;
     }
 
@@ -51,13 +51,13 @@ public abstract class VariableAction extends Action {
     }
 
     public void changeListElementsChangesAmount(int size) {
-        getPlanet().getLimits().setLastVariableElementsChangesAmount(getPlanet().getLimits().getLastVariableElementsChangesAmount()+size);
+        getPlanet().getLimits().setLastVariableElementsChangesAmount(getPlanet().getLimits().getLastVariableElementsChangesAmount() + size);
         getPlanet().getTerritory().scheduleAsyncRunnable(new PlanetRunnable(getPlanet()) {
             @Override
             public void execute() {
                 getPlanet().getLimits().setLastVariableElementsChangesAmount(0);
             }
-        },20L);
+        }, 20L);
     }
 
     protected @NotNull Location getDefaultLocation() {

@@ -26,5 +26,5 @@ public final class LimitReachedVariablesEvent extends WorldEvent {
     public LimitReachedVariablesEvent(Planet planet) {
         super(planet);
     }
-    
+
 }

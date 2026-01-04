@@ -37,7 +37,7 @@ public final class FishingStateValue extends TextEventValue {
 
     @Override
     public @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof FishEvent event ? event.getState().name().toLowerCase(): null;
+        return action.getEvent() instanceof FishEvent event ? event.getState().name().toLowerCase() : null;
     }
 
     @Override

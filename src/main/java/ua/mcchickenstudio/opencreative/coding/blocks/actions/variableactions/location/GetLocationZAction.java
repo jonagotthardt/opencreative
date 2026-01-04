@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location;
 
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
 public final class GetLocationZAction extends VariableAction {
     public GetLocationZAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,13 +34,13 @@ public final class GetLocationZAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",getDefaultLocation(),this);
-        setVarValue(link,location.getZ());
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Location location = getArguments().getLocation("location", getDefaultLocation(), this);
+        setVarValue(link, location.getZ());
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_GET_LOCATION_Z;
     }
 }

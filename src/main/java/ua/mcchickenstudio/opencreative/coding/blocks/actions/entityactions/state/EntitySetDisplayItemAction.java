@@ -50,7 +50,7 @@ public final class EntitySetDisplayItemAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_DISPLAY_ITEM;
     }
 }

@@ -37,6 +37,7 @@ public final class ColorUtils {
      * parseRGB("999,1,99"); // Unknown colors, 255 255 255
      * }
      * </pre>
+     *
      * @param string text to parse RGB colors.
      * @return int array with 3 elements: red, green, blue colors.
      */
@@ -46,7 +47,7 @@ public final class ColorUtils {
         rgbColor[1] = 255;
         rgbColor[2] = 255;
         try {
-            int red,green,blue;
+            int red, green, blue;
             String[] colorString = new String[3];
             boolean isHexCode = false;
             if (string.contains(", ")) {
@@ -76,7 +77,8 @@ public final class ColorUtils {
                     rgbColor[2] = blue;
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return rgbColor;
     }
 

@@ -44,7 +44,7 @@ public final class EntityRemovePotionEffectsAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
+        List<ItemStack> potionsItems = getArguments().getItemList("potions", this);
         for (ItemStack potionItem : potionsItems) {
             PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
             List<PotionEffect> effects = new ArrayList<>();
@@ -61,7 +61,7 @@ public final class EntityRemovePotionEffectsAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_REMOVE_POTION_EFFECTS;
     }
 }

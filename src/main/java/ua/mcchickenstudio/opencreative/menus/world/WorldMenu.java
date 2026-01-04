@@ -28,6 +28,7 @@ public interface WorldMenu {
 
     /**
      * Returns planet, that owns this menu.
+     *
      * @return planet for menu.
      */
     Planet getPlanet();

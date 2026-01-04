@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.other;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -37,7 +36,7 @@ public class EntityUUIDEqualsCondition extends EntityCondition {
 
     @Override
     public boolean checkEntity(@NotNull Entity entity) {
-        List<String> uuids = getArguments().getTextList("uuids",this);
+        List<String> uuids = getArguments().getTextList("uuids", this);
         String entityUUID = entity.getUniqueId().toString();
         for (String uuid : uuids) {
             if (entityUUID.equals(uuid)) {
@@ -48,7 +47,7 @@ public class EntityUUIDEqualsCondition extends EntityCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_ENTITY_UUID_EQUALS;
     }
 }

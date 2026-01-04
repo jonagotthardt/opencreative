@@ -20,15 +20,14 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
@@ -41,21 +40,21 @@ public final class CopyBlocksAction extends WorldAction {
 
     @Override
     protected void execute() {
-        if (!getArguments().pathExists("first") || !getArguments().pathExists("second") || !getArguments().pathExists("from") ||  !getArguments().pathExists("where")) {
+        if (!getArguments().pathExists("first") || !getArguments().pathExists("second") || !getArguments().pathExists("from") || !getArguments().pathExists("where")) {
             return;
         }
-        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location from = getArguments().getLocation("from",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location where = getArguments().getLocation("where",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location second = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location from = getArguments().getLocation("from", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location where = getArguments().getLocation("where", getPlanet().getTerritory().getSpawnLocation(), this);
 
-        int minX = Math.min(first.getBlockX(),second.getBlockX());
-        int minY = Math.min(first.getBlockY(),second.getBlockY());
-        int minZ = Math.min(first.getBlockZ(),second.getBlockZ());
+        int minX = Math.min(first.getBlockX(), second.getBlockX());
+        int minY = Math.min(first.getBlockY(), second.getBlockY());
+        int minZ = Math.min(first.getBlockZ(), second.getBlockZ());
 
-        int maxX = Math.max(first.getBlockX(),second.getBlockX());
-        int maxY = Math.max(first.getBlockY(),second.getBlockY());
-        int maxZ = Math.max(first.getBlockZ(),second.getBlockZ());
+        int maxX = Math.max(first.getBlockX(), second.getBlockX());
+        int maxY = Math.max(first.getBlockY(), second.getBlockY());
+        int maxZ = Math.max(first.getBlockZ(), second.getBlockZ());
 
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
@@ -86,29 +85,29 @@ public final class CopyBlocksAction extends WorldAction {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                         getPlanet().getTerritory().removeBukkitRunnable(runnable);
                         new LimitReachedBlocksEvent(getPlanet()).callEvent();
                         return;
                     }
-                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
-                    Location oldLocation = new Location(getWorld(),x,y,z);
+                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
+                    Location oldLocation = new Location(getWorld(), x, y, z);
                     Location newLocation = oldLocation.clone().add(whereFromSubtraction);
                     if (isOutOfBorders(oldLocation) || isOutOfBorders(newLocation)) {
                         continue;
                     }
                     Block newBlock = newLocation.getBlock();
-                    newBlock.setType(oldLocation.getBlock().getType(),false);
-                    newBlock.setBlockData(oldLocation.getBlock().getBlockData(),false);
+                    newBlock.setType(oldLocation.getBlock().getType(), false);
+                    newBlock.setBlockData(oldLocation.getBlock().getBlockData(), false);
                 }
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_COPY_BLOCKS;
     }
 }

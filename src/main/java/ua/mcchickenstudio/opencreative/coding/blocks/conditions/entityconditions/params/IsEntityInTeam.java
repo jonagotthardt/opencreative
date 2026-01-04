@@ -41,8 +41,8 @@ public class IsEntityInTeam extends EntityCondition {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return false;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
         if (scoreboard == null) {
             return false;
@@ -55,7 +55,7 @@ public class IsEntityInTeam extends EntityCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_ENTITY_IS_IN_RAIN;
     }
 }

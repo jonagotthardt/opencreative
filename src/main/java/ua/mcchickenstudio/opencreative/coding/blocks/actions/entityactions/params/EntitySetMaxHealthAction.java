@@ -38,8 +38,8 @@ public final class EntitySetMaxHealthAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        double health = getArguments().getDouble("health",30.0d,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        double health = getArguments().getDouble("health", 30.0d, this);
         if (add) {
             health = health + livingEntity.getMaxHealth();
         }
@@ -47,7 +47,7 @@ public final class EntitySetMaxHealthAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_MAX_HEALTH;
     }
 }

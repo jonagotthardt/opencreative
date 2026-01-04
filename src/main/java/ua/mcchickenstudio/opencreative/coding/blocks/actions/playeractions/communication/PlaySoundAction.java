@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 public final class PlaySoundAction extends PlayerAction {
 
@@ -38,16 +38,16 @@ public final class PlaySoundAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        String sound = getArguments().getText("sound","entity.player.levelup",this);
-        ItemStack musicDisc = getArguments().getItem("sound",new ItemStack(Material.AIR),this);
+        String sound = getArguments().getText("sound", "entity.player.levelup", this);
+        ItemStack musicDisc = getArguments().getItem("sound", new ItemStack(Material.AIR), this);
         if (musicDisc.getType() != Material.AIR && musicDisc.getType().name().contains("MUSIC_DISC")) {
-            sound = musicDisc.getType().name().toLowerCase().replace("music_disc_","music_disc.");
+            sound = musicDisc.getType().name().toLowerCase().replace("music_disc_", "music_disc.");
         }
-        float volume = getArguments().getFloat("volume",100f,this);
-        float pitch = getArguments().getFloat("pitch",1f,this);
-        String categoryString = getArguments().getText("category","ambient",this);
-        Location location = getArguments().getLocation("location",player.getLocation(),this);
-        long seed = getArguments().getLong("seed",0L,this);
+        float volume = getArguments().getFloat("volume", 100f, this);
+        float pitch = getArguments().getFloat("pitch", 1f, this);
+        String categoryString = getArguments().getText("category", "ambient", this);
+        Location location = getArguments().getLocation("location", player.getLocation(), this);
+        long seed = getArguments().getLong("seed", 0L, this);
         SoundCategory category;
         try {
             category = SoundCategory.valueOf(categoryString.toUpperCase());
@@ -55,14 +55,14 @@ public final class PlaySoundAction extends PlayerAction {
             category = SoundCategory.AMBIENT;
         }
         if (getArguments().pathExists("seed")) {
-            player.playSound(location,sound,category,volume,pitch,seed);
+            player.playSound(location, sound, category, volume, pitch, seed);
         } else {
-            player.playSound(location,sound,category,volume,pitch);
+            player.playSound(location, sound, category, volume, pitch);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_PLAY_SOUND;
     }
 }

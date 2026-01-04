@@ -41,10 +41,11 @@ public final class DamageEntityAction extends EntityAction {
         if (livingEntity.isDead()) {
             return;
         }
-        livingEntity.damage(getArguments().getDouble("damage",2.0d,this));
+        livingEntity.damage(getArguments().getDouble("damage", 2.0d, this));
     }
+
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_ADD_DAMAGE;
     }
 }

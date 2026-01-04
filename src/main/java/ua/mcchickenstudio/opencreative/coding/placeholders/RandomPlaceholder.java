@@ -30,7 +30,7 @@ import java.util.Random;
 public final class RandomPlaceholder extends KeyPlaceholder {
 
     public RandomPlaceholder() {
-        super("random","random_uuid");
+        super("random", "random_uuid");
     }
 
     @Override

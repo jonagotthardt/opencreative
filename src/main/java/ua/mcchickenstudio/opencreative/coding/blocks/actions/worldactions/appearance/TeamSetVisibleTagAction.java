@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -37,21 +37,26 @@ public final class TeamSetVisibleTagAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
         if (scoreboard == null) {
             return;
         }
         Team team = scoreboard.getTeam(teamName);
         if (team == null) return;
-        String statusString = getArguments().getText("option","always",this);
-        Team.OptionStatus optionStatus = statusString.equalsIgnoreCase("never") ? Team.OptionStatus.NEVER : statusString.equalsIgnoreCase("for-own-team") ? Team.OptionStatus.FOR_OWN_TEAM : statusString.equalsIgnoreCase("for-other-teams") ? Team.OptionStatus.FOR_OTHER_TEAMS : Team.OptionStatus.ALWAYS;
-        team.setOption(Team.Option.NAME_TAG_VISIBILITY,optionStatus);
+        String statusString = getArguments().getText("option", "always", this);
+        Team.OptionStatus optionStatus = switch (statusString.toLowerCase()) {
+            case "never" -> Team.OptionStatus.NEVER;
+            case "for-own-team" -> Team.OptionStatus.FOR_OWN_TEAM;
+            case "for-other-teams" -> Team.OptionStatus.FOR_OTHER_TEAMS;
+            default -> Team.OptionStatus.ALWAYS;
+        };
+        team.setOption(Team.Option.NAME_TAG_VISIBILITY, optionStatus);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_TEAM_SET_NAME_TAG_VISIBLE;
     }
 }

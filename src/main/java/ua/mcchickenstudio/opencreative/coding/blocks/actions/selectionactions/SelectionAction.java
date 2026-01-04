@@ -18,8 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -30,8 +31,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,7 @@ public abstract class SelectionAction extends Action {
                 return;
             }
             try {
-                Action action = conditionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class).newInstance(getExecutor(),target,getX(),getArguments(),new ArrayList<>(),new ArrayList<>(),isOpposed);
+                Action action = conditionType.getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class, List.class, boolean.class).newInstance(getExecutor(), target, getX(), getArguments(), new ArrayList<>(), new ArrayList<>(), isOpposed);
                 action.setEvent(this.getHandler().getEvent());
                 if (action instanceof PlayerCondition playerCondition) {
                     playerCondition.setHandler(this.getHandler());
@@ -92,7 +91,7 @@ public abstract class SelectionAction extends Action {
                     }
                 }
             } catch (Exception e) {
-                ErrorUtils.sendPlanetCodeErrorMessage(getExecutor(),this, "Failed to execute select target action",e);
+                ErrorUtils.sendPlanetCodeErrorMessage(getExecutor(), this, "Failed to execute select target action", e);
             }
         } else if (target != null) {
             entities.addAll(getTargets());
@@ -104,9 +103,9 @@ public abstract class SelectionAction extends Action {
         }
         getPlanet().getLimits().setLastModifiedTargetsAmount(getPlanet().getLimits().getLastRedstoneOperationsAmount() + size);
         if (getPlanet().getLimits().getLastModifiedTargetsAmount() > getPlanet().getLimits().getTargetsChangesLimit()) {
-            getPlanet().getTerritory().getScript().getExecutors().stopCode( "targets changes limit");
-            sendPlanetCodeCriticalErrorMessage(getPlanet(),getExecutor(),getLocaleMessage("coding-error.targets-changes-limit",false)
-                    .replace("%limit%",String.valueOf(getPlanet().getLimits().getTargetsChangesLimit())));
+            getPlanet().getTerritory().getScript().getExecutors().stopCode("targets changes limit");
+            sendPlanetCodeCriticalErrorMessage(getPlanet(), getExecutor(), getLocaleMessage("coding-error.targets-changes-limit", false)
+                    .replace("%limit%", String.valueOf(getPlanet().getLimits().getTargetsChangesLimit())));
             return;
         }
         getPlanet().getTerritory().scheduleAsyncRunnable(new PlanetRunnable(getPlanet()) {
@@ -121,7 +120,7 @@ public abstract class SelectionAction extends Action {
     protected abstract void modifyTargets(List<Entity> newTarget, Set<Entity> currentTarget);
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.SELECTION_ACTION;
     }
 }

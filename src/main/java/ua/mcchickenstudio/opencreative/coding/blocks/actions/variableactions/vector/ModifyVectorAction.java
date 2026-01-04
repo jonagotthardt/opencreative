@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -51,19 +51,19 @@ public final class ModifyVectorAction extends VariableAction {
             z = getArguments().getDouble("z", z, this);
         }
         if (add) {
-            vector.setX(vector.getX()+x);
-            vector.setY(vector.getY()+y);
-            vector.setZ(vector.getZ()+z);
+            vector.setX(vector.getX() + x);
+            vector.setY(vector.getY() + y);
+            vector.setZ(vector.getZ() + z);
         } else {
             vector.setX(x);
             vector.setY(y);
             vector.setZ(z);
         }
-        setVarValue(link,vector);
+        setVarValue(link, vector);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_MODIFY_VECTOR;
     }
 }

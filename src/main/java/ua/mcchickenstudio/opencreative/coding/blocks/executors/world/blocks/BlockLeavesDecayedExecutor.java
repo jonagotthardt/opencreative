@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,10 +30,9 @@ public class BlockLeavesDecayedExecutor extends WorldExecutor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.WORLD_BLOCK_LEAVES_DECAYED;
     }
 
-    
 
 }

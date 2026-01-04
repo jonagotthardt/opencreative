@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.coding.values.TextEventValue;
 public final class EntitySpawnReasonValue extends TextEventValue {
 
     public EntitySpawnReasonValue() {
-        super("spawn_reason", new ItemStack(Material.CHICKEN_SPAWN_EGG  ), MenusCategory.ENTITY);
+        super("spawn_reason", new ItemStack(Material.CHICKEN_SPAWN_EGG), MenusCategory.ENTITY);
     }
 
     @Override

@@ -35,8 +35,8 @@ public final class SurvivalGenerator extends WorldGenerator implements Environme
 
     @Override
     public void afterCreation(@NotNull World world) {
-        int y = world.getHighestBlockYAt(0,0)+3;
-        Location spawn = new Location(world, 0, y+1, 0, -90, -6);
+        int y = world.getHighestBlockYAt(0, 0) + 3;
+        Location spawn = new Location(world, 0, y + 1, 0, -90, -6);
         world.setSpawnLocation(spawn);
     }
 

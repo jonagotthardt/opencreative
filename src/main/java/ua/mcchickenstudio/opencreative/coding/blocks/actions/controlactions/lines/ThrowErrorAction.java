@@ -19,12 +19,13 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
 
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 public final class ThrowErrorAction extends ControlAction {
     public ThrowErrorAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,12 +34,12 @@ public final class ThrowErrorAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        String message = getArguments().getText("message","Thrown error from control action",this);
+        String message = getArguments().getText("message", "Thrown error from control action", this);
         throw new NullPointerException(message);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.CONTROL_THROW_ERROR;
     }
 }

@@ -38,8 +38,8 @@ public final class EntitySetBeeStingerCooldownAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        int cooldown = getArguments().getInt("cooldown",20,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int cooldown = getArguments().getInt("cooldown", 20, this);
         if (add) {
             cooldown = cooldown + livingEntity.getBeeStingerCooldown();
         }
@@ -47,7 +47,7 @@ public final class EntitySetBeeStingerCooldownAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_BEE_STINGER_COOLDOWN;
     }
 }

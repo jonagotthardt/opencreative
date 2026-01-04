@@ -72,10 +72,11 @@ public class CodeConfiguration extends YamlConfiguration {
 
     /**
      * Saves executor block data in configuration file.
-     * @param block executor coding block.
+     *
+     * @param block    executor coding block.
      * @param category category of executor.
-     * @param type type of executor.
-     * @param debug should print debug logs or not.
+     * @param type     type of executor.
+     * @param debug    should print debug logs or not.
      */
     public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category,
                                   ExecutorType type, boolean debug) {
@@ -89,8 +90,8 @@ public class CodeConfiguration extends YamlConfiguration {
         set(path + ".type", type.name());
         if (debug) set(path + ".debug", debug);
 
-        String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
-        String thirdSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+        String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(), (byte) 1);
+        String thirdSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
 
         if (category == ExecutorCategory.FUNCTION || category == ExecutorCategory.METHOD) {
             if (thirdSignLine != null && !thirdSignLine.isEmpty()) {
@@ -112,9 +113,10 @@ public class CodeConfiguration extends YamlConfiguration {
 
     /**
      * Saves executor block data in configuration file.
-     * @param block executor coding block.
+     *
+     * @param block    executor coding block.
      * @param category category of executor.
-     * @param type type of executor.
+     * @param type     type of executor.
      */
     public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category, ExecutorType type) {
         saveExecutorBlock(block, notDependsOnHeight, category, type, false);
@@ -122,41 +124,42 @@ public class CodeConfiguration extends YamlConfiguration {
 
     /**
      * Saves action block data in configuration file.
+     *
      * @param multiActions list of multi actions.
-     * @param actionBlock action coding block.
-     * @param category category of action.
-     * @param type type of action.
-     * @param target target for action.
+     * @param actionBlock  action coding block.
+     * @param category     category of action.
+     * @param type         type of action.
+     * @param target       target for action.
      */
     public void saveActionBlock(Block executorBlock, boolean notDependsOnHeight, List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
-        String path = getActionBlockPath(executorBlock,notDependsOnHeight,actionBlock,multiActions);
+        String path = getActionBlockPath(executorBlock, notDependsOnHeight, actionBlock, multiActions);
 
         set(path + ".category", category.name());
         set(path + ".type", type.name());
 
         if (type == ActionType.LAUNCH_FUNCTION || type == ActionType.LAUNCH_METHOD) {
-            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
             if (thirdSignLine != null && !thirdSignLine.isEmpty()) {
-                set(path + ".name",thirdSignLine);
+                set(path + ".name", thirdSignLine);
             }
         }
 
         if (category == ActionCategory.SELECTION_ACTION) {
-            String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
-            String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 2);
-            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 1);
+            String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 2);
+            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
             if (secondSignLine != null && !secondSignLine.isEmpty() && thirdSignLine != null && !thirdSignLine.isEmpty()) {
                 set(path + ".condition.category", secondSignLine.toUpperCase());
                 set(path + ".condition.type", thirdSignLine.toUpperCase());
                 if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
-                    set(path + ".condition.opposed",true);
+                    set(path + ".condition.opposed", true);
                 }
             } else if (secondSignLine != null && !secondSignLine.isEmpty()) {
                 set(path + ".target", secondSignLine.toUpperCase());
             }
         } else if (type == ActionType.REPEAT_WHILE || type == ActionType.REPEAT_WHILE_NOT) {
-            String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 2);
-            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 3);
+            String secondSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 2);
+            String thirdSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
             if (secondSignLine != null && !secondSignLine.isEmpty() && thirdSignLine != null && !thirdSignLine.isEmpty()) {
                 set(path + ".condition.category", secondSignLine.toUpperCase());
                 set(path + ".condition.type", thirdSignLine.toUpperCase());
@@ -169,9 +172,9 @@ public class CodeConfiguration extends YamlConfiguration {
         }
 
         if (category.isCondition()) {
-            String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(),(byte) 1);
+            String firstSignLine = getSignLine(actionBlock.getRelative(BlockFace.SOUTH).getLocation(), (byte) 1);
             if (firstSignLine != null && firstSignLine.equalsIgnoreCase("not")) {
-                set(path + ".opposed",true);
+                set(path + ".opposed", true);
             }
         }
 
@@ -181,21 +184,23 @@ public class CodeConfiguration extends YamlConfiguration {
 
     /**
      * Saves arguments for action block in configuration file.
+     *
      * @param multiActions list of multi actions.
-     * @param actionBlock action block to set arguments.
-     * @param argument argument to set.
-     * @param value value of argument.
-     * @param type value type.
+     * @param actionBlock  action block to set arguments.
+     * @param argument     argument to set.
+     * @param value        value of argument.
+     * @param type         value type.
      */
     public void saveArguments(Block executorBlock, boolean notDependsOnHeight, List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
-        String path = getActionBlockPath(executorBlock,notDependsOnHeight,actionBlock,multiActions);
-        set(path + ".arguments." + argument + ".type",type.name());
-        set(path + ".arguments." + argument + ".value",value);
+        String path = getActionBlockPath(executorBlock, notDependsOnHeight, actionBlock, multiActions);
+        set(path + ".arguments." + argument + ".type", type.name());
+        set(path + ".arguments." + argument + ".value", value);
     }
 
     /**
      * Returns path of action block for setting parameters and arguments.
-     * @param actionBlock coding action or condition block for getting path.
+     *
+     * @param actionBlock  coding action or condition block for getting path.
      * @param multiActions list of multi actions that have brackets and inside actions.
      * @return Configuration path of action block.
      */
@@ -204,7 +209,7 @@ public class CodeConfiguration extends YamlConfiguration {
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
             conditionsPath
-                    .append(condition.endsWith(".else") ? condition.replace(".else","") : condition)
+                    .append(condition.endsWith(".else") ? condition.replace(".else", "") : condition)
                     .append(condition.endsWith(".else") ? ".else." : ".actions.");
         }
         String path = "code.blocks.exec_block_";
@@ -216,7 +221,7 @@ public class CodeConfiguration extends YamlConfiguration {
         builder.append(conditionsPath);
         ActionCategory category = ActionCategory.getByMaterial(actionBlock.getType());
         if (category != null && category.isMultiAction()) {
-            builder.delete(builder.length()-9,builder.length());
+            builder.delete(builder.length() - 9, builder.length());
         } else {
             builder.append("action_block").append(getBlockNumber(actionBlock));
         }

@@ -25,6 +25,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -51,10 +52,10 @@ public final class SpawnItemDisplayAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
-        ItemStack item = getArguments().getItem("item", new ItemStack(Material.AIR),this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.AIR), this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.ITEM_DISPLAY);
 
             if (spawnedEntity instanceof ItemDisplay display) {
@@ -68,7 +69,7 @@ public final class SpawnItemDisplayAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_ITEM_DISPLAY;
     }
 }

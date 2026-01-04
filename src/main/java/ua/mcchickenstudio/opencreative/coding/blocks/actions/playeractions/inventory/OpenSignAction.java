@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class OpenSignAction extends PlayerAction {
@@ -38,10 +38,10 @@ public final class OpenSignAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
         Block block = location.getBlock();
         if (!(block.getState() instanceof Sign sign)) return;
-        String sideString = getArguments().getText("side","front",this);
+        String sideString = getArguments().getText("side", "front", this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
         if (getPlanet().getLimits().cantOpenMenu(player)) {
             /*
@@ -51,11 +51,11 @@ public final class OpenSignAction extends PlayerAction {
              */
             throw new TooManyOpenedMenusException(player.getName());
         }
-        player.openSign(sign,side);
+        player.openSign(sign, side);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_OPEN_SIGN;
     }
 }

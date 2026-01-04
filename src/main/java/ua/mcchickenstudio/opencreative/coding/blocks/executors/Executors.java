@@ -18,6 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -30,9 +33,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.*;
@@ -43,31 +43,25 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 /**
  * <h1>Executors</h1>
  * This class represents Executors in every planet code script.
- * @since 5.0
- * @version 6.0
+ *
  * @author McChicken Studio
+ * @version 6.0
+ * @since 5.0
  */
 public class Executors {
 
     protected final Planet planet;
     private final List<Executor> executorsList = new ArrayList<>();
 
-    private final Map<Executor,Integer> lastExecutorsCallsAmount = new HashMap<>();
+    private final Map<Executor, Integer> lastExecutorsCallsAmount = new HashMap<>();
 
     public Executors(Planet planet) {
         this.planet = planet;
     }
 
     /**
-     * Clears temporary data: executors list, last executors calls.
-     */
-    public void clear() {
-        executorsList.clear();
-        lastExecutorsCallsAmount.clear();
-    }
-
-    /**
      * Finds executor for world event and activates it, if found.
+     *
      * @param event event to activate executor.
      */
     public static void activate(@NotNull WorldEvent event) {
@@ -85,8 +79,9 @@ public class Executors {
 
     /**
      * Calls executor that executes actions.
+     *
      * @param executor executor to call.
-     * @param event event of executor.
+     * @param event    event of executor.
      */
     public static void activate(@NotNull Executor executor, @NotNull WorldEvent event) {
         Planet planet = executor.getPlanet();
@@ -101,7 +96,7 @@ public class Executors {
         Executors executors = planet.getTerritory().getScript().getExecutors();
         if (executors.getLastExecutorCallsAmount(executor) >= planet.getLimits().getCodeOperationsLimit()) {
             planet.getTerritory().getScript().getExecutors().stopCode("operations limit");
-            sendPlanetCodeCriticalErrorMessage(planet,executor,getLocaleMessage("coding-error.operations-limit",false)
+            sendPlanetCodeCriticalErrorMessage(planet, executor, getLocaleMessage("coding-error.operations-limit", false)
                     .replace("%limit%", String.valueOf(planet.getLimits().getCodeOperationsLimit())));
             executors.clearExecutionsAmount(executor);
             return false;
@@ -112,13 +107,22 @@ public class Executors {
                 public void run() {
                     executors.decreaseCallsAmount(executor);
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),35L);
+            }.runTaskLater(OpenCreative.getPlugin(), 35L);
             return true;
         }
     }
 
     /**
+     * Clears temporary data: executors list, last executors calls.
+     */
+    public void clear() {
+        executorsList.clear();
+        lastExecutorsCallsAmount.clear();
+    }
+
+    /**
      * Loads executors from script file.
+     *
      * @param file script file.
      */
     public void load(File file) {
@@ -135,18 +139,17 @@ public class Executors {
                 if (config.getString(path + ".type") != null) {
                     Executor executor = createExecutor(config, path);
                     if (executor != null) {
-                        if (executor.getExecutorType() == null) continue;
                         executors.add(executor);
                     }
                 }
             }
             clear();
             executorsList.addAll(executors);
-            sendCodingDebugLog(planet,"Started code in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
+            sendCodingDebugLog(planet, "Started code in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
             OpenCreative.getPlugin().getLogger().info("Loaded code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
         } else {
             OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " has no code to load.");
-            sendCodingDebugLog(planet,"No code found to load.");
+            sendCodingDebugLog(planet, "No code found to load.");
         }
     }
 
@@ -178,6 +181,7 @@ public class Executors {
 
     /**
      * Returns list of actions inside the condition or multi action.
+     *
      * @param action condition or multi action.
      * @return list of inside actions.
      */
@@ -201,6 +205,7 @@ public class Executors {
 
     /**
      * Returns list of registered cycle executors.
+     *
      * @return list of cycles.
      */
     public @NotNull List<Cycle> getCyclesList() {
@@ -215,6 +220,7 @@ public class Executors {
 
     /**
      * Returns list of registered function executors.
+     *
      * @return list of functions.
      */
     public @NotNull List<Function> getFunctionsList() {
@@ -229,6 +235,7 @@ public class Executors {
 
     /**
      * Returns list of registered method executors.
+     *
      * @return list of methods.
      */
     public @NotNull List<Method> getMethodsList() {
@@ -251,23 +258,24 @@ public class Executors {
 
     /**
      * Creates an instance of executor.
+     *
      * @param config script file.
-     * @param path path of executor.
+     * @param path   path of executor.
      * @return instance of executor, or null.
      */
     private Executor createExecutor(@NotNull YamlConfiguration config, @NotNull String path) {
         Executor executor = null;
         try {
-            int[] coords = getCoords(config,path);
-            ExecutorType type = ExecutorType.valueOf(config.getString(path+".type"));
+            int[] coords = getCoords(config, path);
+            ExecutorType type = ExecutorType.valueOf(config.getString(path + ".type"));
             if (type == ExecutorType.CYCLE) {
-                String name = config.getString(path+".name");
-                int time = config.getInt(path+".time");
+                String name = config.getString(path + ".name");
+                int time = config.getInt(path + ".time");
                 /*
                  * We will not create cycle without name,
                  * because it can't be called in code.
                  */
-                if (time < 5 || time > 3600 ) {
+                if (time < 5 || time > 3600) {
                     time = 20;
                 }
                 if (name != null) {
@@ -275,7 +283,7 @@ public class Executors {
                             .newInstance(planet, coords[0], coords[1], coords[2], name, time);
                 }
             } else if (type == ExecutorType.FUNCTION || type == ExecutorType.METHOD) {
-                String name = config.getString(path+".name");
+                String name = config.getString(path + ".name");
                 /*
                  * We will not create function or method without name,
                  * because it can't be called in code.
@@ -297,15 +305,17 @@ public class Executors {
             if (debug) {
                 executor.setDebug(debug);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return executor;
     }
 
     /**
      * Creates a list of actions for executor.
+     *
      * @param executor executor that will store actions.
-     * @param path path of actions inside executor.
-     * @param config script file.
+     * @param path     path of actions inside executor.
+     * @param config   script file.
      * @return list of actions, or empty list.
      */
     private @NotNull List<Action> createActionList(@NotNull Executor executor,
@@ -328,9 +338,10 @@ public class Executors {
 
     /**
      * Creates an instance of action from script.
+     *
      * @param executor executor that stores action.
-     * @param path path of action inside executor.
-     * @param config script file.
+     * @param path     path of action inside executor.
+     * @param config   script file.
      * @return instance of action, or null.
      */
     private @Nullable Action createAction(@NotNull Executor executor,
@@ -342,7 +353,7 @@ public class Executors {
 
         try {
             ActionType actionType = ActionType.valueOf(type);
-            Arguments args = new Arguments(executor.getPlanet(),executor);
+            Arguments args = new Arguments(executor.getPlanet());
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
             if (targetString != null && !targetString.isEmpty()) {
@@ -353,48 +364,48 @@ public class Executors {
                 args.load(section);
             }
             if (actionType == ActionType.LAUNCH_FUNCTION || actionType == ActionType.LAUNCH_METHOD) {
-                if (config.getString(path+".name") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name"," "));
+                if (config.getString(path + ".name") != null) {
+                    args.setArgumentValue("name", ValueType.TEXT, config.getString(path + ".name", " "));
                 }
             } else if (actionType == ActionType.SELECTION_SET || actionType == ActionType.SELECTION_ADD || actionType == ActionType.SELECTION_REMOVE) {
-                if (config.getConfigurationSection(path+".condition") != null) {
-                    boolean isOpposed = config.getBoolean(path+".condition.opposed",false);
-                    ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path+".condition.category"));
-                    ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
-                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor,config.getInt(path+".location.x"),args,conditionCategory,conditionType,isOpposed);
-                } else if (config.getString(path+".target") != null){
+                if (config.getConfigurationSection(path + ".condition") != null) {
+                    boolean isOpposed = config.getBoolean(path + ".condition.opposed", false);
+                    ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path + ".condition.category"));
+                    ActionType conditionType = ActionType.valueOf(config.getString(path + ".condition.type"));
+                    return actionType.getActionClass().getConstructor(Executor.class, int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor, config.getInt(path + ".location.x"), args, conditionCategory, conditionType, isOpposed);
+                } else if (config.getString(path + ".target") != null) {
                     if (targetString != null && !targetString.isEmpty()) {
                         target = Target.valueOf(targetString);
                     }
-                    return actionType.getActionClass().getConstructor(Executor.class,int.class, Arguments.class, Target.class).newInstance(executor,config.getInt(path+".location.x"),args,target);
+                    return actionType.getActionClass().getConstructor(Executor.class, int.class, Arguments.class, Target.class).newInstance(executor, config.getInt(path + ".location.x"), args, target);
                 }
-                if (config.getString(path+".condition.type") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT,config.getString(path+".name",""));
+                if (config.getString(path + ".condition.type") != null) {
+                    args.setArgumentValue("name", ValueType.TEXT, config.getString(path + ".name", ""));
                 }
             }
             if (actionType.getCategory().isMultiAction()) {
                 if (actionType.getCategory().isCondition()) {
-                    boolean isOpposed = config.getBoolean(path+".opposed",false);
+                    boolean isOpposed = config.getBoolean(path + ".opposed", false);
                     return actionType.getActionClass()
-                            .getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class,List.class,boolean.class)
+                            .getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class, List.class, boolean.class)
                             .newInstance(executor, target, config.getInt(path + ".location.x"),
-                                    args, createActionList(executor,path + ".actions",config),
-                                    createActionList(executor,path + ".else",config),isOpposed);
+                                    args, createActionList(executor, path + ".actions", config),
+                                    createActionList(executor, path + ".else", config), isOpposed);
                 } else if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
-                    if (config.getConfigurationSection(path+".condition") != null) {
-                        ActionType conditionType = ActionType.valueOf(config.getString(path+".condition.type"));
+                    if (config.getConfigurationSection(path + ".condition") != null) {
+                        ActionType conditionType = ActionType.valueOf(config.getString(path + ".condition.type"));
                         return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,
                                 Arguments.class, List.class, ActionType.class).newInstance(executor,
-                                target, config.getInt(path+".location.x"),
-                                args, createActionList(executor,path+".actions",config), conditionType);
+                                target, config.getInt(path + ".location.x"),
+                                args, createActionList(executor, path + ".actions", config), conditionType);
                     }
                 } else {
-                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class,List.class)
+                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class)
                             .newInstance(executor, target, config.getInt(path + ".location.x"),
-                                    args, createActionList(executor,path+".actions",config));
+                                    args, createActionList(executor, path + ".actions", config));
                 }
             }
-            return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,Arguments.class).newInstance(executor,target,config.getInt(path+".location.x"),args);
+            return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class).newInstance(executor, target, config.getInt(path + ".location.x"), args);
         } catch (Exception error) {
             sendDebugError("Can't create an action", error);
             return null;
@@ -404,6 +415,7 @@ public class Executors {
     /**
      * Stops code in planet by setting its mode to Build
      * and sends log in console. Doesn't call quit events.
+     *
      * @param reason reason of stopping the code.
      */
     public void stopCode(@NotNull String reason) {
@@ -413,11 +425,11 @@ public class Executors {
     }
 
     private void increaseCallsAmount(Executor executor) {
-        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor)+1);
+        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor) + 1);
     }
 
     private void decreaseCallsAmount(Executor executor) {
-        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor)-1);
+        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor) - 1);
     }
 
     private int getLastExecutorCallsAmount(Executor executor) {

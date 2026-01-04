@@ -35,9 +35,9 @@ import java.util.regex.Pattern;
  */
 public abstract class KeyPlaceholder extends Placeholder {
 
-    private final String[] keys;
     private final static int limit = 20;
     private final static Pattern PATTERN_PLACEHOLDER = Pattern.compile("%[A-Za-z0-9]+%");
+    private final String[] keys;
 
     public KeyPlaceholder(String... keys) {
         this.keys = keys;
@@ -64,6 +64,7 @@ public abstract class KeyPlaceholder extends Placeholder {
 
     /**
      * Returns array of keys that can be replaced, without %.
+     *
      * @return array of keys.
      */
     public String[] getKeys() {
@@ -72,9 +73,10 @@ public abstract class KeyPlaceholder extends Placeholder {
 
     /**
      * Parses placeholder key, without %.
-     * @param key key to replace.
+     *
+     * @param key     key to replace.
      * @param handler action handler.
-     * @param action action
+     * @param action  action
      * @return string - if parsed, or null - nothing parsed.
      */
     public abstract @Nullable String parseKey(String key, ActionsHandler handler, Action action);
@@ -88,9 +90,9 @@ public abstract class KeyPlaceholder extends Placeholder {
             count++;
             if (count >= limit) break;
             String key = matcher.group();
-            key = key.substring(1,key.length()-1);
+            key = key.substring(1, key.length() - 1);
             String replacement = parseKey(key, handler, action);
-            if (replacement == null) replacement = "%"+key+"%";
+            if (replacement == null) replacement = "%" + key + "%";
             matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(result);

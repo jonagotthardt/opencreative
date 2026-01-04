@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,13 +34,13 @@ public final class VectorToLocationAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Vector vector = getArguments().getVector("vector",new Vector(),this);
-        setVarValue(link,vector.toLocation(getPlanet().getWorld()));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Vector vector = getArguments().getVector("vector", new Vector(), this);
+        setVarValue(link, vector.toLocation(getPlanet().getWorld()));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_VECTOR_TO_LOCATION;
     }
 }

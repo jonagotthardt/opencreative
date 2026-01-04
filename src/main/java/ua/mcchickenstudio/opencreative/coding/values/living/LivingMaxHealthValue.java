@@ -18,10 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

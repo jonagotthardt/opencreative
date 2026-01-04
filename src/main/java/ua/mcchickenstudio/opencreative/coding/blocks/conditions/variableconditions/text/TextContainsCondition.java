@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text;
 
+import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -39,10 +39,10 @@ public class TextContainsCondition extends VariableCondition {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("contains")) {
             return false;
         }
-        String text = getArguments().getText("text","",this);
+        String text = getArguments().getText("text", "", this);
         List<String> contains = getArguments().getTextList("contains", this);
-        boolean ignoreColors = getArguments().getBoolean("ignore-colors",false,this);
-        boolean ignoreCaps = getArguments().getBoolean("ignore-caps",false,this);
+        boolean ignoreColors = getArguments().getBoolean("ignore-colors", false, this);
+        boolean ignoreCaps = getArguments().getBoolean("ignore-caps", false, this);
         if (ignoreColors) text = ChatColor.stripColor(text);
         if (ignoreCaps) text = text.toLowerCase();
         for (String contain : contains) {
@@ -58,7 +58,7 @@ public class TextContainsCondition extends VariableCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_VAR_TEXT_CONTAINS;
     }
 }

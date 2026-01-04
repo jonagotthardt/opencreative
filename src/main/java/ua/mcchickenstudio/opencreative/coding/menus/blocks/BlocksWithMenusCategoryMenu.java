@@ -45,7 +45,7 @@ public abstract class BlocksWithMenusCategoryMenu<T> extends ContentWithMenusCat
                                        @NotNull Material stainedPane,
                                        @NotNull MenusCategory defaultCategory) {
         super(player, mainCategory,
-                ChatColor.stripColor(getLocaleMessage("blocks." + blockPath,false)),
+                ChatColor.stripColor(getLocaleMessage("blocks." + blockPath, false)),
                 stainedPane, defaultCategory);
         this.signLocation = location;
     }

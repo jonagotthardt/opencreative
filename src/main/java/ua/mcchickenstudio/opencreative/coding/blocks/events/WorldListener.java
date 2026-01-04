@@ -20,7 +20,10 @@ package ua.mcchickenstudio.opencreative.coding.blocks.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.*;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -42,7 +45,7 @@ public class WorldListener implements EventExecutor, Listener {
         try {
             Bukkit.getPluginManager().registerEvent(
                     WorldEvent.class,
-                    this, EventPriority.NORMAL,this,
+                    this, EventPriority.NORMAL, this,
                     OpenCreative.getPlugin());
         } catch (Exception error) {
             sendCriticalErrorMessage("Cannot register world events listener: planets code will not work.", error);
@@ -59,6 +62,7 @@ public class WorldListener implements EventExecutor, Listener {
      * <li>Happen while planet is in play mode
      * <li>Happen while planet is loaded
      * </ul>
+     *
      * @param worldEvent event to check.
      * @return true - if possible, false - disallowed.
      */

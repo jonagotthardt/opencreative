@@ -40,12 +40,12 @@ public final class BlockRedstoneEvent extends WorldEvent implements BlockEvent, 
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setNewCurrent(event.getOldCurrent());
+    public boolean isCancelled() {
+        return event.getNewCurrent() == event.getOldCurrent();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.getNewCurrent() == event.getOldCurrent();
+    public void setCancelled(boolean cancelled) {
+        event.setNewCurrent(event.getOldCurrent());
     }
 }

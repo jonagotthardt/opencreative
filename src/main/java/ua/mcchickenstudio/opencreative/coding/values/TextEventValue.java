@@ -40,6 +40,7 @@ public abstract class TextEventValue extends EventValue {
     /**
      * Returns a string that can be got from
      * player, event, action, or null.
+     *
      * @return string, or null.
      */
     public abstract @Nullable String getText(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);
@@ -48,6 +49,6 @@ public abstract class TextEventValue extends EventValue {
     public final @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         String text = getText(handler, action, entity);
         if (text == null) return null;
-        return new StringBuilder(text).substring(0,Math.min(1024,text.length()));
+        return new StringBuilder(text).substring(0, Math.min(1024, text.length()));
     }
 }

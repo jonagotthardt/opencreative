@@ -28,5 +28,5 @@ public class PlanetUnloadEvent extends PlanetEvent {
     public PlanetUnloadEvent(Planet planet) {
         super(planet);
     }
-    
+
 }

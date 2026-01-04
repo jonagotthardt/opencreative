@@ -35,15 +35,17 @@ public abstract class Experiment {
 
     /**
      * Returns id of experiment.
+     *
      * @return short id of experiment that will be used in settings.
-     *           <p>
-     *           It must be lower-snake-cased, for example: "future_update", "code_downloader".
+     * <p>
+     * It must be lower-snake-cased, for example: "future_update", "code_downloader".
      */
     public abstract @NotNull String getId();
 
     /**
      * Returns name of experiment, that will be used
      * for displaying in experiments list.
+     *
      * @return name of experiment.
      */
     public abstract @NotNull String getName();
@@ -51,21 +53,24 @@ public abstract class Experiment {
     /**
      * Returns description of experiment, that will
      * tell purpose of experiment and describes what it adds.
+     *
      * @return description of content in experiment.
      */
     public abstract @NotNull String getDescription();
 
     /**
      * Handles command for experiment.
+     *
      * @param sender sender of command.
-     * @param args arguments of command.
+     * @param args   arguments of command.
      */
     public abstract void handleCommand(@NotNull CommandSender sender, @NotNull String[] args);
 
     /**
      * Returns list of command suggestions for experiment.
+     *
      * @param sender sender of command.
-     * @param args arguments of command.
+     * @param args   arguments of command.
      * @return list of command suggestions.
      */
     public abstract @Nullable List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args);
@@ -74,27 +79,31 @@ public abstract class Experiment {
      * Executes enable operations for experiment.
      */
     @SuppressWarnings("EmptyMethod")
-    public void onEnable() {}
+    public void onEnable() {
+    }
 
     /**
      * Executes disable operations for experiment.
      */
-    public void onDisable() {}
-
-    /**
-     * Sets enabled state of experiment.
-     * @param enabled true - enabled, false - disabled.
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void onDisable() {
     }
 
     /**
      * Checks whether experiment is enabled or not.
+     *
      * @return true - enabled, false - disabled.
      */
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /**
+     * Sets enabled state of experiment.
+     *
+     * @param enabled true - enabled, false - disabled.
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

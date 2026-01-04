@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -35,9 +35,9 @@ public class NumberGreaterCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        double first = getArguments().getDouble("first",2.0d,this);
-        double second = getArguments().getDouble("second",1.0d,this);
-        boolean equals = getArguments().getBoolean("equals",false,this);
+        double first = getArguments().getDouble("first", 2.0d, this);
+        double second = getArguments().getDouble("second", 1.0d, this);
+        boolean equals = getArguments().getBoolean("equals", false, this);
         if (equals) {
             return first >= second;
         }
@@ -45,7 +45,7 @@ public class NumberGreaterCondition extends VariableCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_VAR_NUMBER_GREATER;
     }
 }

@@ -34,7 +34,10 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -47,12 +50,12 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
 
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
-    private final ItemStack REMOVE_ALL = createItem(Material.BARRIER,1,"menus.entities-browser.items.remove-all");
-    private final ItemStack BACK_TO_SETTINGS = createItem(Material.ARROW,1,"menus.entities-browser.items.back");
+    private final ItemStack REMOVE_ALL = createItem(Material.BARRIER, 1, "menus.entities-browser.items.remove-all");
+    private final ItemStack BACK_TO_SETTINGS = createItem(Material.ARROW, 1, "menus.entities-browser.items.back");
 
     public EntitiesBrowserMenu(Player player, Planet planet) {
-        super(player,getLocaleMessage("menus.entities-browser.title",false),
-                PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45,48,50}, new int[]{46,52});
+        super(player, getLocaleMessage("menus.entities-browser.title", false),
+                PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45, 48, 50}, new int[]{46, 52});
         this.planet = planet;
     }
 
@@ -65,20 +68,20 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
     }
 
     private ItemStack createEntityItem(Entity entity) {
-        ItemStack item = createItem(getEntityMaterial(entity),1,"menus.entities-browser.items.entity");
-        replacePlaceholderInLore(item,"%name%",entity.getName().substring(0,Math.min(20,entity.getName().length())));
-        replacePlaceholderInLore(item,"%type%", StringUtils.capitalize(entity.getType().name().toLowerCase().replace('_',' ')));
-        replacePlaceholderInLore(item,"%x%",entity.getLocation().getBlockX());
-        replacePlaceholderInLore(item,"%y%",entity.getLocation().getBlockY());
-        replacePlaceholderInLore(item,"%z%",entity.getLocation().getBlockZ());
-        setPersistentData(item,getItemTypeKey(),entity.getUniqueId().toString());
+        ItemStack item = createItem(getEntityMaterial(entity), 1, "menus.entities-browser.items.entity");
+        replacePlaceholderInLore(item, "%name%", entity.getName().substring(0, Math.min(20, entity.getName().length())));
+        replacePlaceholderInLore(item, "%type%", StringUtils.capitalize(entity.getType().name().toLowerCase().replace('_', ' ')));
+        replacePlaceholderInLore(item, "%x%", entity.getLocation().getBlockX());
+        replacePlaceholderInLore(item, "%y%", entity.getLocation().getBlockY());
+        replacePlaceholderInLore(item, "%z%", entity.getLocation().getBlockZ());
+        setPersistentData(item, getItemTypeKey(), entity.getUniqueId().toString());
         return item;
     }
 
     private Material getEntityMaterial(Entity entity) {
         Material material = Material.getMaterial(entity.getType().name());
         if (material == null && entity.getType().isAlive()) {
-            material = Material.getMaterial(entity.getType().name()+"_SPAWN_EGG");
+            material = Material.getMaterial(entity.getType().name() + "_SPAWN_EGG");
         } else if (entity instanceof Item item) {
             material = item.getItemStack().getType();
         } else if (entity instanceof ItemDisplay item) {
@@ -98,17 +101,17 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
     protected void fillOtherItems() {
         ParameterButton type = new ParameterButton(
                 "all",
-                List.of("all","friendly","monsters","items","transport","decoration","not-living"),
+                List.of("all", "friendly", "monsters", "items", "transport", "decoration", "not-living"),
                 "type",
                 "menus.all-worlds",
                 "menus.entities-browser.items.type",
-                List.of(Material.HOPPER, Material.PIGLIN_HEAD, Material.ZOMBIE_HEAD, Material.POISONOUS_POTATO, Material.BIRCH_CHEST_BOAT, Material.PAINTING,Material.PUMPKIN_SEEDS)
+                List.of(Material.HOPPER, Material.PIGLIN_HEAD, Material.ZOMBIE_HEAD, Material.POISONOUS_POTATO, Material.BIRCH_CHEST_BOAT, Material.PAINTING, Material.PUMPKIN_SEEDS)
         );
         buttons.add(type);
-        setItem(47,createItem(Material.RED_STAINED_GLASS_PANE,1));
-        setItem(48,type.getItem());
-        setItem(50,REMOVE_ALL);
-        setItem(51,createItem(Material.RED_STAINED_GLASS_PANE,1));
+        setItem(47, createItem(Material.RED_STAINED_GLASS_PANE, 1));
+        setItem(48, type.getItem());
+        setItem(50, REMOVE_ALL);
+        setItem(51, createItem(Material.RED_STAINED_GLASS_PANE, 1));
     }
 
     @Override
@@ -119,17 +122,23 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
             return;
         }
         for (ParameterButton button : buttons) {
-            if (itemEquals(item,button.getItem(true))) {
+            if (itemEquals(item, button.getItem(true))) {
                 if (event.getRawSlot() == 48) {
                     button.next();
                     elements.clear();
                     switch (button.getCurrentChoice()) {
-                        case 2 -> elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof LivingEntity && (!(entity instanceof Monster))).toList());
-                        case 3 -> elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Enemy).toList());
-                        case 4 -> elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Item).toList());
-                        case 5 -> elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Vehicle).toList());
-                        case 6 -> elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Painting || entity instanceof ArmorStand || entity instanceof TextDisplay || entity instanceof ItemDisplay || entity instanceof BlockDisplay || entity instanceof ItemFrame).toList());
-                        case 7 -> elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> !(entity instanceof LivingEntity)).toList());
+                        case 2 ->
+                                elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof LivingEntity && (!(entity instanceof Monster))).toList());
+                        case 3 ->
+                                elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Enemy).toList());
+                        case 4 ->
+                                elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Item).toList());
+                        case 5 ->
+                                elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Vehicle).toList());
+                        case 6 ->
+                                elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> entity instanceof Painting || entity instanceof ArmorStand || entity instanceof TextDisplay || entity instanceof ItemDisplay || entity instanceof BlockDisplay || entity instanceof ItemFrame).toList());
+                        case 7 ->
+                                elements.addAll(new ArrayList<>(getElements()).stream().filter(entity -> !(entity instanceof LivingEntity)).toList());
                         default -> elements.addAll(getElements());
                     }
                     fillElements(getCurrentPage());
@@ -140,9 +149,9 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
                 }
             }
         }
-        if (itemEquals(item,BACK_TO_SETTINGS) && planet.isOwner(getPlayer())) {
+        if (itemEquals(item, BACK_TO_SETTINGS) && planet.isOwner(getPlayer())) {
             new WorldSettingsMenu(planet, getPlayer()).open(getPlayer());
-        } else if (itemEquals(item,REMOVE_ALL)) {
+        } else if (itemEquals(item, REMOVE_ALL)) {
             if (elements.isEmpty()) return;
             int count = elements.size();
             for (Entity element : new ArrayList<>(elements)) {
@@ -153,7 +162,7 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
             }
             for (Player p : planet.getPlayers()) {
                 if (planet.getWorldPlayers().canBuild(p)) {
-                    p.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.entities-browser.removed-all", getPlayer()).replace("%count%",String.valueOf(count)));
+                    p.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.entities-browser.removed-all", getPlayer()).replace("%count%", String.valueOf(count)));
                 }
             }
             elements.removeIf(Entity::isDead);
@@ -212,10 +221,10 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
                 for (Player p : planet.getPlayers()) {
                     if (planet.getWorldPlayers().canBuild(p)) {
                         p.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.entities-browser.removed", getPlayer())
-                                .replace("%name%",entity.getName().substring(0,Math.min(20,entity.getName().length())))
-                                .replace("%x%",String.valueOf(entity.getLocation().getBlockX()))
-                                .replace("%y%",String.valueOf(entity.getLocation().getBlockY()))
-                                .replace("%z%",String.valueOf(entity.getLocation().getBlockZ())));
+                                .replace("%name%", entity.getName().substring(0, Math.min(20, entity.getName().length())))
+                                .replace("%x%", String.valueOf(entity.getLocation().getBlockX()))
+                                .replace("%y%", String.valueOf(entity.getLocation().getBlockY()))
+                                .replace("%z%", String.valueOf(entity.getLocation().getBlockZ())));
                     }
                 }
                 Sounds.WORLD_REMOVE_ENTITY.play(getPlayer());
@@ -241,8 +250,8 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 this.setCurrentPage(1);
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : planet.isOwner(getPlayer()) ? BACK_TO_SETTINGS : DECORATION_ITEM);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : planet.isOwner(getPlayer()) ? BACK_TO_SETTINGS : DECORATION_ITEM);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
             setItem(50, REMOVE_ALL);
         }
     }
@@ -259,17 +268,17 @@ public final class EntitiesBrowserMenu extends ListBrowserMenu<Entity> implement
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,getCurrentPage()+1,"menus.entities-browser.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW, getCurrentPage() + 1, "menus.entities-browser.items.next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.entities-browser.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, Math.max(1, getCurrentPage() - 1), "menus.entities-browser.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.entities-browser.items.no-entities");
+        return createItem(Material.BARRIER, 1, "menus.entities-browser.items.no-entities");
     }
 
     @Override

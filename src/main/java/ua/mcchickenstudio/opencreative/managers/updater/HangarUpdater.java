@@ -32,13 +32,13 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 
 public final class HangarUpdater implements Updater {
 
-    private boolean updatesAvailable;
     private final String downloadUrl = "https://hangar.papermc.io/mcchickenstudio/OpenCreative";
     private final String apiUrl = "https://hangar.papermc.io/api/v1/projects/OpenCreative/latestrelease";
+    private boolean updatesAvailable;
 
     @Override
     public CompletableFuture<String> checkUpdates() {
@@ -68,10 +68,10 @@ public final class HangarUpdater implements Updater {
                 }
             } catch (Exception error) {
                 updatesAvailable = false;
-                sendDebugError("Can't check updates: " + apiUrl,error);
+                sendDebugError("Can't check updates: " + apiUrl, error);
                 future.completeExceptionally(error);
             }
-        },1, TimeUnit.SECONDS);
+        }, 1, TimeUnit.SECONDS);
         return future;
     }
 
@@ -113,7 +113,7 @@ public final class HangarUpdater implements Updater {
             String firstNumber = text.substring(0, firstDot);
             int first = Integer.parseInt(firstNumber); // 5
 
-            String secondText = text.substring(firstDot+1); // 9.0 Preview 2
+            String secondText = text.substring(firstDot + 1); // 9.0 Preview 2
             StringBuilder secondBuilder = new StringBuilder();
             for (char c : secondText.toCharArray()) {
                 if (Character.isDigit(c)) {
@@ -132,7 +132,7 @@ public final class HangarUpdater implements Updater {
 
     @Override
     public void init() {
-        Bukkit.getAsyncScheduler().runDelayed(OpenCreative.getPlugin(), (task) -> checkUpdates(),3, TimeUnit.SECONDS);
+        Bukkit.getAsyncScheduler().runDelayed(OpenCreative.getPlugin(), (task) -> checkUpdates(), 3, TimeUnit.SECONDS);
     }
 
     @Override

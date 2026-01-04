@@ -36,7 +36,7 @@ public enum StabilityState {
     NIGHTMARE;
 
     public String getLocalized() {
-        return getLocaleMessage("creative.stability." + name().toLowerCase().replace("_","-"),false);
+        return getLocaleMessage("creative.stability." + name().toLowerCase().replace("_", "-"), false);
     }
 
 }

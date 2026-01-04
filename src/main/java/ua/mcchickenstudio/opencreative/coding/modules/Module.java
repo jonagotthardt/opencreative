@@ -18,9 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.modules;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -56,11 +57,11 @@ public class Module {
     public Module(int id) {
         this.id = id;
 
-        String uuid = getModuleConfig(this).getString("owner","");
+        String uuid = getModuleConfig(this).getString("owner", "");
         try {
             owner = UUID.fromString(uuid);
         } catch (Exception ignored) {
-            owner = new UUID(0,0);
+            owner = new UUID(0, 0);
         }
 
         this.info = new ModuleInfo(this);
@@ -96,8 +97,9 @@ public class Module {
 
     /**
      * Builds code from module.
+     *
      * @param devPlanet dev planet where module will be pasted.
-     * @param player player who loads module.
+     * @param player    player who loads module.
      * @return true - built module successfully, false - failed.
      */
     public boolean place(@NotNull DevPlanet devPlanet, @NotNull Player player) {
@@ -138,7 +140,7 @@ public class Module {
             return false;
         } else if (result == CodingBlockPlacer.CodePlacementResult.ERROR) {
             devPlanet.setCodeChanged(true);
-            player.sendMessage(parseModuleLines(this, MessageUtils.getPlayerLocaleMessage("modules.fail",player)));
+            player.sendMessage(parseModuleLines(this, MessageUtils.getPlayerLocaleMessage("modules.fail", player)));
             Sounds.PLAYER_FAIL.play(player);
             return false;
         } else {
@@ -146,7 +148,7 @@ public class Module {
             Sounds.DEV_MODULE_INSTALLED.play(player);
             for (Player planetPlayer : devPlanet.getPlanet().getPlayers()) {
                 if (devPlanet.getPlanet().getWorldPlayers().canDevelop(planetPlayer)) {
-                    planetPlayer.sendMessage(parseModuleLines(this, MessageUtils.getPlayerLocaleMessage("modules.installed",player)));
+                    planetPlayer.sendMessage(parseModuleLines(this, MessageUtils.getPlayerLocaleMessage("modules.installed", player)));
                 }
             }
             getInformation().addDownload(devPlanet.getPlanet());

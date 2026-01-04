@@ -19,11 +19,6 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
-import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Location;
@@ -36,14 +31,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
 
 public final class DeathListener implements Listener {
@@ -62,14 +62,14 @@ public final class DeathListener implements Listener {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));
                 }
             }
-            event.getDrops().remove(createItem(Material.COMPASS,1,"items.developer.world-settings"));
-            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDeathEvent(player,event).callEvent();
+            event.getDrops().remove(createItem(Material.COMPASS, 1, "items.developer.world-settings"));
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDeathEvent(player, event).callEvent();
             Player killer = player.getKiller();
             if (killer != null) {
-                new PlayerKilledPlayerEvent(killer,player,event).callEvent();
+                new PlayerKilledPlayerEvent(killer, player, event).callEvent();
             }
             player.showTitle(Title.title(
-                    toComponent(getLocaleMessage("deaths.title",false)), Component.text("§7 " + player.getName() + "§f " + translateDeathMessage(player)),
+                    toComponent(getLocaleMessage("deaths.title", false)), Component.text("§7 " + player.getName() + "§f " + translateDeathMessage(player)),
                     Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(2), Duration.ofMillis(500))
             ));
         } else if (isLobbyWorld(event.getPlayer().getWorld())) {
@@ -96,11 +96,11 @@ public final class DeathListener implements Listener {
             case DROWNING -> getLocaleMessage("deaths.drowning");
             case DRYOUT -> getLocaleMessage("deaths.dryout");
             case ENTITY_ATTACK ->
-                    getLocaleMessage("deaths.entity-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(),30))));
+                    getLocaleMessage("deaths.entity-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(), 30))));
             case ENTITY_EXPLOSION ->
-                    getLocaleMessage("deaths.entity-explosion").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(),30))));
+                    getLocaleMessage("deaths.entity-explosion").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(), 30))));
             case ENTITY_SWEEP_ATTACK ->
-                    getLocaleMessage("deaths.entity-sweep-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(),30))));
+                    getLocaleMessage("deaths.entity-sweep-attack").replace("%entity%", (damager == null ? "" : damager.getName().substring(0, Math.min(damager.getName().length(), 30))));
             case FALL -> getLocaleMessage("deaths.fall");
             case FALLING_BLOCK -> getLocaleMessage("deaths.falling-block");
             case FIRE -> getLocaleMessage("deaths.fire");

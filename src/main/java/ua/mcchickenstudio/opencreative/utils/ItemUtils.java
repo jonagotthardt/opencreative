@@ -19,13 +19,22 @@
 package ua.mcchickenstudio.opencreative.utils;
 
 import io.papermc.paper.persistence.PersistentDataContainerView;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.NotNull;
@@ -33,16 +42,6 @@ import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.items.ItemFixerSettings;
 
 import java.io.ByteArrayInputStream;
@@ -133,7 +132,7 @@ public final class ItemUtils {
     }
 
     /**
-     Returns item stack with name, description found in localization file and persistent data.
+     * Returns item stack with name, description found in localization file and persistent data.
      **/
     public static ItemStack createItem(ItemStack item, String localizationPath, String persistentData) {
 
@@ -142,34 +141,34 @@ public final class ItemUtils {
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
         itemStack.setItemMeta(itemMeta);
-        setPersistentData(itemStack,getItemTypeKey(),persistentData);
+        setPersistentData(itemStack, getItemTypeKey(), persistentData);
         return itemStack;
 
     }
 
     /**
-     Returns item stack with name, description found in localization file and persistent data.
+     * Returns item stack with name, description found in localization file and persistent data.
      **/
     public static ItemStack createItem(Material material, int amount, String localizationPath, String persistentData) {
 
         if (!material.isItem()) material = Material.REDSTONE;
-        ItemStack itemStack = createItem(material,amount);
+        ItemStack itemStack = createItem(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
         itemStack.setItemMeta(itemMeta);
-        setPersistentData(itemStack,getItemTypeKey(),persistentData);
+        setPersistentData(itemStack, getItemTypeKey(), persistentData);
         return itemStack;
 
     }
 
     /**
-     Returns item stack with name and description found in localization file.
+     * Returns item stack with name and description found in localization file.
      **/
     public static ItemStack createItem(Material material, int amount, String localizationPath) {
 
         if (!material.isItem()) material = Material.REDSTONE;
-        ItemStack itemStack = createItem(material,amount);
+        ItemStack itemStack = createItem(material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(getLocaleItemName(localizationPath + ".name"));
         itemMeta.setLore(getLocaleItemDescription(localizationPath + ".lore"));
@@ -179,7 +178,7 @@ public final class ItemUtils {
     }
 
     /**
-     Returns item stack with name and description found in localization file.
+     * Returns item stack with name and description found in localization file.
      **/
     public static ItemStack createItem(ItemStack item, String localizationPath) {
 
@@ -193,11 +192,11 @@ public final class ItemUtils {
     }
 
     /**
-     Returns item stack with name and description found in localization file.
+     * Returns item stack with name and description found in localization file.
      **/
     public static ItemStack createItem(Material material, int amount, String localizationPath, Object value) {
 
-        ItemStack itemStack = createItem(material,amount,localizationPath);
+        ItemStack itemStack = createItem(material, amount, localizationPath);
         ItemMeta meta = getOrCreateItemMeta(itemStack);
         PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
         container.set(CODING_VALUE_KEY, PersistentDataType.BYTE, (Byte) value);
@@ -209,7 +208,7 @@ public final class ItemUtils {
 
     public static ItemStack createItem(Material material, int amount) {
 
-        ItemStack itemStack = new ItemStack(material,amount);
+        ItemStack itemStack = new ItemStack(material, amount);
         ItemMeta itemMeta = getOrCreateItemMeta(itemStack);
         itemMeta.setDisplayName(" ");
         itemStack.setItemMeta(itemMeta);
@@ -231,7 +230,7 @@ public final class ItemUtils {
                 ItemFlag.HIDE_ITEM_SPECIFICS
         );
         if (!meta.hasAttributeModifiers()) {
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR,new AttributeModifier(new NamespacedKey(OpenCreative.getPlugin(),"hide_attributes"),0.0d, AttributeModifier.Operation.ADD_NUMBER));
+            meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier(new NamespacedKey(OpenCreative.getPlugin(), "hide_attributes"), 0.0d, AttributeModifier.Operation.ADD_NUMBER));
         }
         itemStack.setItemMeta(meta);
         return itemStack;
@@ -265,7 +264,7 @@ public final class ItemUtils {
     public static ItemStack replacePlaceholderInName(ItemStack item, String placeholder, Object value) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(meta.getDisplayName().replace(placeholder,value.toString()));
+            meta.setDisplayName(meta.getDisplayName().replace(placeholder, value.toString()));
             item.setItemMeta(meta);
         }
         return item;
@@ -277,7 +276,7 @@ public final class ItemUtils {
             List<String> newLore = new ArrayList<>();
             List<String> oldLore = meta.getLore();
             for (String loreLine : oldLore) {
-                newLore.add(loreLine.replace(placeholder,value.toString()));
+                newLore.add(loreLine.replace(placeholder, value.toString()));
             }
             meta.setLore(newLore);
             item.setItemMeta(meta);
@@ -334,7 +333,7 @@ public final class ItemUtils {
     }
 
     public static ValueType getValueType(ItemStack item) {
-        String typeString = getPersistentData(item,getCodingValueKey());
+        String typeString = getPersistentData(item, getCodingValueKey());
         try {
             return ValueType.valueOf(typeString);
         } catch (IllegalArgumentException e) {
@@ -343,7 +342,7 @@ public final class ItemUtils {
     }
 
     public static String getItemType(ItemStack item) {
-        return getPersistentData(item,getItemTypeKey());
+        return getPersistentData(item, getItemTypeKey());
     }
 
     public static String getPersistentData(ItemStack item, NamespacedKey key) {
@@ -406,6 +405,7 @@ public final class ItemUtils {
      * Removes bad things from item: enchants with big level,
      * attribute modifiers, books with a lot of pages,
      * containers with containers; or replaces items with air.
+     *
      * @param item item to fix.
      */
     public static ItemStack fixItem(@NotNull ItemStack item) {
@@ -431,18 +431,19 @@ public final class ItemUtils {
      * Removes bad things from item: enchants with big level,
      * attribute modifiers, books with a lot of pages,
      * containers with containers; or replaces items with air.
-     * @param item item to fix.
-     * @param displayNameMaxLength maximum length of item's display name.
-     * @param loreLineMaxLength maximum length of item's lore line.
-     * @param loreLinesLimit maximum amount of item's lore lines.
-     * @param maxEnchantLevel maximum enchant level.
-     * @param bookPagesLimit limit of books pages.
-     * @param removeClickableBooks remove clickable components in books or not.
+     *
+     * @param item                   item to fix.
+     * @param displayNameMaxLength   maximum length of item's display name.
+     * @param loreLineMaxLength      maximum length of item's lore line.
+     * @param loreLinesLimit         maximum amount of item's lore lines.
+     * @param maxEnchantLevel        maximum enchant level.
+     * @param bookPagesLimit         limit of books pages.
+     * @param removeClickableBooks   remove clickable components in books or not.
      * @param containerBigItemsLimit limit of big items (books, containers) in container.
-     * @param entitiesLimit limit of entities in entities blocks storage (beehives).
-     * @param removeCustomEggs removes custom spawn eggs.
-     * @param removeBossEggs removes boss spawn eggs.
-     * @param removeAttributes removes attribute modifiers (scale).
+     * @param entitiesLimit          limit of entities in entities blocks storage (beehives).
+     * @param removeCustomEggs       removes custom spawn eggs.
+     * @param removeBossEggs         removes boss spawn eggs.
+     * @param removeAttributes       removes attribute modifiers (scale).
      * @param clearCommandBlocksData removes commands from command blocks.
      */
     @SuppressWarnings("deprecation")
@@ -626,7 +627,8 @@ public final class ItemUtils {
                         }
                     }
                 }
-                default -> {}
+                default -> {
+                }
             }
         } catch (Exception exception) {
             sendDebugError("[ITEMS] Can't fix item: " + item, exception);
@@ -673,6 +675,7 @@ public final class ItemUtils {
 
     /**
      * Saves item as byte array in text.
+     *
      * @param item item to serialize.
      * @return string of byte array, that can be used in configs, or empty text "".
      */
@@ -691,6 +694,7 @@ public final class ItemUtils {
 
     /**
      * Loads item from byte array in text.
+     *
      * @param text text with item's byte array to deserialize.
      * @return item from byte array, or empty (air x0) item.
      */
@@ -708,6 +712,7 @@ public final class ItemUtils {
 
     /**
      * Checks whether item should be saved as bytes array instead of just material.
+     *
      * @param item item to check.
      * @return true - item can have special data, so it should be saved as bytes array
      * to contain all information, false - can be saved as material.

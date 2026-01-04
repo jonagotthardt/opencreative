@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.managers.economy;
 
-import ua.mcchickenstudio.opencreative.managers.Manager;
 import org.bukkit.OfflinePlayer;
+import ua.mcchickenstudio.opencreative.managers.Manager;
 
 /**
  * <h1>Economy</h1>
@@ -32,8 +32,9 @@ public interface Economy extends Manager {
     /**
      * Deposits money to player for some reason, examples:
      * gets world liked, some player bought in his world.
+     *
      * @param offlinePlayer Player to give money.
-     * @param money Amount of money to give.
+     * @param money         Amount of money to give.
      * @return true - if successfully taken, false - failed.
      */
     boolean depositMoney(OfflinePlayer offlinePlayer, Number money);
@@ -41,14 +42,16 @@ public interface Economy extends Manager {
     /**
      * Takes money from player balance, examples:
      * buys something in world.
+     *
      * @param offlinePlayer Player to take his money.
-     * @param money Amount of money to take.
+     * @param money         Amount of money to take.
      * @return true - if successfully taken, false - failed.
      */
     boolean withdrawMoney(OfflinePlayer offlinePlayer, Number money);
 
     /**
      * Returns an amount of money that player has currently on his balance.
+     *
      * @param offlinePlayer Player to check balance.
      * @return Amount of money on player's balance.
      */

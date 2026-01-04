@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -36,17 +36,17 @@ public final class AddVectorsAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        List<Vector> vectors = getArguments().getList("vectors",this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        List<Vector> vectors = getArguments().getList("vectors", this);
         Vector result = vectors.getFirst();
-        for (Vector vector : vectors.subList(1,vectors.size())) {
+        for (Vector vector : vectors.subList(1, vectors.size())) {
             result.add(vector);
         }
-        setVarValue(link,result);
+        setVarValue(link, result);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_ADD_VECTORS;
     }
 }

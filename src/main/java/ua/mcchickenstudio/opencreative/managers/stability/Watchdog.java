@@ -48,7 +48,7 @@ public final class Watchdog implements StabilityManager {
     @Override
     public void init() {
         try {
-            STORAGE_VOLUME =  Files.getFileStore(Paths.get("."));
+            STORAGE_VOLUME = Files.getFileStore(Paths.get("."));
         } catch (IOException ignored) {
             STORAGE_VOLUME = null;
         }
@@ -141,12 +141,15 @@ public final class Watchdog implements StabilityManager {
                 }
 
                 if (memoryState == StabilityState.NIGHTMARE) return;
-                if (databaseState != StabilityState.FINE) sendWarningErrorMessage("[Watchdog] Database connection is not stable.");
-                if (ticksState != StabilityState.FINE) sendWarningErrorMessage("[Watchdog] Server ticks aren't stable.");
-                if (storageState != StabilityState.FINE) sendWarningErrorMessage("[Watchdog] Storage cannot be accessed.");
+                if (databaseState != StabilityState.FINE)
+                    sendWarningErrorMessage("[Watchdog] Database connection is not stable.");
+                if (ticksState != StabilityState.FINE)
+                    sendWarningErrorMessage("[Watchdog] Server ticks aren't stable.");
+                if (storageState != StabilityState.FINE)
+                    sendWarningErrorMessage("[Watchdog] Storage cannot be accessed.");
             }
         };
-        runnable.runTaskTimerAsynchronously(OpenCreative.getPlugin(),20L,200L);
+        runnable.runTaskTimerAsynchronously(OpenCreative.getPlugin(), 20L, 200L);
     }
 
     @Override
@@ -180,7 +183,7 @@ public final class Watchdog implements StabilityManager {
     }
 
     public long getAvailableSpace() {
-        return (getTotalSpace()-getUsedSpace())/1000000;
+        return (getTotalSpace() - getUsedSpace()) / 1000000;
     }
 
     public long getUsedSpace() {

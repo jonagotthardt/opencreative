@@ -18,12 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 public final class SetTimeAction extends WorldAction {
     public SetTimeAction(Executor executor, Target target, int x, Arguments args) {
@@ -32,12 +32,12 @@ public final class SetTimeAction extends WorldAction {
 
     @Override
     protected void execute() {
-        float time = getArguments().getFloat("time",6f,this);
-        getPlanet().getTerritory().getWorld().setTime((long) (time*1000));
+        float time = getArguments().getFloat("time", 6f, this);
+        getPlanet().getTerritory().getWorld().setTime((long) (time * 1000));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SET_TIME;
     }
 }

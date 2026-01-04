@@ -62,7 +62,7 @@ public final class Hints implements HintManager {
                     case ExecutorCategory.FUNCTION -> "function";
                     default -> "event";
                 };
-                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints."+hint, player));
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints." + hint, player));
                 return;
             }
             ActionCategory action = ActionCategory.getByMaterial(farBlock.getType());
@@ -75,7 +75,7 @@ public final class Hints implements HintManager {
                         yield "action";
                     }
                 };
-                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints."+hint, player));
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints." + hint, player));
             }
             return;
         }
@@ -94,7 +94,8 @@ public final class Hints implements HintManager {
             case LOCATION -> "location.dev";
             default -> "";
         };
-        if (!hint.isEmpty()) player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints."+hint, player));
+        if (!hint.isEmpty())
+            player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints." + hint, player));
     }
 
     @Override

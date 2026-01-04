@@ -18,10 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.values;
 
-import java.util.*;
-
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
-
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +31,12 @@ import ua.mcchickenstudio.opencreative.coding.values.human.*;
 import ua.mcchickenstudio.opencreative.coding.values.living.*;
 import ua.mcchickenstudio.opencreative.coding.values.player.*;
 import ua.mcchickenstudio.opencreative.coding.values.world.*;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 
 /**
  * <h1>EventValues</h1>
@@ -50,12 +52,13 @@ import ua.mcchickenstudio.opencreative.coding.values.world.*;
  * {@link #registerEventValue(EventValue)} method.
  */
 public final class EventValues {
-    
+
     private static EventValues instance;
     private final List<EventValue> eventValues = new LinkedList<>();
 
     /**
      * Returns instance of event values controller class.
+     *
      * @return instance of event values.
      */
     public synchronized static @NotNull EventValues getInstance() {
@@ -68,14 +71,15 @@ public final class EventValues {
 
     /**
      * Registers event value, that will be replaced in coding.
+     *
      * @param value event value to register.
      */
     public void registerEventValue(@NotNull EventValue value) {
         EventValue existing = getById(value.getID());
         if (existing != null) {
             sendDebug("[VALUES] Can't register event value " + value.getName() + " (from " + value.getExtensionId() + "), "
-                + "because there's already registered event value " + existing.getName() + " (from " + existing.getExtensionId() + ") "
-                + "with same ID: " + value.getID());
+                    + "because there's already registered event value " + existing.getName() + " (from " + existing.getExtensionId() + ") "
+                    + "with same ID: " + value.getID());
             return;
         }
         sendDebug("[VALUES] Registered event value: " + value.getName() + " (from " + value.getExtensionId() + ")");
@@ -84,6 +88,7 @@ public final class EventValues {
 
     /**
      * Registers event values, that will be replaced in coding.
+     *
      * @param values event values to register.
      */
     public void registerEventValue(@NotNull EventValue... values) {
@@ -94,6 +99,7 @@ public final class EventValues {
 
     /**
      * Unregisters event value if list contains it.
+     *
      * @param value event value to unregister.
      */
     @SuppressWarnings("unused")
@@ -103,6 +109,7 @@ public final class EventValues {
 
     /**
      * Returns a copy of list that contains all registered event values.
+     *
      * @return event values list.
      */
     public @NotNull List<EventValue> getEventValues() {
@@ -158,6 +165,7 @@ public final class EventValues {
 
     /**
      * Returns list of event values, that have same menu category.
+     *
      * @param menusCategory menu category.
      * @return list of event values with specified menu category.
      */
@@ -173,6 +181,7 @@ public final class EventValues {
 
     /**
      * Returns list of all menu categories of all event values.
+     *
      * @return list of menu categories.
      */
     public @NotNull List<MenusCategory> getCategories() {
@@ -186,6 +195,7 @@ public final class EventValues {
 
     /**
      * Checks if event value with specified ID exists in registry.
+     *
      * @param id id of event value.
      * @return true - exists, false - not exists.
      */
@@ -195,6 +205,7 @@ public final class EventValues {
 
     /**
      * Checks if event value with specified class exists in registry.
+     *
      * @param clazz class of event value.
      * @return true - exists, false - not exists.
      */
@@ -205,6 +216,7 @@ public final class EventValues {
     /**
      * Returns event value from registry by specified class
      * if it exists, otherwise will return null.
+     *
      * @param clazz class to get event value.
      * @return event value - if exists, or null - not exists.
      */
@@ -220,6 +232,7 @@ public final class EventValues {
     /**
      * Returns event value from registry by specified id
      * if it exists, otherwise will return null.
+     *
      * @param id id to get event value.
      * @return event value - if exists, or null - not exists.
      */
@@ -237,10 +250,11 @@ public final class EventValues {
      * otherwise it will return null.
      * <p>
      * Replaced value can also be null by some conditions.
-     * @param id id of event value.
+     *
+     * @param id      id of event value.
      * @param handler handler of action.
-     * @param action action, where it executes.
-     * @param entity entity, or null.
+     * @param action  action, where it executes.
+     * @param entity  entity, or null.
      * @return value of event value, or null.
      */
     public @Nullable Object getValue(@NotNull String id, @NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
@@ -254,10 +268,11 @@ public final class EventValues {
      * otherwise it will return null.
      * <p>
      * Replaced value can also be null by some conditions.
-     * @param clazz class of event value.
+     *
+     * @param clazz   class of event value.
      * @param handler handler of action.
-     * @param action action, where it executes.
-     * @param entity entity, or null.
+     * @param action  action, where it executes.
+     * @param entity  entity, or null.
      * @return value of event value, or null.
      */
     public @Nullable Object getValue(@NotNull Class<? extends EventValue> clazz, @NotNull ActionsHandler handler, @NotNull Action action, @NotNull Entity entity) {

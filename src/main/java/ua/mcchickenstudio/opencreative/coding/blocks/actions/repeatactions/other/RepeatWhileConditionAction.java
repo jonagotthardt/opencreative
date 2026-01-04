@@ -20,6 +20,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -46,9 +47,9 @@ public final class RepeatWhileConditionAction extends RepeatAction {
         Action action;
         try {
             action = conditionType.getActionClass().getConstructor(Executor.class,
-                    Target.class, int.class, Arguments.class,
-                    List.class, List.class, boolean.class)
-                    .newInstance(getExecutor(),getTarget(),getX(), getArguments(),
+                            Target.class, int.class, Arguments.class,
+                            List.class, List.class, boolean.class)
+                    .newInstance(getExecutor(), getTarget(), getX(), getArguments(),
                             new ArrayList<>(), new ArrayList<>(), false);
         } catch (Exception error) {
             throw new RuntimeException("Failed to construct condition for repeat while action: " + conditionType.name());
@@ -67,7 +68,7 @@ public final class RepeatWhileConditionAction extends RepeatAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.REPEAT_WHILE;
     }
 }

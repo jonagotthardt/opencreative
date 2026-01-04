@@ -35,7 +35,7 @@ public final class EntitySetDisplayTextWidthAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        int width = getArguments().getInt("width", 30,this);
+        int width = getArguments().getInt("width", 30, this);
         if (entity instanceof TextDisplay display) {
             display.setLineWidth(width);
         } else {
@@ -44,7 +44,7 @@ public final class EntitySetDisplayTextWidthAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_TEXT_DISPLAY_WIDTH;
     }
 }

@@ -18,12 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.other;
 
+import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownFunctionException;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public final class LaunchFunctionAction extends Action {
 
     @Override
     protected void execute(Entity entity) {
-        String name = getArguments().getText("name","",this);
+        String name = getArguments().getText("name", "", this);
         if (name.isEmpty()) return;
         List<Function> functions = new ArrayList<>();
         for (Function function : getPlanet().getTerritory().getScript().getExecutors().getFunctionsList()) {
@@ -65,12 +66,12 @@ public final class LaunchFunctionAction extends Action {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.LAUNCH_FUNCTION;
     }
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.LAUNCH_FUNCTION_ACTION;
     }
 }

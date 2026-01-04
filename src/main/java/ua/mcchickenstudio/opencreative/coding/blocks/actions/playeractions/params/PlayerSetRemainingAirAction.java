@@ -33,17 +33,17 @@ public final class PlayerSetRemainingAirAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        boolean add = getArguments().getBoolean("add",false,this);
-        int ticks = getArguments().getInt("ticks",0,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int ticks = getArguments().getInt("ticks", 0, this);
         if (!add) {
             player.setRemainingAir(ticks);
         } else {
-            player.setRemainingAir(player.getRemainingAir()+ticks);
+            player.setRemainingAir(player.getRemainingAir() + ticks);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_REMAINING_AIR;
     }
 }

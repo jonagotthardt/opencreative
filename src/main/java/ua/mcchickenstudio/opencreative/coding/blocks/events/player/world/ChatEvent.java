@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyValuePlaceholder;
 
@@ -36,17 +36,17 @@ public final class ChatEvent extends WorldEvent implements Cancellable {
     }
 
     private String filter(String string) {
-        string = string.replace("\\n"," ");
+        string = string.replace("\\n", " ");
         string = KeyPlaceholder.getPatternPlaceholder().matcher(string).replaceAll(" ");
         return KeyValuePlaceholder.getPattern().matcher(string).replaceAll(" ");
     }
 
-    public void setHandledByCode(boolean handledByCode) {
-        this.handledByCode = handledByCode;
-    }
-
     public boolean isHandledByCode() {
         return handledByCode;
+    }
+
+    public void setHandledByCode(boolean handledByCode) {
+        this.handledByCode = handledByCode;
     }
 
     public String getMessage() {
@@ -54,12 +54,12 @@ public final class ChatEvent extends WorldEvent implements Cancellable {
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    public boolean isCancelled() {
+        return cancelled;
     }
 
     @Override
-    public boolean isCancelled() {
-        return cancelled;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

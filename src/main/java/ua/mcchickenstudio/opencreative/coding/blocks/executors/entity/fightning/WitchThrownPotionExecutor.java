@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.fightning;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -29,7 +30,7 @@ public class WitchThrownPotionExecutor extends EntityExecutor {
     }
 
     @Override
-    public ExecutorType getExecutorType() {
+    public @NotNull ExecutorType getExecutorType() {
         return ExecutorType.ENTITY_WITCH_THROWN_POTION;
     }
 

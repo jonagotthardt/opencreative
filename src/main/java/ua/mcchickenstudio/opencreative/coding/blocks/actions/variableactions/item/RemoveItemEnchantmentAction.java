@@ -20,9 +20,9 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.it
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -39,20 +39,20 @@ public final class RemoveItemEnchantmentAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
-        ItemStack enchantmentItem = getArguments().getItem("enchantment",new ItemStack(Material.ENCHANTED_BOOK),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE), this), this);
+        ItemStack enchantmentItem = getArguments().getItem("enchantment", new ItemStack(Material.ENCHANTED_BOOK), this);
         if (enchantmentItem.getItemMeta() instanceof EnchantmentStorageMeta enchantmentMeta) {
-            Map<Enchantment,Integer> enchantments = enchantmentMeta.getStoredEnchants();
+            Map<Enchantment, Integer> enchantments = enchantmentMeta.getStoredEnchants();
             for (Enchantment enchantment : enchantments.keySet()) {
                 item.removeEnchantment(enchantment);
             }
         }
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_REMOVE_ITEM_ENCHANTMENT;
     }
 }

@@ -18,7 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys;
 
-import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -40,15 +40,15 @@ public final class AddPhysObjectAction extends WorldAction {
     protected void execute() {
         final Arguments a = getArguments();
         final List<?>
-        visual = a.getList("visual", this),
-        motion = a.getList("motion", this),
-        settings =  a.getList("settings", this);
+                visual = a.getList("visual", this),
+                motion = a.getList("motion", this),
+                settings = a.getList("settings", this);
         final PhysObject physObject = new PhysObject(getPlanet().getWorld(), visual, motion, settings);
-        PhysService.add(physObject,getPlanet().getLimits().getPhysicalObjectsLimit());
+        PhysService.add(physObject, getPlanet().getLimits().getPhysicalObjectsLimit());
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_ADD_PHYS_OBJECT;
     }
 }

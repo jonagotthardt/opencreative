@@ -38,72 +38,72 @@ public final class CreativeListener implements Listener {
 
     @EventHandler
     public void onEvent(PlayerLobbyEvent event) {
-        Map<String,Object> placeholders = new HashMap<>();
-        placeholders.put("%player%",event.getPlayer().getName());
-        OpenCreative.getSettings().getCommands().execute(event.getPlayer(),"onLobby",placeholders);
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("%player%", event.getPlayer().getName());
+        OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onLobby", placeholders);
     }
 
     @EventHandler
     public void onEvent(CreativeChatEvent event) {
         if (!(event.getSender() instanceof Player player)) return;
-        Map<String,Object> placeholders = new HashMap<>();
-        placeholders.put("%player%",event.getSender().getName());
-        placeholders.put("%message%",event.getMessage());
-        placeholders.put("%formatted%",event.getFormattedMessage());
-        OpenCreative.getSettings().getCommands().execute(player,"onCreativeChat",placeholders);
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("%player%", event.getSender().getName());
+        placeholders.put("%message%", event.getMessage());
+        placeholders.put("%formatted%", event.getFormattedMessage());
+        OpenCreative.getSettings().getCommands().execute(player, "onCreativeChat", placeholders);
     }
 
     @EventHandler
     public void onEvent(WorldChatEvent event) {
-        Map<String,Object> placeholders = new HashMap<>();
-        placeholders.put("%player%",event.getPlayer().getName());
-        placeholders.put("%world%",event.getPlayer().getWorld().getName());
-        placeholders.put("%message%",event.getMessage());
-        placeholders.put("%formatted%",event.getFormattedMessage());
-        OpenCreative.getSettings().getCommands().execute(event.getPlayer(),"onWorldChat",placeholders);
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("%player%", event.getPlayer().getName());
+        placeholders.put("%world%", event.getPlayer().getWorld().getName());
+        placeholders.put("%message%", event.getMessage());
+        placeholders.put("%formatted%", event.getFormattedMessage());
+        OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onWorldChat", placeholders);
     }
 
     @EventHandler
     public void onEvent(PlanetConnectPlayerEvent event) {
-        Map<String,Object> placeholders = new HashMap<>();
-        placeholders.put("%player%",event.getPlayer().getName());
-        placeholders.put("%planet%",event.getPlanet().getId());
-        OpenCreative.getSettings().getCommands().execute(event.getPlayer(),"onPlanetConnect",placeholders);
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("%player%", event.getPlayer().getName());
+        placeholders.put("%planet%", event.getPlanet().getId());
+        OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onPlanetConnect", placeholders);
     }
 
     @EventHandler
     public void onEvent(PlanetDisconnectPlayerEvent event) {
-        Map<String,Object> placeholders = new HashMap<>();
-        placeholders.put("%player%",event.getPlayer().getName());
-        placeholders.put("%planet%",event.getPlanet().getId());
-        OpenCreative.getSettings().getCommands().execute(event.getPlayer(),"onPlanetDisconnect",placeholders);
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("%player%", event.getPlayer().getName());
+        placeholders.put("%planet%", event.getPlanet().getId());
+        OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onPlanetDisconnect", placeholders);
     }
 
     @EventHandler
     public void onEvent(MaintenanceStartEvent event) {
-        Map<String,Object> placeholders = new HashMap<>();
+        Map<String, Object> placeholders = new HashMap<>();
         if (event.getSender() instanceof Player player) {
             placeholders.put("%player%", player.getName());
-            OpenCreative.getSettings().getCommands().execute(player,"onMaintenanceStart",placeholders);
+            OpenCreative.getSettings().getCommands().execute(player, "onMaintenanceStart", placeholders);
         } else if (event.getSender() != null) {
             placeholders.put("%player%", Bukkit.getConsoleSender().getName());
-            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceStart",placeholders);
+            OpenCreative.getSettings().getCommands().execute(null, "onMaintenanceStart", placeholders);
         } else {
-            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceStart",placeholders);
+            OpenCreative.getSettings().getCommands().execute(null, "onMaintenanceStart", placeholders);
         }
     }
 
     @EventHandler
     public void onEvent(MaintenanceEndEvent event) {
-        Map<String,Object> placeholders = new HashMap<>();
+        Map<String, Object> placeholders = new HashMap<>();
         if (event.getSender() instanceof Player player) {
             placeholders.put("%player%", player.getName());
-            OpenCreative.getSettings().getCommands().execute(player,"onMaintenanceEnd",placeholders);
+            OpenCreative.getSettings().getCommands().execute(player, "onMaintenanceEnd", placeholders);
         } else if (event.getSender() != null) {
             placeholders.put("%player%", Bukkit.getConsoleSender().getName());
-            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceEnd",placeholders);
+            OpenCreative.getSettings().getCommands().execute(null, "onMaintenanceEnd", placeholders);
         } else {
-            OpenCreative.getSettings().getCommands().execute(null,"onMaintenanceEnd",placeholders);
+            OpenCreative.getSettings().getCommands().execute(null, "onMaintenanceEnd", placeholders);
         }
     }
 

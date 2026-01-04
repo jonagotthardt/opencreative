@@ -18,17 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -43,9 +44,9 @@ public final class SpawnFireworkAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        ItemStack firework = getArguments().getItem("firework",new ItemStack(Material.FIREWORK_ROCKET,1),this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.FIREWORK_ROCKET);
+        ItemStack firework = getArguments().getItem("firework", new ItemStack(Material.FIREWORK_ROCKET, 1), this);
+        for (Location location : getArguments().getLocationList("locations", this)) {
+            Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location, EntityType.FIREWORK_ROCKET);
             if (spawnedEntity instanceof Firework rocket) {
                 rocket.setItem(firework);
                 setLastSpawnedEntity(rocket);
@@ -54,7 +55,7 @@ public final class SpawnFireworkAction extends WorldAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_SPAWN_FIREWORK;
     }
 }

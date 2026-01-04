@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 public final class TargetPlaceholder extends KeyPlaceholder {
 
     public TargetPlaceholder() {
-        super("selected","selected_uuid","target","target_uuid","targets","selection");
+        super("selected", "selected_uuid", "target", "target_uuid", "targets", "selection");
     }
 
     @Override
@@ -37,7 +37,8 @@ public final class TargetPlaceholder extends KeyPlaceholder {
         return switch (key) {
             case "selected", "target" -> entity == null ? null : entity.getName();
             case "selected_uuid", "target_uuid" -> entity == null ? null : entity.getUniqueId().toString();
-            case "targets", "selection" -> String.join(", ",action.getHandler().getSelectedTargets().stream().map(CommandSender::getName).toList());
+            case "targets", "selection" ->
+                    String.join(", ", action.getHandler().getSelectedTargets().stream().map(CommandSender::getName).toList());
             default -> null;
         };
     }

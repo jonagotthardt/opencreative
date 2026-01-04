@@ -35,9 +35,8 @@ import java.util.*;
 
 public class PhysObject {
 
+    private static final double BOX_SIZE = 0.5;
     private final World world;
-    private boolean living = true;
-
     private final Particle mainParticle;
     private final Particle subParticle;
     private final Particle hitParticle;
@@ -48,14 +47,12 @@ public class PhysObject {
     private final int offsetZ;
     private final int hitCount;
     private final Location location;
-    public double speed, weight, speedAccel, speedLimit,
-                    weightAccel, weightLimit, damage, explosion,
-                    shockwaveRadius, shockwavePower;
-
-    private static final double BOX_SIZE = 0.5;
-    public int timeExist = 0;
-
     private final List<PotionEffect> potionEffect;
+    public double speed, weight, speedAccel, speedLimit,
+            weightAccel, weightLimit, damage, explosion,
+            shockwaveRadius, shockwavePower;
+    public int timeExist = 0;
+    private boolean living = true;
 
     // Made by pawsashatoy :)
     public PhysObject(final World world, final List<?> visual, final List<?> motion, final List<?> settings) {
@@ -88,6 +85,31 @@ public class PhysObject {
         }
     }
 
+    private static List<Entity> getEntitiesAroundPoint(Location location, double radius) {
+        List<Entity> entities = new ArrayList<>();
+        World world = location.getWorld();
+        int smallX = FastMath.floor((location.getX() - radius) / 16.0D);
+        int bigX = FastMath.floor((location.getX() + radius) / 16.0D);
+        int smallZ = FastMath.floor((location.getZ() - radius) / 16.0D);
+        int bigZ = FastMath.floor((location.getZ() + radius) / 16.0D);
+
+        for (int x = smallX; x <= bigX; x++) {
+            for (int z = smallZ; z <= bigZ; z++) {
+                if (world.isChunkLoaded(x, z)) {
+                    entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
+                }
+            }
+        }
+        entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
+        return entities;
+    }
+
+    private static List<PotionEffect> getPotionEffects(ItemStack item) {
+        if (item == null || item.getType() != Material.POTION) return List.of();
+        if (!(item.getItemMeta() instanceof PotionMeta potionMeta)) return List.of();
+        return potionMeta.getCustomEffects();
+    }
+
     public void tick() {
         this.timeExist++;
         if (timeExist > 800) living = false;
@@ -117,10 +139,10 @@ public class PhysObject {
         { // apply
             final float yaw = location.getYaw(), pitch = location.getPitch();
             double yawRad = Math.toRadians(yaw),
-            pitchRad = Math.toRadians(pitch),
-            x = -Math.cos(pitchRad) * Math.sin(yawRad),
-            y = -Math.sin(pitchRad),
-            z = Math.cos(pitchRad) * Math.cos(yawRad);
+                    pitchRad = Math.toRadians(pitch),
+                    x = -Math.cos(pitchRad) * Math.sin(yawRad),
+                    y = -Math.sin(pitchRad),
+                    z = Math.cos(pitchRad) * Math.cos(yawRad);
             location.add(new Vector(x, y, z).multiply(speed));
         }
         location.add(0, -weight, 0);
@@ -131,6 +153,7 @@ public class PhysObject {
         if (weight > weightLimit) weight = weightLimit;
         else if (weight < 0) weight = 0;
     }
+
     public boolean checkEntityCollision(final Location from) {
         final List<Entity> entities = getEntitiesAroundPoint(location, speed + 0.5);
         final Vec3 fromVec = new Vec3(from.getX(), from.getY(), from.getZ());
@@ -141,14 +164,14 @@ public class PhysObject {
             final Location l = entity.getLocation();
             if (entity instanceof LivingEntity) {
                 final AxisAlignedBB bb = new AxisAlignedBB(
-                                l.getX() - 0.3, l.getY() - 0.1, l.getZ() - 0.3,
-                                l.getX() + 0.3, l.getY() + 1.9, l.getZ() + 0.3
+                        l.getX() - 0.3, l.getY() - 0.1, l.getZ() - 0.3,
+                        l.getX() + 0.3, l.getY() + 1.9, l.getZ() + 0.3
                 );
                 final MovingObjectPosition result =
-                                RayTrace.rayCast(l.getYaw(),
-                                                location.getPitch(),
-                                                bb, fromVec,
-                                                speed + 0.1, BuildSpeed.FAST);
+                        RayTrace.rayCast(l.getYaw(),
+                                location.getPitch(),
+                                bb, fromVec,
+                                speed + 0.1, BuildSpeed.FAST);
                 if (result == null) continue;
                 final double dist = fromVec.distanceTo(result.hitVec);
                 if (dist < closest) {
@@ -171,6 +194,7 @@ public class PhysObject {
         }
         return false;
     }
+
     public boolean checkBlockCollision(final Location from) {
         final Set<AxisAlignedBB> boxes = new HashSet<>();
         for (int x = -1; x <= 1; x++) {
@@ -180,12 +204,12 @@ public class PhysObject {
                     final Block block = world.getBlockAt(l);
                     if (!block.getType().name().equals("AIR")) {
                         final Location b = new Location(world,
-                                        block.getX() + 0.5,
-                                        block.getY() + 0.5,
-                                        block.getZ() + 0.5);
+                                block.getX() + 0.5,
+                                block.getY() + 0.5,
+                                block.getZ() + 0.5);
                         boxes.add(new AxisAlignedBB(
-                                        b.getX() - BOX_SIZE, b.getY() - BOX_SIZE, b.getZ() - BOX_SIZE,
-                                        b.getX() + BOX_SIZE, b.getY() + BOX_SIZE, b.getZ() + BOX_SIZE
+                                b.getX() - BOX_SIZE, b.getY() - BOX_SIZE, b.getZ() - BOX_SIZE,
+                                b.getX() + BOX_SIZE, b.getY() + BOX_SIZE, b.getZ() + BOX_SIZE
                         ));
                     }
                 }
@@ -198,10 +222,10 @@ public class PhysObject {
             Vec3 closestDist = new Vec3(0, 0, 0);
             for (final AxisAlignedBB bb : boxes) {
                 final MovingObjectPosition result =
-                                RayTrace.rayCast(location.getYaw(),
-                                                location.getPitch(),
-                                                bb, fromVec,
-                                                speed + 0.3, BuildSpeed.FAST);
+                        RayTrace.rayCast(location.getYaw(),
+                                location.getPitch(),
+                                bb, fromVec,
+                                speed + 0.3, BuildSpeed.FAST);
                 if (result == null) continue;
                 final double dist = fromVec.distanceTo(result.hitVec);
                 if (dist < closest) {
@@ -232,55 +256,30 @@ public class PhysObject {
                 { // ease 1
                     double delta = l.getY() - to.getY();
                     calculateRealisticVertical = (delta >= 1.0) ? 0 :
-                                    Interpolation.interpolate(0.5, 1,
-                                                    delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
+                            Interpolation.interpolate(0.5, 1,
+                                    delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
                 }
                 final Vec2 vec = Euler.calculateVec2Vec(
-                                new Vec3(to.toVector()),
-                                new Vec3(l.clone().add(0, calculateRealisticVertical, 0).toVector()));
+                        new Vec3(to.toVector()),
+                        new Vec3(l.clone().add(0, calculateRealisticVertical, 0).toVector()));
                 final Vector velo = new Vector(
-                                -GeneralMath.sin((float) Math.toRadians(vec.getX()), BuildSpeed.FAST),
-                                -GeneralMath.sin((float) Math.toRadians(vec.getY()), BuildSpeed.FAST),
-                                GeneralMath.cos((float) Math.toRadians(vec.getX()), BuildSpeed.FAST))
-                                .multiply((shockwavePower + 1) / 5);
+                        -GeneralMath.sin((float) Math.toRadians(vec.getX()), BuildSpeed.FAST),
+                        -GeneralMath.sin((float) Math.toRadians(vec.getY()), BuildSpeed.FAST),
+                        GeneralMath.cos((float) Math.toRadians(vec.getX()), BuildSpeed.FAST))
+                        .multiply((shockwavePower + 1) / 5);
                 double interpolatePitch = 1 - ((Math.abs(vec.getY())) / 90);
                 velo.setX(velo.getX() * 3 * interpolatePitch);
                 velo.setZ(velo.getZ() * 3 * interpolatePitch);
                 { // ease 2
                     double delta = l.distance(to) / shockwaveRadius;
                     double calculateRealisticHorizontal = Interpolation.interpolate(1, 0.25,
-                                    delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
+                            delta, Interpolation.Type.BACK, Interpolation.Ease.OUT);
                     velo.setX(velo.getX() * calculateRealisticHorizontal);
                     velo.setZ(velo.getZ() * calculateRealisticHorizontal);
                 }
                 entity.setVelocity(velo);
             }
         }
-    }
-
-    private static List<Entity> getEntitiesAroundPoint(Location location, double radius) {
-        List<Entity> entities = new ArrayList<>();
-        World world = location.getWorld();
-        int smallX = FastMath.floor((location.getX() - radius) / 16.0D);
-        int bigX = FastMath.floor((location.getX() + radius) / 16.0D);
-        int smallZ = FastMath.floor((location.getZ() - radius) / 16.0D);
-        int bigZ = FastMath.floor((location.getZ() + radius) / 16.0D);
-
-        for (int x = smallX; x <= bigX; x++) {
-            for (int z = smallZ; z <= bigZ; z++) {
-                if (world.isChunkLoaded(x, z)) {
-                    entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
-                }
-            }
-        }
-        entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
-        return entities;
-    }
-
-    private static List<PotionEffect> getPotionEffects(ItemStack item) {
-        if (item == null || item.getType() != Material.POTION) return List.of();
-        if (!(item.getItemMeta() instanceof PotionMeta potionMeta)) return List.of();
-        return potionMeta.getCustomEffects();
     }
 
     @Override

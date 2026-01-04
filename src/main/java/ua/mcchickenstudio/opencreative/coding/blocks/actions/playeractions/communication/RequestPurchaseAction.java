@@ -18,6 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -29,10 +33,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 import ua.mcchickenstudio.opencreative.menus.ConfirmationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
@@ -52,10 +52,10 @@ public final class RequestPurchaseAction extends PlayerAction {
              */
             throw new TooManyOpenedMenusException(player.getName());
         }
-        String id = getArguments().getText("id","example",this);
-        String name = getArguments().getText("name","Example",this);
-        boolean save = getArguments().getBoolean("save",false,this);
-        int price = getArguments().getInt("price",100,this);
+        String id = getArguments().getText("id", "example", this);
+        String name = getArguments().getText("name", "Example", this);
+        boolean save = getArguments().getBoolean("save", false, this);
+        int price = getArguments().getInt("price", 100, this);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) return;
         new ConfirmationMenu(
@@ -74,7 +74,7 @@ public final class RequestPurchaseAction extends PlayerAction {
                             return;
                         }
                         if (OpenCreative.getEconomy().getBalance(player).intValue() < price) {
-                            player.sendMessage(getLocaleMessage("no-money").replace("%money%",String.valueOf(price)));
+                            player.sendMessage(getLocaleMessage("no-money").replace("%money%", String.valueOf(price)));
                         } else {
                             if (save) {
                                 if (planet.getWorldPlayers().getPlanetPlayer(player).getPurchases().contains(id.toLowerCase())) {
@@ -85,17 +85,17 @@ public final class RequestPurchaseAction extends PlayerAction {
                             }
                             Sounds.WORLD_PURCHASE.play(player);
                             if (!planet.isOwner(player)) {
-                                OpenCreative.getEconomy().withdrawMoney(player,price);
-                                OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()),price);
+                                OpenCreative.getEconomy().withdrawMoney(player, price);
+                                OpenCreative.getEconomy().depositMoney(Bukkit.getOfflinePlayer(planet.getOwner()), price);
                             }
-                            new PlayerPurchaseEvent(player,id,name,price,save).callEvent();
+                            new PlayerPurchaseEvent(player, id, name, price, save).callEvent();
                         }
                     }
                 }).open(player);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_REQUEST_PURCHASE;
     }
 }

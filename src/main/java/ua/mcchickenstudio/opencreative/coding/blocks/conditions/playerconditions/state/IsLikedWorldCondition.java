@@ -18,15 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state;
 
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class IsLikedWorldCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         //FIXME: Use liked players in planet.getWorldPlayers() instead of loading files
         List<String> likedPlayers = FileUtils.getPlayersFromPlanetList(getPlanet(), Planet.PlayersType.LIKED);
         for (String nickname : likedPlayers) {
@@ -49,7 +50,7 @@ public class IsLikedWorldCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_LIKED_WORLD;
     }
 }

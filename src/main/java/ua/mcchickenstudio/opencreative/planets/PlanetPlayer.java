@@ -27,7 +27,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
@@ -55,6 +57,7 @@ public class PlanetPlayer {
 
     /**
      * Returns planet, where player is registered.
+     *
      * @return associated planet.
      */
     @SuppressWarnings("unused")
@@ -64,6 +67,7 @@ public class PlanetPlayer {
 
     /**
      * Returns Bukkit's player.
+     *
      * @return World player as Bukkit's player.
      */
     public Player getPlayer() {
@@ -81,6 +85,7 @@ public class PlanetPlayer {
     /**
      * Saves items array as inventory.
      * Used in player action "Save Inventory".
+     *
      * @param items Array of ItemStacks to save.
      */
     public void saveInventory(ItemStack[] items) {
@@ -96,6 +101,7 @@ public class PlanetPlayer {
     /**
      * Saves items array as items in ender chest.
      * Used for saving player's own ender chest.
+     *
      * @param items Array of ItemStacks to save.
      */
     public void saveEnderChest(ItemStack[] items) {
@@ -111,6 +117,7 @@ public class PlanetPlayer {
     /**
      * Loads saved player data from JSON file, that
      * stored in planet's folder as /playerData/UUID.json.
+     *
      * @return True - if successfully loaded, false - if failed to load.
      */
     @SuppressWarnings("unchecked")
@@ -155,11 +162,12 @@ public class PlanetPlayer {
     /**
      * Saves some required player data into JSON file
      * in planet's folder as /playerData/UUID.json.
+     *
      * @return True - if successfully saved, false - if failed to save.
      */
     @SuppressWarnings("unchecked")
     public boolean save() {
-        File playerDataJson = getPlayerDataJson(currentPlanet,player);
+        File playerDataJson = getPlayerDataJson(currentPlanet, player);
         if (playerDataJson == null) {
             return false;
         }
@@ -169,18 +177,18 @@ public class PlanetPlayer {
 
             JSONArray purchasesJson = new JSONArray();
             purchasesJson.addAll(purchases);
-            playerObject.put("purchases",purchasesJson);
+            playerObject.put("purchases", purchasesJson);
 
             JSONArray savedInventoryJson = serializeItems(savedInventory);
-            playerObject.put("saved-inventory",savedInventoryJson);
+            playerObject.put("saved-inventory", savedInventoryJson);
             JSONArray enderChestJson = serializeItems(savedEnderChest);
-            playerObject.put("saved-ender-chest",enderChestJson);
+            playerObject.put("saved-ender-chest", enderChestJson);
 
             writer.write(playerObject.toString());
             writer.close();
             return true;
         } catch (Exception e) {
-            sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlanet.getWorldName(),e);
+            sendCriticalErrorMessage("Couldn't save player data " + player.getName() + " " + currentPlanet.getWorldName(), e);
             return false;
         }
     }
@@ -199,6 +207,7 @@ public class PlanetPlayer {
 
     /**
      * Returns set of saved purchases IDs.
+     *
      * @return set of saved purchases IDs.
      */
     public Set<String> getPurchases() {
@@ -207,6 +216,7 @@ public class PlanetPlayer {
 
     /**
      * Adds purchase ID into set of saved player's purchases.
+     *
      * @param id ID of purchase.
      */
     public void addPurchase(String id) {

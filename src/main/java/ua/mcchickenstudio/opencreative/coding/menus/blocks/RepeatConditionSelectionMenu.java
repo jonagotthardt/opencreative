@@ -38,9 +38,9 @@ public final class RepeatConditionSelectionMenu extends AbstractMenu {
     private final Location signLocation;
     private final boolean opposed;
 
-    private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.variable-condition");
-    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.player-condition");
-    private final ItemStack entityCondition = createItem(Material.BRICKS,1,"items.developer.entity-condition");
+    private final ItemStack varCondition = createItem(Material.OBSIDIAN, 1, "items.developer.variable-condition");
+    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS, 1, "items.developer.player-condition");
+    private final ItemStack entityCondition = createItem(Material.BRICKS, 1, "items.developer.entity-condition");
 
     public RepeatConditionSelectionMenu(Player player, Location location, boolean opposed) {
         super(3, getLocaleMessage("blocks.repeat_while" + (opposed ? "_not" : ""),
@@ -76,5 +76,6 @@ public final class RepeatConditionSelectionMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+    }
 }

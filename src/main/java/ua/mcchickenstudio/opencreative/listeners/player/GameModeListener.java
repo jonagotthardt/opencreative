@@ -18,23 +18,24 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import org.bukkit.GameMode;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.hidePlayerInTab;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 
 public final class GameModeListener implements Listener {
 
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent event) {
         Player player = event.getPlayer();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),() -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(), () -> {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 // If player is not in planet
@@ -46,19 +47,19 @@ public final class GameModeListener implements Listener {
                 }
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (!player.getWorld().equals(onlinePlayer.getWorld())) {
-                        hidePlayerInTab(onlinePlayer,player);
-                        hidePlayerInTab(player,onlinePlayer);
+                        hidePlayerInTab(onlinePlayer, player);
+                        hidePlayerInTab(player, onlinePlayer);
                     }
                 }
                 return;
             }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (!onlinePlayer.getWorld().equals(planet.getTerritory().getWorld()) && !onlinePlayer.getWorld().equals(planet.getDevPlanet().getWorld())) {
-                    hidePlayerInTab(onlinePlayer,player);
-                    hidePlayerInTab(player,onlinePlayer);
+                    hidePlayerInTab(onlinePlayer, player);
+                    hidePlayerInTab(player, onlinePlayer);
                 }
             }
-        },5L);
+        }, 5L);
     }
 
 }

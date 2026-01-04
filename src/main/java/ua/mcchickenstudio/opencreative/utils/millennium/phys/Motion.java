@@ -63,12 +63,6 @@ public final class Motion {
         this.z.add(vector.zCoord);
     }
 
-    public double distanceSquared(final Motion other) {
-        return Math.pow(this.x.get() - other.getX().get(), 2) +
-                Math.pow(this.y.get() - other.getY().get(), 2) +
-                Math.pow(this.z.get() - other.getZ().get(), 2);
-    }
-
     public double length() {
         return Math.sqrt(this.x.get() * this.x.get()
                 + this.y.get() * this.y.get() + this.z.get() * this.z.get());

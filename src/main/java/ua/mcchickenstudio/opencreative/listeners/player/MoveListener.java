@@ -21,11 +21,6 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChunkLoadEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChunkUnloadEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,6 +30,11 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.util.Vector;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChunkLoadEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChunkUnloadEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -47,15 +47,15 @@ public final class MoveListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (player.getY() < 0 && isEntityInDevPlanet(player)) {
-            player.setVelocity(new Vector(0,0.6f * Math.ceil(Math.abs(player.getY())),0));
-            if (player.getLocation().add(0,1.9d,-0.8).getBlock().isSolid()) {
-                player.teleport(player.getLocation().add(0,2.5,1));
+            player.setVelocity(new Vector(0, 0.6f * Math.ceil(Math.abs(player.getY())), 0));
+            if (player.getLocation().add(0, 1.9d, -0.8).getBlock().isSolid()) {
+                player.teleport(player.getLocation().add(0, 2.5, 1));
             }
         }
-        if (isBlockChanged(event.getFrom(),event.getTo())) {
-            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerMoveEvent(event.getPlayer(),event).callEvent();
+        if (isBlockChanged(event.getFrom(), event.getTo())) {
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.PlayerMoveEvent(event.getPlayer(), event).callEvent();
             if (isEntityInDevPlanet(player)) {
-                translateSigns(player,10);
+                translateSigns(player, 10);
                 if (player.getY() < -20) {
                     player.teleport(player.getWorld().getSpawnLocation());
                 }
@@ -74,16 +74,16 @@ public final class MoveListener implements Listener {
     public void onJump(PlayerJumpEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            new JumpEvent(event.getPlayer(),event).callEvent();
+            new JumpEvent(event.getPlayer(), event).callEvent();
         }
     }
 
     @EventHandler
     public void onSneaking(PlayerToggleSneakEvent event) {
         if (event.isSneaking()) {
-            new StartSneakingEvent(event.getPlayer(),event).callEvent();
+            new StartSneakingEvent(event.getPlayer(), event).callEvent();
         } else {
-            new StopSneakingEvent(event.getPlayer(),event).callEvent();
+            new StopSneakingEvent(event.getPlayer(), event).callEvent();
         }
     }
 
@@ -92,9 +92,9 @@ public final class MoveListener implements Listener {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
             if (event.isFlying()) {
-                new StartFlyingEvent(event.getPlayer(),event).callEvent();
+                new StartFlyingEvent(event.getPlayer(), event).callEvent();
             } else {
-                new StopFlyingEvent(event.getPlayer(),event).callEvent();
+                new StopFlyingEvent(event.getPlayer(), event).callEvent();
             }
         }
     }
@@ -115,7 +115,7 @@ public final class MoveListener implements Listener {
     public void onChunkLoad(PlayerChunkLoadEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            new ChunkLoadEvent(event.getPlayer(),event).callEvent();
+            new ChunkLoadEvent(event.getPlayer(), event).callEvent();
         }
     }
 
@@ -123,7 +123,7 @@ public final class MoveListener implements Listener {
     public void onChunkUnload(PlayerChunkUnloadEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            new ChunkUnloadEvent(event.getPlayer(),event).callEvent();
+            new ChunkUnloadEvent(event.getPlayer(), event).callEvent();
         }
     }
 

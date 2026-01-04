@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 public final class SetSlotAction extends PlayerAction {
     public SetSlotAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,16 +33,16 @@ public final class SetSlotAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        int slot = getArguments().getInt("slot",1,this);
+        int slot = getArguments().getInt("slot", 1, this);
         if (slot > 9 || slot < 1) {
             slot = 1;
         }
-        player.getInventory().setHeldItemSlot(slot-1);
+        player.getInventory().setHeldItemSlot(slot - 1);
     }
 
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_SLOT;
     }
 }

@@ -18,6 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.reputation;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
@@ -26,10 +30,6 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -56,11 +56,11 @@ public class DislikeCommand extends CommandHandler {
 
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
-            long createdSeconds = (System.currentTimeMillis()-planet.getCreationTime())/1000;
+            long createdSeconds = (System.currentTimeMillis() - planet.getCreationTime()) / 1000;
             if (OpenCreative.getSettings().getRequirements().getWorldReputationMinSeconds() > createdSeconds) {
                 Sounds.PLAYER_CANCEL.play(player);
-                long unlockTime = (OpenCreative.getSettings().getRequirements().getWorldReputationMinSeconds()-createdSeconds)*1000;
-                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate",player).replace("%time%",
+                long unlockTime = (OpenCreative.getSettings().getRequirements().getWorldReputationMinSeconds() - createdSeconds) * 1000;
+                player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.cant-rate", player).replace("%time%",
                         convertTime(unlockTime)));
                 return;
             }
@@ -69,10 +69,10 @@ public class DislikeCommand extends CommandHandler {
             } else if (FileUtils.getPlayersFromPlanetList(planet, Planet.PlayersType.DISLIKED).contains(sender.getName())) {
                 sender.sendMessage(MessageUtils.getLocaleMessage("world.already-rated"));
             } else {
-                if (FileUtils.addPlayerInPlanetList(planet,sender.getName(), Planet.PlayersType.DISLIKED)) {
-                    planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() -1);
+                if (FileUtils.addPlayerInPlanetList(planet, sender.getName(), Planet.PlayersType.DISLIKED)) {
+                    planet.getInformation().setPlanetReputation(planet.getInformation().getReputation() - 1);
                     Sounds.WORLD_DISLIKED.play(player);
-                    sender.sendMessage(MessageUtils.getPlayerLocaleMessage("world.disliked",player));
+                    sender.sendMessage(MessageUtils.getPlayerLocaleMessage("world.disliked", player));
                 }
             }
         }

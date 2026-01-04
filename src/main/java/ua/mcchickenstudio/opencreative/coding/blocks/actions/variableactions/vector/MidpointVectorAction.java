@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,14 +34,14 @@ public final class MidpointVectorAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Vector first = getArguments().getVector("first",new Vector(),this);
-        Vector second = getArguments().getVector("second",new Vector(),this);
-        setVarValue(link,first.midpoint(second));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Vector first = getArguments().getVector("first", new Vector(), this);
+        Vector second = getArguments().getVector("second", new Vector(), this);
+        setVarValue(link, first.midpoint(second));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_MIDPOINT_VECTOR;
     }
 }

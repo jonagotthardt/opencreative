@@ -38,17 +38,17 @@ public final class EntitySetFallDistanceAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        float distance = getArguments().getFloat("distance",0.0f,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        float distance = getArguments().getFloat("distance", 0.0f, this);
         if (!add) {
             livingEntity.setFallDistance(distance);
         } else {
-            livingEntity.setFallDistance(livingEntity.getFallDistance()+distance);
+            livingEntity.setFallDistance(livingEntity.getFallDistance() + distance);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_FALL_DISTANCE;
     }
 }

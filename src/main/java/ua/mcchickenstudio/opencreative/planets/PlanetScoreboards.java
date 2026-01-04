@@ -51,6 +51,7 @@ public class PlanetScoreboards {
 
     /**
      * Returns map of names and scoreboards.
+     *
      * @return map of names and scoreboards.
      */
     public Map<String, Scoreboard> getMap() {
@@ -63,7 +64,8 @@ public class PlanetScoreboards {
 
     /**
      * Registers new scoreboard, or replaces old with new one.
-     * @param name name of scoreboard.
+     *
+     * @param name       name of scoreboard.
      * @param scoreboard scoreboard to register.
      */
     public void registerScoreboard(@NotNull String name, @NotNull Scoreboard scoreboard) {
@@ -72,6 +74,7 @@ public class PlanetScoreboards {
 
     /**
      * Unregisters scoreboard from world by name.
+     *
      * @param name scoreboard to remove.
      */
     public void unregisterScoreboard(@NotNull String name) {
@@ -83,6 +86,7 @@ public class PlanetScoreboards {
 
     /**
      * Unregisters scoreboard from world.
+     *
      * @param scoreboard scoreboard to remove.
      */
     @SuppressWarnings("unused")
@@ -100,6 +104,7 @@ public class PlanetScoreboards {
      * Removes objective from scoreboard and hides it from all players.
      * <p>
      * To unregister scoreboard, use {@link #unregisterScoreboard(Scoreboard)}.
+     *
      * @param scoreboard scoreboard to destroy.
      */
     public void destroyScoreboard(@NotNull Scoreboard scoreboard) {
@@ -116,6 +121,7 @@ public class PlanetScoreboards {
 
     /**
      * Clears all scores from scoreboard.
+     *
      * @param scoreboard scoreboard to clear scores.
      */
     public void clearScores(@NotNull Scoreboard scoreboard) {
@@ -133,6 +139,7 @@ public class PlanetScoreboards {
 
     /**
      * Returns scoreboard by name, or null - if not exists.
+     *
      * @param scoreboard name of scoreboard.
      * @return scoreboard, or null - if not found.
      */
@@ -142,6 +149,7 @@ public class PlanetScoreboards {
 
     /**
      * Returns amount of all scoreboards.
+     *
      * @return amount of scoreboards.
      */
     public int getAmount() {
@@ -150,6 +158,7 @@ public class PlanetScoreboards {
 
     /**
      * Checks whether player sees any active scoreboard from this planet.
+     *
      * @param player player to check.
      * @return true - player sees world's scoreboard, false - doesn't see.
      */

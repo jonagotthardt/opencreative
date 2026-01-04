@@ -38,36 +38,36 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public final class WorldModerationMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
-    private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG,1,"menus.world-moderation.items.clear-name","clear-name");
-    private final ItemStack CLEAR_DESCRIPTION = createItem(Material.BOOK,1,"menus.world-moderation.items.clear-description","clear-description");
-    private final ItemStack CLEAR_ICON = createItem(Material.DIAMOND,1,"menus.world-moderation.items.clear-icon","clear-icon");
-    private final ItemStack CLEAR_ID = createItem(Material.LEAD,1,"menus.world-moderation.items.clear-id","clear-id");
+    private final ItemStack CLEAR_NAME = createItem(Material.NAME_TAG, 1, "menus.world-moderation.items.clear-name", "clear-name");
+    private final ItemStack CLEAR_DESCRIPTION = createItem(Material.BOOK, 1, "menus.world-moderation.items.clear-description", "clear-description");
+    private final ItemStack CLEAR_ICON = createItem(Material.DIAMOND, 1, "menus.world-moderation.items.clear-icon", "clear-icon");
+    private final ItemStack CLEAR_ID = createItem(Material.LEAD, 1, "menus.world-moderation.items.clear-id", "clear-id");
 
-    private final ItemStack CONNECT_SILENT = createItem(Material.ENDER_EYE,1,"menus.world-moderation.items.connect-silent","connect-silent");
-    private final ItemStack CONNECT_DEV_SILENT = createItem(Material.ENDER_PEARL,1,"menus.world-moderation.items.connect-dev-silent","connect-dev-silent");
-    private final ItemStack LOAD = createItem(Material.CHERRY_CHEST_BOAT,1,"menus.world-moderation.items.load","load");
-    private final ItemStack UNLOAD = createItem(Material.CHEST_MINECART,1,"menus.world-moderation.items.unload","unload");
+    private final ItemStack CONNECT_SILENT = createItem(Material.ENDER_EYE, 1, "menus.world-moderation.items.connect-silent", "connect-silent");
+    private final ItemStack CONNECT_DEV_SILENT = createItem(Material.ENDER_PEARL, 1, "menus.world-moderation.items.connect-dev-silent", "connect-dev-silent");
+    private final ItemStack LOAD = createItem(Material.CHERRY_CHEST_BOAT, 1, "menus.world-moderation.items.load", "load");
+    private final ItemStack UNLOAD = createItem(Material.CHEST_MINECART, 1, "menus.world-moderation.items.unload", "unload");
 
-    private final ItemStack CLOSE_WORLD = createItem(Material.BARRIER,1,"menus.world-moderation.items.close-world","close-world");
+    private final ItemStack CLOSE_WORLD = createItem(Material.BARRIER, 1, "menus.world-moderation.items.close-world", "close-world");
 
     public WorldModerationMenu(Planet planet) {
-        super(4, MessageUtils.getLocaleMessage("menus.world-moderation.title",false));
+        super(4, MessageUtils.getLocaleMessage("menus.world-moderation.title", false));
         this.planet = planet;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(DECORATION_PANE_ITEM,28,34);
-        setItem(createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE,1),29,33);
-        setItem(31,setPersistentData(planet.getInformation().getIcon().clone(),getItemTypeKey(),"connect"));
-        setItem(10,player.hasPermission("opencreative.moderation.clear-name") ? CLEAR_NAME : NO_PERMS_ITEM);
-        setItem(11,player.hasPermission("opencreative.moderation.clear-description") ? CLEAR_DESCRIPTION : NO_PERMS_ITEM);
-        setItem(12,player.hasPermission("opencreative.moderation.clear-icon") ? CLEAR_ICON : NO_PERMS_ITEM);
-        setItem(13,player.hasPermission("opencreative.moderation.clear-id") ? CLEAR_ID : NO_PERMS_ITEM);
-        setItem(15,player.hasPermission("opencreative.moderation.connect-silent") ? (planet.isLoaded() ? CONNECT_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
-        setItem(16,player.hasPermission("opencreative.moderation.connect-dev-silent") ? (planet.isLoaded() ? CONNECT_DEV_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
-        setItem(27,planet.isLoaded() ? (player.hasPermission("opencreative.world.unload") ? UNLOAD : NO_PERMS_ITEM) : (player.hasPermission("opencreative.world.load") ? LOAD : NO_PERMS_ITEM));
-        setItem(35,player.hasPermission("opencreative.moderation.close-world") ? (planet.getSharing() == Planet.Sharing.PUBLIC ? CLOSE_WORLD : DECORATION_ITEM) : NO_PERMS_ITEM) ;
+        setItem(DECORATION_PANE_ITEM, 28, 34);
+        setItem(createItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, 1), 29, 33);
+        setItem(31, setPersistentData(planet.getInformation().getIcon().clone(), getItemTypeKey(), "connect"));
+        setItem(10, player.hasPermission("opencreative.moderation.clear-name") ? CLEAR_NAME : NO_PERMS_ITEM);
+        setItem(11, player.hasPermission("opencreative.moderation.clear-description") ? CLEAR_DESCRIPTION : NO_PERMS_ITEM);
+        setItem(12, player.hasPermission("opencreative.moderation.clear-icon") ? CLEAR_ICON : NO_PERMS_ITEM);
+        setItem(13, player.hasPermission("opencreative.moderation.clear-id") ? CLEAR_ID : NO_PERMS_ITEM);
+        setItem(15, player.hasPermission("opencreative.moderation.connect-silent") ? (planet.isLoaded() ? CONNECT_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
+        setItem(16, player.hasPermission("opencreative.moderation.connect-dev-silent") ? (planet.isLoaded() ? CONNECT_DEV_SILENT : DECORATION_ITEM) : NO_PERMS_ITEM);
+        setItem(27, planet.isLoaded() ? (player.hasPermission("opencreative.world.unload") ? UNLOAD : NO_PERMS_ITEM) : (player.hasPermission("opencreative.world.load") ? LOAD : NO_PERMS_ITEM));
+        setItem(35, player.hasPermission("opencreative.moderation.close-world") ? (planet.getSharing() == Planet.Sharing.PUBLIC ? CLOSE_WORLD : DECORATION_ITEM) : NO_PERMS_ITEM);
     }
 
     @Override
@@ -94,18 +94,18 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                planet.connectPlayer(player,true);
+                planet.connectPlayer(player, true);
             }
             case "connect-dev-silent" -> {
                 player.closeInventory();
-                planet.connectToDevPlanet(player,true);
+                planet.connectToDevPlanet(player, true);
             }
             case "clear-name" -> {
                 if (player.hasCooldown(item.getType())) {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(item.getType(),20);
+                player.setCooldown(item.getType(), 20);
                 planet.getInformation().setDisplayName(getLocaleMessage("creating-world.default-world-name").replace("%player%", planet.getOwner()));
                 Sounds.MENU_CLEAR_DATA.play(player);
                 planet.getInformation().updateIcon();
@@ -116,7 +116,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(item.getType(),20);
+                player.setCooldown(item.getType(), 20);
                 planet.getInformation().setDescription(getLocaleMessage("creating-world.default-world-description").replace("%player%", planet.getOwner()));
                 Sounds.MENU_CLEAR_DATA.play(player);
                 planet.getInformation().updateIcon();
@@ -127,7 +127,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(item.getType(),20);
+                player.setCooldown(item.getType(), 20);
                 planet.getInformation().setIcon(new ItemStack(Material.DIAMOND));
                 Sounds.MENU_CLEAR_DATA.play(player);
                 planet.getInformation().updateIcon();
@@ -138,7 +138,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(item.getType(),20);
+                player.setCooldown(item.getType(), 20);
                 planet.getInformation().resetCustomID();
                 Sounds.MENU_CLEAR_DATA.play(player);
                 planet.getInformation().updateIcon();
@@ -149,7 +149,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(item.getType(),20);
+                player.setCooldown(item.getType(), 20);
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
@@ -165,8 +165,8 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(LOAD.getType(),300);
-                player.setCooldown(UNLOAD.getType(),300);
+                player.setCooldown(LOAD.getType(), 300);
+                player.setCooldown(UNLOAD.getType(), 300);
                 Sounds.WORLD_LOAD.play(player);
                 OpenCreative.getPlugin().getLogger().info("Player " + player.getName() + " loads planet " + planet.getId());
                 planet.getTerritory().load();
@@ -174,15 +174,15 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     if (player.isOnline() && equals(player.getOpenInventory().getTopInventory().getHolder())) {
                         fillItems(player);
                     }
-                },10L);
+                }, 10L);
             }
             case "unload" -> {
                 if (player.hasCooldown(item.getType())) {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(LOAD.getType(),300);
-                player.setCooldown(UNLOAD.getType(),300);
+                player.setCooldown(LOAD.getType(), 300);
+                player.setCooldown(UNLOAD.getType(), 300);
                 Sounds.WORLD_UNLOAD.play(player);
                 OpenCreative.getPlugin().getLogger().info("Player " + player.getName() + " unloads planet " + planet.getId());
                 planet.getTerritory().unload();
@@ -190,7 +190,7 @@ public final class WorldModerationMenu extends AbstractMenu implements WorldMenu
                     if (player.isOnline() && equals(player.getOpenInventory().getTopInventory().getHolder())) {
                         fillItems(player);
                     }
-                },10L);
+                }, 10L);
             }
         }
     }

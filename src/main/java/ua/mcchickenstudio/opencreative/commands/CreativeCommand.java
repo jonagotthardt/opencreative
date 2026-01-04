@@ -18,43 +18,44 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
-import ua.mcchickenstudio.opencreative.settings.groups.Group;
-import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
-import ua.mcchickenstudio.opencreative.settings.items.Items;
-import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
-import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
-import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import org.bukkit.*;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.*;
-import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.settings.groups.Group;
+import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
+import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
+import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 
 import java.io.File;
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
@@ -149,8 +150,8 @@ public class CreativeCommand extends CommandHandler {
                     }
                     long now = System.currentTimeMillis();
                     sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
-                            .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%",getElapsedTime(now, planet.getCreationTime()))
-                            .replace("%activity-time%",getElapsedTime(now, planet.getLastActivityTime())).replace("%online%",String.valueOf(planet.getOnline()))
+                            .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%", getElapsedTime(now, planet.getCreationTime()))
+                            .replace("%activity-time%", getElapsedTime(now, planet.getLastActivityTime())).replace("%online%", String.valueOf(planet.getOnline()))
                             .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
                             .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
                 }
@@ -171,20 +172,20 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("world.not-numeric-id"));
                         return;
                     }
-                    File planetFolder = new File(FileUtils.getPlanetsStorageFolder(),"planet"+id);
+                    File planetFolder = new File(FileUtils.getPlanetsStorageFolder(), "planet" + id);
                     if (!planetFolder.exists() || !planetFolder.isDirectory()) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%",args[1])
-                                .replace("%path%",planetFolder.getPath()));
+                                .replace("%id%", args[1])
+                                .replace("%path%", planetFolder.getPath()));
                         return;
                     }
                     if (OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]) != null) {
-                        sender.sendMessage(getLocaleMessage("world.already-registered").replace("%id%",args[1]));
+                        sender.sendMessage(getLocaleMessage("world.already-registered").replace("%id%", args[1]));
                         return;
                     }
                     Planet newPlanet = new Planet(id);
                     OpenCreative.getPlanetsManager().registerPlanet(newPlanet);
-                    sender.sendMessage(getLocaleMessage("world.registered").replace("%id%",args[1]));
+                    sender.sendMessage(getLocaleMessage("world.registered").replace("%id%", args[1]));
                 }
                 case "unregister" -> {
                     if (!sender.hasPermission("opencreative.world.unregister")) {
@@ -200,12 +201,12 @@ public class CreativeCommand extends CommandHandler {
                     if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%",args[1])
-                                .replace("%path%","/join " + id));
+                                .replace("%id%", args[1])
+                                .replace("%path%", "/join " + id));
                         return;
                     }
                     OpenCreative.getPlanetsManager().unregisterPlanet(planet);
-                    sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%",args[1]));
+                    sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%", args[1]));
                 }
                 case "updateicons" -> {
                     if (!sender.hasPermission("opencreative.update-icons")) {
@@ -241,7 +242,7 @@ public class CreativeCommand extends CommandHandler {
                     planet.loadInfo();
                     planet.getInformation().loadInformation();
                     planet.getInformation().updateIconAsync();
-                    sender.sendMessage(getLocaleMessage("world.updated-info").replace("%id%",args[1]));
+                    sender.sendMessage(getLocaleMessage("world.updated-info").replace("%id%", args[1]));
                 }
                 case "setowner" -> {
                     if (!sender.hasPermission("opencreative.world.set-owner")) {
@@ -257,8 +258,8 @@ public class CreativeCommand extends CommandHandler {
                     if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%",args[1])
-                                .replace("%path%","/join " + id));
+                                .replace("%id%", args[1])
+                                .replace("%path%", "/join " + id));
                         return;
                     }
                     String ownerNameOrUUID = args[2];
@@ -297,8 +298,8 @@ public class CreativeCommand extends CommandHandler {
                     if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%",args[1])
-                                .replace("%path%","/join " + id));
+                                .replace("%id%", args[1])
+                                .replace("%path%", "/join " + id));
                         return;
                     }
                     String sizeString = args[2];
@@ -352,8 +353,8 @@ public class CreativeCommand extends CommandHandler {
                     if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%",args[1])
-                                .replace("%path%","/join " + id));
+                                .replace("%id%", args[1])
+                                .replace("%path%", "/join " + id));
                         return;
                     }
                     if (OpenCreative.getSettings().addRecommendedWorld(planet.getId())) {
@@ -477,8 +478,8 @@ public class CreativeCommand extends CommandHandler {
                     if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%",args[1])
-                                .replace("%path%","/join " + id));
+                                .replace("%id%", args[1])
+                                .replace("%path%", "/join " + id));
                         return;
                     }
                     if (OpenCreative.getSettings().removeRecommendedWorld(planet.getId())) {
@@ -543,19 +544,19 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev", ""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return;
                     }
                     if (!planet.isLoaded()) {
                         planet.getTerritory().load();
-                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
+                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
                     } else if (args[1].contains("dev") && !planet.getDevPlanet().isLoaded()) {
                         planet.getDevPlanet().loadDevPlanetWorld();
-                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
+                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
                     } else {
-                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
+                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%", args[1]));
                     }
                 }
                 case "dev" -> {
@@ -567,20 +568,20 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev",""));
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev", ""));
                     if (planet == null) {
                         sender.sendMessage(getLocaleMessage("no-planet-found"));
                         return;
                     }
                     if (planet.getDevPlanet().isLoaded()) {
-                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%",args[1]));
+                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%", args[1]));
                         return;
                     }
                     if (!planet.isLoaded()) {
                         planet.getTerritory().load();
                     }
                     planet.connectToDevPlanet(player);
-                    sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%",args[1]));
+                    sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
                 }
                 case "creative-chat", "chat" -> {
                     if (!sender.hasPermission("opencreative.creative-chat")) {
@@ -594,17 +595,18 @@ public class CreativeCommand extends CommandHandler {
                     if ("disable".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setCreativeChatEnabled(false);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled").replace("%player%",sender.getName()));
+                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled").replace("%player%", sender.getName()));
                         }
                     } else if ("enable".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setCreativeChatEnabled(true);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled").replace("%player%",sender.getName()));
+                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled").replace("%player%", sender.getName()));
                         }
-                    } if ("clear".equalsIgnoreCase(args[1])) {
+                    }
+                    if ("clear".equalsIgnoreCase(args[1])) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             onlinePlayer.sendMessage("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n ");
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%",sender.getName()));
+                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%", sender.getName()));
                         }
                     }
                 }
@@ -619,10 +621,10 @@ public class CreativeCommand extends CommandHandler {
                     }
                     if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setDebug(false);
-                        sender.sendMessage(getLocaleMessage("creative.debug.disabled").replace("%player%",sender.getName()));
+                        sender.sendMessage(getLocaleMessage("creative.debug.disabled").replace("%player%", sender.getName()));
                     } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
                         OpenCreative.getSettings().setDebug(true);
-                        sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%",sender.getName()));
+                        sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%", sender.getName()));
                     }
                 }
                 case "all", "created" -> {
@@ -672,7 +674,7 @@ public class CreativeCommand extends CommandHandler {
                         return;
                     }
                     if (localizationFileExists(args[1])) {
-                        OpenCreative.getPlugin().getConfig().set("messages.locale",args[1]);
+                        OpenCreative.getPlugin().getConfig().set("messages.locale", args[1]);
                         OpenCreative.getPlugin().saveConfig();
                         loadLocalizationFile();
                         sender.sendMessage(getLocaleMessage("creative.locale.changed"));
@@ -690,12 +692,12 @@ public class CreativeCommand extends CommandHandler {
                         return;
                     }
                     if (OpenCreative.getSettings().setSoundsTheme(args[1])) {
-                        sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%",args[1]));
+                        sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%", args[1]));
                         if (player != null) {
                             Sounds.LOBBY.play(player);
                         }
                     } else {
-                        sender.sendMessage(getLocaleMessage("creative.sounds.not-found").replace("%theme%",args[1]));
+                        sender.sendMessage(getLocaleMessage("creative.sounds.not-found").replace("%theme%", args[1]));
                     }
                 }
                 case "sound", "playsound" -> {
@@ -710,7 +712,8 @@ public class CreativeCommand extends CommandHandler {
                     try {
                         Sounds sound = Sounds.valueOf(args[1].toUpperCase());
                         sound.play(sender);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                 }
                 case "firework", "fireworks" -> {
                     if (!sender.hasPermission("opencreative.fireworks")) {
@@ -724,12 +727,14 @@ public class CreativeCommand extends CommandHandler {
                     int times = 3;
                     try {
                         times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                     int seconds = 5;
                     if (args.length >= 3) {
                         try {
-                            seconds =  Math.clamp(Integer.parseInt(args[2]), 1, 10);
-                        } catch (Exception ignored) {}
+                            seconds = Math.clamp(Integer.parseInt(args[2]), 1, 10);
+                        } catch (Exception ignored) {
+                        }
                     }
                     sender.sendMessage(getLocaleMessage("creative.fireworks")
                             .replace("%amount%", String.valueOf(times))
@@ -778,10 +783,12 @@ public class CreativeCommand extends CommandHandler {
                     if (args.length >= 6) {
                         try {
                             yaw = (float) fromTextToCoordinate(args[4], location.getYaw());
-                        } catch (NumberFormatException ignored) {}
+                        } catch (NumberFormatException ignored) {
+                        }
                         try {
                             pitch = (float) fromTextToCoordinate(args[5], location.getPitch());
-                        } catch (NumberFormatException ignored) {}
+                        } catch (NumberFormatException ignored) {
+                        }
                     }
                     location.set(x, y, z);
                     location.setYaw(yaw);
@@ -844,7 +851,8 @@ public class CreativeCommand extends CommandHandler {
                             int slot = 1;
                             try {
                                 slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
-                            } catch (Exception ignored) {}
+                            } catch (Exception ignored) {
+                            }
                             if (group.giveItem(player, slot)) {
                                 sender.sendMessage(getLocaleMessage("creative.items.received-from-kit")
                                         .replace("%kit%", groupId)
@@ -856,7 +864,8 @@ public class CreativeCommand extends CommandHandler {
                                 Sounds.PLAYER_FAIL.play(player);
                             }
                         }
-                    } if (args[1].equalsIgnoreCase("reset")) {
+                    }
+                    if (args[1].equalsIgnoreCase("reset")) {
                         if (!sender.hasPermission("opencreative.items.reset")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                             return;
@@ -876,7 +885,8 @@ public class CreativeCommand extends CommandHandler {
                         int slot = 1;
                         try {
                             slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
                         if (args.length == 4) {
                             sender.sendMessage(getLocaleMessage("creative.items.changed")
                                     .replace("%kit%", groupId)
@@ -957,7 +967,7 @@ public class CreativeCommand extends CommandHandler {
                             }
                         }
                     } else if ("ignore".equalsIgnoreCase(args[1])) {
-                        List<String> nicknames = new ArrayList<>(List.of(args)).subList(1,args.length);
+                        List<String> nicknames = new ArrayList<>(List.of(args)).subList(1, args.length);
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             boolean ignore = false;
                             for (String nick : nicknames) {
@@ -971,7 +981,7 @@ public class CreativeCommand extends CommandHandler {
                         }
                     }
                 }
-                case "maintenance" -> handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0,args.length));
+                case "maintenance" -> handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0, args.length));
                 case "unload" -> handleUnloadCommand(sender, args);
                 case "update", "updates", "checkupdate" -> handleUpdateCommand(sender);
                 case "list" -> {
@@ -1006,7 +1016,7 @@ public class CreativeCommand extends CommandHandler {
                         }
                         sender.sendMessage(getLocaleMessage("creative.loaded-worlds.list")
                                 .replace("%amount%", String.valueOf(worlds.size()))
-                                .replace("%build%", String.valueOf(worlds.size()-devCount))
+                                .replace("%build%", String.valueOf(worlds.size() - devCount))
                                 .replace("%dev%", String.valueOf(devCount)));
                     } else {
                         if (!sender.hasPermission("opencreative.list.players")) {
@@ -1057,7 +1067,7 @@ public class CreativeCommand extends CommandHandler {
                         return;
                     }
                     sender.sendMessage(MiniMessage.miniMessage().deserialize(
-                            String.join(" ", Arrays.copyOfRange(args,1,args.length))));
+                            String.join(" ", Arrays.copyOfRange(args, 1, args.length))));
                 }
                 case "minimsg2" -> {
                     if (!sender.hasPermission("opencreative.print.minimessage")) {
@@ -1072,7 +1082,7 @@ public class CreativeCommand extends CommandHandler {
                         sender.sendMessage(getLocaleMessage("only-players"));
                         return;
                     }
-                    String message = String.join(" ", Arrays.copyOfRange(args,1,args.length));
+                    String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     sender.sendMessage(toComponent(message));
                     sender.sendActionBar(Component.text("Original: " + message));
 
@@ -1140,26 +1150,28 @@ public class CreativeCommand extends CommandHandler {
             if (args.length > 2) {
                 try {
                     seconds = Integer.parseInt(args[2]);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
             OpenCreative.getPlugin().getLogger().info("Maintenance mode will be enabled after " + seconds + " seconds by " + sender.getName());
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 Sounds.MAINTENANCE_NOTIFY.play(onlinePlayer);
-                onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-notification").replace("%time%",String.valueOf(seconds)));
+                onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-notification").replace("%time%", String.valueOf(seconds)));
             }
             int time = seconds;
             new BukkitRunnable() {
                 int seconds = time;
+
                 @Override
                 public void run() {
                     if (seconds >= 1) {
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendActionBar(getLocaleMessage("creative.maintenance.starting-in").replace("%time%",String.valueOf(seconds)));
+                            onlinePlayer.sendActionBar(getLocaleMessage("creative.maintenance.starting-in").replace("%time%", String.valueOf(seconds)));
                         }
                         if (seconds <= 3) {
                             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                                 Sounds.MAINTENANCE_COUNT.play(onlinePlayer);
-                                onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-in").replace("%time%",String.valueOf(seconds)));
+                                onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-in").replace("%time%", String.valueOf(seconds)));
                             }
                         }
                         seconds--;
@@ -1168,7 +1180,7 @@ public class CreativeCommand extends CommandHandler {
                         cancel();
                     }
                 }
-            }.runTaskTimer(OpenCreative.getPlugin(),0L,20L);
+            }.runTaskTimer(OpenCreative.getPlugin(), 0L, 20L);
         } else if ("end".equalsIgnoreCase(args[1])) {
             OpenCreative.getSettings().setMaintenance(false);
         }
@@ -1181,7 +1193,7 @@ public class CreativeCommand extends CommandHandler {
         }
         if (!(sender instanceof Player player)) return;
         if (args.length == 1) return;
-        File template = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]);
+        File template = new File(OpenCreative.getPlugin().getDataPath() + File.separator + "templates" + File.separator + args[1]);
         if (!template.exists()) {
             sender.sendMessage("Template doesn't exist.");
             return;
@@ -1191,13 +1203,13 @@ public class CreativeCommand extends CommandHandler {
             Sounds.PLAYER_FAIL.play(player);
             return;
         }
-        File templateDev = new File(OpenCreative.getPlugin().getDataPath()+File.separator+"templates"+File.separator+args[1]+"dev");
+        File templateDev = new File(OpenCreative.getPlugin().getDataPath() + File.separator + "templates" + File.separator + args[1] + "dev");
         int id = WorldUtils.generateWorldID();
-        File world = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator);
-        File worldDev = new File(Bukkit.getWorldContainer().getPath()+File.separator+"planets"+File.separator+"planet"+id+File.separator+"dev");
-        FileUtils.copyFilesToDirectory(template,world);
+        File world = new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + File.separator);
+        File worldDev = new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + File.separator + "dev");
+        FileUtils.copyFilesToDirectory(template, world);
         if (templateDev.exists()) {
-            FileUtils.copyFilesToDirectory(templateDev,worldDev);
+            FileUtils.copyFilesToDirectory(templateDev, worldDev);
         }
         OpenCreative.getPlanetsManager().createPlanet(player, id, new FlatGenerator());
     }
@@ -1236,7 +1248,8 @@ public class CreativeCommand extends CommandHandler {
                     int value = 0;
                     try {
                         value = Integer.parseInt(args[5]);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                     if (OpenCreative.getSettings().getGroups().setLimit(groupName, type, value)) {
                         sender.sendMessage(getLocaleMessage("creative.groups.set-limit")
                                 .replace("%value%", String.valueOf(value))
@@ -1256,7 +1269,8 @@ public class CreativeCommand extends CommandHandler {
                     int value = 0;
                     try {
                         value = Integer.parseInt(args[5]);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                     if (OpenCreative.getSettings().getGroups().setLimitModifier(groupName, type, value)) {
                         sender.sendMessage(getLocaleMessage("creative.groups.set-modifier")
                                 .replace("%value%", String.valueOf(value))
@@ -1332,11 +1346,11 @@ public class CreativeCommand extends CommandHandler {
                 version -> {
                     if (version.isEmpty()) {
                         sender.sendMessage(getLocaleMessage("creative.updates.up-to-date")
-                                .replace("%version%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
+                                .replace("%version%", OpenCreative.getPlugin().getPluginMeta().getVersion()));
                     } else {
                         sender.sendMessage(getLocaleMessage("creative.updates.available")
-                                .replace("%new%",version)
-                                .replace("%old%",OpenCreative.getPlugin().getPluginMeta().getVersion()));
+                                .replace("%new%", version)
+                                .replace("%old%", OpenCreative.getPlugin().getPluginMeta().getVersion()));
                     }
                 }
         ).exceptionally(e -> {
@@ -1376,12 +1390,12 @@ public class CreativeCommand extends CommandHandler {
         }
         if (planet.isLoaded()) {
             planet.getTerritory().unload();
-            sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
+            sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%", args[1]));
         } else if (args[1].contains("dev") && planet.getDevPlanet().isLoaded()) {
             planet.getDevPlanet().unload();
-            sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%",args[1]));
+            sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%", args[1]));
         } else {
-            sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%",args[1]));
+            sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%", args[1]));
         }
     }
 
@@ -1509,7 +1523,7 @@ public class CreativeCommand extends CommandHandler {
             }
             Set<Planet> corruptedPlanets = OpenCreative.getPlanetsManager().getCorruptedPlanets();
             sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.list")
-                    .replace("%amount%",String.valueOf(corruptedPlanets.size())));
+                    .replace("%amount%", String.valueOf(corruptedPlanets.size())));
             String worldMessage = getLocaleMessage("creative.corrupted-worlds.world");
             for (Planet planet : corruptedPlanets) {
                 sender.sendMessage(Component.text(worldMessage
@@ -1526,7 +1540,8 @@ public class CreativeCommand extends CommandHandler {
         int id = -1;
         try {
             id = Integer.parseInt(args[1]);
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+        }
         if (id < 0) return;
         Planet foundPlanet = null;
         for (Planet planet : OpenCreative.getPlanetsManager().getCorruptedPlanets()) {
@@ -1553,9 +1568,11 @@ public class CreativeCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%",args[3]));
-                if (foundPlanet.getCreationTime() == 0) setPlanetConfigParameter(foundPlanet,"creation-time",System.currentTimeMillis());
-                if (foundPlanet.getLastActivityTime() == 0) setPlanetConfigParameter(foundPlanet,"last-activity-time",System.currentTimeMillis());
+                sender.sendMessage(getLocaleMessage("creative.corrupted-worlds.set-owner").replace("%replace%", args[3]));
+                if (foundPlanet.getCreationTime() == 0)
+                    setPlanetConfigParameter(foundPlanet, "creation-time", System.currentTimeMillis());
+                if (foundPlanet.getLastActivityTime() == 0)
+                    setPlanetConfigParameter(foundPlanet, "last-activity-time", System.currentTimeMillis());
                 foundPlanet.setOwner(args[3]);
                 OpenCreative.getPlanetsManager().getCorruptedPlanets().remove(foundPlanet);
                 Planet planet = new Planet(foundPlanet.getId());
@@ -1573,16 +1590,17 @@ public class CreativeCommand extends CommandHandler {
         if (args.length >= 2) {
             try {
                 months = Integer.parseInt(args[1]);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
         if (months < 1) months = 1;
         long currentTime = System.currentTimeMillis();
         List<Planet> deprecatedWorlds = new ArrayList<>();
         for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
-            long monthsInMillis = 2592000000L*months;
-            if (currentTime- planet.getCreationTime() > monthsInMillis && !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet)) {
+            long monthsInMillis = 2592000000L * months;
+            if (currentTime - planet.getCreationTime() > monthsInMillis && !OpenCreative.getPlanetsManager().getRecommendedPlanets().contains(planet)) {
                 OfflinePlayer planetOwner = Bukkit.getOfflinePlayer(planet.getOwner());
-                if (planetOwner.getLastSeen() == 0 || currentTime-planetOwner.getLastLogin() > monthsInMillis) {
+                if (planetOwner.getLastSeen() == 0 || currentTime - planetOwner.getLastLogin() > monthsInMillis) {
                     deprecatedWorlds.add(planet);
                 }
             }
@@ -1592,13 +1610,13 @@ public class CreativeCommand extends CommandHandler {
             sender.sendMessage(Component.text(worldMessage
                     .replace("%id%", String.valueOf(planet.getId()))
                     .replace("%owner%", planet.getOwner())
-                    .replace("%created%",getElapsedTime(currentTime, planet.getCreationTime()))
-                    .replace("%seen%",getElapsedTime(currentTime,Bukkit.getOfflinePlayer(planet.getOwner()).getLastSeen())
+                    .replace("%created%", getElapsedTime(currentTime, planet.getCreationTime()))
+                    .replace("%seen%", getElapsedTime(currentTime, Bukkit.getOfflinePlayer(planet.getOwner()).getLastSeen())
                     )).clickEvent(ClickEvent.runCommand("/oc delete " + planet.getId()))
             );
         }
         sender.sendMessage(getLocaleMessage("creative.deprecated-worlds.list")
-                .replace("%amount%",String.valueOf(deprecatedWorlds.size())));
+                .replace("%amount%", String.valueOf(deprecatedWorlds.size())));
     }
 
     @Override
@@ -1668,8 +1686,8 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("remove");
                 tabCompleter.add("edit");
                 tabCompleter.add("info");
-            } else if (List.of("load","unload","moderate","moderation",
-                    "updateworld","unregister","delete","setowner","setsize")
+            } else if (List.of("load", "unload", "moderate", "moderation",
+                            "updateworld", "unregister", "delete", "setowner", "setsize")
                     .contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets()
                         .stream().map(planet -> String.valueOf(planet.getId()))
@@ -1730,7 +1748,7 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("60");
                 tabCompleter.add("30");
                 tabCompleter.add("15");
-            }  else if ("setsize".equalsIgnoreCase(args[0])) {
+            } else if ("setsize".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("0");
                 tabCompleter.add("25");
                 tabCompleter.add("50");

@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class CharAtTextAction extends VariableAction {
     public CharAtTextAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,14 +33,14 @@ public final class CharAtTextAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getText("text"," ",this);
-        int index = getArguments().getInt("index",1,this);
-        setVarValue(link, String.valueOf(text.charAt(index-1)));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String text = getArguments().getText("text", " ", this);
+        int index = getArguments().getInt("index", 1, this);
+        setVarValue(link, String.valueOf(text.charAt(index - 1)));
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_CHAR_AT;
     }
 }

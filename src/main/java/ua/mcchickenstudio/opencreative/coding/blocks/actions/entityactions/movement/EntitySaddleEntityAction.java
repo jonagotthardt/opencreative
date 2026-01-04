@@ -33,14 +33,14 @@ public final class EntitySaddleEntityAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String text = getArguments().getText("entity"," ",this);
+        String text = getArguments().getText("entity", " ", this);
         for (Entity entityWithName : getEntitiesByNameOrUUID(text)) {
             entityWithName.addPassenger(entity);
         }
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SADDLE_ENTITY;
     }
 }

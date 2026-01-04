@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.eve
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -41,7 +42,7 @@ public final class UncancelEventAction extends ControlAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.CONTROL_UNCANCEL_EVENT;
     }
 }

@@ -63,28 +63,29 @@ public final class Requirements {
             return;
         }
 
-        worldCreationMinSeconds = section.getInt("world-creation.played-seconds",30);
-        worldReputationMinSeconds = section.getInt("world-reputation.creation-seconds",300);
+        worldCreationMinSeconds = section.getInt("world-creation.played-seconds", 30);
+        worldReputationMinSeconds = section.getInt("world-reputation.creation-seconds", 300);
 
-        customIdPattern = section.getString("world-custom-id.pattern","^[a-zA-Zа-яА-Я0-9_]+$");
-        customIdMinLength = section.getInt("world-custom-id.min-length",2);
-        customIdMaxLength = section.getInt("world-custom-id.max-length",16);
+        customIdPattern = section.getString("world-custom-id.pattern", "^[a-zA-Zа-яА-Я0-9_]+$");
+        customIdMinLength = section.getInt("world-custom-id.min-length", 2);
+        customIdMaxLength = section.getInt("world-custom-id.max-length", 16);
 
-        worldNameMinLength = section.getInt("world-name.min-length",2);
-        worldNameMaxLength = section.getInt("world-name.max-length",16);
+        worldNameMinLength = section.getInt("world-name.min-length", 2);
+        worldNameMaxLength = section.getInt("world-name.max-length", 16);
 
-        worldDescriptionMinLength = section.getInt("world-description.min-length",2);
-        worldDescriptionMaxLength = section.getInt("world-description.max-length",256);
+        worldDescriptionMinLength = section.getInt("world-description.min-length", 2);
+        worldDescriptionMaxLength = section.getInt("world-description.max-length", 256);
 
-        moduleNameMinLength = section.getInt("module-name.min-length",2);
-        moduleNameMaxLength = section.getInt("module-name.max-length",16);
+        moduleNameMinLength = section.getInt("module-name.min-length", 2);
+        moduleNameMaxLength = section.getInt("module-name.max-length", 16);
 
-        moduleDescriptionMinLength = section.getInt("module-description.min-length",2);
-        moduleDescriptionMaxLength = section.getInt("module-description.max-length",256);
+        moduleDescriptionMinLength = section.getInt("module-description.min-length", 2);
+        moduleDescriptionMaxLength = section.getInt("module-description.max-length", 256);
     }
 
     /**
      * Returns pattern for world's custom ID.
+     *
      * @return pattern of world custom ID.
      */
     public @NotNull String getCustomIdPattern() {
@@ -93,6 +94,7 @@ public final class Requirements {
 
     /**
      * Returns maximum length of world's custom ID.
+     *
      * @return limit of world's custom ID length.
      */
     public int getCustomIdMaxLength() {
@@ -101,6 +103,7 @@ public final class Requirements {
 
     /**
      * Returns minimal length of world's custom ID.
+     *
      * @return minimal length of custom ID.
      */
     public int getCustomIdMinLength() {
@@ -109,6 +112,7 @@ public final class Requirements {
 
     /**
      * Returns maximum length of world's description.
+     *
      * @return limit of world's description length.
      */
     public int getWorldDescriptionMaxLength() {
@@ -117,6 +121,7 @@ public final class Requirements {
 
     /**
      * Returns minimal length of world's description.
+     *
      * @return minimal length of description.
      */
     public int getWorldDescriptionMinLength() {
@@ -125,6 +130,7 @@ public final class Requirements {
 
     /**
      * Returns maximum length of world's name.
+     *
      * @return limit of world's name length.
      */
     public int getWorldNameMaxLength() {
@@ -133,6 +139,7 @@ public final class Requirements {
 
     /**
      * Returns minimal length of world's name.
+     *
      * @return minimal length of name.
      */
     public int getWorldNameMinLength() {
@@ -142,6 +149,7 @@ public final class Requirements {
     /**
      * Returns how many seconds need to pass after player join
      * to be able to create a world.
+     *
      * @return minimal amount of seconds to be able to create a world.
      */
     public int getWorldCreationMinSeconds() {
@@ -149,9 +157,11 @@ public final class Requirements {
     }
 
     //  Цьом
+
     /**
      * Returns how many seconds need to pass after world's
      * creation to allow players to like or dislike world.
+     *
      * @return minimal amount of seconds to be able to like or dislike a world.
      */
     public int getWorldReputationMinSeconds() {
@@ -160,6 +170,7 @@ public final class Requirements {
 
     /**
      * Returns maximum length of module's description.
+     *
      * @return limit of module's description length.
      */
     public int getModuleDescriptionMaxLength() {
@@ -168,6 +179,7 @@ public final class Requirements {
 
     /**
      * Returns minimal length of module's description.
+     *
      * @return minimal length of description.
      */
     public int getModuleDescriptionMinLength() {
@@ -176,6 +188,7 @@ public final class Requirements {
 
     /**
      * Returns maximum length of module's name.
+     *
      * @return limit of module's name length.
      */
     public int getModuleNameMaxLength() {
@@ -184,10 +197,11 @@ public final class Requirements {
 
     /**
      * Returns minimal length of module's name.
+     *
      * @return minimal length of name.
      */
     public int getModuleNameMinLength() {
         return moduleNameMinLength;
     }
-    
+
 }

@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import net.kyori.adventure.bossbar.BossBar;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.entity.Entity;
 
 public final class BossBarOverlayAction extends WorldAction {
     public BossBarOverlayAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,21 +36,22 @@ public final class BossBarOverlayAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getText("name","boss",this);
-        String overlayString = getArguments().getText("overlay","progress",this);
+        String name = getArguments().getText("name", "boss", this);
+        String overlayString = getArguments().getText("overlay", "progress", this);
         BossBar.Overlay overlay = BossBar.Overlay.PROGRESS;
         try {
             overlay = BossBar.Overlay.valueOf(overlayString.toUpperCase());
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             bossBar.overlay(overlay);
         }
-        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(), bossBar);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.WORLD_BOSS_BAR_PROGRESS;
     }
 }

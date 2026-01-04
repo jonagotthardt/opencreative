@@ -20,9 +20,9 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.it
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -40,9 +40,9 @@ public final class RemoveItemLoreLineAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
-        int index = getArguments().getInt("index",1,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE), this), this);
+        int index = getArguments().getInt("index", 1, this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -51,15 +51,15 @@ public final class RemoveItemLoreLineAction extends VariableAction {
         if (newLore == null) {
             newLore = new ArrayList<>();
         }
-        newLore.remove(index-1);
+        newLore.remove(index - 1);
         meta.lore(newLore);
         item.setItemMeta(meta);
         if (link == null) return;
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_REMOVE_ITEM_LORE_LINE;
     }
 }
