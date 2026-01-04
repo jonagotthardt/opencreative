@@ -42,7 +42,7 @@ public final class KickPlayerAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_KICK;
     }
 }

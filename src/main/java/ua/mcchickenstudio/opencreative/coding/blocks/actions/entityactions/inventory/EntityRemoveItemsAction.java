@@ -83,7 +83,7 @@ public final class EntityRemoveItemsAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_REMOVE_ITEMS;
     }
 }

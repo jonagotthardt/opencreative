@@ -46,7 +46,7 @@ public final class SetStepHeightAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_STEP_HEIGHT;
     }
 }

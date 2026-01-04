@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -39,7 +40,7 @@ public class IsLookingAtBlockCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<ItemStack> blocks = getArguments().getItemList("blocks", this);
         List<Location> locations = getArguments().getLocationList("locations", this);
         if (blocks.isEmpty() && locations.isEmpty()) {
@@ -66,7 +67,7 @@ public class IsLookingAtBlockCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_LOOKS_AT_BLOCK;
     }
 }

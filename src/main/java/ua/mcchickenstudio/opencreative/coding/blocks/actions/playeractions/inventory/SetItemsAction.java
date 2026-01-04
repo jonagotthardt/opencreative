@@ -46,7 +46,7 @@ public final class SetItemsAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_ITEMS;
     }
 }

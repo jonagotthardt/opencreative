@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -70,7 +71,7 @@ public class IsWorldPlayerInWorldCondition extends WorldCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_WORLD_IS_PLAYER_IN;
     }
 }

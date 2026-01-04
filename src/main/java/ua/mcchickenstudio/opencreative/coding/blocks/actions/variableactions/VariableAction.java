@@ -42,7 +42,7 @@ public abstract class VariableAction extends Action {
     protected abstract void execute();
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.VARIABLE_ACTION;
     }
 

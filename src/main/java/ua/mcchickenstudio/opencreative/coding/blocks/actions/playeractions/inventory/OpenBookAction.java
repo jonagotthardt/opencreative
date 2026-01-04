@@ -40,7 +40,7 @@ public final class OpenBookAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_OPEN_BOOK;
     }
 

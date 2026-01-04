@@ -65,7 +65,7 @@ public final class SendDialogAction extends PlayerAction {
 
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SEND_DIALOG;
     }
 }

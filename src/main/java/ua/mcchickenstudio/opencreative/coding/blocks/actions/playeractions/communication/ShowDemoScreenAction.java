@@ -46,7 +46,7 @@ public final class ShowDemoScreenAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SHOW_DEMO_SCREEN;
     }
 }

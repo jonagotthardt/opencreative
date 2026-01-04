@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -36,7 +37,7 @@ public class HasSavedPurchaseCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<String> names = getArguments().getTextList("names", this);
         boolean check = false;
         PlanetPlayer planetPlayer = getPlanet().getWorldPlayers().getPlanetPlayer(player);
@@ -51,7 +52,7 @@ public class HasSavedPurchaseCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_HAS_SAVED_PURCHASE;
     }
 }

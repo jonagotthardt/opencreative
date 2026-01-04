@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,7 +36,7 @@ public class HasWorldPermissionCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         String permission = getArguments().getText("permission", "owner", this);
         return switch (permission.toLowerCase()) {
             case "owner" -> (getPlanet().isOwner(player));
@@ -46,7 +47,7 @@ public class HasWorldPermissionCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_HAS_WORLD_PERMISSION;
     }
 }

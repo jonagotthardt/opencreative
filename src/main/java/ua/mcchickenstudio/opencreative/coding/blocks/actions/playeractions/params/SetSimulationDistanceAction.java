@@ -44,7 +44,7 @@ public final class SetSimulationDistanceAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_SIMULATION_DISTANCE;
     }
 }

@@ -37,7 +37,7 @@ public final class RestoreInventoryAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_RESTORE_INVENTORY;
     }
 }

@@ -354,7 +354,7 @@ public class Executors {
 
         try {
             ActionType actionType = ActionType.valueOf(type);
-            Arguments args = new Arguments(executor.getPlanet(), executor);
+            Arguments args = new Arguments(executor.getPlanet());
             Target target = Target.DEFAULT;
             String targetString = config.getString(path + ".target");
             if (targetString != null && !targetString.isEmpty()) {

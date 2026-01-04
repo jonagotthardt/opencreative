@@ -53,7 +53,7 @@ public final class StopSoundsAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_STOP_SOUNDS;
     }
 }

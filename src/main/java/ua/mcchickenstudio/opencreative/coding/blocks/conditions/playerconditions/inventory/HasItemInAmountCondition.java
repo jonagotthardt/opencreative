@@ -22,6 +22,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -38,7 +39,7 @@ public class HasItemInAmountCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         ItemStack item = getArguments().getItem("item", new ItemStack(Material.APPLE), this);
         int amount = getArguments().getInt("amount", item.getAmount(), this);
         String compareMode = getArguments().getText("compare-mode", "full", this);
@@ -53,7 +54,7 @@ public class HasItemInAmountCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_HAS_ITEM_IN_AMOUNT;
     }
 }

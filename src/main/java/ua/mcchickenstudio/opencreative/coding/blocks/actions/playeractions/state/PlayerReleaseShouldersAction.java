@@ -45,7 +45,7 @@ public final class PlayerReleaseShouldersAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_RELEASE_SHOULDERS;
     }
 }

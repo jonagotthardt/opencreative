@@ -40,7 +40,7 @@ public class IsEntityInsideVehicle extends EntityCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_ENTITY_IS_INSIDE_VEHICLE;
     }
 }

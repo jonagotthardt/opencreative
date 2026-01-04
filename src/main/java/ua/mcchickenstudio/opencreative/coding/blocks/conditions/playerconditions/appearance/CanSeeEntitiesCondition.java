@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -42,7 +43,7 @@ public class CanSeeEntitiesCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<String> names = getArguments().getTextList("players", this);
         boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean canSee = false;
@@ -67,7 +68,7 @@ public class CanSeeEntitiesCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_CAN_SEE_ENTITY;
     }
 }

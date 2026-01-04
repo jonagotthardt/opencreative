@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -36,7 +37,7 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         boolean requiredColor = getArguments().getBoolean("color", false, this);
         boolean requiredCaps = getArguments().getBoolean("caps", false, this);
         List<String> names = getArguments().getTextList("names", this);
@@ -60,7 +61,7 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_INVENTORY_NAME_EQUALS;
     }
 }

@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -35,7 +36,7 @@ public class MessageEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         if (!(getEventValue(ChatMessageValue.class) instanceof String text)) {
             return false;
         }
@@ -57,7 +58,7 @@ public class MessageEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_MESSAGE_EQUALS;
     }
 }

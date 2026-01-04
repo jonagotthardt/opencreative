@@ -42,7 +42,7 @@ public final class SetMaxNoDamageTicksAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_MAXIMUM_NO_DAMAGE_TICKS;
     }
 }

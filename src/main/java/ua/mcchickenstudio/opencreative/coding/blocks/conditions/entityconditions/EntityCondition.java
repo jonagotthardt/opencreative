@@ -45,7 +45,7 @@ public abstract class EntityCondition extends Condition {
     public abstract boolean checkEntity(@NotNull Entity entity);
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.ENTITY_CONDITION;
     }
 }

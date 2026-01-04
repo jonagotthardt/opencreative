@@ -55,7 +55,7 @@ public final class OpenInventoryAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_OPEN_INVENTORY_VIEW;
     }
 }

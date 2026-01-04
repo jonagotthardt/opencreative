@@ -43,7 +43,7 @@ public abstract class WorldAction extends Action {
         getHandler().getMainActionHandler().setLastSpawnedEntity(entity);
     }
 
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.WORLD_ACTION;
     }
 }

@@ -44,7 +44,7 @@ public final class EntityLaunchToLocationAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_LAUNCH_TO_LOCATION;
     }
 }

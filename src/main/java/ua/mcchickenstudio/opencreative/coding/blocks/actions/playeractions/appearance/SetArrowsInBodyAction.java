@@ -45,7 +45,7 @@ public final class SetArrowsInBodyAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_ARROWS_IN_BODY;
     }
 }

@@ -19,6 +19,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -40,7 +41,7 @@ public final class RepeatAlwaysAction extends RepeatAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.REPEAT_ALWAYS;
     }
 }

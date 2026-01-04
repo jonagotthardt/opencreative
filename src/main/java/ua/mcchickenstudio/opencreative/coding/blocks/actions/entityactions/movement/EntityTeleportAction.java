@@ -48,7 +48,7 @@ public final class EntityTeleportAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_TELEPORT;
     }
 }

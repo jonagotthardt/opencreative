@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -36,7 +37,7 @@ public class IsCurrentScoreboardCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<String> names = getArguments().getTextList("scoreboards", this);
         for (String name : names) {
             Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
@@ -48,7 +49,7 @@ public class IsCurrentScoreboardCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_SCOREBOARD_EQUALS;
     }
 }

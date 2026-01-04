@@ -43,7 +43,7 @@ public final class LaunchHorizontalAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_LAUNCH_HORIZONTAL;
     }
 }

@@ -43,7 +43,7 @@ public final class EntityVillagerShakeHeadAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_VILLAGER_SHAKE_HEAD;
     }
 }

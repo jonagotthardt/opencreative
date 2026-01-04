@@ -44,7 +44,7 @@ public final class EntityLaunchVerticalAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_LAUNCH_VERTICAL;
     }
 }

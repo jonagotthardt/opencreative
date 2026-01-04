@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
@@ -62,22 +61,32 @@ public class Arguments {
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
     private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
     private final @NotNull Planet planet;
-    private final @NotNull Executor executor;
     private final @NotNull List<Argument> argumentList = new ArrayList<>();
 
-    public Arguments(@NotNull Planet planet, @NotNull Executor executor) {
+    public Arguments(@NotNull Planet planet) {
         this.planet = planet;
-        this.executor = executor;
     }
 
-    public final void load(ConfigurationSection section) {
+    /**
+     * Loads arguments from action's arguments section.
+     *
+     * @param section arguments section of action.
+     */
+    public final void load(@NotNull ConfigurationSection section) {
         for (String path : section.getKeys(false)) {
             Argument arg = loadArgument(section, path);
             if (arg != null) argumentList.add(arg);
         }
     }
 
-    private Argument loadArgument(ConfigurationSection section, String name) {
+    /**
+     * Loads argument from section.
+     *
+     * @param section section of argument.
+     * @param name    key of argument.
+     * @return argument with value, or null - if type or value are empty.
+     */
+    private @Nullable Argument loadArgument(@NotNull ConfigurationSection section, @NotNull String name) {
         String configType = section.getString(name + ".type");
         Object configValue = section.get(name + ".value");
         if (configType == null || configType.isEmpty() || configValue == null) {
@@ -88,7 +97,19 @@ public class Arguments {
         return new Argument(planet, type, name, value);
     }
 
-    private @NotNull Object parseValue(ConfigurationSection section, String name, ValueType type, Object configValue) {
+    /**
+     * Parses value from section.
+     *
+     * @param section     section of value
+     * @param name        key of argument.
+     * @param type        type of value.
+     * @param configValue value from config.
+     * @return parsed value, or text - if value is wrong.
+     */
+    private @NotNull Object parseValue(@NotNull ConfigurationSection section,
+                                       @NotNull String name,
+                                       @NotNull ValueType type,
+                                       Object configValue) {
         String stringValue = configValue.toString();
         ConfigurationSection listSection = section.getConfigurationSection(name + ".value");
         switch (type) {
@@ -197,6 +218,12 @@ public class Arguments {
         }
     }
 
+    /**
+     * Checks whether argument exists.
+     *
+     * @param path key of argument.
+     * @return true - exists, false - not.
+     */
     public final boolean pathExists(@NotNull String path) {
         for (Argument argument : argumentList) {
             if (argument.getPath().equals(path)) return true;
@@ -204,6 +231,12 @@ public class Arguments {
         return false;
     }
 
+    /**
+     * Returns argument by path.
+     *
+     * @param path key of argument.
+     * @return argument, or null - if not found.
+     */
     private @Nullable Argument getArg(@NotNull String path) {
         for (Argument argument : argumentList) {
             if (argument.getPath().equals(path)) {
@@ -213,6 +246,13 @@ public class Arguments {
         return null;
     }
 
+    /**
+     * Returns map of values stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return map of values, or empty map - if not found.
+     */
     public final @NotNull Map<Object, Object> getMap(@NotNull String path, @NotNull Action action) {
         Map<Object, Object> map = new LinkedHashMap<>();
         Argument arg = getArg(path);
@@ -231,6 +271,14 @@ public class Arguments {
         return map;
     }
 
+    /**
+     * Returns list with values stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @param <T>    class of required values.
+     * @return list with values, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final <T> List<T> getList(@NotNull String path, @NotNull Action action) {
         List<T> list = new ArrayList<>();
@@ -256,6 +304,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with variable links stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with variable links, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final @NotNull List<VariableLink> getVarLinksList(@NotNull String path, @NotNull Action action) {
         List<VariableLink> list = new ArrayList<>();
@@ -276,6 +331,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with booleans stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with booleans, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final @NotNull List<Boolean> getBooleanList(@NotNull String path, @NotNull Action action) {
         List<Boolean> list = new ArrayList<>();
@@ -300,6 +362,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with texts stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with texts, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final @NotNull List<String> getTextList(@NotNull String path, @NotNull Action action) {
         List<String> list = new ArrayList<>();
@@ -327,6 +396,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with components stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with components, or empty list - if not found.
+     */
     public final @NotNull List<Component> getComponentList(@NotNull String path, @NotNull Action action) {
         List<Component> list = new ArrayList<>();
         List<String> texts = getTextList(path, action);
@@ -337,6 +413,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with double numbers stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with doubles, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final @NotNull List<Double> getNumbersList(@NotNull String path, @NotNull Action action) {
         List<Double> list = new ArrayList<>();
@@ -356,6 +439,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with items stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with items, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final @NotNull List<ItemStack> getItemList(@NotNull String path, @NotNull Action action) {
         List<ItemStack> list = new ArrayList<>();
@@ -374,6 +464,13 @@ public class Arguments {
         return list;
     }
 
+    /**
+     * Returns list with locations stored in arguments.
+     *
+     * @param path   key of argument.
+     * @param action action, that will be used for parsing variables.
+     * @return list with locations, or empty list - if not found.
+     */
     @SuppressWarnings("unchecked")
     public final @NotNull List<Location> getLocationList(@NotNull String path, @NotNull Action action) {
         List<Location> list = new ArrayList<>();
@@ -497,7 +594,14 @@ public class Arguments {
         return value;
     }
 
-    public Object getValue(String path, Action action) {
+    /**
+     * Returns value stored in arguments.
+     *
+     * @param path   key of argument, that stores long number value.
+     * @param action action, that asks for value.
+     * @return argument value, or empty text "" - if not found.
+     */
+    public @NotNull Object getValue(String path, Action action) {
         Argument arg = getArg(path);
         Object value = "";
         if (arg == null) {
@@ -747,10 +851,13 @@ public class Arguments {
         return vectionValue;
     }
 
-    private Object getVariableValue(VariableLink link, Action action) {
-        return planet.getVariables().getVariableValue(link, action);
-    }
-
+    /**
+     * Parses object into integer number and returns it, or default value.
+     *
+     * @param object       object to parse.
+     * @param defaultValue default value.
+     * @return parsed integer number from object, or default value.
+     */
     public int parseObject(Object object, int defaultValue) {
         return switch (object) {
             case Float f -> f.intValue();
@@ -762,6 +869,13 @@ public class Arguments {
         };
     }
 
+    /**
+     * Parses object into long number and returns it, or default value.
+     *
+     * @param object       object to parse.
+     * @param defaultValue default value.
+     * @return parsed long number from object, or default value.
+     */
     public long parseObject(Object object, long defaultValue) {
         return switch (object) {
             case Float f -> f.longValue();
@@ -773,6 +887,13 @@ public class Arguments {
         };
     }
 
+    /**
+     * Parses object into boolean number and returns it, or default value.
+     *
+     * @param object       object to parse.
+     * @param defaultValue default value.
+     * @return parsed boolean number from object, or default value.
+     */
     public boolean parseObject(Object object, boolean defaultValue) {
         return switch (object) {
             case Boolean b -> b;
@@ -782,6 +903,13 @@ public class Arguments {
         };
     }
 
+    /**
+     * Parses object into float number and returns it, or default value.
+     *
+     * @param object       object to parse.
+     * @param defaultValue default value.
+     * @return parsed float number from object, or default value.
+     */
     public float parseObject(Object object, float defaultValue) {
         return switch (object) {
             case Float f -> f;
@@ -793,6 +921,13 @@ public class Arguments {
         };
     }
 
+    /**
+     * Parses object into double number and returns it, or default value.
+     *
+     * @param object       object to parse.
+     * @param defaultValue default value.
+     * @return parsed double number from object, or default value.
+     */
     public double parseObject(Object object, double defaultValue) {
         return switch (object) {
             case Float f -> f.doubleValue();
@@ -804,17 +939,34 @@ public class Arguments {
         };
     }
 
+    /**
+     * Sets argument value by key.
+     *
+     * @param path  key of argument.
+     * @param type  type of value.
+     * @param value new value.
+     */
     public void setArgumentValue(@NotNull String path, @NotNull ValueType type, @NotNull Object value) {
         argumentList.removeIf(it -> path.equals(it.path));
         argumentList.add(new Argument(planet, type, path, value));
     }
 
+    /**
+     * Removes stored argument.
+     *
+     * @param paths keys of arguments.
+     */
     public void removeArgumentValue(@NotNull String... paths) {
         for (String path : paths) {
             argumentList.removeIf(it -> path.equals(it.path));
         }
     }
 
+    /**
+     * Returns list of stored arguments.
+     *
+     * @return list of arguments.
+     */
     public @NotNull List<Argument> getArgumentList() {
         return argumentList;
     }

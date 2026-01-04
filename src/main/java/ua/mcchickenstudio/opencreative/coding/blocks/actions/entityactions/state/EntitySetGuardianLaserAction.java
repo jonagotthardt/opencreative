@@ -43,7 +43,7 @@ public final class EntitySetGuardianLaserAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_GUARDIAN_LASER;
     }
 }

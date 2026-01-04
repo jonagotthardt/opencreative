@@ -60,7 +60,7 @@ public final class GivePotionEffectsAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_GIVE_POTION_EFFECTS;
     }
 }

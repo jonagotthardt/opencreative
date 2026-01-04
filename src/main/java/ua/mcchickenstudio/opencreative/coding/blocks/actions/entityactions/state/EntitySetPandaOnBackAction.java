@@ -43,7 +43,7 @@ public final class EntitySetPandaOnBackAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_PANDA_ON_BACK;
     }
 }

@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -36,7 +37,7 @@ public class IsNearLocationCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<Location> locations = getArguments().getLocationList("locations", this);
         float radius = getArguments().getFloat("distance", 5.0f, this);
         if (locations.isEmpty()) return false;
@@ -50,7 +51,7 @@ public class IsNearLocationCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_IS_NEAR_LOCATION;
     }
 }

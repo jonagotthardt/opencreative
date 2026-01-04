@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -42,7 +43,7 @@ public abstract class WorldCondition extends Condition {
     public abstract boolean check();
 
     @Override
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.WORLD_CONDITION;
     }
 }

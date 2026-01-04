@@ -46,7 +46,7 @@ public final class EntityClearInventoryAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_CLEAR_INVENTORY;
     }
 }

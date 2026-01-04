@@ -46,7 +46,7 @@ public final class CloseInventoryAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_CLOSE_INVENTORY;
     }
 }

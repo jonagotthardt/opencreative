@@ -39,7 +39,7 @@ public final class ApplyMendingAction extends PlayerAction {
 
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_APPLY_MENDING;
     }
 }

@@ -50,7 +50,7 @@ public final class EntitySetArrowsInBodyAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_ARROWS_IN_BODY;
     }
 }

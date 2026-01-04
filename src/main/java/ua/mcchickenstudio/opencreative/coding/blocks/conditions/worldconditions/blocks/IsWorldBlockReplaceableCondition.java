@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.blocks;
 
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -55,7 +56,7 @@ public class IsWorldBlockReplaceableCondition extends WorldCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_WORLD_BLOCK_IS_REPLACEABLE;
     }
 }

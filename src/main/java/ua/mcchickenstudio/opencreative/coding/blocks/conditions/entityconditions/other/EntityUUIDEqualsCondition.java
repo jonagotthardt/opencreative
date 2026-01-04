@@ -47,7 +47,7 @@ public class EntityUUIDEqualsCondition extends EntityCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_ENTITY_UUID_EQUALS;
     }
 }

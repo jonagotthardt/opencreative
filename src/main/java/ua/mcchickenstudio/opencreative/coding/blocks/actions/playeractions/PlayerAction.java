@@ -34,7 +34,7 @@ public abstract class PlayerAction extends Action {
         super(executor, target, x, args);
     }
 
-    public ActionCategory getActionCategory() {
+    public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.PLAYER_ACTION;
     }
 

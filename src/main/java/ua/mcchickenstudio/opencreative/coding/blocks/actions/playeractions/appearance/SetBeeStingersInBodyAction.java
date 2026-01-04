@@ -45,7 +45,7 @@ public final class SetBeeStingersInBodyAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_BEE_STINGERS_IN_BODY;
     }
 }

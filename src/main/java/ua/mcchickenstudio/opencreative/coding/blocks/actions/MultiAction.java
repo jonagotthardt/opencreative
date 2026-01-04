@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
@@ -58,7 +59,7 @@ public abstract class MultiAction extends Action {
     }
 
     @Override
-    public final void prepareAndExecute(ActionsHandler handler) {
+    public final void prepareAndExecute(@NotNull ActionsHandler handler) {
         if (getActionType() != null && getActionType().isDisabled()) {
             sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;

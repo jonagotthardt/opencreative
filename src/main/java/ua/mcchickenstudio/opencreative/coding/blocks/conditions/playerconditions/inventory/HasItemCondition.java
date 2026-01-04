@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -37,7 +38,7 @@ public class HasItemCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<ItemStack> items = getArguments().getItemList("items", this);
         boolean all = getArguments().getBoolean("all", false, this);
         String compareMode = getArguments().getText("compare-mode", "min-items", this);
@@ -61,7 +62,7 @@ public class HasItemCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_HAS_ITEM;
     }
 }

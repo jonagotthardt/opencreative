@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -36,7 +37,7 @@ public class IsCurrentBossBarCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         List<String> names = getArguments().getTextList("bossbars", this);
         boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean seesBossBar = false;
@@ -59,7 +60,7 @@ public class IsCurrentBossBarCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_BOSS_BAR_EQUALS;
     }
 }

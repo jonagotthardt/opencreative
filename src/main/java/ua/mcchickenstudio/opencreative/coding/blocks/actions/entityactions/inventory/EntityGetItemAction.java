@@ -53,7 +53,7 @@ public final class EntityGetItemAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_GET_ITEM_BY_SLOT;
     }
 }

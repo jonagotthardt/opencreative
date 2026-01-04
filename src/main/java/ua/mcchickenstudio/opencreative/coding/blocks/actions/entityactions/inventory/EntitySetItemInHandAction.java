@@ -55,7 +55,7 @@ public final class EntitySetItemInHandAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_ITEM_IN_HAND;
     }
 }

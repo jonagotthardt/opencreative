@@ -47,7 +47,7 @@ public final class EntitySetNoDamageTicksAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_NO_DAMAGE_TICKS;
     }
 }

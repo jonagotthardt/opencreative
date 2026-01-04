@@ -45,7 +45,7 @@ public final class EntitySetGoatHornsAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_GOAT_HORNS;
     }
 }

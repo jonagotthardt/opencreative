@@ -49,7 +49,7 @@ public final class SetEntityTargetAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_TARGET;
     }
 }

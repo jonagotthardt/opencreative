@@ -106,7 +106,7 @@ public final class ParseJSONAction extends VariableAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.VAR_PARSE_JSON;
     }
 }

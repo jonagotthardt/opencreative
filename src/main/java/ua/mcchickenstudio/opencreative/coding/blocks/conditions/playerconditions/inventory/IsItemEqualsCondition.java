@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playercondition
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -39,7 +40,7 @@ public class IsItemEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public boolean checkPlayer(Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         if (!(getEventValue(EventItemValue.class) instanceof ItemStack eventItem)) {
             ErrorUtils.sendCodingNotFoundEventValue(getPlanet(), getExecutor(), EventItemValue.class);
             return false;
@@ -68,7 +69,7 @@ public class IsItemEqualsCondition extends PlayerCondition {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.IF_PLAYER_ITEM_EQUALS;
     }
 }

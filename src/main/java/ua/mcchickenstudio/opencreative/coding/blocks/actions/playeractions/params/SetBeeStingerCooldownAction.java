@@ -42,7 +42,7 @@ public final class SetBeeStingerCooldownAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_BEE_STINGER_COOLDOWN;
     }
 }

@@ -54,7 +54,7 @@ public final class SetMenuItemAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_INVENTORY_VIEW_ITEM;
     }
 }

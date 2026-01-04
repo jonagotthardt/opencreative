@@ -61,7 +61,7 @@ public abstract class Condition extends Action {
     public abstract boolean check(Entity entity);
 
     @Override
-    public final void prepareAndExecute(ActionsHandler handler) {
+    public final void prepareAndExecute(@NotNull ActionsHandler handler) {
         if (getActionType() != null && getActionType().isDisabled()) {
             sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
@@ -92,7 +92,7 @@ public abstract class Condition extends Action {
     protected void execute(Entity entity) {
     }
 
-    public abstract ActionCategory getActionCategory();
+    public abstract @NotNull ActionCategory getActionCategory();
 
     public List<Action> getActions() {
         return actions;

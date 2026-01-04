@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
@@ -78,7 +79,7 @@ public abstract class Action {
      *
      * @param handler ActionsHandler that stores event data and temporary variables.
      */
-    public void prepareAndExecute(ActionsHandler handler) {
+    public void prepareAndExecute(@NotNull ActionsHandler handler) {
         if (getActionType() != null && getActionType().isDisabled()) {
             sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
@@ -104,18 +105,18 @@ public abstract class Action {
      *
      * @param entity Entity to execute action.
      */
-    protected abstract void execute(Entity entity);
+    protected abstract void execute(@Nullable Entity entity);
 
-    public abstract ActionType getActionType();
+    public @NotNull abstract ActionType getActionType();
 
-    public abstract ActionCategory getActionCategory();
+    public @NotNull abstract ActionCategory getActionCategory();
 
     /**
      * Returns arguments of action.
      *
      * @return Arguments of action.
      */
-    protected final Arguments getArguments() {
+    protected final @NotNull Arguments getArguments() {
         return arguments;
     }
 

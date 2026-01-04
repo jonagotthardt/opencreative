@@ -48,7 +48,7 @@ public final class EntitySetMaximumAirAction extends EntityAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.ENTITY_SET_MAXIMUM_AIR;
     }
 }

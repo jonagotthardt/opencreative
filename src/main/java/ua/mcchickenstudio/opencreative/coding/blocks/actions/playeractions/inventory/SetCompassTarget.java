@@ -39,7 +39,7 @@ public final class SetCompassTarget extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_SET_COMPASS_TARGET;
     }
 }

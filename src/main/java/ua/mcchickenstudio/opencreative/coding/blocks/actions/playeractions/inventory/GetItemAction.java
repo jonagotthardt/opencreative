@@ -40,7 +40,7 @@ public final class GetItemAction extends PlayerAction {
     }
 
     @Override
-    public ActionType getActionType() {
+    public @NotNull ActionType getActionType() {
         return ActionType.PLAYER_GET_ITEM_BY_SLOT;
     }
 }
