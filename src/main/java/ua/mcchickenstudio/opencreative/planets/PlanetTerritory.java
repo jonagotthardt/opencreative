@@ -252,12 +252,12 @@ public class PlanetTerritory {
         runningBukkitRunnables.add(runnable);
     }
 
-    public void scheduleRunnable(PlanetRunnable runnable, long delay) {
+    public void scheduleRunnable(@NotNull PlanetRunnable runnable, long delay) {
         runningBukkitRunnables.add(runnable);
         runnable.runTaskLater(OpenCreative.getPlugin(), delay);
     }
 
-    public void scheduleAsyncRunnable(PlanetRunnable runnable, long delay) {
+    public void scheduleAsyncRunnable(@NotNull PlanetRunnable runnable, long delay) {
         runningBukkitRunnables.add(runnable);
         runnable.runTaskLaterAsynchronously(OpenCreative.getPlugin(), delay);
     }

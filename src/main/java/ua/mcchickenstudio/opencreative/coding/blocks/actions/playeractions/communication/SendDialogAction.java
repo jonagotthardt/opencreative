@@ -18,16 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.CreativeRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class SendDialogAction extends PlayerAction {
@@ -37,23 +39,28 @@ public final class SendDialogAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        List<Player> players = new ArrayList<>(List.of(player));
         int cooldown = getArguments().getInt("cooldown", 20, this);
-        List<String> text = getArguments().getTextList("messages", this);
-        new CreativeRunnable(getPlanet()) {
-            byte current = 0;
+        List<Component> text = getArguments().getComponentList("messages", this);
+        BukkitRunnable task = new BukkitRunnable() {
+
+            int current = 0;
 
             @Override
-            public void execute(Player player) {
-                if (current == text.size()) {
+            public void run() {
+                if (!player.isOnline()
+                        || !player.getWorld().equals(getWorld())
+                        || getPlanet().getMode() != Planet.Mode.PLAYING
+                        || current >= text.size()) {
+                    getPlanet().getTerritory().removeBukkitRunnable(this);
                     cancel();
-                } else {
-                    String message = text.get(current);
-                    player.sendMessage(message);
-                    current++;
+                    return;
                 }
+                player.sendMessage(text.get(current));
+                current++;
             }
-        }.runTaskTimer(players, 0, cooldown);
+        };
+        getPlanet().getTerritory().addBukkitRunnable(task);
+        task.runTaskTimer(OpenCreative.getPlugin(), 0, cooldown);
     }
 
 
