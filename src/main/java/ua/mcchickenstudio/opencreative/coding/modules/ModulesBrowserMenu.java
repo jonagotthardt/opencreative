@@ -123,7 +123,7 @@ public final class ModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW, getCurrentPage() - 1, "menus.modules.items.previous-page"), "%page%", getCurrentPage() - 1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, Math.max(1, getCurrentPage() - 1), "menus.modules.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
