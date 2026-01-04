@@ -33,7 +33,7 @@ public final class EntityRemovePassengerAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String text = getArguments().getText("entity","",this);
+        String text = getArguments().getText("entity", "", this);
         if (text.isEmpty()) {
             for (Entity passenger : entity.getPassengers()) {
                 entity.removePassenger(passenger);

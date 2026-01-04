@@ -18,10 +18,10 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
 
 public final class StopFlyingEvent extends WorldEvent implements Cancellable {
 
@@ -33,13 +33,13 @@ public final class StopFlyingEvent extends WorldEvent implements Cancellable {
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        event.setCancelled(cancel);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancel);
     }
 
 }

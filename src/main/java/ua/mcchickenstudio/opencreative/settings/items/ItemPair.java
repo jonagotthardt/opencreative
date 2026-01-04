@@ -21,7 +21,9 @@ package ua.mcchickenstudio.opencreative.settings.items;
 /**
  * <h1>ItemPair</h1>
  * This record represents pair of slot and item.
+ *
  * @param slot slot of item.
  * @param item item, that will be in slot.
  */
-public record ItemPair(int slot, Items item) {}
+public record ItemPair(int slot, Items item) {
+}

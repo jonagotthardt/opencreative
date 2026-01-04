@@ -19,15 +19,15 @@
 package ua.mcchickenstudio.opencreative.coding;
 
 import org.apache.commons.io.FileUtils;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
-import org.bukkit.configuration.ConfigurationSection;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetScriptFile;
@@ -37,6 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * <h1>CodeScript</h1>
  * This class represents configuration file that stores planet's code.
  * It has methods to load code and save coding blocks.
+ *
  * @see CodingBlockParser
  */
 public class CodeScript {
@@ -55,7 +56,7 @@ public class CodeScript {
      * Loads code from codeScript.yml file.
      */
     public void loadCode() {
-        sendCodingDebugLog(planet,"Starting code, please wait...");
+        sendCodingDebugLog(planet, "Starting code, please wait...");
         File scriptFile = getPlanetScriptFile(planet);
         long totalSize = ua.mcchickenstudio.opencreative.utils.FileUtils.getFileSize(scriptFile);
         long limit = planet.getGroup().getScriptSizeLimit() * 1024L * 1024L;
@@ -63,7 +64,7 @@ public class CodeScript {
             sendPlanetErrorMessage(planet, getLocaleMessage("world.script-size-limit")
                     .replace("%amount%", FileUtils.byteCountToDisplaySize(totalSize))
                     .replace("%limit%", String.valueOf(planet.getGroup().getScriptSizeLimit())));
-            sendCodingDebugLog(planet,"Script File is too large to load :(");
+            sendCodingDebugLog(planet, "Script File is too large to load :(");
             return;
         }
         scriptConfig = CodeConfiguration.loadConfiguration(scriptFile);
@@ -77,14 +78,15 @@ public class CodeScript {
 
     /**
      * Saves code script config into file.
+     *
      * @return true - if saved, false - if failed.
      */
     public boolean saveCode() {
         long time = System.currentTimeMillis();
-        sendCodingDebugLog(planet,"Saving code...");
+        sendCodingDebugLog(planet, "Saving code...");
         try {
             scriptConfig.save(getPlanetScriptFile(planet));
-            sendCodingDebugLog(planet,"Saved code in " + (System.currentTimeMillis()-time) + " ms.");
+            sendCodingDebugLog(planet, "Saved code in " + (System.currentTimeMillis() - time) + " ms.");
             return true;
         } catch (IOException error) {
             sendCriticalErrorMessage("An IO Exception has occurred while saving code.", error);
@@ -107,7 +109,7 @@ public class CodeScript {
         try {
             scriptConfig.save(getPlanetScriptFile(planet));
         } catch (IOException exception) {
-            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlanet().getWorldName(),exception);
+            sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlanet().getWorldName(), exception);
         }
     }
 
@@ -121,6 +123,7 @@ public class CodeScript {
 
     /**
      * Returns config, that stores code script.
+     *
      * @return code script config.
      */
     public @NotNull CodeConfiguration getConfig() {
@@ -129,6 +132,7 @@ public class CodeScript {
 
     /**
      * Returns instance of executors.
+     *
      * @return executors of script.
      */
     public @NotNull Executors getExecutors() {

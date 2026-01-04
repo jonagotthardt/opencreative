@@ -106,7 +106,7 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
                             code = code.substring(3);
                         }
                         if (code.endsWith("```")) {
-                            code = code.substring(0, code.length()-3);
+                            code = code.substring(0, code.length() - 3);
                         }
                         future.complete(code);
                     }
@@ -126,21 +126,16 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
                                        @NotNull String text,
                                        int actionsLimit) {
         return new Gson().toJson(
-            new GeminiRequest(
-                new GeminiInstruction(
-                    List.of(new GeminiParts(new PrompterInstruction(
-                            nickname, uuid.toString(), text, actionsLimit).get()))
-                ),
-                List.of(
-                    new GeminiContents("user", List.of(new GeminiParts(text)))
+                new GeminiRequest(
+                        new GeminiInstruction(
+                                List.of(new GeminiParts(new PrompterInstruction(
+                                        nickname, uuid.toString(), text, actionsLimit).get()))
+                        ),
+                        List.of(
+                                new GeminiContents("user", List.of(new GeminiParts(text)))
+                        )
                 )
-            )
         );
-    }
-
-    @Override
-    public void setModel(@NotNull String model) {
-        this.model = model;
     }
 
     @Override
@@ -149,12 +144,18 @@ public final class GeminiPrompter implements CodingPrompter, PrompterModelCapabl
     }
 
     @Override
+    public void setModel(@NotNull String model) {
+        this.model = model;
+    }
+
+    @Override
     public void setToken(@NotNull String token) {
         this.token = token.toCharArray();
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

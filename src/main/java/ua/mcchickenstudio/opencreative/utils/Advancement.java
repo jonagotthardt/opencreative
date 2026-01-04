@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.utils;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.UUID;
 
@@ -51,7 +51,7 @@ public final class Advancement {
 
     public static Advancement make(@NotNull ItemStack itemStack, @NotNull AdvancementStyle style,
                                    @NotNull String title, @NotNull String message) {
-        return new Advancement(itemStack,style,title,message);
+        return new Advancement(itemStack, style, title, message);
     }
 
     public void show(@NotNull Player player) {

@@ -31,7 +31,7 @@ public final class MovingObjectPosition {
      * The vector position of the hit
      */
     public Vec3 hitVec;
-    private BlockPos blockPos;
+    private final BlockPos blockPos;
 
     public MovingObjectPosition(Vec3 vec3, EnumFacing facing) {
         this(MovingObjectType.BLOCK, vec3, facing, BlockPos.ORIGIN);
@@ -51,6 +51,6 @@ public final class MovingObjectPosition {
     public enum MovingObjectType {
         MISS,
         BLOCK,
-        ENTITY;
+        ENTITY
     }
 }

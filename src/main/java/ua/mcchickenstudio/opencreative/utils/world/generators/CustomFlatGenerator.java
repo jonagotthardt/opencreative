@@ -38,16 +38,16 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorM
 public final class CustomFlatGenerator extends AbstractFlatGenerator {
 
     /**
-     * @param id id of generator.
-     * @param displayIcon icon to display.
-     * @param generation generation pattern, that consists of amounts and material layers.
-     * <pre>
-     * {@code
-     * "bedrock" // Generates only 1 layer with bedrock
-     * "bedrock,2*sand" // Generates bedrock on Y = 0, and sand on Y = 1, 2.
-     * "bedrock,2*air,stone" // Generates bedrock on Y = 0, and stone on Y = 3.
-     * "bedrock,grass_block;ice_spikes" // Generates bedrock, grass_block with ice_spikes biome.
-     * } </pre>
+     * @param id            id of generator.
+     * @param displayIcon   icon to display.
+     * @param generation    generation pattern, that consists of amounts and material layers.
+     *                      <pre>
+     *                      {@code
+     *                      "bedrock" // Generates only 1 layer with bedrock
+     *                      "bedrock,2*sand" // Generates bedrock on Y = 0, and sand on Y = 1, 2.
+     *                      "bedrock,2*air,stone" // Generates bedrock on Y = 0, and stone on Y = 3.
+     *                      "bedrock,grass_block;ice_spikes" // Generates bedrock, grass_block with ice_spikes biome.
+     *                      } </pre>
      * @param generateTrees generate trees or not.
      */
     public CustomFlatGenerator(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull String generation, boolean generateTrees) {
@@ -63,7 +63,7 @@ public final class CustomFlatGenerator extends AbstractFlatGenerator {
         Map<Integer, Material> blocksMap = new LinkedHashMap<>();
         try {
             // minecraft:bedrock,2*minecraft:dirt,1*minecraft:grass_block;ice_spikes
-            text = text.toUpperCase().replace("-","_").replace("MINECRAFT:", "");
+            text = text.toUpperCase().replace("-", "_").replace("MINECRAFT:", "");
             // BEDROCK,2*DIRT,1*GRASS_BLOCK;ICE_SPIKES
             String[] blocksAndBiome = text.split(";");
             String[] blocks = blocksAndBiome[0].split(",");
@@ -84,7 +84,8 @@ public final class CustomFlatGenerator extends AbstractFlatGenerator {
                 try {
                     amount = Integer.parseInt(amountString);
                     if (amount < 0 || amount > 320) amount = 1;
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
                 material = Objects.requireNonNullElse(Material.getMaterial(materialString), material);
                 if (!material.isBlock() || material == Material.AIR) {
                     y += amount;

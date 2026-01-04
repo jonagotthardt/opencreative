@@ -34,13 +34,13 @@ public final class EntityLaunchVerticalAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        float power = getArguments().getFloat("power",1.0f,this);
+        float power = getArguments().getFloat("power", 1.0f, this);
         if (power < -20) {
             power = -20;
         } else if (power > 20) {
             power = 20;
         }
-        entity.setVelocity(entity.getVelocity().add(new Vector(entity.getVelocity().getX(),power,entity.getVelocity().getZ())));
+        entity.setVelocity(entity.getVelocity().add(new Vector(entity.getVelocity().getX(), power, entity.getVelocity().getZ())));
     }
 
     @Override

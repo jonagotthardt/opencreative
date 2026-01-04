@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +36,8 @@ public final class GetValuesSetAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        Map<Object,Object> map = getArguments().getMap("map",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        Map<Object, Object> map = getArguments().getMap("map", this);
         List<Object> valuesList = new ArrayList<>(map.values());
         setVarValue(variable, valuesList);
     }

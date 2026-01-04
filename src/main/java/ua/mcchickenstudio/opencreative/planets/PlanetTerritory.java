@@ -18,8 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.planets;
 
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.util.TriState;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -27,24 +32,20 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.utils.FileUtils;
+import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.EnvironmentCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.StructuresCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerators;
-import ua.mcchickenstudio.opencreative.utils.*;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.util.TriState;
-import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetConfig;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.clearOnceMessages;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -80,23 +81,6 @@ public class PlanetTerritory {
     }
 
     /**
-     * Sets auto-save option to specified value.
-     * @param autoSave true - build world changes will be saved.
-     * <p>false - build world changes will be not saved.</p>
-     */
-    public void setAutoSave(boolean autoSave) {
-        if (this.autoSave == autoSave) return;
-        this.autoSave = autoSave;
-        for (Player planetPlayer : planet.getPlayers()) {
-            planetPlayer.sendMessage(getLocaleMessage("settings.autosave." + (autoSave ? "enabled" : "disabled")));
-        }
-        if (getWorld() != null) {
-            getWorld().setAutoSave(autoSave);
-        }
-        FileUtils.setPlanetConfigParameter(planet,"autosave",!autoSave ? false : null);
-    }
-
-    /**
      * Resets custom world size to owner's group world size.
      */
     public void resetWorldSize() {
@@ -114,6 +98,7 @@ public class PlanetTerritory {
 
     /**
      * Sets custom size of world borders.
+     *
      * @param size new size of world.
      * @param save whether ignore size from owner's group on next world load and use specified.
      */
@@ -127,20 +112,21 @@ public class PlanetTerritory {
                 showBorders(player);
             }
         }
-        if (save) FileUtils.setPlanetConfigParameter(planet,"size", size);
+        if (save) FileUtils.setPlanetConfigParameter(planet, "size", size);
     }
-    
+
     private void loadInformation() {
         FileConfiguration config = getPlanetConfig(planet);
         World.Environment environment = World.Environment.NORMAL;
         if (config.getString("environment") != null) {
             try {
                 environment = World.Environment.valueOf(config.getString("environment"));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         worldSize = config.getInt("size", OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize());
-        autoSave = config.getBoolean("autosave",true);
-        this.generator = config.getString("generator","");
+        autoSave = config.getBoolean("autosave", true);
+        this.generator = config.getString("generator", "");
         this.environment = environment;
     }
 
@@ -190,10 +176,10 @@ public class PlanetTerritory {
                         }
                     }
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),10L);
+            }.runTaskLater(OpenCreative.getPlugin(), 10L);
         }
         planet.setLastActivityTime(System.currentTimeMillis());
-        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
+        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         world.getWorldBorder().setSize(worldSize);
         planet.getVariables().load();
         new PlanetLoadEvent(planet).callEvent();
@@ -228,13 +214,13 @@ public class PlanetTerritory {
             new QuitEvent(player).callEvent();
         }
         planet.setLastActivityTime(System.currentTimeMillis());
-        FileUtils.setPlanetConfigParameter(planet,"environment", planet.getTerritory().getEnvironment().name());
+        FileUtils.setPlanetConfigParameter(planet, "environment", planet.getTerritory().getEnvironment().name());
         planet.getVariables().save();
         for (Player player : planet.getPlayers()) {
             teleportToLobby(player);
         }
         clearData();
-        Bukkit.unloadWorld(planet.getWorldName(),autoSave);
+        Bukkit.unloadWorld(planet.getWorldName(), autoSave);
         if (planet.getDevPlanet().isLoaded()) {
             planet.getDevPlanet().unload();
         }
@@ -289,13 +275,15 @@ public class PlanetTerritory {
                 if (runnable != null && !runnable.isCancelled()) {
                     runnable.cancel();
                 }
-            } catch (IllegalStateException ignored) {}
+            } catch (IllegalStateException ignored) {
+            }
         }
         runningBukkitRunnables.clear();
     }
 
     /**
      * Returns flags of planet, that store additional settings.
+     *
      * @return planet's flags.
      */
     public PlanetFlags getFlags() {
@@ -304,6 +292,7 @@ public class PlanetTerritory {
 
     /**
      * Returns map of IDs and boss bars.
+     *
      * @return map of IDs and boss bars.
      */
     public Map<String, BossBar> getBossBars() {
@@ -317,6 +306,7 @@ public class PlanetTerritory {
     /**
      * Returns world of planet for buildings.
      * If world is unloaded, returns null.
+     *
      * @return planet's world, or null - if world is unloaded.
      */
     public @Nullable World getWorld() {
@@ -326,6 +316,7 @@ public class PlanetTerritory {
     /**
      * Returns size of world, that will be used
      * to set world borders.
+     *
      * @return size of world.
      */
     public int getWorldSize() {
@@ -335,6 +326,7 @@ public class PlanetTerritory {
     /**
      * Returns code script of world, that stores
      * executors and actions.
+     *
      * @return code script.
      */
     public @NotNull CodeScript getScript() {
@@ -393,7 +385,7 @@ public class PlanetTerritory {
                     }
                 }
             };
-            runnable.runTaskLater(OpenCreative.getPlugin(),10L);
+            runnable.runTaskLater(OpenCreative.getPlugin(), 10L);
 
             return world;
         }
@@ -407,7 +399,8 @@ public class PlanetTerritory {
             if (rule != null && getWorld() != null) {
                 getWorld().setGameRule((GameRule<? super Boolean>) rule, value);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -417,11 +410,13 @@ public class PlanetTerritory {
             if (rule != null && getWorld() != null) {
                 getWorld().setGameRule((GameRule<? super Integer>) rule, value);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     /**
      * Shows custom world borders for player.
+     *
      * @param player player to show.
      */
     public void showBorders(@NotNull Player player) {
@@ -431,12 +426,12 @@ public class PlanetTerritory {
         switch (planet.getFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS)) {
             case 1 -> border.setSize(border.getSize());
             case 2 -> {
-                border.setSize(border.getSize()+0.001,3600);
+                border.setSize(border.getSize() + 0.001, 3600);
             }
             case 3 -> {
-                border.setSize(border.getSize()+0.1);
+                border.setSize(border.getSize() + 0.1);
                 player.setWorldBorder(border);
-                border.setSize(border.getSize()-0.1, 3600);
+                border.setSize(border.getSize() - 0.1, 3600);
             }
             case 4 -> border.setSize(border.getMaxSize());
         }
@@ -445,6 +440,7 @@ public class PlanetTerritory {
 
     /**
      * Returns scoreboards of planet.
+     *
      * @return planet's scoreboards.
      */
     public @NotNull PlanetScoreboards getScoreboards() {
@@ -454,6 +450,7 @@ public class PlanetTerritory {
     /**
      * Returns spawn location, where players should appear
      * after connecting to planet.
+     *
      * @return spawn location of planet
      */
     public @NotNull Location getSpawnLocation() {
@@ -469,6 +466,7 @@ public class PlanetTerritory {
     /**
      * Sets new spawn location for planet, where player
      * will appear after joining to planet.
+     *
      * @param spawnLocation new spawn location.
      */
     public void setSpawnLocation(@NotNull Location spawnLocation) {
@@ -478,10 +476,28 @@ public class PlanetTerritory {
         if (world != null) world.setSpawnLocation(spawnLocation);
 
         Map<String, Double> configLocation = WorldUtils.fromLocationToMap(spawnLocation);
-        FileUtils.setPlanetConfigParameter(planet,"spawn", configLocation);
+        FileUtils.setPlanetConfigParameter(planet, "spawn", configLocation);
     }
 
     public boolean isAutoSave() {
         return autoSave;
+    }
+
+    /**
+     * Sets auto-save option to specified value.
+     *
+     * @param autoSave true - build world changes will be saved.
+     *                 <p>false - build world changes will be not saved.</p>
+     */
+    public void setAutoSave(boolean autoSave) {
+        if (this.autoSave == autoSave) return;
+        this.autoSave = autoSave;
+        for (Player planetPlayer : planet.getPlayers()) {
+            planetPlayer.sendMessage(getLocaleMessage("settings.autosave." + (autoSave ? "enabled" : "disabled")));
+        }
+        if (getWorld() != null) {
+            getWorld().setAutoSave(autoSave);
+        }
+        FileUtils.setPlanetConfigParameter(planet, "autosave", !autoSave ? false : null);
     }
 }

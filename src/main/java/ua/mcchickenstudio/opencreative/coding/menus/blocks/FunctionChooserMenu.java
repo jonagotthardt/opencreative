@@ -18,9 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -36,10 +33,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
@@ -54,7 +55,7 @@ public final class FunctionChooserMenu extends ListBrowserMenu<Location> {
     private final Location signLocation;
 
     public FunctionChooserMenu(Player player, DevPlanet planet, Location location) {
-        super(player,getLocaleMessage("menus.developer.function-chooser.title"),PlacementLayout.LOCATION_CHOOSER);
+        super(player, getLocaleMessage("menus.developer.function-chooser.title"), PlacementLayout.LOCATION_CHOOSER);
         this.devPlanet = planet;
         this.signLocation = location;
     }
@@ -62,20 +63,20 @@ public final class FunctionChooserMenu extends ListBrowserMenu<Location> {
     @Override
     protected ItemStack getElementIcon(Location location) {
         Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
-        String line = getSignLine(signBlock.getLocation(),3);
+        String line = getSignLine(signBlock.getLocation(), 3);
         if (line != null && !line.isEmpty()) {
-            ItemStack itemStack = createItem(Material.LAPIS_LAZULI,1,"menus.developer.function-chooser.items.function");
+            ItemStack itemStack = createItem(Material.LAPIS_LAZULI, 1, "menus.developer.function-chooser.items.function");
             ItemMeta meta = itemStack.getItemMeta();
             if (meta != null) {
                 meta.setDisplayName(ChatColor.BLUE + line);
             }
             itemStack.setItemMeta(meta);
-            setPersistentData(itemStack,getCodingLocationX(),location.getX());
-            setPersistentData(itemStack,getCodingLocationY(),location.getY());
-            setPersistentData(itemStack,getCodingLocationZ(),location.getZ());
-            replacePlaceholderInLore(itemStack,"%x%",location.getX());
-            replacePlaceholderInLore(itemStack,"%y%",location.getY());
-            replacePlaceholderInLore(itemStack,"%z%",location.getZ());
+            setPersistentData(itemStack, getCodingLocationX(), location.getX());
+            setPersistentData(itemStack, getCodingLocationY(), location.getY());
+            setPersistentData(itemStack, getCodingLocationZ(), location.getZ());
+            replacePlaceholderInLore(itemStack, "%x%", location.getX());
+            replacePlaceholderInLore(itemStack, "%y%", location.getY());
+            replacePlaceholderInLore(itemStack, "%z%", location.getZ());
             return itemStack;
         }
         return ItemStack.empty();
@@ -84,18 +85,20 @@ public final class FunctionChooserMenu extends ListBrowserMenu<Location> {
     @Override
     protected void fillDecorationItems() {
         for (int slot = 0; slot <= 8; slot++) {
-            setItem(slot,DECORATION_PANE_ITEM);
+            setItem(slot, DECORATION_PANE_ITEM);
         }
         for (int slot = 45; slot <= 53; slot++) {
-            setItem(slot,DECORATION_PANE_ITEM);
+            setItem(slot, DECORATION_PANE_ITEM);
         }
     }
 
     @Override
-    protected void fillOtherItems() {}
+    protected void fillOtherItems() {
+    }
 
     @Override
-    protected void onCharmsBarClick(InventoryClickEvent event) {}
+    protected void onCharmsBarClick(InventoryClickEvent event) {
+    }
 
     @Override
     protected void onElementClick(InventoryClickEvent event) {
@@ -112,12 +115,13 @@ public final class FunctionChooserMenu extends ListBrowserMenu<Location> {
                         double x = container.get(getCodingLocationX(), PersistentDataType.DOUBLE);
                         double y = container.get(getCodingLocationY(), PersistentDataType.DOUBLE);
                         double z = container.get(getCodingLocationZ(), PersistentDataType.DOUBLE);
-                        event.getWhoClicked().teleport(new Location(event.getWhoClicked().getWorld(),x,y,z+2,180,0));
-                    } catch (NullPointerException ignored) {}
+                        event.getWhoClicked().teleport(new Location(event.getWhoClicked().getWorld(), x, y, z + 2, 180, 0));
+                    } catch (NullPointerException ignored) {
+                    }
                 }
             } else {
                 devPlanet.setCodeChanged(true);
-                setSignLine(signLocation,3,name);
+                setSignLine(signLocation, 3, name);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().showTitle(Title.title(
                         toComponent(getLocaleMessage("menus.developer.function-chooser.chosen")), Component.text(name).color(NamedTextColor.BLUE),
@@ -141,8 +145,8 @@ public final class FunctionChooserMenu extends ListBrowserMenu<Location> {
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
         }
     }
 
@@ -153,17 +157,17 @@ public final class FunctionChooserMenu extends ListBrowserMenu<Location> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.function-chooser.items.next-page");
+        return createItem(Material.SPECTRAL_ARROW, 1, "menus.developer.function-chooser.items.next-page");
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return createItem(Material.ARROW,1,"menus.developer.function-chooser.items.previous-page");
+        return createItem(Material.ARROW, 1, "menus.developer.function-chooser.items.previous-page");
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.developer.function-chooser.items.no-elements");
+        return createItem(Material.BARRIER, 1, "menus.developer.function-chooser.items.no-elements");
     }
 
     @Override

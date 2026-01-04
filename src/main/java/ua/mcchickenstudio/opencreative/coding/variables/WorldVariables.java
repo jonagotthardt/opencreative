@@ -19,26 +19,27 @@
 package ua.mcchickenstudio.opencreative.coding.variables;
 
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedVariablesEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.*;
 
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
@@ -63,7 +64,7 @@ public final class WorldVariables {
     }
 
     public @Nullable WorldVariable getVariable(@NotNull VariableLink link, @NotNull Action action) {
-        return getVariable(parseEntity(link.getName(),action.getHandler(),action),link.getVariableType(),action.getHandler().getMainActionHandler());
+        return getVariable(parseEntity(link.getName(), action.getHandler(), action), link.getVariableType(), action.getHandler().getMainActionHandler());
     }
 
     public @Nullable WorldVariable getVariable(@NotNull String name, @NotNull VariableLink.VariableType type, @Nullable ActionsHandler handler) {
@@ -116,11 +117,12 @@ public final class WorldVariables {
 
     /**
      * Sets variable value to new specified one. Used in actions.
-     * @param link variable link to set.
-     * @param type new type of value.
-     * @param value new value.
+     *
+     * @param link    variable link to set.
+     * @param type    new type of value.
+     * @param value   new value.
      * @param handler handler of setting.
-     * @param action action of setting.
+     * @param action  action of setting.
      */
     public void setVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
         handleVariableValue(link, type, value, handler, action);
@@ -128,8 +130,9 @@ public final class WorldVariables {
 
     /**
      * Sets variable value to new specified one.
-     * @param link variable link to set.
-     * @param type new type of value.
+     *
+     * @param link  variable link to set.
+     * @param type  new type of value.
      * @param value new value.
      * @return true - if successfully set, false - failed.
      */
@@ -139,22 +142,24 @@ public final class WorldVariables {
 
     /**
      * Gets variable value by variable link.
-     * @param link link for variable.
+     *
+     * @param link   link for variable.
      * @param action action.
      * @return variable - if found, null - variable not exists.
      */
     public Object getVariableValue(VariableLink link, Action action) {
-        WorldVariable variable = getVariable(link,action);
+        WorldVariable variable = getVariable(link, action);
         return variable != null ? variable.getValue() : null;
     }
 
     /**
      * Removes variable by variable link.
-     * @param link link for variable.
+     *
+     * @param link   link for variable.
      * @param action action.
      */
     public void removeVariable(VariableLink link, Action action) {
-        variables.removeIf(var -> var.equals(getVariable(link,action)));
+        variables.removeIf(var -> var.equals(getVariable(link, action)));
     }
 
     public Set<WorldVariable> getSet() {
@@ -188,13 +193,13 @@ public final class WorldVariables {
                 String name = (String) jsonObject.get("name");
                 ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
                 Object value = jsonObject.get("value");
-                value = deserializeObject(value,type);
+                value = deserializeObject(value, type);
                 if (variables.size() < planet.getLimits().getVariablesAmountLimit()) {
-                    variables.add(new WorldVariable(name,VariableLink.VariableType.SAVED,type,value,null));
+                    variables.add(new WorldVariable(name, VariableLink.VariableType.SAVED, type, value, null));
                 }
             }
         } catch (Exception e) {
-            sendCriticalErrorMessage("Failed to parse JSON file " + variablesJson.getPath(),e);
+            sendCriticalErrorMessage("Failed to parse JSON file " + variablesJson.getPath(), e);
         }
 
         long endTime = System.currentTimeMillis();
@@ -228,8 +233,8 @@ public final class WorldVariables {
                 jsonArray.add(objItem);
             }
             file.write(jsonArray.toString());
-        } catch (Exception e){
-            sendCriticalErrorMessage("Failed to save variables",e);
+        } catch (Exception e) {
+            sendCriticalErrorMessage("Failed to save variables", e);
         }
 
         long endTime = System.currentTimeMillis();
@@ -247,23 +252,23 @@ public final class WorldVariables {
             if (value instanceof ItemStack item) {
                 value = ItemUtils.saveItemAsByteArray(item);
             } else if (value instanceof Location location) {
-                Map<String,Number> locationMap = new HashMap<>();
-                locationMap.put("x",location.getX());
-                locationMap.put("y",location.getY());
-                locationMap.put("z",location.getZ());
-                locationMap.put("yaw",location.getYaw());
-                locationMap.put("pitch",location.getPitch());
+                Map<String, Number> locationMap = new HashMap<>();
+                locationMap.put("x", location.getX());
+                locationMap.put("y", location.getY());
+                locationMap.put("z", location.getZ());
+                locationMap.put("yaw", location.getYaw());
+                locationMap.put("pitch", location.getPitch());
                 return locationMap;
             } else if (value instanceof Vector vector) {
-                Map<String,Number> vectorMap = new HashMap<>();
-                vectorMap.put("x",vector.getX());
-                vectorMap.put("y",vector.getY());
-                vectorMap.put("z",vector.getZ());
+                Map<String, Number> vectorMap = new HashMap<>();
+                vectorMap.put("x", vector.getX());
+                vectorMap.put("y", vector.getY());
+                vectorMap.put("z", vector.getZ());
                 return vectorMap;
             } else if (value instanceof List<?> list) {
                 List<Object> newList = new ArrayList<>();
                 for (Object element : list) {
-                    Map<String,Object> parsedElement = new HashMap<>();
+                    Map<String, Object> parsedElement = new HashMap<>();
                     ValueType insideType = ValueType.getByObject(element);
                     if (insideType == null || insideType == ValueType.LIST || insideType == ValueType.MAP) {
                         insideType = ValueType.TEXT;
@@ -273,16 +278,16 @@ public final class WorldVariables {
                     newList.add(parsedElement);
                 }
                 return newList;
-            } else if (value instanceof Map<?,?> map) {
-                Map<Object,Object> newMap = new HashMap<>();
+            } else if (value instanceof Map<?, ?> map) {
+                Map<Object, Object> newMap = new HashMap<>();
                 for (Object key : map.keySet()) {
-                    Map<String,Object> newKey = new HashMap<>();
+                    Map<String, Object> newKey = new HashMap<>();
                     ValueType insideKeyType = ValueType.getByObject(key);
                     if (insideKeyType == null) insideKeyType = ValueType.TEXT;
                     newKey.put("type", insideKeyType.name());
                     newKey.put("value", serializeObject(key));
 
-                    Map<String,Object> newValue = new HashMap<>();
+                    Map<String, Object> newValue = new HashMap<>();
                     Object mapValue = map.get(key);
                     ValueType insideValueType = ValueType.getByObject(mapValue);
                     if (insideValueType == null || insideValueType == ValueType.MAP) {
@@ -296,13 +301,13 @@ public final class WorldVariables {
                 return newMap;
             } else if (value instanceof Color color) {
                 Map<String, Integer> colorMap = new HashMap<>();
-                colorMap.put("red",color.getRed());
-                colorMap.put("green",color.getGreen());
-                colorMap.put("blue",color.getBlue());
+                colorMap.put("red", color.getRed());
+                colorMap.put("green", color.getGreen());
+                colorMap.put("blue", color.getBlue());
                 return colorMap;
             } else if (value instanceof Particle particle) {
                 Map<String, String> particleMap = new HashMap<>();
-                particleMap.put("type",particle.name());
+                particleMap.put("type", particle.name());
                 return particleMap;
             } else if (value instanceof EventValueLink link) {
                 Map<String, String> valueMap = new HashMap<>();
@@ -328,64 +333,64 @@ public final class WorldVariables {
             } else if (type == ValueType.LOCATION) {
                 double x, y, z;
                 float yaw, pitch;
-                Map<?,?> locationMap = (Map<?,?>) value;
+                Map<?, ?> locationMap = (Map<?, ?>) value;
                 x = (Double) locationMap.get("x");
                 y = (Double) locationMap.get("y");
                 z = (Double) locationMap.get("z");
                 yaw = ((Double) locationMap.get("yaw")).floatValue();
                 pitch = ((Double) locationMap.get("pitch")).floatValue();
-                return new Location(planet.getTerritory().getWorld(),x,y,z,yaw,pitch);
+                return new Location(planet.getTerritory().getWorld(), x, y, z, yaw, pitch);
             } else if (type == ValueType.VECTOR) {
                 double x, y, z;
-                Map<?,?> vectorMap = (Map<?,?>) value;
+                Map<?, ?> vectorMap = (Map<?, ?>) value;
                 x = (Double) vectorMap.get("x");
                 y = (Double) vectorMap.get("y");
                 z = (Double) vectorMap.get("z");
-                return new Vector(x,y,z);
+                return new Vector(x, y, z);
             } else if (type == ValueType.LIST) {
                 List<Object> newList = new ArrayList<>();
                 List<?> oldList = (List<?>) value;
                 for (Object element : oldList) {
                     Object newElement = element;
-                    if (newElement instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                    if (newElement instanceof Map<?, ?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
                         ValueType keyType = ValueType.parseString(insideMap.get("type").toString());
-                        newElement = deserializeObject(insideMap.get("value"),keyType);
+                        newElement = deserializeObject(insideMap.get("value"), keyType);
                     } else {
-                        newElement = deserializeObject(newElement,ValueType.getByObject(newElement));
+                        newElement = deserializeObject(newElement, ValueType.getByObject(newElement));
                     }
                     newList.add(newElement);
                 }
                 return newList;
             } else if (type == ValueType.MAP) {
-                Map<Object,Object> newMap = new LinkedHashMap<>();
-                Map<?,?> oldMap = (Map<?,?>) value;
+                Map<Object, Object> newMap = new LinkedHashMap<>();
+                Map<?, ?> oldMap = (Map<?, ?>) value;
                 for (Object key : oldMap.keySet()) {
                     Object newKey = key;
                     Object newValue = oldMap.get(key);
                     Map<String, Object> deserializedKey = (Map<String, Object>) new JSONParser().parse((String) newKey);
                     newKey = deserializeObject(deserializedKey.get("value"), ValueType.parseString(deserializedKey.get("type").toString()));
-                    if (newValue instanceof Map<?,?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                    if (newValue instanceof Map<?, ?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
                         ValueType keyValueType = ValueType.parseString(insideMap.get("type").toString());
-                        newValue = deserializeObject(insideMap.get("value"),keyValueType);
+                        newValue = deserializeObject(insideMap.get("value"), keyValueType);
                     } else {
-                        newValue = deserializeObject(key,ValueType.getByObject(key));
+                        newValue = deserializeObject(key, ValueType.getByObject(key));
                     }
-                    newMap.put(newKey,newValue);
+                    newMap.put(newKey, newValue);
                 }
                 return newMap;
             } else if (type == ValueType.COLOR) {
-                int red,green, blue;
-                Map<?,?> colorMap = (Map<?,?>) value;
+                int red, green, blue;
+                Map<?, ?> colorMap = (Map<?, ?>) value;
                 red = (int) colorMap.get("red");
                 green = (int) colorMap.get("green");
                 blue = (int) colorMap.get("blue");
-                return Color.fromRGB(red,green,blue);
+                return Color.fromRGB(red, green, blue);
             } else if (type == ValueType.PARTICLE) {
-                Map<?,?> particleMap = (Map<?,?>) value;
+                Map<?, ?> particleMap = (Map<?, ?>) value;
                 String particleType = (String) particleMap.get("type");
                 return Particle.valueOf(particleType);
             } else if (type == ValueType.EVENT_VALUE) {
-                Map<?,?> eventValueMap = (Map<?,?>) value;
+                Map<?, ?> eventValueMap = (Map<?, ?>) value;
                 String eventValueType = (String) eventValueMap.get("name");
                 Target target = Target.SELECTED;
                 if (eventValueMap.containsKey("target")) {
@@ -394,7 +399,7 @@ public final class WorldVariables {
                 }
                 return new EventValueLink(eventValueType, target);
             } else if (type == ValueType.VARIABLE) {
-                Map<?,?> varMap = (Map<?,?>) value;
+                Map<?, ?> varMap = (Map<?, ?>) value;
                 String varName = (String) varMap.get("name");
                 return new VariableLink(varName, VariableLink.VariableType.SAVED);
             }
@@ -406,6 +411,7 @@ public final class WorldVariables {
 
     /**
      * Returns total size of variables. It includes list and maps elements.
+     *
      * @return total size of variables.
      */
     public int getTotalVariablesAmount() {
@@ -422,6 +428,7 @@ public final class WorldVariables {
 
     /**
      * Clears local variables with action handler type.
+     *
      * @param actionsHandler handler.
      */
     public void garbageCollector(ActionsHandler actionsHandler) {

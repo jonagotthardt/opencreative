@@ -26,5 +26,5 @@ public final class LimitReachedBlocksEvent extends WorldEvent {
     public LimitReachedBlocksEvent(Planet planet) {
         super(planet);
     }
-    
+
 }

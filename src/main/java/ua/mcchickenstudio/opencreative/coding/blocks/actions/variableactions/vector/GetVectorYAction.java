@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -34,9 +33,9 @@ public final class GetVectorYAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Vector vector = getArguments().getVector("vector",new Vector(),this);
-        setVarValue(link,vector.getY());
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Vector vector = getArguments().getVector("vector", new Vector(), this);
+        setVarValue(link, vector.getY());
     }
 
     @Override

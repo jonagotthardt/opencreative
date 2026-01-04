@@ -39,16 +39,15 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  */
 public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMenu implements BlockMenu {
 
+    private final Location location;
     private ExecutorCategory executorCategory = null;
     private ActionCategory actionCategory = null;
     private String firstLine = null;
 
-    private final Location location;
-
     public BlocksCategorySelectionMenu(@NotNull Player player,
                                        @NotNull Location location,
                                        @NotNull ExecutorCategory category) {
-        super(player,category.getItem(),
+        super(player, category.getItem(),
                 category.getStainedPane(),
                 ExecutorType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
@@ -59,7 +58,7 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
     public BlocksCategorySelectionMenu(@NotNull Player player,
                                        @NotNull Location location,
                                        @NotNull ActionCategory category) {
-        super(player,category.getItem(),
+        super(player, category.getItem(),
                 category.getStainedPane(),
                 ActionType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
@@ -71,7 +70,7 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
                                        @NotNull Location location,
                                        @NotNull ActionCategory category,
                                        @NotNull String firstLine) {
-        super(player,category.getItem(),
+        super(player, category.getItem(),
                 category.getStainedPane(),
                 ActionType.getMenusCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),

@@ -26,7 +26,8 @@ import com.comphenix.protocol.wrappers.*;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -57,9 +58,9 @@ public final class ProtocolLibManager implements PacketManager {
         UUID uuid = UUID.randomUUID();
         int id = 300;
         if (location.getX() == location.getBlockX() && location.getZ() == location.getBlockZ()) {
-            location.add(0.5,0,0.5);
+            location.add(0.5, 0, 0.5);
         }
-        PacketContainer spawnEntityPacket = getSpawnFallingBlockPacket(id,uuid,location);
+        PacketContainer spawnEntityPacket = getSpawnFallingBlockPacket(id, uuid, location);
         PacketContainer entityDataPacket = getFallingBlockDataPacket(id);
         PacketContainer createTeamPacket = getTeamCreationPacket(uuid, ChatColor.GREEN);
         PacketContainer hideGlowingPacket = getRemoveEntityPacket(id);
@@ -175,8 +176,8 @@ public final class ProtocolLibManager implements PacketManager {
         entityDataPacket.getIntegers().write(0, id);
         WrappedDataWatcher watcher = new WrappedDataWatcher();
         watcher.setByte(0, (byte) (0x20 | 0x40), true); // Glowing and Invisible
-        watcher.setInteger(16,2,true);
-        watcher.setBoolean(5,true,true); // No gravity
+        watcher.setInteger(16, 2, true);
+        watcher.setBoolean(5, true, true); // No gravity
 
         List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
         for (final WrappedWatchableObject entry : watcher.getWatchableObjects()) {

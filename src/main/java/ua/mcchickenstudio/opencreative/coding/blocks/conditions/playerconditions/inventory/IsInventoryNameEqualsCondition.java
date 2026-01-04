@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory;
 
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class IsInventoryNameEqualsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        boolean requiredColor = getArguments().getBoolean("color",false,this);
-        boolean requiredCaps = getArguments().getBoolean("caps",false,this);
-        List<String> names = getArguments().getTextList("names",this);
+        boolean requiredColor = getArguments().getBoolean("color", false, this);
+        boolean requiredCaps = getArguments().getBoolean("caps", false, this);
+        List<String> names = getArguments().getTextList("names", this);
         String title = player.getOpenInventory().getTitle();
         for (String name : names) {
             if (!requiredColor) {

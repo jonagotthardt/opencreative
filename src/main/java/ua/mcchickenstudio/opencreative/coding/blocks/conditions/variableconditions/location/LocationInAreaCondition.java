@@ -18,14 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.location;
 
+import org.bukkit.Location;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -36,9 +35,9 @@ public class LocationInAreaCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location second = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
         double maxX = Math.max(first.getX(), second.getX());
         double maxY = Math.max(first.getY(), second.getY());
         double maxZ = Math.max(first.getZ(), second.getZ());

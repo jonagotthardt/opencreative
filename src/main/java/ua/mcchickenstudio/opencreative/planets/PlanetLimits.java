@@ -32,18 +32,15 @@ import java.util.*;
 public class PlanetLimits {
 
     private final Planet planet;
-
-    private int lastModifiedBlocksAmount;
-    private int lastRedstoneOperationsAmount;
-    private int lastModifiedTargetsAmount;
-    private int lastListElementsChangesAmount;
-
     private final LinkedList<Long> lastWebRequests = new LinkedList<>();
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
     private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
     private final LinkedList<Long> lastCodingErrors = new LinkedList<>();
-
     private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
+    private int lastModifiedBlocksAmount;
+    private int lastRedstoneOperationsAmount;
+    private int lastModifiedTargetsAmount;
+    private int lastListElementsChangesAmount;
 
     public PlanetLimits(Planet planet) {
         this.planet = planet;
@@ -53,6 +50,7 @@ public class PlanetLimits {
      * Returns limit of all variables' size in the planet.
      * If the value of a variable is map, keys' amount will be added to size.
      * If the value of a variable is list, elements' amount will be added to size.
+     *
      * @return limit of variables size.
      */
     public int getVariablesAmountLimit() {
@@ -61,6 +59,7 @@ public class PlanetLimits {
 
     /**
      * Returns modifying blocks limit.
+     *
      * @return limit of changing blocks.
      */
     public int getModifyingBlocksLimit() {
@@ -69,6 +68,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum builders amount in the planet.
+     *
      * @return limit of builders amount.
      */
     public int getBuildersLimit() {
@@ -77,6 +77,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum developers amount in the planet.
+     *
      * @return limit of developers amount.
      */
     public int getDevelopersLimit() {
@@ -85,6 +86,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum blacklisted players amount in the planet.
+     *
      * @return limit of banned players amount.
      */
     public int getBlacklistedLimit() {
@@ -93,6 +95,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum whitelisted players amount in the planet.
+     *
      * @return limit of whitelisted players amount.
      */
     public int getWhitelistedLimit() {
@@ -101,6 +104,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum redstone operations amount in the planet.
+     *
      * @return limit of redstone operations.
      */
     public int getRedstoneOperationsLimit() {
@@ -109,6 +113,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum targets changes per 1 second amount in the planet.
+     *
      * @return limit of changed targets.
      */
     public int getTargetsChangesLimit() {
@@ -117,6 +122,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum repeats activations per 1 second amount in the planet.
+     *
      * @return limit of repeats.
      */
     public int getRepeatsAmountLimit() {
@@ -125,6 +131,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum code operations amount in the planet.
+     *
      * @return limit of executor calls.
      */
     public int getCodeOperationsLimit() {
@@ -133,6 +140,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum coding errors amount in the planet.
+     *
      * @return limit of errors amount.
      */
     public int getCodingErrorsLimit() {
@@ -142,6 +150,7 @@ public class PlanetLimits {
     /**
      * Returns maximum amount of opening or closing
      * inventories for player in the last 5 seconds.
+     *
      * @return limit of inventory actions.
      */
     public int getOpeningInventoriesLimit() {
@@ -150,6 +159,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum amount of sending web requests in the last 5 seconds.
+     *
      * @return limit of web requests.
      */
     public int getWebRequestsLimit() {
@@ -158,6 +168,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum entities amount in the planet.
+     *
      * @return limit of entities.
      */
     public int getEntitiesLimit() {
@@ -166,6 +177,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum scoreboards amount in the planet.
+     *
      * @return limit of scoreboards.
      */
     public int getScoreboardsLimit() {
@@ -174,6 +186,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum elements changes amount in the planet.
+     *
      * @return limit of scoreboards.
      */
     public int getVariableElementsChangesLimit() {
@@ -182,6 +195,7 @@ public class PlanetLimits {
 
     /**
      * Returns maximum bossbars amount in the planet.
+     *
      * @return limit of bossbars.
      */
     public int getBossBarsLimit() {
@@ -192,6 +206,7 @@ public class PlanetLimits {
      * Returns maximum physical objects limit in the planet.
      * It's not related to sand, gravel, anvil and other blocks,
      * they are related to entities.
+     *
      * @return limit of physical objects.
      */
     public int getPhysicalObjectsLimit() {
@@ -199,39 +214,8 @@ public class PlanetLimits {
     }
 
     /**
-     * Sets last amount of changed elements in lists or maps.
-     * @param changedElementsAmount number of changed elements.
-     */
-    public void setLastVariableElementsChangesAmount(int changedElementsAmount) {
-        this.lastListElementsChangesAmount = changedElementsAmount;
-    }
-
-    /**
-     * Sets last modified blocks amount.
-     * @param lastModifiedBlocksAmount number of changed blocks.
-     */
-    public void setLastModifiedBlocksAmount(int lastModifiedBlocksAmount) {
-        this.lastModifiedBlocksAmount = lastModifiedBlocksAmount;
-    }
-
-    /**
-     * Sets last modified targets amount.
-     * @param lastModifiedTargetsAmount number of changed targets.
-     */
-    public void setLastModifiedTargetsAmount(int lastModifiedTargetsAmount) {
-        this.lastModifiedTargetsAmount = lastModifiedTargetsAmount;
-    }
-
-    /**
-     * Sets last redstone operations amount.
-     * @param lastRedstoneOperationsAmount number of redstone operations.
-     */
-    public void setLastRedstoneOperationsAmount(int lastRedstoneOperationsAmount) {
-        this.lastRedstoneOperationsAmount = lastRedstoneOperationsAmount;
-    }
-
-    /**
      * Returns last modified blocks amount.
+     *
      * @return number of modified blocks.
      */
     public int getLastModifiedBlocksAmount() {
@@ -239,7 +223,17 @@ public class PlanetLimits {
     }
 
     /**
+     * Sets last modified blocks amount.
+     *
+     * @param lastModifiedBlocksAmount number of changed blocks.
+     */
+    public void setLastModifiedBlocksAmount(int lastModifiedBlocksAmount) {
+        this.lastModifiedBlocksAmount = lastModifiedBlocksAmount;
+    }
+
+    /**
      * Returns last coding errors amount from last 3 seconds.
+     *
      * @return amount of coding errors in last 3 seconds.
      */
     public int getLastCodingErrorsAmount() {
@@ -248,6 +242,7 @@ public class PlanetLimits {
 
     /**
      * Returns last modified targets amount.
+     *
      * @return number of changed targets.
      */
     public int getLastModifiedTargetsAmount() {
@@ -255,7 +250,17 @@ public class PlanetLimits {
     }
 
     /**
+     * Sets last modified targets amount.
+     *
+     * @param lastModifiedTargetsAmount number of changed targets.
+     */
+    public void setLastModifiedTargetsAmount(int lastModifiedTargetsAmount) {
+        this.lastModifiedTargetsAmount = lastModifiedTargetsAmount;
+    }
+
+    /**
      * Returns last redstone operations amount.
+     *
      * @return number of redstone operations.
      */
     public int getLastRedstoneOperationsAmount() {
@@ -263,7 +268,17 @@ public class PlanetLimits {
     }
 
     /**
+     * Sets last redstone operations amount.
+     *
+     * @param lastRedstoneOperationsAmount number of redstone operations.
+     */
+    public void setLastRedstoneOperationsAmount(int lastRedstoneOperationsAmount) {
+        this.lastRedstoneOperationsAmount = lastRedstoneOperationsAmount;
+    }
+
+    /**
      * Returns last elements changes amount in lists or maps.
+     *
      * @return number of elements changes.
      */
     public int getLastVariableElementsChangesAmount() {
@@ -271,8 +286,18 @@ public class PlanetLimits {
     }
 
     /**
+     * Sets last amount of changed elements in lists or maps.
+     *
+     * @param changedElementsAmount number of changed elements.
+     */
+    public void setLastVariableElementsChangesAmount(int changedElementsAmount) {
+        this.lastListElementsChangesAmount = changedElementsAmount;
+    }
+
+    /**
      * Returns maximum coding platforms amount in the planet.
      * Doesn't change with players' amount.
+     *
      * @return limit of coding platforms.
      */
     public int getCodingPlatformsLimit() {
@@ -283,6 +308,7 @@ public class PlanetLimits {
      * Checks if world can strike lightning. Used to prevent
      * "too many lightning strikes" crash. Checks if the amount
      * of lightning strikes in last 5 seconds is not greater than 5.
+     *
      * @return true - if it's allowed to strike lightning, false - it's disallowed.
      */
     public boolean canLightningStrike() {
@@ -307,6 +333,7 @@ public class PlanetLimits {
      * Checks if bee for beehive can spawn in world to prevent
      * "too many bees at once" crash. Checks if the amount
      * of spawned bees in last 5 seconds is not greater than 5.
+     *
      * @return true - if it's allowed to exit from beehive for bee, false - it's disallowed.
      */
     public boolean canBeeSpawnFromBeehive() {
@@ -331,6 +358,7 @@ public class PlanetLimits {
      * Checks if world can send web request. Used to prevent
      * web attacks. Checks if the amount of sent web requests
      * in last 5 seconds is not greater than limit.
+     *
      * @return true - if it's allowed to strike lightning, false - it's disallowed.
      */
     public boolean canSendWebRequest() {
@@ -353,6 +381,7 @@ public class PlanetLimits {
 
     /**
      * Checks whether coding encountered too many errors in the last 3 seconds.
+     *
      * @return true - must stop the code, false - few or no errors.
      */
     public boolean isTooManyCodingErrors() {
@@ -378,6 +407,7 @@ public class PlanetLimits {
      * Used to prevent unavailability of leaving game.
      * Checks if the amount of player's opened menus
      * in last 5 seconds is not greater than limit.
+     *
      * @return true - if it's allowed to open menu, false - it's disallowed.
      */
     public boolean cantOpenMenu(Player player) {
@@ -409,6 +439,7 @@ public class PlanetLimits {
 
     /**
      * Clears player's data when player leaves planet.
+     *
      * @param player player to clear data.
      */
     public void clearPlayerLimits(Player player) {

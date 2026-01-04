@@ -39,13 +39,15 @@ public interface ModuleManager extends Manager {
     /**
      * Register a module to base, so it will be visible
      * in modules browser menu.
+     *
      * @param module module to register
      */
     void registerModule(@NotNull Module module);
 
     /**
      * Creates a new module and registers it in base.
-     * @param owner owner of module.
+     *
+     * @param owner     owner of module.
      * @param devPlanet dev planet to parse executor locations.
      * @param locations set of location, that contains executors.
      */
@@ -53,6 +55,7 @@ public interface ModuleManager extends Manager {
 
     /**
      * Deletes module from files and base.
+     *
      * @param module module to delete.
      */
     void deleteModule(@NotNull Module module);
@@ -60,6 +63,7 @@ public interface ModuleManager extends Manager {
     /**
      * Returns modules, that were made by player with
      * specified unique ID.
+     *
      * @param uuid unique id of player.
      * @return set of player created modules.
      */
@@ -67,12 +71,14 @@ public interface ModuleManager extends Manager {
 
     /**
      * Returns set of all registered modules in base.
+     *
      * @return set of modules.
      */
     @NotNull Set<Module> getModules();
 
     /**
      * Returns module by its ID.
+     *
      * @param id id to get module.
      * @return module - if found, or null - not exists.
      */

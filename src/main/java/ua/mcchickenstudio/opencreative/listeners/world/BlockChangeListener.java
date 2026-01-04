@@ -23,9 +23,14 @@ import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import io.papermc.paper.event.block.TargetHitEvent;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.BrewingStandFuelEvent;
@@ -37,12 +42,10 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.EntityExplodedEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockPhysicsEvent;
-import ua.mcchickenstudio.opencreative.planets.*;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -59,7 +62,7 @@ public final class BlockChangeListener implements Listener {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                 event.setCancelled(true);
             } else {
-                new BlockFadedEvent(planet,event).callEvent();
+                new BlockFadedEvent(planet, event).callEvent();
             }
         }
     }
@@ -82,7 +85,7 @@ public final class BlockChangeListener implements Listener {
                 if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_CHANGING) == 2) {
                     event.setCancelled(true);
                 } else {
-                    new BlockFormedEvent(planet,event).callEvent();
+                    new BlockFormedEvent(planet, event).callEvent();
                 }
             }
         }
@@ -134,7 +137,7 @@ public final class BlockChangeListener implements Listener {
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_EXPLOSION) == 2) {
                 event.blockList().clear();
             }
-            new BlockExplodedEvent(planet,event).callEvent();
+            new BlockExplodedEvent(planet, event).callEvent();
         }
         if (isDevPlanet(world)) {
             event.blockList().clear();
@@ -175,7 +178,7 @@ public final class BlockChangeListener implements Listener {
     public void onFallingBlock(EntityChangeBlockEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
         if (planet != null && event.getEntityType() == EntityType.FALLING_BLOCK) {
-            new BlockPhysicsEvent(planet,event).callEvent();
+            new BlockPhysicsEvent(planet, event).callEvent();
         }
     }
 
@@ -189,13 +192,13 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onBlock(BlockGrowEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockGrownEvent(planet,event).callEvent();
+        if (planet != null) new BlockGrownEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(BlockIgniteEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockIgnitedEvent(planet,event).callEvent();
+        if (planet != null) new BlockIgnitedEvent(planet, event).callEvent();
     }
 
     @EventHandler
@@ -219,61 +222,61 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockBurnedEvent(planet,event).callEvent();
+        if (planet != null) new BlockBurnedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlockCook(BlockCookEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockCookedEvent(planet,event).callEvent();
+        if (planet != null) new BlockCookedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlockExperience(BlockExpEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockExperienceDropEvent(planet,event).callEvent();
+        if (planet != null) new BlockExperienceDropEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlockBrew(BrewEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockBrewingEndEvent(planet,event).callEvent();
+        if (planet != null) new BlockBrewingEndEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockFurnaceBurnedEvent(planet,event).callEvent();
+        if (planet != null) new BlockFurnaceBurnedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBrewingStandFuel(BrewingStandFuelEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockBrewingFuelEvent(planet,event).callEvent();
+        if (planet != null) new BlockBrewingFuelEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onFluidChange(FluidLevelChangeEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockFluidChangeEvent(planet,event).callEvent();
+        if (planet != null) new BlockFluidChangeEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onCauldronChange(CauldronLevelChangeEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockCauldronChangeEvent(planet,event).callEvent();
+        if (planet != null) new BlockCauldronChangeEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onCampfireStart(CampfireStartEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockCampfireStartEvent(planet,event).callEvent();
+        if (planet != null) new BlockCampfireStartEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBrewingStart(BrewingStartEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockBrewingStartEvent(planet,event).callEvent();
+        if (planet != null) new BlockBrewingStartEvent(planet, event).callEvent();
     }
 
     @EventHandler
@@ -281,58 +284,58 @@ public final class BlockChangeListener implements Listener {
         Location location = event.getInventory().getLocation();
         if (location != null) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(location.getWorld());
-            if (planet != null) new BlockAnvilDamagedEvent(planet,event,location.getBlock()).callEvent();
+            if (planet != null) new BlockAnvilDamagedEvent(planet, event, location.getBlock()).callEvent();
         }
     }
 
     @EventHandler
     public void onBlock(TargetHitEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
-        if (planet != null) new BlockTargetHitEvent(planet,event).callEvent();
+        if (planet != null) new BlockTargetHitEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(NotePlayEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockNotePlayedEvent(planet,event).callEvent();
+        if (planet != null) new BlockNotePlayedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(SculkBloomEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockSculkBloomedEvent(planet,event).callEvent();
+        if (planet != null) new BlockSculkBloomedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(BellRingEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockBellRungEvent(planet,event).callEvent();
+        if (planet != null) new BlockBellRungEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(CrafterCraftEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockCrafterCraftedEvent(planet,event).callEvent();
+        if (planet != null) new BlockCrafterCraftedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(LeavesDecayEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockLeavesDecayedEvent(planet,event).callEvent();
+        if (planet != null) new BlockLeavesDecayedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onBlock(SpongeAbsorbEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
-        if (planet != null) new BlockSpongeAbsorbedEvent(planet,event).callEvent();
+        if (planet != null) new BlockSpongeAbsorbedEvent(planet, event).callEvent();
     }
 
     @EventHandler
     public void onLightningStrike(LightningStrikeEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getWorld());
-        if (planet != null) new ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LightningStrikeEvent(planet,event).callEvent();
+        if (planet != null)
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LightningStrikeEvent(planet, event).callEvent();
     }
-
 
 
 }

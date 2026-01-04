@@ -19,8 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.values.living;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

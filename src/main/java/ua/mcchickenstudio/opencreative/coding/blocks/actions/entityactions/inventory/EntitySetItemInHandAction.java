@@ -38,9 +38,9 @@ public final class EntitySetItemInHandAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        ItemStack mainItem = getArguments().getItem("main",new ItemStack(Material.AIR),this);
-        ItemStack offItem = getArguments().getItem("off",new ItemStack(Material.AIR),this);
-        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",false,this);
+        ItemStack mainItem = getArguments().getItem("main", new ItemStack(Material.AIR), this);
+        ItemStack offItem = getArguments().getItem("off", new ItemStack(Material.AIR), this);
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air", false, this);
         if (entity instanceof HumanEntity human) {
             if (replaceWithAir || !mainItem.isEmpty()) human.getInventory().setItemInMainHand(mainItem);
             if (replaceWithAir || !offItem.isEmpty()) human.getInventory().setItemInOffHand(offItem);

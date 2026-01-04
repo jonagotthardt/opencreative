@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.other;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -25,9 +27,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -39,22 +38,22 @@ public class VarItemEqualsCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        boolean ignoreAmount = getArguments().getBoolean("ignore-amount",true,this);
-        boolean ignoreName = getArguments().getBoolean("ignore-name",false,this);
-        boolean ignoreLore = getArguments().getBoolean("ignore-lore",false,this);
-        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments",false,this);
-        boolean ignoreFlags = getArguments().getBoolean("ignore-flags",false,this);
-        boolean ignoreMaterial = getArguments().getBoolean("ignore-material",false,this);
-        boolean ignoreDamage = getArguments().getBoolean("ignore-damage",false,this);
+        boolean ignoreAmount = getArguments().getBoolean("ignore-amount", true, this);
+        boolean ignoreName = getArguments().getBoolean("ignore-name", false, this);
+        boolean ignoreLore = getArguments().getBoolean("ignore-lore", false, this);
+        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments", false, this);
+        boolean ignoreFlags = getArguments().getBoolean("ignore-flags", false, this);
+        boolean ignoreMaterial = getArguments().getBoolean("ignore-material", false, this);
+        boolean ignoreDamage = getArguments().getBoolean("ignore-damage", false, this);
 
         boolean check = false;
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         if (items.isEmpty()) return false;
 
-        ItemStack comparedItem = getArguments().getItem("item",new ItemStack(Material.AIR,1),this);
-        comparedItem = ItemUtils.getItemWithIgnoreData(comparedItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
+        ItemStack comparedItem = getArguments().getItem("item", new ItemStack(Material.AIR, 1), this);
+        comparedItem = ItemUtils.getItemWithIgnoreData(comparedItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
         for (ItemStack checkItem : items) {
-            checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
+            checkItem = ItemUtils.getItemWithIgnoreData(checkItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
             if (comparedItem.equals(checkItem)) {
                 check = true;
             }

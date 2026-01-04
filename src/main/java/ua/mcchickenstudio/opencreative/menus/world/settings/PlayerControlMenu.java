@@ -55,35 +55,42 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPla
  */
 public final class PlayerControlMenu extends AbstractMenu implements WorldMenu {
 
+    private final static Map<Player, String> newOwners = new HashMap<>();
     private final String nickname;
     private final Planet planet;
-
-    private final static Map<Player, String> newOwners = new HashMap<>();
     private final List<ParameterButton> buttons = new ArrayList<>();
 
-    private final ItemStack KICK = createItem(Material.STRUCTURE_VOID,1,"menus.player-control.items.kick","kick");
-    private final ItemStack BAN = createItem(Material.BARRIER,1,"menus.player-control.items.ban","ban");
-    private final ItemStack UNBAN = createItem(Material.LIME_STAINED_GLASS,1,"menus.player-control.items.unban","unban");
-    private final ItemStack WHITELIST = createItem(Material.MAP,1,"menus.player-control.items.whitelist","whitelist");
-    private final ItemStack UNWHITELIST = createItem(Material.FILLED_MAP,1,"menus.player-control.items.whitelist-remove","unwhitelist");
+    private final ItemStack KICK = createItem(Material.STRUCTURE_VOID, 1, "menus.player-control.items.kick", "kick");
+    private final ItemStack BAN = createItem(Material.BARRIER, 1, "menus.player-control.items.ban", "ban");
+    private final ItemStack UNBAN = createItem(Material.LIME_STAINED_GLASS, 1, "menus.player-control.items.unban", "unban");
+    private final ItemStack WHITELIST = createItem(Material.MAP, 1, "menus.player-control.items.whitelist", "whitelist");
+    private final ItemStack UNWHITELIST = createItem(Material.FILLED_MAP, 1, "menus.player-control.items.whitelist-remove", "unwhitelist");
 
-    private final ItemStack TRANSFER = createItem(Material.CAKE,1,"menus.player-control.items.transfer-ownership","transfer");
-    
-    private final ItemStack BACK = createItem(Material.ARROW,1,"menus.player-control.items.back","back");
+    private final ItemStack TRANSFER = createItem(Material.CAKE, 1, "menus.player-control.items.transfer-ownership", "transfer");
+
+    private final ItemStack BACK = createItem(Material.ARROW, 1, "menus.player-control.items.back", "back");
 
     public PlayerControlMenu(String nickname, Planet planet) {
-        super(4, MessageUtils.getLocaleMessage("menus.player-control.title",false)
+        super(4, MessageUtils.getLocaleMessage("menus.player-control.title", false)
                 .replace("%name%", substring(nickname, 20)));
         this.nickname = nickname;
         this.planet = planet;
     }
 
+    public static void removeConfirmation(@NotNull Player player) {
+        newOwners.remove(player);
+    }
+
+    public static @Nullable String getConfirmationNewOwner(@NotNull Player player) {
+        return newOwners.get(player);
+    }
+
     @Override
     public void fillItems(Player opener) {
 
-        setItem(DECORATION_PANE_ITEM,28,34);
+        setItem(DECORATION_PANE_ITEM, 28, 34);
         setItem(createItem(getSelectedPlayer() == null ? Material.RED_STAINED_GLASS_PANE :
-                Material.LIGHT_BLUE_STAINED_GLASS_PANE,1), 29,33);
+                Material.LIGHT_BLUE_STAINED_GLASS_PANE, 1), 29, 33);
         setItem(31, getPlayerIcon(nickname));
 
         Player player = getSelectedPlayer();
@@ -353,14 +360,6 @@ public final class PlayerControlMenu extends AbstractMenu implements WorldMenu {
             return player;
         }
         return null;
-    }
-
-    public static void removeConfirmation(@NotNull Player player) {
-        newOwners.remove(player);
-    }
-
-    public static @Nullable String getConfirmationNewOwner(@NotNull Player player) {
-        return newOwners.get(player);
     }
 
     @Override

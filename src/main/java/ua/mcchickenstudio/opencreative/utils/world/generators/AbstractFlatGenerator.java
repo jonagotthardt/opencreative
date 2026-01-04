@@ -54,7 +54,8 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {}
+    public void afterCreation(@NotNull World world) {
+    }
 
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
@@ -107,7 +108,7 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
             }
 
             public @Nullable TreeType getTreeFromBiome(@NotNull Biome biome) {
-                return switch (biome)  {
+                return switch (biome) {
                     case PLAINS, TAIGA, WINDSWEPT_FOREST, SNOWY_TAIGA, OLD_GROWTH_SPRUCE_TAIGA -> TreeType.TREE;
                     case DARK_FOREST -> TreeType.DARK_OAK;
                     case BIRCH_FOREST -> TreeType.BIRCH;

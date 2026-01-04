@@ -41,12 +41,12 @@ public final class BlockPhysicsEvent extends WorldEvent implements BlockEvent, C
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 }

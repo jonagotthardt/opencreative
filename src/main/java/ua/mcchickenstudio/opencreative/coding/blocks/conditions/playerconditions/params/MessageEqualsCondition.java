@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params;
 
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.values.events.ChatMessageValue;
 
 import java.util.List;
@@ -40,8 +40,8 @@ public class MessageEqualsCondition extends PlayerCondition {
             return false;
         }
         boolean check = false;
-        List<String> messages = getArguments().getTextList("messages",this);
-        boolean caps = getArguments().getBoolean("require-caps",false,this);
+        List<String> messages = getArguments().getTextList("messages", this);
+        boolean caps = getArguments().getBoolean("require-caps", false, this);
         for (String message : messages) {
             if (caps) {
                 if (message.equals(text)) {

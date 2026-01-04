@@ -25,17 +25,20 @@ public final class SystemUtils {
 
     /**
      * Sets property in JVM.
-     * @param key key of property.
+     *
+     * @param key   key of property.
      * @param value value of property.
      */
     public static void setSystemProperty(@NotNull String key, @NotNull String value) {
         try {
             System.getProperties().setProperty("opencreative." + key, value);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     /**
      * Returns value of property, or null
+     *
      * @param key key of property.
      * @return value, or null - if not exists.
      */

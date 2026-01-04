@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Material;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
@@ -65,10 +65,6 @@ public enum ActionCategory {
         this.defaultCategory = defaultCategory;
     }
 
-    public MenusCategory getDefaultCategory() {
-        return defaultCategory;
-    }
-
     public static ActionCategory getByMaterial(Material material) {
         for (ActionCategory category : values()) {
             if (category.block == material) return category;
@@ -83,6 +79,10 @@ public enum ActionCategory {
             }
         }
         return null;
+    }
+
+    public MenusCategory getDefaultCategory() {
+        return defaultCategory;
     }
 
     public boolean isMultiAction() {
@@ -115,6 +115,6 @@ public enum ActionCategory {
     }
 
     public ItemStack getItem() {
-        return createItem(block,1,"items.developer." + name().toLowerCase().replace("_","-"),name().toLowerCase());
+        return createItem(block, 1, "items.developer." + name().toLowerCase().replace("_", "-"), name().toLowerCase());
     }
 }

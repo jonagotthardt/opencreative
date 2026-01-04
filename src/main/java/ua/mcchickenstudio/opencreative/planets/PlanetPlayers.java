@@ -31,7 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetConfig;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -63,6 +64,7 @@ public class PlanetPlayers {
 
     /**
      * Registers player to planet.
+     *
      * @param player online player to register.
      */
     public void registerPlayer(@NotNull Player player) {
@@ -247,8 +249,8 @@ public class PlanetPlayers {
         if (!planet.isLoaded()) loadPlayers();
         buildersNotTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
         buildersTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
-        setPlanetConfigParameter(planet,"players.builders.not-trusted",buildersNotTrusted);
-        setPlanetConfigParameter(planet,"players.builders.trusted",buildersTrusted);
+        setPlanetConfigParameter(planet, "players.builders.not-trusted", buildersNotTrusted);
+        setPlanetConfigParameter(planet, "players.builders.trusted", buildersTrusted);
     }
 
     public void removeDeveloper(String nickname) {
@@ -268,8 +270,8 @@ public class PlanetPlayers {
         if (!planet.isLoaded()) loadPlayers();
         developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         developersTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
-        setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
-        setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);
+        setPlanetConfigParameter(planet, "players.developers.not-trusted", developersNotTrusted);
+        setPlanetConfigParameter(planet, "players.developers.trusted", developersTrusted);
     }
 
     public void addDeveloperGuest(String nickname) {
@@ -278,7 +280,7 @@ public class PlanetPlayers {
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
-                player.sendMessage(getLocaleMessage("world.players.developers.player-guest").replace("%player%",player.getName()));
+                player.sendMessage(getLocaleMessage("world.players.developers.player-guest").replace("%player%", player.getName()));
                 Sounds.WORLD_NOW_DEVELOPER_GUEST.play(player);
             }
         }
@@ -286,9 +288,10 @@ public class PlanetPlayers {
         developersGuests.add(nickname);
         developersNotTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
         developersTrusted.removeIf(developer -> developer.equalsIgnoreCase(nickname));
-        setPlanetConfigParameter(planet,"players.developers.guests",developersGuests);
-        setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
-        setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);    }
+        setPlanetConfigParameter(planet, "players.developers.guests", developersGuests);
+        setPlanetConfigParameter(planet, "players.developers.not-trusted", developersNotTrusted);
+        setPlanetConfigParameter(planet, "players.developers.trusted", developersTrusted);
+    }
 
     public void addDeveloper(String nickname, boolean trusted) {
         if (getAllDevelopers().size() > planet.getLimits().getDevelopersLimit()) return;
@@ -297,7 +300,7 @@ public class PlanetPlayers {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 if (!trusted) {
-                    player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%",player.getName()));
+                    player.sendMessage(getLocaleMessage("world.players.developers.player").replace("%player%", player.getName()));
                     Sounds.WORLD_NOW_DEVELOPER.play(player);
                     if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                         player.setGameMode(GameMode.CREATIVE);
@@ -314,9 +317,9 @@ public class PlanetPlayers {
             developersNotTrusted.add(nickname);
         }
         developersGuests.removeIf(developer -> developer.equalsIgnoreCase(nickname));
-        setPlanetConfigParameter(planet,"players.developers.guests",developersGuests);
-        setPlanetConfigParameter(planet,"players.developers.not-trusted",developersNotTrusted);
-        setPlanetConfigParameter(planet,"players.developers.trusted",developersTrusted);
+        setPlanetConfigParameter(planet, "players.developers.guests", developersGuests);
+        setPlanetConfigParameter(planet, "players.developers.not-trusted", developersNotTrusted);
+        setPlanetConfigParameter(planet, "players.developers.trusted", developersTrusted);
     }
 
 
@@ -327,7 +330,7 @@ public class PlanetPlayers {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 if (!trusted) {
-                    player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%",player.getName()));
+                    player.sendMessage(getLocaleMessage("world.players.builders.player").replace("%player%", player.getName()));
                     Sounds.WORLD_NOW_BUILDER.play(player);
                     if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
                         player.setGameMode(GameMode.CREATIVE);
@@ -343,22 +346,22 @@ public class PlanetPlayers {
             buildersTrusted.removeIf(builder -> builder.equalsIgnoreCase(nickname));
             buildersNotTrusted.add(nickname);
         }
-        setPlanetConfigParameter(planet,"players.builders.not-trusted",buildersNotTrusted);
-        setPlanetConfigParameter(planet,"players.builders.trusted",buildersTrusted);
+        setPlanetConfigParameter(planet, "players.builders.not-trusted", buildersNotTrusted);
+        setPlanetConfigParameter(planet, "players.builders.trusted", buildersTrusted);
         if (!planet.isLoaded()) clear();
     }
 
     public void unbanPlayer(String nickname) {
         if (!planet.isLoaded()) loadPlayers();
         this.bannedPlayers.removeIf(ban -> ban.equalsIgnoreCase(nickname));
-        setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
+        setPlanetConfigParameter(planet, "players.blacklist", bannedPlayers);
         if (!planet.isLoaded()) clear();
     }
 
     public void removeFromWhitelist(String nickname) {
         if (!planet.isLoaded()) loadPlayers();
         this.whitelistedPlayers.removeIf(whitelisted -> whitelisted.equalsIgnoreCase(nickname));
-        setPlanetConfigParameter(planet,"players.whitelist",whitelistedPlayers);
+        setPlanetConfigParameter(planet, "players.whitelist", whitelistedPlayers);
         if (!planet.isLoaded()) clear();
     }
 
@@ -370,13 +373,13 @@ public class PlanetPlayers {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
                 teleportToLobby(player);
-                player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%",player.getName()));
+                player.sendMessage(getLocaleMessage("world.players.black-list.player").replace("%player%", player.getName()));
                 Sounds.WORLD_BANNED.play(player);
             }
         }
         if (!planet.isLoaded()) loadPlayers();
         bannedPlayers.add(nickname);
-        setPlanetConfigParameter(planet,"players.blacklist",bannedPlayers);
+        setPlanetConfigParameter(planet, "players.blacklist", bannedPlayers);
         if (!planet.isLoaded()) clear();
     }
 
@@ -387,13 +390,13 @@ public class PlanetPlayers {
         if (player != null) {
             Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet.equals(playerPlanet)) {
-                player.sendMessage(getLocaleMessage("world.players.white-list.player").replace("%player%",player.getName()));
-                Sounds.WORLD_WHITELIST_ADDED.play(player);;
+                player.sendMessage(getLocaleMessage("world.players.white-list.player").replace("%player%", player.getName()));
+                Sounds.WORLD_WHITELIST_ADDED.play(player);
             }
         }
         if (!planet.isLoaded()) loadPlayers();
         whitelistedPlayers.add(nickname);
-        setPlanetConfigParameter(planet,"players.whitelist", whitelistedPlayers);
+        setPlanetConfigParameter(planet, "players.whitelist", whitelistedPlayers);
         if (!planet.isLoaded()) clear();
     }
 
@@ -401,7 +404,7 @@ public class PlanetPlayers {
         Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet.equals(playerPlanet) && !player.hasPermission("opencreative.world.kick.bypass")) {
             teleportToLobby(player);
-            player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%",player.getName()));
+            player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%", player.getName()));
             Sounds.WORLD_KICKED.play(player);
         }
     }
@@ -498,15 +501,15 @@ public class PlanetPlayers {
     public void purgeData() {
         List<String> empty = new ArrayList<>();
         clear();
-        setPlanetConfigParameter(planet,"players.unique",empty);
-        setPlanetConfigParameter(planet,"players.liked",empty);
-        setPlanetConfigParameter(planet,"players.disliked",empty);
-        setPlanetConfigParameter(planet,"players.blacklist",empty);
-        setPlanetConfigParameter(planet,"players.whitelist",empty);
-        setPlanetConfigParameter(planet,"players.developers.trusted",empty);
-        setPlanetConfigParameter(planet,"players.developers.not-trusted",empty);
-        setPlanetConfigParameter(planet,"players.developers.guests",empty);
-        setPlanetConfigParameter(planet,"players.builders.trusted",empty);
-        setPlanetConfigParameter(planet,"players.builders.not-trusted",empty);
+        setPlanetConfigParameter(planet, "players.unique", empty);
+        setPlanetConfigParameter(planet, "players.liked", empty);
+        setPlanetConfigParameter(planet, "players.disliked", empty);
+        setPlanetConfigParameter(planet, "players.blacklist", empty);
+        setPlanetConfigParameter(planet, "players.whitelist", empty);
+        setPlanetConfigParameter(planet, "players.developers.trusted", empty);
+        setPlanetConfigParameter(planet, "players.developers.not-trusted", empty);
+        setPlanetConfigParameter(planet, "players.developers.guests", empty);
+        setPlanetConfigParameter(planet, "players.builders.trusted", empty);
+        setPlanetConfigParameter(planet, "players.builders.not-trusted", empty);
     }
 }

@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 public final class ShowScoreboardAction extends PlayerAction {
     public ShowScoreboardAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,7 +37,7 @@ public final class ShowScoreboardAction extends PlayerAction {
     public void executePlayer(@NotNull Player player) {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
         if (getArguments().pathExists("scoreboard")) {
-            String name = getArguments().getText("scoreboard"," ",this);
+            String name = getArguments().getText("scoreboard", " ", this);
             scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
             if (scoreboard == null) {
                 scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();

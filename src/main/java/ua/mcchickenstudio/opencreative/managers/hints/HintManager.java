@@ -33,6 +33,7 @@ public interface HintManager extends Manager {
     /**
      * Checks player for suggestions and sends hint
      * in action bar if it's necessary.
+     *
      * @param player player to check.
      */
     void checkForHints(@NotNull Player player);

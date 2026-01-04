@@ -50,9 +50,9 @@ public class PlanetExperiments {
                 WorldBorder border = Bukkit.createWorldBorder();
                 border.setSize(player.getWorld().getWorldBorder().getSize());
                 if ("green".equalsIgnoreCase(args[1])) {
-                    border.setSize(border.getSize()+0.1,3600);
+                    border.setSize(border.getSize() + 0.1, 3600);
                 } else if ("red".equalsIgnoreCase(args[1])) {
-                    border.setSize(border.getSize()-0.1, 3600);
+                    border.setSize(border.getSize() - 0.1, 3600);
                 }
                 player.setWorldBorder(border);
             }
@@ -60,6 +60,6 @@ public class PlanetExperiments {
     }
 
     private void announce(String message) {
-        planet.getAudience().sendMessage(Component.text("[Experiment: " + message +"]").decorate(TextDecoration.ITALIC).color(TextColor.color(170,170,170)));
+        planet.getAudience().sendMessage(Component.text("[Experiment: " + message + "]").decorate(TextDecoration.ITALIC).color(TextColor.color(170, 170, 170)));
     }
 }

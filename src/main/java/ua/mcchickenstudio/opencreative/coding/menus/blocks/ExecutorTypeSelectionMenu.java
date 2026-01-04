@@ -36,7 +36,8 @@ import java.time.Duration;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingValueKey;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getPersistentData;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
@@ -68,17 +69,18 @@ public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
-            String typeString = getPersistentData(item,getCodingValueKey());
+            String typeString = getPersistentData(item, getCodingValueKey());
             ExecutorType executorType = null;
             try {
                 executorType = ExecutorType.valueOf(typeString);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
             if (executorCategory != null) {
                 devPlanet.setCodeChanged(true);
-                setSignLine(signLocation,2, executorCategory.name().toLowerCase());
+                setSignLine(signLocation, 2, executorCategory.name().toLowerCase());
             }
-            if (setSignLine(signLocation,3,typeString.toLowerCase())) {
+            if (setSignLine(signLocation, 3, typeString.toLowerCase())) {
                 devPlanet.setCodeChanged(true);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().closeInventory();
@@ -94,6 +96,6 @@ public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu
 
     @Override
     public List<ExecutorType> getElements() {
-        return ExecutorType.getExecutorsByCategories(executor,currentCategory);
+        return ExecutorType.getExecutorsByCategories(executor, currentCategory);
     }
 }

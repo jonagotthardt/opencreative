@@ -23,7 +23,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public final class DeleteScoreboardAction extends WorldAction {
         if (!getArguments().pathExists("scoreboards")) {
             return;
         }
-        List<String> scoreboards = getArguments().getTextList("scoreboards",this);
+        List<String> scoreboards = getArguments().getTextList("scoreboards", this);
         for (String name : scoreboards) {
             getPlanet().getTerritory().getScoreboards().unregisterScoreboard(name.toLowerCase());
         }

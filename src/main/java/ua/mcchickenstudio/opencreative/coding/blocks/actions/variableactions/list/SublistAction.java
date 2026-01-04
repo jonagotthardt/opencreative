@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -35,11 +34,11 @@ public final class SublistAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> list = getArguments().getList("list",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> list = getArguments().getList("list", this);
         int from = getArguments().getInt("from", 1, this);
         int to = getArguments().getInt("to", list.size(), this);
-        List<Object> variableList = list.subList(from-1, to-1);
+        List<Object> variableList = list.subList(from - 1, to - 1);
         setVarValue(variable, variableList);
     }
 

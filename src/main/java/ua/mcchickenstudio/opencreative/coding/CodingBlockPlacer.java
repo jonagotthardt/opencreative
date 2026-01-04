@@ -56,7 +56,6 @@ import java.util.regex.Pattern;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDebugTorch;
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.placeDevBlock;
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -70,12 +69,11 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
  */
 public class CodingBlockPlacer {
 
+    private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
+    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
     private final Material wallSign;
     private final Material container;
     private final int blocksPerColumnLimit;
-
-    private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
-    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
 
     public CodingBlockPlacer(@NotNull Material wallSign, @NotNull Material container, int maximumBlocks) {
         this.wallSign = wallSign;
@@ -88,26 +86,13 @@ public class CodingBlockPlacer {
                 devPlanet.getDevPlatformer().getCodingBlocksLimit(devPlanet));
     }
 
-    public enum CodePlacementResult {
-
-        SUCCESSFULLY,
-        NOTHING_TO_BUILD,
-        ERROR,
-        CANNOT_PLACE,
-        NOT_ENOUGH_CODING_LINES;
-
-        public boolean isSuccess() {
-            return this == SUCCESSFULLY || this == NOTHING_TO_BUILD;
-        }
-
-    }
-
     /**
      * Places all coding blocks from specified configuration
      * section and returns result. Section must contain
      * executor blocks with actions inside them.
+     *
      * @param devPlanet developers planet where coding blocks will be built.
-     * @param blocks configuration section containing coding blocks.
+     * @param blocks    configuration section containing coding blocks.
      * @return result of placing blocks.
      */
     public @NotNull CodePlacementResult placeCodingLines(@NotNull DevPlanet devPlanet, @NotNull ConfigurationSection blocks) {
@@ -131,8 +116,9 @@ public class CodingBlockPlacer {
      * Places all coding blocks from specified configuration
      * section and returns result. Section must contain
      * executor blocks with actions inside them.
-     * @param devPlanet developers planet where coding blocks will be built.
-     * @param blocks configuration section containing coding blocks.
+     *
+     * @param devPlanet      developers planet where coding blocks will be built.
+     * @param blocks         configuration section containing coding blocks.
      * @param columnLocation location of column, where first coding line will be placed
      * @return result of placing blocks.
      */
@@ -153,8 +139,9 @@ public class CodingBlockPlacer {
      * Places all coding from specified configuration
      * section into free columns. Locations of free columns
      * are locations of executor glass rows.
+     *
      * @param freeColumns locations of executor glass rows with free space through coding line.
-     * @param blocks configuration section containing coding blocks.
+     * @param blocks      configuration section containing coding blocks.
      * @return result of placing blocks.
      */
     public @NotNull CodePlacementResult placeCodingLines(@NotNull List<Location> freeColumns, @NotNull ConfigurationSection blocks) {
@@ -170,7 +157,7 @@ public class CodingBlockPlacer {
         for (String key : blocks.getKeys(false)) {
             ConfigurationSection executorBlock = blocks.getConfigurationSection(key);
             if (executorBlock == null) continue;
-            Location executorLocation = freeColumns.get(columnIndex).add(0,1,0);
+            Location executorLocation = freeColumns.get(columnIndex).add(0, 1, 0);
             if (!placeExecutor(executorLocation, executorBlock)) {
                 return CodePlacementResult.ERROR;
             }
@@ -182,8 +169,9 @@ public class CodingBlockPlacer {
 
     /**
      * Places executor and its actions through coding line.
+     *
      * @param location location of executor block, begin of coding line.
-     * @param data configuration section of executor.
+     * @param data     configuration section of executor.
      * @return true - if successfully placed executor, false - an error has occurred.
      */
     public boolean placeExecutor(@NotNull Location location, @NotNull ConfigurationSection data) {
@@ -198,7 +186,7 @@ public class CodingBlockPlacer {
             for (String key : actions.getKeys(false)) {
                 ConfigurationSection action = actions.getConfigurationSection(key);
                 if (action == null) continue;
-                actionLocation.add(2,0,0); // Moves for 2 blocks right ->
+                actionLocation.add(2, 0, 0); // Moves for 2 blocks right ->
                 if (blocksAmount > blocksPerColumnLimit) return false;
                 if (!placeAction(actionLocation, action,
                         location.getBlockX() + (2 * blocksPerColumnLimit))) return false;
@@ -213,9 +201,10 @@ public class CodingBlockPlacer {
 
     /**
      * Builds executor block on specified location.
+     *
      * @param location location of executor block where it will be placed.
-     * @param type type of executor.
-     * @param data configuration section of executor.
+     * @param type     type of executor.
+     * @param data     configuration section of executor.
      */
     private void buildExecutorBlock(@NotNull Location location, @NotNull ExecutorType type,
                                     @NotNull ConfigurationSection data) {
@@ -237,14 +226,14 @@ public class CodingBlockPlacer {
                 placeDevBlock(location, ExecutorCategory.CYCLE.getBlock(),
                         ExecutorCategory.CYCLE.getAdditionalBlock(),
                         wallSign, "cycle");
-                setSignLine(signLocation,1, cycleName);
-                setSignLine(signLocation,3, String.valueOf(cycleRepeatingTime));
+                setSignLine(signLocation, 1, cycleName);
+                setSignLine(signLocation, 3, String.valueOf(cycleRepeatingTime));
             }
             default -> {
                 placeDevBlock(location, type.getCategory().getBlock(),
                         type.getCategory().getAdditionalBlock(),
                         wallSign, type.getCategory().name().toLowerCase());
-                setSignLine(signLocation,3, type.name().toLowerCase());
+                setSignLine(signLocation, 3, type.name().toLowerCase());
             }
         }
         if (data.getBoolean("debug", false)) {
@@ -254,8 +243,9 @@ public class CodingBlockPlacer {
 
     /**
      * Places action and its actions, if it's multi action or condition.
+     *
      * @param location location of action.
-     * @param data configuration section of action.
+     * @param data     configuration section of action.
      * @param maximumX limit of X coordinate for placing blocks while moving right.
      * @return true - if successfully placed, false - error has occurred.
      */
@@ -280,9 +270,10 @@ public class CodingBlockPlacer {
     /**
      * Builds container block on top of action block,
      * if action type has arguments.
+     *
      * @param location location of action block.
-     * @param data configuration section of action.
-     * @param type type of action.
+     * @param data     configuration section of action.
+     * @param type     type of action.
      */
     private void buildContainerBlock(@NotNull Location location, @NotNull ConfigurationSection data,
                                      @Nullable ActionType type) {
@@ -331,24 +322,25 @@ public class CodingBlockPlacer {
 
     /**
      * Builds action block on specified location.
+     *
      * @param location location of action block where it will be placed.
      * @param category category of action.
-     * @param type type of action.
-     * @param data configuration section of action.
+     * @param type     type of action.
+     * @param data     configuration section of action.
      * @param maximumX limit of X coordinate for placing blocks while moving right.
      */
     private void buildActionBlock(@NotNull Location location, @NotNull ConfigurationSection data,
                                   @NotNull ActionCategory category, @Nullable ActionType type, int maximumX) {
         Location signLocation = location.getBlock().getRelative(BlockFace.SOUTH).getLocation();
-        String target = data.getString("target","").toLowerCase();
+        String target = data.getString("target", "").toLowerCase();
         switch (category) {
             case LAUNCH_FUNCTION_ACTION, LAUNCH_METHOD_ACTION -> {
                 placeDevBlock(location, category.getBlock(),
                         category.getAdditionalBlock(),
                         wallSign, category.name().toLowerCase());
-                String name = data.getString("name","");
-                setSignLine(signLocation,3, name);
-                if (!target.equals("default")) setSignLine(signLocation,4, target);
+                String name = data.getString("name", "");
+                setSignLine(signLocation, 3, name);
+                if (!target.equals("default")) setSignLine(signLocation, 4, target);
             }
             case SELECTION_ACTION -> {
                 placeDevBlock(location, category.getBlock(),
@@ -388,10 +380,10 @@ public class CodingBlockPlacer {
                 placeDevBlock(location, category.getBlock(),
                         category.getAdditionalBlock(),
                         wallSign, category.name().toLowerCase());
-                if (type != null) setSignLine(signLocation,3, type.name().toLowerCase());
-                setSignLine(signLocation,4, target);
+                if (type != null) setSignLine(signLocation, 3, type.name().toLowerCase());
+                setSignLine(signLocation, 4, target);
                 if (category.isCondition()) {
-                    if (data.getBoolean("opposed",false)) {
+                    if (data.getBoolean("opposed", false)) {
                         setSignLine(signLocation, 1, "not");
                     }
                 }
@@ -405,9 +397,10 @@ public class CodingBlockPlacer {
     /**
      * Builds inside actions and else actions of multi action
      * or condition.
-     * @param location location of multi action block.
-     * @param data configuration section of multi action.
-     * @param maximumX limit of X coordinate for placing blocks while moving right.
+     *
+     * @param location    location of multi action block.
+     * @param data        configuration section of multi action.
+     * @param maximumX    limit of X coordinate for placing blocks while moving right.
      * @param isCondition checks whether block is condition or not
      */
     private void buildMultiActionBlock(@NotNull Location location, @NotNull ConfigurationSection data,
@@ -416,7 +409,7 @@ public class CodingBlockPlacer {
         if (actions != null) {
             for (String key : actions.getKeys(false)) {
                 if (location.getBlockX() + 2 > maximumX) return;
-                location.add(2,0,0);
+                location.add(2, 0, 0);
                 ConfigurationSection action = actions.getConfigurationSection(key);
                 if (action == null) continue;
                 placeAction(location, action, maximumX);
@@ -427,12 +420,12 @@ public class CodingBlockPlacer {
         }
         ConfigurationSection elseActions = data.getConfigurationSection("else");
         if (elseActions != null) {
-            placeDevBlock(location.add(2,0,0), ActionCategory.ELSE_CONDITION.getBlock(),
+            placeDevBlock(location.add(2, 0, 0), ActionCategory.ELSE_CONDITION.getBlock(),
                     ActionCategory.ELSE_CONDITION.getAdditionalBlock(), wallSign,
                     "else_condition");
             for (String key : elseActions.getKeys(false)) {
                 if (location.getBlockX() + 2 > maximumX) return;
-                location.add(2,0,0);
+                location.add(2, 0, 0);
                 ConfigurationSection action = elseActions.getConfigurationSection(key);
                 if (action == null) continue;
                 placeAction(location, action, maximumX);
@@ -444,7 +437,8 @@ public class CodingBlockPlacer {
     /**
      * Parses value and gives it as coding item stack.
      * If it's wrong value, then returns AIR.
-     * @param type type of value.
+     *
+     * @param type        type of value.
      * @param configValue section or string.
      * @param doNotDropMe prevent dropping this item on destroying container.
      * @return item stack of value, or AIR item.
@@ -453,7 +447,7 @@ public class CodingBlockPlacer {
     private @NotNull ItemStack getItem(@NotNull ValueType type, @NotNull Object configValue, boolean doNotDropMe) {
         String stringValue = configValue.toString();
         ItemStack item = createItem(type.getMaterial(), 1,
-                "menus.developer.variables.items." + type.name().toLowerCase().replace("_","-"));
+                "menus.developer.variables.items." + type.name().toLowerCase().replace("_", "-"));
         if (doNotDropMe) setPersistentData(item, getCodingDoNotDropMeKey(), "1");
         ItemMeta meta = item.getItemMeta();
         Map<String, Object> data = null;
@@ -468,7 +462,7 @@ public class CodingBlockPlacer {
         switch (type) {
             case LOCATION -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                double x, y ,z;
+                double x, y, z;
                 float yaw, pitch;
                 x = (double) data.getOrDefault("x", 0);
                 y = (double) data.getOrDefault("y", 0);
@@ -477,31 +471,31 @@ public class CodingBlockPlacer {
                 pitch = ((Double) data.getOrDefault("pitch", 0)).floatValue();
                 Location location = new Location(null, x, y, z, yaw, pitch);
                 setDisplayName(item, InteractListener.formatLocation(location));
-                setPersistentData(item,getCodingValueKey(),"LOCATION");
+                setPersistentData(item, getCodingValueKey(), "LOCATION");
                 return item;
             }
             case VECTOR -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                double x, y ,z;
+                double x, y, z;
                 x = (double) data.getOrDefault("x", 0);
                 y = (double) data.getOrDefault("y", 0);
                 z = (double) data.getOrDefault("z", 0);
                 setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
                         "&b" + x + " " + y + " " + z));
-                setPersistentData(item,getCodingValueKey(),"VECTOR");
+                setPersistentData(item, getCodingValueKey(), "VECTOR");
                 return item;
             }
             case COLOR -> {
                 if (data == null) return new ItemStack(Material.AIR);
-                int r,g,b;
+                int r, g, b;
                 r = (int) data.getOrDefault("red", 0);
                 g = (int) data.getOrDefault("blue", 0);
                 b = (int) data.getOrDefault("green", 0);
                 if (meta != null) {
-                    meta.displayName(Component.text(r + " " + g + " " + b).color(TextColor.color(r,g,b)));
+                    meta.displayName(Component.text(r + " " + g + " " + b).color(TextColor.color(r, g, b)));
                     item.setItemMeta(meta);
                 }
-                setPersistentData(item,getCodingValueKey(),"COLOR");
+                setPersistentData(item, getCodingValueKey(), "COLOR");
                 return item;
             }
             case VARIABLE -> {
@@ -513,8 +507,8 @@ public class CodingBlockPlacer {
                     varType = VariableLink.VariableType.GLOBAL;
                 }
                 setDisplayName(item, varType.getColor() + varName);
-                setPersistentData(item,getCodingValueKey(),"VARIABLE");
-                setPersistentData(item,getCodingVariableTypeKey(),varType.name());
+                setPersistentData(item, getCodingValueKey(), "VARIABLE");
+                setPersistentData(item, getCodingVariableTypeKey(), varType.name());
                 return item;
             }
             case EVENT_VALUE -> {
@@ -525,7 +519,7 @@ public class CodingBlockPlacer {
                 if (valueType.isEmpty()) return new ItemStack(Material.AIR);
                 Target target = Target.getByText(targetType);
                 if (valueType.startsWith("PLOT")) {
-                    valueType = valueType.replace("PLOT","PLANET");
+                    valueType = valueType.replace("PLOT", "PLANET");
                 }
                 EventValue eventValue = EventValues.getInstance().getById(valueType.toLowerCase());
                 if (eventValue != null) {
@@ -573,7 +567,7 @@ public class CodingBlockPlacer {
             case ITEM, ANY, POTION -> {
                 if (data == null) return new ItemStack(Material.AIR);
                 try {
-                    item = fixItem(ItemStack.deserialize(data));;
+                    item = fixItem(ItemStack.deserialize(data));
                 } catch (Exception error) {
                     item = createItem(Material.BARRIER, 1, "items.developer.broken");
                 }
@@ -587,18 +581,33 @@ public class CodingBlockPlacer {
 
     /**
      * Builds piston at the end of condition.
+     *
      * @param location location of condition block.
      */
     private void addEndingPiston(@NotNull Location location) {
         // o[
-        location.add(3,0,0); // Moves for 3 blocks right ->
+        location.add(3, 0, 0); // Moves for 3 blocks right ->
         Block farEastBlock = location.getBlock();
         farEastBlock.setType(Material.PISTON);
         // o[ ]
         Directional data = (Directional) farEastBlock.getBlockData();
         data.setFacing(BlockFace.WEST);
         farEastBlock.setBlockData(data);
-        location.add(-1,0,0); // Returns to free slot before piston
+        location.add(-1, 0, 0); // Returns to free slot before piston
+    }
+
+    public enum CodePlacementResult {
+
+        SUCCESSFULLY,
+        NOTHING_TO_BUILD,
+        ERROR,
+        CANNOT_PLACE,
+        NOT_ENOUGH_CODING_LINES;
+
+        public boolean isSuccess() {
+            return this == SUCCESSFULLY || this == NOTHING_TO_BUILD;
+        }
+
     }
 
 }

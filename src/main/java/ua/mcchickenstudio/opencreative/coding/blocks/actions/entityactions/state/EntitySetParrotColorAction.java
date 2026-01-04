@@ -38,7 +38,7 @@ public final class EntitySetParrotColorAction extends EntityAction {
         String colorName = getArguments().getText("color", "red", this);
         Parrot.Variant variant;
         try {
-            variant = Parrot.Variant.valueOf(colorName.toUpperCase().replace("-","_"));
+            variant = Parrot.Variant.valueOf(colorName.toUpperCase().replace("-", "_"));
         } catch (Exception ignored) {
             variant = Parrot.Variant.RED;
         }

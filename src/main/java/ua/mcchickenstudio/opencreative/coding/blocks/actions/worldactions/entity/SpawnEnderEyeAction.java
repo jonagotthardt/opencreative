@@ -45,13 +45,13 @@ public final class SpawnEnderEyeAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
 
-        String dropType  = getArguments().getText("drop","random",this);
+        String dropType = getArguments().getText("drop", "random", this);
         int despawnTimer = getArguments().getInt("despawn-time", 80, this);
-        Location targetLocation = getArguments().getLocation("target",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location targetLocation = getArguments().getLocation("target", getPlanet().getTerritory().getSpawnLocation(), this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.EYE_OF_ENDER);
 
             if (spawnedEntity instanceof EnderSignal eye) {

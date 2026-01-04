@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appea
 
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -42,7 +41,7 @@ public final class SetScoreNumberStyleAction extends WorldAction {
             return;
         }
         Component style = getArguments().getComponent("style", Component.empty(), this);
-        List<String> scoreboards = getArguments().getTextList("scoreboards",this);
+        List<String> scoreboards = getArguments().getTextList("scoreboards", this);
         for (String name : scoreboards) {
             Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
             if (scoreboard != null) {

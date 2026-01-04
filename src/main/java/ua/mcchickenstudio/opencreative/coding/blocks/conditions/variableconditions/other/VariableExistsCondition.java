@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -36,11 +35,11 @@ public class VariableExistsCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        List<VariableLink> links = getArguments().getVarLinksList("variables",this);
-        boolean requireAll = getArguments().getBoolean("all",false,this);
+        List<VariableLink> links = getArguments().getVarLinksList("variables", this);
+        boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean exists = false;
         for (VariableLink link : links) {
-            if (getPlanet().getVariables().getVariable(link,this) != null) {
+            if (getPlanet().getVariables().getVariable(link, this) != null) {
                 if (!requireAll) {
                     return true;
                 }

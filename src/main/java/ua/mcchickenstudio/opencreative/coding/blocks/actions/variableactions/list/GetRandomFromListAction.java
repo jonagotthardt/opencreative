@@ -19,12 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 import java.util.Random;
@@ -36,13 +35,13 @@ public final class GetRandomFromListAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> elements = getArguments().getList("list",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> elements = getArguments().getList("list", this);
         if (elements.isEmpty()) {
             return;
         }
         int min = 0;
-        int max = elements.size()-1;
+        int max = elements.size() - 1;
         int randomId = new Random().nextInt(max + 1 - min) + min;
         Object result = elements.get(randomId);
         setVarValue(variable, result);

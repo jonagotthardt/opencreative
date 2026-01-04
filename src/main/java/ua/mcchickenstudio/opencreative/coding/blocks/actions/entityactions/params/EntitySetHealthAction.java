@@ -44,11 +44,11 @@ public final class EntitySetHealthAction extends EntityAction {
         }
 
         if (livingEntity.isDead()) {
-            sendCodingDebugLog(getPlanet(),"Can't set entity's health, livingEntity is dead.");
+            sendCodingDebugLog(getPlanet(), "Can't set entity's health, livingEntity is dead.");
             return;
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        double health = getArguments().getDouble("health",20.0d,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        double health = getArguments().getDouble("health", 20.0d, this);
         if (add) {
             health = health + livingEntity.getHealth();
         }

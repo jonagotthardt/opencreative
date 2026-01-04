@@ -18,7 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Panda;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;

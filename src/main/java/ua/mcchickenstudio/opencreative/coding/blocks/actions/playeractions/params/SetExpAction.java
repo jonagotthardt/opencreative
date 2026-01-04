@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 public final class SetExpAction extends PlayerAction {
     public SetExpAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,12 +33,12 @@ public final class SetExpAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        boolean add = getArguments().getBoolean("add",false,this);
-        float exp = getArguments().getFloat("exp",0.0f,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        float exp = getArguments().getFloat("exp", 0.0f, this);
         if (!add) {
             player.setExp(exp);
         } else {
-            player.setExp(player.getExp()+exp);
+            player.setExp(player.getExp() + exp);
         }
     }
 

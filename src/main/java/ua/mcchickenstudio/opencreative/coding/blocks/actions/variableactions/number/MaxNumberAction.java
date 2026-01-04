@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class MaxNumberAction extends VariableAction {
     public MaxNumberAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,10 +32,10 @@ public final class MaxNumberAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        double first = getArguments().getInt("first",0,this);
-        double second = getArguments().getInt("second",1,this);
-        setVarValue(variable, Math.max(first,second));
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        double first = getArguments().getInt("first", 0, this);
+        double second = getArguments().getInt("second", 1, this);
+        setVarValue(variable, Math.max(first, second));
     }
 
     @Override

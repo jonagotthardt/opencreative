@@ -33,6 +33,5 @@ public class BlockLeavesDecayedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_LEAVES_DECAYED;
     }
 
-    
 
 }

@@ -127,6 +127,10 @@ public enum EnumFacing {
         return this.name;
     }
 
+    public Axis getAxis() {
+        return axis;
+    }
+
     public enum Axis implements Predicate {
 
         X("x", Plane.HORIZONTAL),
@@ -243,55 +247,62 @@ public enum EnumFacing {
         static {
             try {
                 PLANE_LOOKUP[Plane.HORIZONTAL.ordinal()] = 1;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 PLANE_LOOKUP[Plane.VERTICAL.ordinal()] = 2;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             FACING_LOOKUP = new int[EnumFacing.values().length];
 
             try {
                 FACING_LOOKUP[EnumFacing.NORTH.ordinal()] = 1;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 FACING_LOOKUP[EnumFacing.EAST.ordinal()] = 2;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 FACING_LOOKUP[EnumFacing.SOUTH.ordinal()] = 3;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 FACING_LOOKUP[EnumFacing.WEST.ordinal()] = 4;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 FACING_LOOKUP[EnumFacing.UP.ordinal()] = 5;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 FACING_LOOKUP[EnumFacing.DOWN.ordinal()] = 6;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             AXIS_LOOKUP = new int[Axis.values().length];
 
             try {
                 AXIS_LOOKUP[Axis.X.ordinal()] = 1;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 AXIS_LOOKUP[Axis.Y.ordinal()] = 2;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
 
             try {
                 AXIS_LOOKUP[Axis.Z.ordinal()] = 3;
-            } catch (NoSuchFieldError ignored) {}
+            } catch (NoSuchFieldError ignored) {
+            }
         }
-    }
-
-    public Axis getAxis() {
-        return axis;
     }
 }

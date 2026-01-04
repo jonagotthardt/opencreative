@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.sendSignChange;
 
@@ -36,10 +36,10 @@ public final class SendSignChangeAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        String text = getArguments().getText("text","Hello world!",this);
-        int numberOfLine = getArguments().getInt("number",1,this);
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
-        sendSignChange(location,player,numberOfLine,text);
+        String text = getArguments().getText("text", "Hello world!", this);
+        int numberOfLine = getArguments().getInt("number", 1, this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
+        sendSignChange(location, player, numberOfLine, text);
     }
 
     @Override

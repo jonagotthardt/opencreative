@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 
 public final class CloseInventoryAction extends PlayerAction {

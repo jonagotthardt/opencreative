@@ -46,7 +46,7 @@ public final class EntitySetNameAction extends EntityAction {
             entity.customName(null);
             return;
         }
-        List<Component> components = getArguments().getComponentList("name",this);
+        List<Component> components = getArguments().getComponentList("name", this);
         TextComponent.Builder builder = Component.text();
         for (Component component : components) {
             builder.append(component);

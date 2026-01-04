@@ -33,6 +33,5 @@ public class BlockAnvilDamagedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_ANVIL_DAMAGED;
     }
 
-    
 
 }

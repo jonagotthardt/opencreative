@@ -33,6 +33,5 @@ public class PortalCreatedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_PORTAL_CREATED;
     }
 
-    
 
 }

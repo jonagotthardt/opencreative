@@ -26,5 +26,5 @@ public final class LimitReachedEntitiesEvent extends WorldEvent {
     public LimitReachedEntitiesEvent(Planet planet) {
         super(planet);
     }
-    
+
 }

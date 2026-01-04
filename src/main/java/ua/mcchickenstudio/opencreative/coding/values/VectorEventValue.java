@@ -41,6 +41,7 @@ public abstract class VectorEventValue extends EventValue {
     /**
      * Returns a vector that can be got from
      * player, event, action, or null.
+     *
      * @return vector, or null.
      */
     public abstract @Nullable Vector getVector(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);

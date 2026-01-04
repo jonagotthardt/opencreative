@@ -22,7 +22,8 @@ package ua.mcchickenstudio.opencreative.settings.groups;
  * <h1>LimitModifier</h1>
  * This class represents modifier of limit, that is used
  * for calculating limits.
- * @param limit original limit.
+ *
+ * @param limit    original limit.
  * @param modifier modifier of world's players count.
  */
 public record LimitModifier(int limit, int modifier) {
@@ -30,6 +31,7 @@ public record LimitModifier(int limit, int modifier) {
     /**
      * Returns limit by adding modifier multiplied by players count
      * to original limit.
+     *
      * @param playersCount count of players.
      * @return limit, that can be used for checks.
      */

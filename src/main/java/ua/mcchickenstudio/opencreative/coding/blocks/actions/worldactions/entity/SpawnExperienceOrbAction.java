@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -41,9 +41,9 @@ public final class SpawnExperienceOrbAction extends WorldAction {
             sendCodingDebugLog(getPlanet(), "Too many entities: spawn entity action is cancelled.");
             return;
         }
-        int amount = getArguments().getInt("amount",1,this);
-        for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,EntityType.EXPERIENCE_ORB);
+        int amount = getArguments().getInt("amount", 1, this);
+        for (Location location : getArguments().getLocationList("locations", this)) {
+            Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location, EntityType.EXPERIENCE_ORB);
             if (spawnedEntity instanceof ExperienceOrb orb) {
                 orb.setExperience(amount);
                 setLastSpawnedEntity(orb);

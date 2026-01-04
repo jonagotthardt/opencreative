@@ -52,18 +52,19 @@ public final class LobbySettings {
             return;
         }
 
-        clearInventory = section.getBoolean("clear-inventory",true);
-        disableExplosions = section.getBoolean("disable-explosions",true);
-        disallowWorldEdit = section.getBoolean("disallow-world-edit",true);
-        disallowDamagingMobs = section.getBoolean("disallow-damaging-mobs",true);
-        disallowSpawningMobs = section.getBoolean("disallow-spawning-mobs",true);
-        disallowPlacingBlocks = section.getBoolean("disallow-placing-blocks",true);
-        disallowDestroyingBlocks = section.getBoolean("disallow-destroying-blocks",true);
+        clearInventory = section.getBoolean("clear-inventory", true);
+        disableExplosions = section.getBoolean("disable-explosions", true);
+        disallowWorldEdit = section.getBoolean("disallow-world-edit", true);
+        disallowDamagingMobs = section.getBoolean("disallow-damaging-mobs", true);
+        disallowSpawningMobs = section.getBoolean("disallow-spawning-mobs", true);
+        disallowPlacingBlocks = section.getBoolean("disallow-placing-blocks", true);
+        disallowDestroyingBlocks = section.getBoolean("disallow-destroying-blocks", true);
     }
 
     /**
      * Checks whether player's inventory should be
      * cleared after joining a lobby.
+     *
      * @return true - will be cleared, false - not.
      */
     public boolean shouldClearInventory() {
@@ -73,6 +74,7 @@ public final class LobbySettings {
     /**
      * Checks whether explosions in lobby world
      * should be cancelled without bypass permission.
+     *
      * @return true - disable explosions, false - allow them.
      */
     public boolean areExplosionsDisabled() {
@@ -82,6 +84,7 @@ public final class LobbySettings {
     /**
      * Checks whether damaging mobs in lobby world
      * should be cancelled without bypass permission.
+     *
      * @return true - disable damaging mobs, false - allow it.
      */
     public boolean isDamagingMobsDisallowed() {
@@ -91,6 +94,7 @@ public final class LobbySettings {
     /**
      * Checks whether destroying blocks in lobby world
      * should be cancelled without bypass permission.
+     *
      * @return true - disable destroying blocks, false - allow it.
      */
     public boolean isDestroyingBlocksDisallowed() {
@@ -100,6 +104,7 @@ public final class LobbySettings {
     /**
      * Checks whether placing blocks in lobby world
      * should be cancelled without bypass permission.
+     *
      * @return true - disable placing blocks, false - allow it.
      */
     public boolean isPlacingBlocksDisallowed() {
@@ -109,6 +114,7 @@ public final class LobbySettings {
     /**
      * Checks whether spawning mobs in lobby world
      * should be cancelled without bypass permission.
+     *
      * @return true - disable spawning mobs, false - allow it.
      */
     public boolean isSpawningMobsDisallowed() {
@@ -118,10 +124,11 @@ public final class LobbySettings {
     /**
      * Checks whether using WorldEdit in lobby world
      * should be cancelled without bypass permission.
+     *
      * @return true - disable spawning mobs, false - allow it.
      */
     public boolean isWorldEditDisallowed() {
         return disallowWorldEdit;
     }
-    
+
 }

@@ -18,13 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -37,6 +30,13 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -52,6 +52,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.sendOpenedChestA
  * <h1>Layout</h1>
  * This class represents an inventory menus, that opens
  * if player clicks on coding block chest to fill arguments.
+ *
  * @see LayoutMaker
  */
 public abstract class Layout extends AbstractMenu {
@@ -62,6 +63,7 @@ public abstract class Layout extends AbstractMenu {
     protected final ArgumentSlot[] requiredSlots;
     private final Block containerBlock;
     private final Set<Player> viewers = new HashSet<>();
+    private int currentSlot = 0;
 
     public Layout(int rows, ActionType actionType, Block chestBlock) {
         super(rows, ChatColor.stripColor(actionType.getLocaleName()));
@@ -71,8 +73,8 @@ public abstract class Layout extends AbstractMenu {
     }
 
     protected void fillDecorationItems() {
-        for (int slot = 0; slot < (getRows()*9); slot++) {
-            setItem(slot,DECORATION_PANE_ITEM);
+        for (int slot = 0; slot < (getRows() * 9); slot++) {
+            setItem(slot, DECORATION_PANE_ITEM);
         }
     }
 
@@ -99,15 +101,15 @@ public abstract class Layout extends AbstractMenu {
         if (argsSlots.contains(event.getRawSlot())) {
             ItemStack argItem = inventory.getItem(event.getRawSlot());
             for (ParameterButton parameter : parameterButtons) {
-                if (itemEquals(argItem,parameter.getItem())) {
+                if (itemEquals(argItem, parameter.getItem())) {
                     event.setCancelled(true);
                     if (getValueType(currentItem) == ValueType.VARIABLE) {
-                        inventory.setItem(event.getRawSlot(),currentItem);
+                        inventory.setItem(event.getRawSlot(), currentItem);
                         Sounds.DEV_VARIABLE_PARAMETER.play(event.getWhoClicked());
                     } else {
                         parameter.next();
                         Sounds.DEV_NEXT_PARAMETER.play(event.getWhoClicked());
-                        inventory.setItem(event.getRawSlot(),parameter.getItem());
+                        inventory.setItem(event.getRawSlot(), parameter.getItem());
                     }
                 }
             }
@@ -127,7 +129,7 @@ public abstract class Layout extends AbstractMenu {
         viewers.add((Player) event.getPlayer());
         (containerBlock.getType() == Material.BARREL ? Sounds.DEV_OPEN_BARREL : Sounds.DEV_OPEN_CHEST).play(event.getPlayer());
         for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
-            sendOpenedChestAnimation(onlinePlayer,containerBlock);
+            sendOpenedChestAnimation(onlinePlayer, containerBlock);
         }
     }
 
@@ -142,7 +144,7 @@ public abstract class Layout extends AbstractMenu {
                 devPlanet.setCodeChanged(true);
                 devPlanet.unregisterOpenedMenu(containerBlock.getLocation());
                 for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
-                    sendClosedChestAnimation(onlinePlayer,containerBlock);
+                    sendClosedChestAnimation(onlinePlayer, containerBlock);
                 }
             }
             destroy();
@@ -154,7 +156,7 @@ public abstract class Layout extends AbstractMenu {
         int chestSlot = 0;
         for (int argSlot : argsSlots) {
             ItemStack argItem = inventory.getItem(argSlot);
-            container.getInventory().setItem(chestSlot,argItem);
+            container.getInventory().setItem(chestSlot, argItem);
             for (ParameterButton rb : parameterButtons) {
                 if (argItem == null) continue;
                 ItemStack itemStack = argItem.clone();
@@ -167,12 +169,12 @@ public abstract class Layout extends AbstractMenu {
                         if (rb.getCurrentValue() instanceof Integer) {
                             itemStack.setType(Material.SLIME_BALL);
                             itemMeta = itemStack.getItemMeta();
-                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&a")+ rb.getCurrentValue()+".0");
+                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a") + rb.getCurrentValue() + ".0");
                         } else if (rb.getCurrentValue() instanceof Boolean) {
                             boolean value = (boolean) rb.getCurrentValue();
                             itemStack.setType(Material.CLOCK);
                             itemMeta = itemStack.getItemMeta();
-                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&" + (value ? "a" : "c") + value));
+                            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&" + (value ? "a" : "c") + value));
                         } else {
                             itemStack.setType(Material.BOOK);
                             itemMeta = itemStack.getItemMeta();
@@ -180,9 +182,9 @@ public abstract class Layout extends AbstractMenu {
                         }
                         itemMeta.lore(null);
                         itemStack.setItemMeta(itemMeta);
-                        setPersistentData(itemStack,getCodingValueKey(), ValueType.getByMaterial(itemStack.getType()).name());
-                        setPersistentData(itemStack,getCodingDoNotDropMeKey(), "1");
-                        container.getInventory().setItem(chestSlot,itemStack);
+                        setPersistentData(itemStack, getCodingValueKey(), ValueType.getByMaterial(itemStack.getType()).name());
+                        setPersistentData(itemStack, getCodingDoNotDropMeKey(), "1");
+                        container.getInventory().setItem(chestSlot, itemStack);
                     }
                 }
             }
@@ -196,39 +198,38 @@ public abstract class Layout extends AbstractMenu {
     }
 
     protected void setArgSlotVertical(int argNumber, int slot) {
-        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((slot-9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
-        setArgSlot(argNumber,slot);
-        setItem((slot+9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
+        setItem((slot - 9), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
+        setArgSlot(argNumber, slot);
+        setItem((slot + 9), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
     }
 
     protected void setArgSlotHorizontal(int argNumber, int slot) {
-        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((slot-1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
-        setArgSlot(argumentSlot,slot);
-        setItem((slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
+        setItem((slot - 1), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
+        setArgSlot(argumentSlot, slot);
+        setItem((slot + 1), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
     }
 
     protected void setArgSlotCross(int argNumber, int slot) {
-        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem((slot-9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
-        setItem((slot-1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
-        setArgSlot(argumentSlot,slot);
-        setItem((slot+1), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
-        setItem((slot+9), argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
+        setItem((slot - 9), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
+        setItem((slot - 1), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
+        setArgSlot(argumentSlot, slot);
+        setItem((slot + 1), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
+        setItem((slot + 9), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
     }
 
     protected void setGlass(int argNumber, int slot) {
-        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setItem(slot, argumentSlot.getVarType().getGlassItem(actionType,argumentSlot.getPath()));
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
+        setItem(slot, argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
     }
 
     protected void setArgSlot(int argNumber, int slot) {
-        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber-1];
-        setArgSlot(argumentSlot,slot);
+        ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
+        setArgSlot(argumentSlot, slot);
     }
 
-    private int currentSlot = 0;
     private void setArgSlot(ArgumentSlot argumentSlot, int slot) {
         ItemStack contentItem = getFromContent(currentSlot++);
         if (argumentSlot.isParameter()) {
@@ -236,22 +237,22 @@ public abstract class Layout extends AbstractMenu {
             if (contentItem != null && contentItem.hasItemMeta()) {
                 String display = ChatColor.stripColor(contentItem.getItemMeta().getDisplayName());
                 if (contentItem.getType() == Material.SLIME_BALL) {
-                    value = Integer.parseInt(display.replace(".0",""));
+                    value = Integer.parseInt(display.replace(".0", ""));
                 } else if (contentItem.getType() == Material.CLOCK) {
                     value = Boolean.parseBoolean(display);
                 } else {
                     value = display;
                 }
             }
-            ParameterButton rb = createParamButton((ParameterSlot) argumentSlot,value);
+            ParameterButton rb = createParamButton((ParameterSlot) argumentSlot, value);
             if (contentItem != null && getValueType(contentItem) == ValueType.VARIABLE) {
-                setItem(slot,contentItem);
+                setItem(slot, contentItem);
             } else {
-                setItem(slot,rb.getItem());
+                setItem(slot, rb.getItem());
             }
             parameterButtons.add(rb);
         } else {
-            setItem(slot,contentItem);
+            setItem(slot, contentItem);
         }
         argsSlots.add(slot);
     }
@@ -261,8 +262,8 @@ public abstract class Layout extends AbstractMenu {
     }
 
     protected ParameterButton createParamButton(ParameterSlot argumentSlot, Object value) {
-        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_","-") + ".arguments." + argumentSlot.getPath();
-        return new ParameterButton(value, argumentSlot.getValues(),argumentSlot.getPath(),"items.developer",path,argumentSlot.getIcons());
+        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_", "-") + ".arguments." + argumentSlot.getPath();
+        return new ParameterButton(value, argumentSlot.getValues(), argumentSlot.getPath(), "items.developer", path, argumentSlot.getIcons());
     }
 
     protected int getRow(int slot) {
@@ -278,7 +279,7 @@ public abstract class Layout extends AbstractMenu {
 
     protected List<Integer> getRowSlots(int row) {
         int lastSlot = (row * 9 - 1);
-        int firstSlot = (lastSlot-8);
+        int firstSlot = (lastSlot - 8);
         List<Integer> slots = new ArrayList<>();
         for (int slot = firstSlot; slot < lastSlot; slot++) {
             slots.add(slot);
@@ -298,67 +299,67 @@ public abstract class Layout extends AbstractMenu {
         List<Integer> slots = new ArrayList<>();
         switch (count) {
             case 1:
-                slots.add((row*9-5));
+                slots.add((row * 9 - 5));
                 break;
             case 2:
-                slots.add((row*9-7));
-                slots.add((row*9-3));
+                slots.add((row * 9 - 7));
+                slots.add((row * 9 - 3));
                 break;
             case 3:
-                slots.add((row*9-8));
-                slots.add((row*9-5));
-                slots.add((row*9-2));
+                slots.add((row * 9 - 8));
+                slots.add((row * 9 - 5));
+                slots.add((row * 9 - 2));
                 break;
             case 4:
-                slots.add((row*9-8));
-                slots.add((row*9-6));
-                slots.add((row*9-4));
-                slots.add((row*9-2));
+                slots.add((row * 9 - 8));
+                slots.add((row * 9 - 6));
+                slots.add((row * 9 - 4));
+                slots.add((row * 9 - 2));
                 break;
             case 5:
-                slots.add((row*9-9));
-                slots.add((row*9-7));
-                slots.add((row*9-5));
-                slots.add((row*9-3));
-                slots.add((row*9-1));
+                slots.add((row * 9 - 9));
+                slots.add((row * 9 - 7));
+                slots.add((row * 9 - 5));
+                slots.add((row * 9 - 3));
+                slots.add((row * 9 - 1));
                 break;
             case 6:
-                slots.add((row*9-8));
-                slots.add((row*9-7));
-                slots.add((row*9-6));
-                slots.add((row*9-4));
-                slots.add((row*9-3));
-                slots.add((row*9-2));
+                slots.add((row * 9 - 8));
+                slots.add((row * 9 - 7));
+                slots.add((row * 9 - 6));
+                slots.add((row * 9 - 4));
+                slots.add((row * 9 - 3));
+                slots.add((row * 9 - 2));
                 break;
             case 7:
-                slots.add((row*9-8));
-                slots.add((row*9-7));
-                slots.add((row*9-6));
-                slots.add((row*9-5));
-                slots.add((row*9-4));
-                slots.add((row*9-3));
-                slots.add((row*9-2));
+                slots.add((row * 9 - 8));
+                slots.add((row * 9 - 7));
+                slots.add((row * 9 - 6));
+                slots.add((row * 9 - 5));
+                slots.add((row * 9 - 4));
+                slots.add((row * 9 - 3));
+                slots.add((row * 9 - 2));
                 break;
             case 8:
-                slots.add((row*9-9));
-                slots.add((row*9-8));
-                slots.add((row*9-7));
-                slots.add((row*9-6));
-                slots.add((row*9-4));
-                slots.add((row*9-3));
-                slots.add((row*9-2));
-                slots.add((row*9-1));
+                slots.add((row * 9 - 9));
+                slots.add((row * 9 - 8));
+                slots.add((row * 9 - 7));
+                slots.add((row * 9 - 6));
+                slots.add((row * 9 - 4));
+                slots.add((row * 9 - 3));
+                slots.add((row * 9 - 2));
+                slots.add((row * 9 - 1));
                 break;
             default:
-                slots.add((row*9-9));
-                slots.add((row*9-8));
-                slots.add((row*9-7));
-                slots.add((row*9-6));
-                slots.add((row*9-5));
-                slots.add((row*9-4));
-                slots.add((row*9-3));
-                slots.add((row*9-2));
-                slots.add((row*9-1));
+                slots.add((row * 9 - 9));
+                slots.add((row * 9 - 8));
+                slots.add((row * 9 - 7));
+                slots.add((row * 9 - 6));
+                slots.add((row * 9 - 5));
+                slots.add((row * 9 - 4));
+                slots.add((row * 9 - 3));
+                slots.add((row * 9 - 2));
+                slots.add((row * 9 - 1));
                 break;
         }
         return slots;

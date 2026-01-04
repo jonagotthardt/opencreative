@@ -38,12 +38,12 @@ public final class EntitySetMaximumAirAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        int ticks = getArguments().getInt("ticks",0,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int ticks = getArguments().getInt("ticks", 0, this);
         if (!add) {
             livingEntity.setMaximumAir(ticks);
         } else {
-            livingEntity.setMaximumAir(livingEntity.getMaximumAir()+ticks);
+            livingEntity.setMaximumAir(livingEntity.getMaximumAir() + ticks);
         }
     }
 

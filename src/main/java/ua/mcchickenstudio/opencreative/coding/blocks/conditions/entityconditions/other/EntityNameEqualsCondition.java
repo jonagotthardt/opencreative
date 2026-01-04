@@ -37,9 +37,9 @@ public class EntityNameEqualsCondition extends EntityCondition {
 
     @Override
     public boolean checkEntity(@NotNull Entity entity) {
-        boolean requiredColor = getArguments().getBoolean("require-color",false,this);
-        boolean requiredCaps = getArguments().getBoolean("require-caps",false,this);
-        List<String> names = getArguments().getTextList("names",this);
+        boolean requiredColor = getArguments().getBoolean("require-color", false, this);
+        boolean requiredCaps = getArguments().getBoolean("require-caps", false, this);
+        List<String> names = getArguments().getTextList("names", this);
         String entityName = entity.getName();
         for (String name : names) {
             if (!requiredColor) {

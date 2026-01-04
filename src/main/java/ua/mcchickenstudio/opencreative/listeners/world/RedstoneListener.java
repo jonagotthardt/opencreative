@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.listeners.world;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -26,7 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedRedstoneEvent;
 import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -45,33 +44,33 @@ public final class RedstoneListener implements Listener {
         Location location = event.getBlock().getLocation();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(location.getWorld());
         if (planet != null) {
-            planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount()+1);
+            planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount() + 1);
             if (planet.getLimits().getLastRedstoneOperationsAmount() > planet.getLimits().getRedstoneOperationsLimit()) {
-                    sendMessageOnce(planet, "world.redstone-limit",
+                sendMessageOnce(planet, "world.redstone-limit",
                         new PlaceholderReplacer("count", planet.getLimits().getRedstoneOperationsLimit()),
                         null, 5);
-                    if (location.getBlock().getType() == Material.OBSERVER) {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                location.getBlock().setType(Material.AIR);
-                            }
-                        }.runTaskLater(OpenCreative.getPlugin(),1L);
-                    } else {
-                        location.getBlock().setType(Material.CAVE_AIR);
-                    }
-                    planet.getLimits().setLastRedstoneOperationsAmount(0);
-                    new LimitReachedRedstoneEvent(planet).callEvent();
+                if (location.getBlock().getType() == Material.OBSERVER) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            location.getBlock().setType(Material.AIR);
+                        }
+                    }.runTaskLater(OpenCreative.getPlugin(), 1L);
+                } else {
+                    location.getBlock().setType(Material.CAVE_AIR);
+                }
+                planet.getLimits().setLastRedstoneOperationsAmount(0);
+                new LimitReachedRedstoneEvent(planet).callEvent();
             } else {
-                new ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockRedstoneEvent(planet,event).callEvent();
+                new ua.mcchickenstudio.opencreative.coding.blocks.events.world.blocks.BlockRedstoneEvent(planet, event).callEvent();
             }
             if (planet.getLimits().getLastRedstoneOperationsAmount() > 0) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount()-1);
+                        planet.getLimits().setLastRedstoneOperationsAmount(planet.getLimits().getLastRedstoneOperationsAmount() - 1);
                     }
-                }.runTaskLater(OpenCreative.getPlugin(),5L);
+                }.runTaskLater(OpenCreative.getPlugin(), 5L);
             }
         }
 

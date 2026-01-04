@@ -40,7 +40,8 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {}
+    public void afterCreation(@NotNull World world) {
+    }
 
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {

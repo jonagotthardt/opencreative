@@ -35,7 +35,7 @@ public final class FireworkBoostAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        ItemStack item = getArguments().getItem("firework", new ItemStack(Material.FIREWORK_ROCKET),this);
+        ItemStack item = getArguments().getItem("firework", new ItemStack(Material.FIREWORK_ROCKET), this);
         player.fireworkBoost(item);
     }
 

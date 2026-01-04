@@ -26,7 +26,7 @@ package ua.mcchickenstudio.opencreative.coding.exceptions;
 public final class CollectionWithCollectionException extends RuntimeException {
 
     public CollectionWithCollectionException(Class<?> first, Class<?> second) {
-        super("Adding collection (" + first.getSimpleName() + ") to collection (" + second.getSimpleName() + ") is not supported." );
+        super("Adding collection (" + first.getSimpleName() + ") to collection (" + second.getSimpleName() + ") is not supported.");
     }
 
 }

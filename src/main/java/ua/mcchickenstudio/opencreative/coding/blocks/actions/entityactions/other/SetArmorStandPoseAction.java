@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.util.EulerAngle;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.util.EulerAngle;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetArmorStandPoseAction extends EntityAction {
@@ -39,10 +39,10 @@ public final class SetArmorStandPoseAction extends EntityAction {
         if (!(entity instanceof ArmorStand armorStand)) {
             throw new UnsupportedEntityException(ArmorStand.class, entity);
         }
-        double x = getArguments().getDouble("x",0.0d,this);
-        double y = getArguments().getDouble("x",0.0d,this);
-        double z = getArguments().getDouble("x",0.0d,this);
-        armorStand.setBodyPose(new EulerAngle(x,y,z));
+        double x = getArguments().getDouble("x", 0.0d, this);
+        double y = getArguments().getDouble("x", 0.0d, this);
+        double z = getArguments().getDouble("x", 0.0d, this);
+        armorStand.setBodyPose(new EulerAngle(x, y, z));
     }
 
     @Override

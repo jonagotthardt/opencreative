@@ -50,12 +50,12 @@ public final class SpawnFallingBlockAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
-        Material block = getArguments().getMaterial("block",Material.GRASS_BLOCK,this);
-        float damagePerBlock = getArguments().getFloat("damage",0.0f,this);
-        boolean cancelDrop = !getArguments().getBoolean("drop",true,this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
+        Material block = getArguments().getMaterial("block", Material.GRASS_BLOCK, this);
+        float damagePerBlock = getArguments().getFloat("damage", 0.0f, this);
+        boolean cancelDrop = !getArguments().getBoolean("drop", true, this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.FALLING_BLOCK);
 
             if (spawnedEntity instanceof FallingBlock falling) {

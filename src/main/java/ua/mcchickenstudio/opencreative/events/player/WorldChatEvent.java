@@ -19,13 +19,13 @@
 package ua.mcchickenstudio.opencreative.events.player;
 
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.events.CreativeEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.events.CreativeEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
  * Called when player sends message.

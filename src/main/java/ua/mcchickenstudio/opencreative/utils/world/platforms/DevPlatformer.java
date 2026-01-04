@@ -42,6 +42,7 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Constructor of coding platform generator.
+     *
      * @param id short id of dev platformer that will be used in registry.
      *           <p>
      *           It must be lower-snake-cased, for example: "horizontal", "classic".
@@ -54,6 +55,7 @@ public abstract class DevPlatformer implements ExtensionContent {
     /**
      * Returns id of platforms creator, that will be used
      * to find it in registry.
+     *
      * @return id of dev platformer.
      */
     public final @NotNull String getID() {
@@ -62,12 +64,14 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Sets world border for developer planet.
+     *
      * @param devPlanet dev planet to set border.
      */
     public abstract void setWorldBorder(@NotNull DevPlanet devPlanet);
 
     /**
      * Returns coding platform by location.
+     *
      * @param location location to get platform.
      * @return coding platform - if location contains coding platform, otherwise - null.
      */
@@ -75,6 +79,7 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Returns the most far platform by X coordinate.
+     *
      * @param devPlanet developer planet to get platform.
      * @return farthest platform by X, or coding platform placed at (1,1).
      */
@@ -82,6 +87,7 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Returns the most far platform by Z coordinate.
+     *
      * @param devPlanet developer planet to get platform.
      * @return farthest platform by Z, or coding platform placed at (1,1).
      */
@@ -90,6 +96,7 @@ public abstract class DevPlatformer implements ExtensionContent {
     /**
      * Returns list of existing coding platforms, that
      * can be used to place coding blocks.
+     *
      * @param devPlanet developer planet to get platforms.
      * @return list of developer platforms.
      */
@@ -97,8 +104,9 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Claims coding platform, if it doesn't exist yet.
+     *
      * @param devPlanet developer planet to claim platform.
-     * @param platform coding platform to claim.
+     * @param platform  coding platform to claim.
      * @return true - claimed coding platform, false - already built and exists.
      */
     public abstract boolean claimPlatform(@NotNull DevPlanet devPlanet, @NotNull DevPlatform platform);
@@ -106,9 +114,10 @@ public abstract class DevPlatformer implements ExtensionContent {
     /**
      * Builds coding platform by its coordinates.
      * Coordinates are not from Minecraft location.
-     * @param platform platform to create.
-     * @param floorMaterial material of block, that will be used as floor.
-     * @param eventMaterial material of block, that will be placed as cells for event blocks placement.
+     *
+     * @param platform       platform to create.
+     * @param floorMaterial  material of block, that will be used as floor.
+     * @param eventMaterial  material of block, that will be placed as cells for event blocks placement.
      * @param actionMaterial material of block, that will be placed as cells for action blocks placement.
      * @return true - created coding platform, false - cannot build it.
      */
@@ -116,6 +125,7 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Returns location of top left corner of platform.
+     *
      * @param platform dev platform to get location.
      * @return begin location of platform.
      */
@@ -123,6 +133,7 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Returns location of bottom right corner of platform.
+     *
      * @param platform dev platform to get location.
      * @return end location of platform.
      */
@@ -131,6 +142,7 @@ public abstract class DevPlatformer implements ExtensionContent {
 
     /**
      * Returns next platform, that will be created by player.
+     *
      * @return next available coding platform.
      */
     public abstract @NotNull DevPlatform getNextAvailablePlatform(@NotNull DevPlanet planet);
@@ -138,6 +150,7 @@ public abstract class DevPlatformer implements ExtensionContent {
     /**
      * Returns maximum amount of coding blocks in 1 column.
      * Includes executor and all actions blocks through coding line.
+     *
      * @return limit of coding blocks.
      */
     public abstract int getCodingBlocksLimit(@NotNull DevPlanet planet);
@@ -147,6 +160,7 @@ public abstract class DevPlatformer implements ExtensionContent {
      * on Z coordinate instead of Y coordinate.
      * Useful for skipping additional checks while
      * parsing coding blocks.
+     *
      * @return true - considers only Z or X coordinates, false - considers also Y.
      */
     public abstract boolean notDependsOnHeight();

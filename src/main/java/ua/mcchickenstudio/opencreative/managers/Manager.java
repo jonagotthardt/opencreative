@@ -31,6 +31,7 @@ public interface Manager {
 
     /**
      * Checks if manager is ready to work.
+     *
      * @return true - if enabled, false - disabled.
      */
     boolean isEnabled();
@@ -38,6 +39,7 @@ public interface Manager {
     /**
      * Returns name of manager, that will be
      * displayed by request in the logs.
+     *
      * @return name of manager.
      */
     String getName();

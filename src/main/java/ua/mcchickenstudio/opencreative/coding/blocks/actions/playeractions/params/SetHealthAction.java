@@ -20,13 +20,13 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.para
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -37,11 +37,11 @@ public final class SetHealthAction extends PlayerAction {
 
     public void executePlayer(@NotNull Player player) {
         if (player.isDead()) {
-            sendCodingDebugLog(getPlanet(),"Can't set player's health, player is dead.");
+            sendCodingDebugLog(getPlanet(), "Can't set player's health, player is dead.");
             return;
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        double health = getArguments().getDouble("health",20.0d,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        double health = getArguments().getDouble("health", 20.0d, this);
         if (add) {
             health = health + player.getHealth();
         }

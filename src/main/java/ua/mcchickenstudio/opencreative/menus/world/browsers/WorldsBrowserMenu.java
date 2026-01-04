@@ -18,19 +18,18 @@
 
 package ua.mcchickenstudio.opencreative.menus.world.browsers;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -53,21 +52,21 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
     private int sortType = 1;
 
     public WorldsBrowserMenu(Player player, Set<Planet> planets) {
-        super(player,getLocaleMessage("menus.all-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45,48,50},new int[]{45,46,52,53});
+        super(player, getLocaleMessage("menus.all-worlds.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{45, 48, 50}, new int[]{45, 46, 52, 53});
         this.planets = new ArrayList<>(planets);
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
-        RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended");
+        RECOMMENDED = createItem(Material.WIND_CHARGE, 1, "menus.all-worlds.items.recommended");
     }
 
     public WorldsBrowserMenu(Player player, Set<Planet> planets, boolean withRecommendedButton) {
-        super(player,getLocaleMessage("menus.all-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45,48,50},new int[]{45,46,52,53});
+        super(player, getLocaleMessage("menus.all-worlds.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{45, 48, 50}, new int[]{45, 46, 52, 53});
         this.planets = new ArrayList<>(planets);
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
-        RECOMMENDED = withRecommendedButton ? createItem(Material.WIND_CHARGE,1,"menus.all-worlds.items.recommended") : DECORATION_ITEM;
+        RECOMMENDED = withRecommendedButton ? createItem(Material.WIND_CHARGE, 1, "menus.all-worlds.items.recommended") : DECORATION_ITEM;
     }
 
     @Override
@@ -79,7 +78,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
     protected void fillOtherItems() {
         ParameterButton sort = new ParameterButton(
                 "online",
-                List.of("online","likes","last"),
+                List.of("online", "likes", "last"),
                 "sort",
                 "menus.all-worlds",
                 "menus.all-worlds.items.sort",
@@ -87,7 +86,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         );
         ParameterButton category = new ParameterButton(
                 "online",
-                List.of("all","sandbox","adventure","arcade","roleplay","simulator","experiment","story","strategy"),
+                List.of("all", "sandbox", "adventure", "arcade", "roleplay", "simulator", "experiment", "story", "strategy"),
                 "category",
                 "menus.all-worlds",
                 "menus.all-worlds.items.category",
@@ -95,11 +94,11 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         );
         buttons.add(sort);
         buttons.add(category);
-        setItem(45,RECOMMENDED);
-        setItem(47,createItem(Material.CYAN_STAINED_GLASS_PANE,1));
-        setItem(48,category.getItem());
-        setItem(50,sort.getItem());
-        setItem(51,createItem(Material.CYAN_STAINED_GLASS_PANE,1));
+        setItem(45, RECOMMENDED);
+        setItem(47, createItem(Material.CYAN_STAINED_GLASS_PANE, 1));
+        setItem(48, category.getItem());
+        setItem(50, sort.getItem());
+        setItem(51, createItem(Material.CYAN_STAINED_GLASS_PANE, 1));
     }
 
     @Override
@@ -110,7 +109,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
             return;
         }
         for (ParameterButton button : buttons) {
-            if (itemEquals(item,button.getItem(true))) {
+            if (itemEquals(item, button.getItem(true))) {
                 if (event.getRawSlot() == 50) {
                     button.next();
                     sortType = button.getCurrentChoice();
@@ -135,7 +134,7 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
                 }
             }
         }
-        if (itemEquals(item,RECOMMENDED)) {
+        if (itemEquals(item, RECOMMENDED)) {
             new RecommendedWorldsMenu().open(getPlayer());
         }
 
@@ -182,16 +181,19 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : RECOMMENDED);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : RECOMMENDED);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
         }
     }
 
     private void sortElements() {
         Comparator<Object> planetComparator = switch (sortType) {
-            case 2 -> (planet1, planet2) -> Integer.compare(((Planet) planet2).getInformation().getReputation(), ((Planet) planet1).getInformation().getReputation());
-            case 3 -> (planet1, planet2) -> Long.compare(((Planet) planet2).getCreationTime(), ((Planet) planet1).getCreationTime());
-            default -> (planet1, planet2) -> Integer.compare(((Planet) planet2).getOnline(), ((Planet) planet1).getOnline());
+            case 2 ->
+                    (planet1, planet2) -> Integer.compare(((Planet) planet2).getInformation().getReputation(), ((Planet) planet1).getInformation().getReputation());
+            case 3 ->
+                    (planet1, planet2) -> Long.compare(((Planet) planet2).getCreationTime(), ((Planet) planet1).getCreationTime());
+            default ->
+                    (planet1, planet2) -> Integer.compare(((Planet) planet2).getOnline(), ((Planet) planet1).getOnline());
         };
         elements.sort(planetComparator);
     }
@@ -203,17 +205,17 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,getCurrentPage()+1,"menus.all-worlds.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW, getCurrentPage() + 1, "menus.all-worlds.items.next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.all-worlds.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, Math.max(1, getCurrentPage() - 1), "menus.all-worlds.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.all-worlds.items.no-worlds");
+        return createItem(Material.BARRIER, 1, "menus.all-worlds.items.no-worlds");
     }
 
     @Override

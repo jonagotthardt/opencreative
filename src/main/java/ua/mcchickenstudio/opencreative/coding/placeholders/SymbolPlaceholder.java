@@ -26,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 public final class SymbolPlaceholder extends KeyPlaceholder {
 
     public SymbolPlaceholder() {
-        super("space","empty","new-line","nl");
+        super("space", "empty", "new-line", "nl");
     }
 
     @Override

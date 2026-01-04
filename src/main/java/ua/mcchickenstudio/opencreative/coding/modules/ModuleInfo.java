@@ -38,7 +38,8 @@ import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.FileUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.getModuleConfig;
+import static ua.mcchickenstudio.opencreative.utils.FileUtils.setModuleConfigParameter;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
@@ -64,8 +65,21 @@ public class ModuleInfo {
     }
 
     /**
+     * Sets new display name of module, that will be displayed
+     * in modules browser menu.
+     *
+     * @param name new display name.
+     */
+    public void setDisplayName(String name) {
+        this.displayName = name;
+        setModuleConfigParameter(module, "name", name);
+        updateIconAsync();
+    }
+
+    /**
      * Returns text component of display name, that can be
      * used in item stacks or texts.
+     *
      * @return display name of planet.
      */
     public Component displayName() {
@@ -76,6 +90,18 @@ public class ModuleInfo {
         return description;
     }
 
+    /**
+     * Sets new description of module, that will be displayed
+     * in worlds browser menu.
+     *
+     * @param description new description.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+        setModuleConfigParameter(module, "description", description);
+        updateIconAsync();
+    }
+
     public @NotNull ItemStack getIcon() {
         if (module.getInformation().isPublic()) return icon;
         else {
@@ -83,8 +109,33 @@ public class ModuleInfo {
         }
     }
 
+    /**
+     * Sets new item stack as module's icon. Name, lore
+     * and enchantments will be removed from item.
+     *
+     * @param itemStack new icon.
+     */
+    public void setIcon(ItemStack itemStack) {
+        ItemStack newIcon = clearItemMeta(itemStack.clone());
+        newIcon.setAmount(1);
+        if (ItemUtils.doesItemRequireSpecialData(newIcon)) {
+            setModuleConfigParameter(module, "icon", ItemUtils.saveItemAsByteArray(newIcon));
+        } else {
+            setModuleConfigParameter(module, "icon", newIcon.getType().name());
+        }
+        this.icon = newIcon;
+        updateIcon();
+    }
+
     public boolean isPublic() {
         return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        if (isPublic == this.isPublic) return;
+        this.isPublic = isPublic;
+        setModuleConfigParameter(module, "public", isPublic);
+        updateIconAsync();
     }
 
     public long getCreationTime() {
@@ -104,9 +155,9 @@ public class ModuleInfo {
 
     private void loadInformation() {
         FileConfiguration config = getModuleConfig(module);
-        displayName = config.getString("name","Unknown name");
-        description = config.getString("description","Unknown description");
-        isPublic = config.getBoolean("public",true);
+        displayName = config.getString("name", "Unknown name");
+        description = config.getString("description", "Unknown description");
+        isPublic = config.getBoolean("public", true);
         icon = new ItemStack(Material.BARREL, 1);
         try {
             if (config.isString("icon")) {
@@ -127,8 +178,8 @@ public class ModuleInfo {
         }
         if (icon.isEmpty()) icon = new ItemStack(Material.BARREL, 1);
         setPersistentData(icon, getItemIdKey(), String.valueOf(module.getId()));
-        creationTime = config.getLong("creation-time",1670573410000L);
-        reputation = config.getStringList("players.liked").size()-config.getStringList("players.disliked").size();
+        creationTime = config.getLong("creation-time", 1670573410000L);
+        reputation = config.getStringList("players.liked").size() - config.getStringList("players.disliked").size();
         downloads = config.getIntegerList("planets").size();
     }
 
@@ -145,10 +196,10 @@ public class ModuleInfo {
             if (loreLine.contains("%moduleDescription%")) {
                 String[] newLines = this.description.split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&', newLine)));
                 }
             } else {
-                lore.add(parseModuleLines(module,loreLine));
+                lore.add(parseModuleLines(module, loreLine));
             }
         }
         item.setAmount(1);
@@ -159,52 +210,6 @@ public class ModuleInfo {
         icon = item;
     }
 
-    /**
-     * Sets new item stack as module's icon. Name, lore
-     * and enchantments will be removed from item.
-     * @param itemStack new icon.
-     */
-    public void setIcon(ItemStack itemStack) {
-        ItemStack newIcon = clearItemMeta(itemStack.clone());
-        newIcon.setAmount(1);
-        if (ItemUtils.doesItemRequireSpecialData(newIcon)) {
-            setModuleConfigParameter(module,"icon", ItemUtils.saveItemAsByteArray(newIcon));
-        } else {
-            setModuleConfigParameter(module,"icon", newIcon.getType().name());
-        }
-        this.icon = newIcon;
-        updateIcon();
-    }
-
-    public void setPublic(boolean isPublic) {
-        if (isPublic == this.isPublic) return;
-        this.isPublic = isPublic;
-        setModuleConfigParameter(module,"public", isPublic);
-        updateIconAsync();
-    }
-
-    /**
-     * Sets new display name of module, that will be displayed
-     * in modules browser menu.
-     * @param name new display name.
-     */
-    public void setDisplayName(String name) {
-        this.displayName = name;
-        setModuleConfigParameter(module,"name",name);
-        updateIconAsync();
-    }
-
-    /**
-     * Sets new description of module, that will be displayed
-     * in worlds browser menu.
-     * @param description new description.
-     */
-    public void setDescription(String description) {
-        this.description = description;
-        setModuleConfigParameter(module,"description",description);
-        updateIconAsync();
-    }
-
     public boolean wasDownloadedBefore(@NotNull Planet planet) {
         FileConfiguration config = getModuleConfig(module);
         List<Integer> planets = config.getIntegerList("planets");
@@ -213,6 +218,7 @@ public class ModuleInfo {
 
     /**
      * Marks planet as module downloader.
+     *
      * @param planet planet that has installed module.
      */
     public void addDownload(@NotNull Planet planet) {

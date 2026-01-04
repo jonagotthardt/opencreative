@@ -37,9 +37,9 @@ public class IsEntityInAreaCondition extends EntityCondition {
 
     @Override
     public boolean checkEntity(@NotNull Entity entity) {
-        Location first = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location first = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
         Location location = entity.getLocation();
-        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
+        Location second = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
         double maxX = Math.max(first.getX(), second.getX());
         double maxY = Math.max(first.getY(), second.getY());
         double maxZ = Math.max(first.getZ(), second.getZ());

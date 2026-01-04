@@ -35,12 +35,14 @@ public interface InventoryMenu extends InventoryHolder {
 
     /**
      * Opens the inventory for player.
+     *
      * @param player player to open menus.
      */
     void open(@NotNull Player player);
 
     /**
      * Executes when player clicks in inventory.
+     *
      * @param event event of click in inventory.
      */
     void onClick(@NotNull InventoryClickEvent event);
@@ -49,6 +51,7 @@ public interface InventoryMenu extends InventoryHolder {
      * Executes when player opens inventory and
      * sees it first time. Useful for playing
      * sounds or setting items.
+     *
      * @param event event of inventory open.
      */
     void onOpen(@NotNull InventoryOpenEvent event);
@@ -58,8 +61,9 @@ public interface InventoryMenu extends InventoryHolder {
      * <p>
      * <b>NOTE:</b> Menu should be unregistered after
      * closing it.
-     * @see #destroy()
+     *
      * @param event event of inventory close.
+     * @see #destroy()
      */
     default void onClose(@NotNull InventoryCloseEvent event) {
         destroy();
@@ -67,6 +71,7 @@ public interface InventoryMenu extends InventoryHolder {
 
     /**
      * Returns the creation time of menu in milliseconds of Unix format.
+     *
      * @return creation time of menu.
      */
     long getCreationTime();

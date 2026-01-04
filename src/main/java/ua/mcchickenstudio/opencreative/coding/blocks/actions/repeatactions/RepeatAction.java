@@ -17,12 +17,13 @@
  */
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions;
+
 import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyRepeatsException;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
@@ -64,12 +65,12 @@ public abstract class RepeatAction extends MultiAction {
         }
         if (handler.getWaitDelay() > 0) {
             getPlanet().getTerritory().scheduleRunnable(
-                new PlanetRunnable(getPlanet()) {
-                    @Override
-                    public void execute() {
-                        RepeatAction.this.execute(entity);
-                    }
-                }, handler.getWaitDelay());
+                    new PlanetRunnable(getPlanet()) {
+                        @Override
+                        public void execute() {
+                            RepeatAction.this.execute(entity);
+                        }
+                    }, handler.getWaitDelay());
         } else {
             execute(entity);
         }
@@ -90,11 +91,12 @@ public abstract class RepeatAction extends MultiAction {
             }
         };
         getPlanet().getTerritory().addBukkitRunnable(runnable);
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
     }
 
     /**
      * Sets whether repeat action should stop repeating itself.
+     *
      * @param mustStop true - stop repeater, false - continue.
      */
     public void setMustStop(boolean mustStop) {
@@ -104,6 +106,7 @@ public abstract class RepeatAction extends MultiAction {
     /**
      * Checks whether repeat action can continue repeating and
      * executing the same actions.
+     *
      * @return true - can continue and execute actions, false - stop repeater.
      */
     public abstract boolean checkCanContinue();

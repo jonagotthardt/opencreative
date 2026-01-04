@@ -33,6 +33,5 @@ public class BlockNotePlayedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_NOTE_PLAYED;
     }
 
-    
 
 }

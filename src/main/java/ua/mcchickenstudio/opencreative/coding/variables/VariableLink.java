@@ -37,6 +37,7 @@ public final class VariableLink {
 
     /**
      * Creates instance of variable link.
+     *
      * @param name name of variable.
      * @param type type of variable (local, global, saved).
      */
@@ -47,6 +48,7 @@ public final class VariableLink {
 
     /**
      * Returns type of variable (local, global, saved).
+     *
      * @return type of variable.
      */
     public @NotNull VariableType getVariableType() {
@@ -55,10 +57,16 @@ public final class VariableLink {
 
     /**
      * Returns name of variable.
+     *
      * @return name of variable.
      */
     public @NotNull String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "null! " + name + " - " + type.name();
     }
 
     public enum VariableType {
@@ -82,10 +90,6 @@ public final class VariableLink {
             this.color = color;
         }
 
-        public ChatColor getColor() {
-            return color;
-        }
-
         public static VariableType getEnum(String string) {
             for (VariableType type : VariableType.values()) {
                 if (type.name().equals(string.toUpperCase())) {
@@ -95,14 +99,13 @@ public final class VariableLink {
             return null;
         }
 
+        public ChatColor getColor() {
+            return color;
+        }
+
         public String getLocalized() {
             return getLocaleMessage("items.developer.variable." + name().toLowerCase());
         }
-    }
-
-    @Override
-    public String toString() {
-        return "null! " + name + " - " + type.name();
     }
 
 }

@@ -30,7 +30,8 @@ public final class DisabledBlocksManager implements BlocksManager {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

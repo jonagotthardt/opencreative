@@ -38,7 +38,7 @@ public final class EntitySetVisualFireAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        livingEntity.setVisualFire(getArguments().getBoolean("boolean",true,this));
+        livingEntity.setVisualFire(getArguments().getBoolean("boolean", true, this));
     }
 
     @Override

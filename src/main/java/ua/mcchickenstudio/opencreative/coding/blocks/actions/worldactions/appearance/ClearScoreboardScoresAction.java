@@ -18,14 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
-import io.papermc.paper.scoreboard.numbers.NumberFormat;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -45,7 +37,7 @@ public final class ClearScoreboardScoresAction extends WorldAction {
         if (!getArguments().pathExists("scoreboards")) {
             return;
         }
-        List<String> scoreboards = getArguments().getTextList("scoreboards",this);
+        List<String> scoreboards = getArguments().getTextList("scoreboards", this);
         for (String name : scoreboards) {
             Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
             if (scoreboard != null) {

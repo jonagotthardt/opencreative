@@ -32,5 +32,5 @@ public class ItemCraftExecutor extends PlayerExecutor {
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_ITEM_CRAFT;
     }
-    
+
 }

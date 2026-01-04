@@ -19,21 +19,21 @@
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
 import org.bukkit.*;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.settings.Sounds.SOUND_REGEX;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -49,7 +49,7 @@ public class PlaySoundCommand extends CommandHandler {
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            Bukkit.getServer().dispatchCommand(sender,"minecraft:playsound " + String.join(" ",args));
+            Bukkit.getServer().dispatchCommand(sender, "minecraft:playsound " + String.join(" ", args));
         } else {
             if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
 
@@ -89,7 +89,8 @@ public class PlaySoundCommand extends CommandHandler {
                 if (isCustomTarget && args.length >= 3) {
                     try {
                         volume = Float.parseFloat(args[2]);
-                    } catch (NumberFormatException ignored) {}
+                    } catch (NumberFormatException ignored) {
+                    }
                 }
                 soundString = args[isCustomTarget ? 1 : 0];
             } else {
@@ -102,7 +103,8 @@ public class PlaySoundCommand extends CommandHandler {
                     if (!(args.length == 3 && isCustomTarget)) {
                         pitch = Float.parseFloat(args[isCustomTarget ? 3 : 2]);
                     }
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             if (args.length >= 4) {
@@ -111,7 +113,8 @@ public class PlaySoundCommand extends CommandHandler {
                     if (!(args.length == 4 && isCustomTarget)) {
                         seed = Long.parseLong(args[isCustomTarget ? 4 : 3]);
                     }
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             if (isCustomTarget) target = Bukkit.getPlayer(args[0]);
@@ -135,27 +138,28 @@ public class PlaySoundCommand extends CommandHandler {
 
             try {
                 sound = Sound.valueOf(soundString.toUpperCase());
-            } catch (IllegalArgumentException ignored) {}
-            volume = Math.clamp(volume,1,100);
-            pitch = Math.clamp(pitch,0.1f,2.0f);
+            } catch (IllegalArgumentException ignored) {
+            }
+            volume = Math.clamp(volume, 1, 100);
+            pitch = Math.clamp(pitch, 0.1f, 2.0f);
             Location location = target.getLocation().clone();
             if (volume < 100) {
-                location = location.add(0,-50,0);
+                location = location.add(0, -50, 0);
             }
             if (sound == null) {
                 if (seed != null) {
-                    target.playSound(location,soundString,SoundCategory.AMBIENT,volume,pitch,seed);
+                    target.playSound(location, soundString, SoundCategory.AMBIENT, volume, pitch, seed);
                 } else {
-                    target.playSound(location,soundString,volume,pitch);
+                    target.playSound(location, soundString, volume, pitch);
                 }
             } else {
                 if (seed != null) {
-                    target.playSound(location,sound,SoundCategory.AMBIENT,volume,pitch,seed);
+                    target.playSound(location, sound, SoundCategory.AMBIENT, volume, pitch, seed);
                 } else {
-                    target.playSound(location,sound,volume,pitch);
+                    target.playSound(location, sound, volume, pitch);
                 }
             }
-            sender.sendMessage(getLocaleMessage("commands.play-sound.played").replace("%sound%",soundString).replace("%volume%",String.valueOf(volume)).replace("%pitch%",String.valueOf(pitch)).replace("%player%",target.getName()));
+            sender.sendMessage(getLocaleMessage("commands.play-sound.played").replace("%sound%", soundString).replace("%volume%", String.valueOf(volume)).replace("%pitch%", String.valueOf(pitch)).replace("%player%", target.getName()));
         }
     }
 

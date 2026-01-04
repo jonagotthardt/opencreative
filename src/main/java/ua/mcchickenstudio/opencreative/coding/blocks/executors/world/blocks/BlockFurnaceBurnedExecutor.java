@@ -33,6 +33,5 @@ public class BlockFurnaceBurnedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_BREWING_FUEL;
     }
 
-    
 
 }

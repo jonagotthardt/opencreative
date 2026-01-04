@@ -18,9 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.world;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.entity.Player;
 
 public final class PlayEvent extends WorldEvent implements Cancellable {
 

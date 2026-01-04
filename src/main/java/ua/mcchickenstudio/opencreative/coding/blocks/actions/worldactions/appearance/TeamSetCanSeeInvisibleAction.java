@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -37,10 +36,10 @@ public final class TeamSetCanSeeInvisibleAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
-        boolean visible = getArguments().getBoolean("visible",true,this);
+        boolean visible = getArguments().getBoolean("visible", true, this);
         if (scoreboard == null) {
             return;
         }

@@ -25,7 +25,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.WorldCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 

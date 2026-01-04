@@ -23,6 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 /**
  * This class represents an Argument Slot, that can be added to actions.
  * It's used for creating layouts and saving items into chest.
+ *
  * @see ParameterSlot
  */
 public class ArgumentSlot {

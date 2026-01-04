@@ -46,41 +46,46 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
 
     private final Planet planet;
-    private final ItemStack CONNECT = createItem(Material.NETHER_STAR,1,"menus.world-access.items.connect","connect");
+    private final ItemStack CONNECT = createItem(Material.NETHER_STAR, 1, "menus.world-access.items.connect", "connect");
 
-    private final ItemStack PLAY_MODE = createItem(Material.DIAMOND_BLOCK,1,"menus.world-access.items.play-mode","play");
-    private final ItemStack BUILD_MODE = createItem(Material.BRICKS,1,"menus.world-access.items.build-mode","build");
-    private final ItemStack ADVERTISEMENT = createItem(Material.BEACON,1,"menus.world-access.items.advertisement","ad");
+    private final ItemStack PLAY_MODE = createItem(Material.DIAMOND_BLOCK, 1, "menus.world-access.items.play-mode", "play");
+    private final ItemStack BUILD_MODE = createItem(Material.BRICKS, 1, "menus.world-access.items.build-mode", "build");
+    private final ItemStack ADVERTISEMENT = createItem(Material.BEACON, 1, "menus.world-access.items.advertisement", "ad");
 
-    private final ItemStack OPENED = createItem(Material.LIME_STAINED_GLASS,1,"menus.world-access.items.opened","close");
-    private final ItemStack CLOSED = createItem(Material.RED_STAINED_GLASS,1,"menus.world-access.items.closed","open");
-    private final ItemStack DELETE = createItem(Material.TNT_MINECART,1,"menus.world-access.items.delete","delete");
+    private final ItemStack OPENED = createItem(Material.LIME_STAINED_GLASS, 1, "menus.world-access.items.opened", "close");
+    private final ItemStack CLOSED = createItem(Material.RED_STAINED_GLASS, 1, "menus.world-access.items.closed", "open");
+    private final ItemStack DELETE = createItem(Material.TNT_MINECART, 1, "menus.world-access.items.delete", "delete");
 
     public WorldAccessMenu(Planet planet) {
-        super(4, MessageUtils.getLocaleMessage("menus.world-access.title",false).replace("%name%",substring(ChatColor.stripColor(planet.getInformation().getDisplayName()),25)));
+        super(4, MessageUtils.getLocaleMessage("menus.world-access.title", false).replace("%name%", substring(ChatColor.stripColor(planet.getInformation().getDisplayName()), 25)));
         this.planet = planet;
     }
 
     @Override
     public void fillItems(Player player) {
         if (getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
-            if (!player.hasCooldown(PLAY_MODE.getType())) player.setCooldown(PLAY_MODE.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND)*20);
-            if (!player.hasCooldown(BUILD_MODE.getType())) player.setCooldown(BUILD_MODE.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND)*20);
-            if (!player.hasCooldown(CLOSED.getType())) player.setCooldown(CLOSED.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND)*20);
-            if (!player.hasCooldown(OPENED.getType())) player.setCooldown(OPENED.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND)*20);
+            if (!player.hasCooldown(PLAY_MODE.getType()))
+                player.setCooldown(PLAY_MODE.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) * 20);
+            if (!player.hasCooldown(BUILD_MODE.getType()))
+                player.setCooldown(BUILD_MODE.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) * 20);
+            if (!player.hasCooldown(CLOSED.getType()))
+                player.setCooldown(CLOSED.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) * 20);
+            if (!player.hasCooldown(OPENED.getType()))
+                player.setCooldown(OPENED.getType(), getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) * 20);
         }
         if (getCooldown(player, CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND) > 0) {
-            if (!player.hasCooldown(ADVERTISEMENT.getType())) player.setCooldown(ADVERTISEMENT.getType(), getCooldown(player, CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND)*20);
+            if (!player.hasCooldown(ADVERTISEMENT.getType()))
+                player.setCooldown(ADVERTISEMENT.getType(), getCooldown(player, CooldownUtils.CooldownType.ADVERTISEMENT_COMMAND) * 20);
         }
-        setItem(DECORATION_PANE_ITEM,28,34);
-        setItem(createItem(Material.BLUE_STAINED_GLASS_PANE,1),29,33);
-        setItem(31,setPersistentData(planet.getInformation().getIcon().clone(),getItemTypeKey(),"connect"));
+        setItem(DECORATION_PANE_ITEM, 28, 34);
+        setItem(createItem(Material.BLUE_STAINED_GLASS_PANE, 1), 29, 33);
+        setItem(31, setPersistentData(planet.getInformation().getIcon().clone(), getItemTypeKey(), "connect"));
         setItem(13, CONNECT);
-        CONNECT.setAmount(Math.clamp(1,planet.getOnline(),64));
-        setItem(10,planet.getMode() == Planet.Mode.PLAYING ? PLAY_MODE : BUILD_MODE);
-        setItem(27,ADVERTISEMENT);
-        setItem(16,planet.getSharing() == Planet.Sharing.PUBLIC ? OPENED : CLOSED);
-        setItem(35,DELETE);
+        CONNECT.setAmount(Math.clamp(1, planet.getOnline(), 64));
+        setItem(10, planet.getMode() == Planet.Mode.PLAYING ? PLAY_MODE : BUILD_MODE);
+        setItem(27, ADVERTISEMENT);
+        setItem(16, planet.getSharing() == Planet.Sharing.PUBLIC ? OPENED : CLOSED);
+        setItem(35, DELETE);
     }
 
     @Override
@@ -111,7 +116,7 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(BUILD_MODE.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
+                player.setCooldown(BUILD_MODE.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown() * 20);
                 PlanetModeChangeEvent planetEvent = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.BUILD);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
@@ -127,7 +132,7 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(PLAY_MODE.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
+                player.setCooldown(PLAY_MODE.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown() * 20);
                 PlanetModeChangeEvent planetEvent = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING, player);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
@@ -146,7 +151,7 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                 if (planet.getSharing() != Planet.Sharing.PUBLIC) {
                     player.sendMessage(getLocaleMessage("advertisement.closed-world"));
                     Sounds.PLAYER_FAIL.play(player);
-                    player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
+                    player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown() * 20);
                     return;
                 }
                 PlanetAdvertisementEvent planetEvent = new PlanetAdvertisementEvent(planet, player);
@@ -162,19 +167,19 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                         player.sendMessage(getPlayerLocaleMessage("advertisement.no-money", player)
                                 .replace("%money%", String.valueOf(Math.round(advertisementPrice - playerBalance))));
                         Sounds.PLAYER_FAIL.play(player);
-                        player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
+                        player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown() * 20);
                         return;
                     }
                 }
-                player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown()*20);
-                AdvertisementCommand.handlePlanetAdvertisement(player,planet);
+                player.setCooldown(item.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getAdvertisementCooldown() * 20);
+                AdvertisementCommand.handlePlanetAdvertisement(player, planet);
             }
             case "open" -> {
                 if (player.hasCooldown(item.getType()) || getCooldown(player, CooldownUtils.CooldownType.GENERIC_COMMAND) > 0) {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(OPENED.getType(),OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
+                player.setCooldown(OPENED.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown() * 20);
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PUBLIC);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
@@ -190,7 +195,7 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                     Sounds.PLAYER_FAIL.play(player);
                     return;
                 }
-                player.setCooldown(CLOSED.getType(),OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown()*20);
+                player.setCooldown(CLOSED.getType(), OpenCreative.getSettings().getGroups().getGroup(player).getGenericCommandCooldown() * 20);
                 PlanetSharingChangeEvent planetEvent = new PlanetSharingChangeEvent(planet, planet.getSharing(), Planet.Sharing.PRIVATE);
                 planetEvent.callEvent();
                 if (planetEvent.isCancelled()) {
@@ -205,7 +210,7 @@ public final class WorldAccessMenu extends AbstractMenu implements WorldMenu {
                 player.closeInventory();
                 Bukkit.getScheduler().scheduleSyncDelayedTask(OpenCreative.getPlugin(),
                         () -> new ConfirmationMenu(
-                                getLocaleMessage("menus.confirmation.delete-world", false).replace("%name%", substring(ChatColor.stripColor(planet.getInformation().getDisplayName()),20)),
+                                getLocaleMessage("menus.confirmation.delete-world", false).replace("%name%", substring(ChatColor.stripColor(planet.getInformation().getDisplayName()), 20)),
                                 Material.TNT,
                                 getLocaleItemName("menus.confirmation.items.delete-world.name"),
                                 getLocaleItemDescription("menus.confirmation.items.delete-world.lore"),

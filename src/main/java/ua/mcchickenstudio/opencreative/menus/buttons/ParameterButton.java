@@ -18,14 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.menus.buttons;
 
-import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.fixItem;
@@ -40,15 +41,14 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 public class ParameterButton {
 
     private final ItemStack item;
-    private Object currentValue;
-    private int currentChoice;
-
     private final String name;
     private final String turnedPath;
     private final String localizationPath;
     private final List<String> originalLore;
     private final List<Object> valueList = new ArrayList<>();
     private final List<Material> materialList = new ArrayList<>();
+    private Object currentValue;
+    private int currentChoice;
 
     public ParameterButton(Object currentValue, List<Object> values, String name, String turnedPath, String itemPath, List<Material> materials) {
         this.turnedPath = turnedPath;
@@ -63,29 +63,29 @@ public class ParameterButton {
             currentChoice = 1;
         }
         for (int i = 0; i < valueList.size(); i++) {
-            if (currentValue.equals(valueList.get(i)))  {
-                currentChoice = (i+1);
+            if (currentValue.equals(valueList.get(i))) {
+                currentChoice = (i + 1);
                 break;
             }
         }
         this.currentValue = currentValue;
-        this.item = materialList.size() == currentChoice-1 ?
-                createItem(Material.BARRIER,1,localizationPath) :
-                createItem(materialList.get(currentChoice-1),1,localizationPath);
-        if (!messageExists(localizationPath+".name")) {
+        this.item = materialList.size() == currentChoice - 1 ?
+                createItem(Material.BARRIER, 1, localizationPath) :
+                createItem(materialList.get(currentChoice - 1), 1, localizationPath);
+        if (!messageExists(localizationPath + ".name")) {
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&fParameter: &6" + name));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&fParameter: &6" + name));
             item.setItemMeta(meta);
         }
-        if (!messageExists(localizationPath+".lore")) {
+        if (!messageExists(localizationPath + ".lore")) {
             ItemMeta meta = item.getItemMeta();
             List<String> notFoundLore = new ArrayList<>();
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&6This parameter was not filled in localization,"));
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&6please tell administration to fill line."));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&6This parameter was not filled in localization,"));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&6please tell administration to fill line."));
             notFoundLore.add(" ");
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&7" + localizationPath));
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&fValues:"));
-            for (int i = 1; i < valueList.size()+1; i++) {
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&7" + localizationPath));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&fValues:"));
+            for (int i = 1; i < valueList.size() + 1; i++) {
                 notFoundLore.add("%" + i + "%");
             }
             meta.setLore(notFoundLore);
@@ -108,27 +108,27 @@ public class ParameterButton {
             currentChoice = 1;
         }
         for (int i = 0; i < valueList.size(); i++) {
-            if (currentValue.equals(valueList.get(i)))  {
-                currentChoice = (i+1);
+            if (currentValue.equals(valueList.get(i))) {
+                currentChoice = (i + 1);
                 break;
             }
         }
         this.currentValue = currentValue;
-        this.item = createItem(material,1,localizationPath);
-        if (!messageExists(localizationPath+".name")) {
+        this.item = createItem(material, 1, localizationPath);
+        if (!messageExists(localizationPath + ".name")) {
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&fParameter: &6" + name));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&fParameter: &6" + name));
             item.setItemMeta(meta);
         }
-        if (!messageExists(localizationPath+".lore")) {
+        if (!messageExists(localizationPath + ".lore")) {
             ItemMeta meta = item.getItemMeta();
             List<String> notFoundLore = new ArrayList<>();
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&6This parameter was not filled in localization,"));
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&6please tell administration to fill line."));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&6This parameter was not filled in localization,"));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&6please tell administration to fill line."));
             notFoundLore.add(" ");
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&7" + localizationPath));
-            notFoundLore.add(ChatColor.translateAlternateColorCodes('&',"&fValues:"));
-            for (int i = 1; i < valueList.size()+1; i++) {
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&7" + localizationPath));
+            notFoundLore.add(ChatColor.translateAlternateColorCodes('&', "&fValues:"));
+            for (int i = 1; i < valueList.size() + 1; i++) {
                 notFoundLore.add("%" + i + "%");
             }
             meta.setLore(notFoundLore);
@@ -144,9 +144,9 @@ public class ParameterButton {
         } else {
             currentChoice--;
         }
-        currentValue = valueList.get(currentChoice-1);
+        currentValue = valueList.get(currentChoice - 1);
         if (currentChoice <= materialList.size()) {
-            item.setType(materialList.get(currentChoice-1));
+            item.setType(materialList.get(currentChoice - 1));
         }
         updateLore();
     }
@@ -157,31 +157,31 @@ public class ParameterButton {
         } else {
             currentChoice++;
         }
-        if (currentChoice-1 == valueList.size()) return;
-        currentValue = valueList.get(currentChoice-1);
+        if (currentChoice - 1 == valueList.size()) return;
+        currentValue = valueList.get(currentChoice - 1);
         if (currentChoice <= materialList.size()) {
-            item.setType(materialList.get(currentChoice-1));
+            item.setType(materialList.get(currentChoice - 1));
         }
         updateLore();
 
     }
 
     public void updateLore() {
-        String turnedOn = MessageUtils.getLocaleMessage(turnedPath+".turned-on");
-        String turnedOff = MessageUtils.getLocaleMessage(turnedPath+".turned-off");
+        String turnedOn = MessageUtils.getLocaleMessage(turnedPath + ".turned-on");
+        String turnedOff = MessageUtils.getLocaleMessage(turnedPath + ".turned-off");
         List<String> newLore = new ArrayList<>();
         String turned;
         for (String loreLine : originalLore) {
             String content = loreLine;
             if (content.matches("%[0-9]+%")) {
-                int choiceNumber = Integer.parseInt(content.replace("%",""));
+                int choiceNumber = Integer.parseInt(content.replace("%", ""));
                 if (choiceNumber > valueList.size()) continue;
                 if (choiceNumber == currentChoice) {
                     turned = turnedOn;
                 } else {
                     turned = turnedOff;
                 }
-                Object value = valueList.get(choiceNumber-1);
+                Object value = valueList.get(choiceNumber - 1);
                 String choicePath = localizationPath + ".choices." + (value instanceof Integer i ? (i) : value).toString();
                 String choiceMessage = (value instanceof Integer i ? (i) : value).toString();
                 if (messageExists(choicePath)) {
@@ -219,6 +219,6 @@ public class ParameterButton {
     }
 
     public Object getCurrentValue() {
-        return valueList.get(currentChoice-1);
+        return valueList.get(currentChoice - 1);
     }
 }

@@ -23,7 +23,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 public abstract class PlayerExecutor extends Executor {
-    
+
     public PlayerExecutor(Planet planet, int x, int y, int z) {
         super(planet, x, y, z);
     }

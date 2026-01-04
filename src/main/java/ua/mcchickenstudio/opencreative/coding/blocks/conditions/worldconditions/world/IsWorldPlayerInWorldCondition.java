@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.world;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
@@ -38,9 +37,9 @@ public class IsWorldPlayerInWorldCondition extends WorldCondition {
 
     @Override
     public boolean check() {
-        List<String> players = getArguments().getTextList("players",this);
-        boolean allElements = getArguments().getBoolean("all",true,this);
-        String consider = getArguments().getText("consider","all",this);
+        List<String> players = getArguments().getTextList("players", this);
+        boolean allElements = getArguments().getBoolean("all", true, this);
+        String consider = getArguments().getText("consider", "all", this);
         boolean inWorld = false;
         for (String requiredPlayer : players) {
             Player player = Bukkit.getPlayerExact(requiredPlayer);

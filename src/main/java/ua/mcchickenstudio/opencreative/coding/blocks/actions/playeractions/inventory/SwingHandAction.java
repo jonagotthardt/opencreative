@@ -33,7 +33,7 @@ public final class SwingHandAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        String hand = getArguments().getText("hand","main",this);
+        String hand = getArguments().getText("hand", "main", this);
         if (hand.equalsIgnoreCase("off")) {
             player.swingOffHand();
         } else {

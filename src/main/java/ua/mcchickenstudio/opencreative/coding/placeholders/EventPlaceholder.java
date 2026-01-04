@@ -24,12 +24,12 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
 
 public final class EventPlaceholder extends KeyPlaceholder {
 
     public EventPlaceholder() {
-        super("killer","damager","killer_uuid","damager_uuid","victim","victim_uuid","shooter","shooter_uuid","event");
+        super("killer", "damager", "killer_uuid", "damager_uuid", "victim", "victim_uuid", "shooter", "shooter_uuid", "event");
     }
 
     @Override
@@ -43,10 +43,12 @@ public final class EventPlaceholder extends KeyPlaceholder {
         }
         return switch (key) {
             case "killer", "damager", "shooter" -> killer != null ? killer.getName() : null;
-            case "killer_uuid", "damager_uuid", "shooter_uuid" -> killer != null ? killer.getUniqueId().toString() : null;
+            case "killer_uuid", "damager_uuid", "shooter_uuid" ->
+                    killer != null ? killer.getUniqueId().toString() : null;
             case "victim" -> victim != null ? victim.getName() : null;
             case "victim_uuid" -> victim != null ? victim.getUniqueId().toString() : null;
-            case "event" -> handler.getEvent() == null ? "null" : handler.getEvent().getClass().getSimpleName().toLowerCase();
+            case "event" ->
+                    handler.getEvent() == null ? "null" : handler.getEvent().getClass().getSimpleName().toLowerCase();
             default -> null;
         };
     }

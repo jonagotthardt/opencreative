@@ -51,10 +51,10 @@ public final class SpawnItemDisplayAction extends WorldAction {
             return;
         }
 
-        Component customName = getArguments().getComponent("name",Component.text(""),this);
-        ItemStack item = getArguments().getItem("item", new ItemStack(Material.AIR),this);
+        Component customName = getArguments().getComponent("name", Component.text(""), this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.AIR), this);
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
+        for (Location location : getArguments().getLocationList("locations", this)) {
             Entity spawnedEntity = getWorld().spawnEntity(location, EntityType.ITEM_DISPLAY);
 
             if (spawnedEntity instanceof ItemDisplay display) {

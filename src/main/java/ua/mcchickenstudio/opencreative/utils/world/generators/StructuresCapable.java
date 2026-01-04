@@ -23,4 +23,5 @@ package ua.mcchickenstudio.opencreative.utils.world.generators;
  * This interface is used for {@link WorldGenerator}, that supports "Generate structures"
  * option in {@link ua.mcchickenstudio.opencreative.menus.world.WorldGenerationMenu}.
  */
-public interface StructuresCapable {}
+public interface StructuresCapable {
+}

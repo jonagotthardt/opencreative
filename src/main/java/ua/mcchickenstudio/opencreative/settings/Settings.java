@@ -35,23 +35,21 @@ import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceEndEvent;
 import ua.mcchickenstudio.opencreative.events.status.MaintenanceStartEvent;
-import ua.mcchickenstudio.opencreative.settings.items.Items;
-import ua.mcchickenstudio.opencreative.settings.items.ItemFixerSettings;
 import ua.mcchickenstudio.opencreative.managers.stability.DisabledWatchdog;
 import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 import ua.mcchickenstudio.opencreative.settings.items.*;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
+import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
-import ua.mcchickenstudio.opencreative.utils.world.generators.*;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 
 import java.io.File;
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
@@ -62,19 +60,6 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
  */
 public final class Settings {
 
-    private boolean debug = false;
-    private boolean maintenance = false;
-    private boolean creativeChatEnabled = true;
-
-    private boolean consoleCriticalErrors = true;
-    private boolean consoleNotFoundMessage = false;
-    private boolean consoleWarnings = true;
-
-    private boolean notifyNoPlayersAround = true;
-
-    private BukkitRunnable announcer;
-    private PlayerListChanger listChanger = PlayerListChanger.FULL;
-
     private final Groups groups;
     private final Commands commands;
     private final Requirements requirements;
@@ -82,14 +67,20 @@ public final class Settings {
     private final CodingSettings codingSettings;
     private final EconomySettings economySettings;
     private final ItemFixerSettings itemFixerSettings;
-
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
-
     private final Set<String> messagesIgnoringReset = new HashSet<>();
-
     private final Map<Sounds, SettingsSound> sounds = new HashMap<>();
     private final Map<ItemsGroup, SettingsItemsGroup> itemsGroups = new HashMap<>();
+    private boolean debug = false;
+    private boolean maintenance = false;
+    private boolean creativeChatEnabled = true;
+    private boolean consoleCriticalErrors = true;
+    private boolean consoleNotFoundMessage = false;
+    private boolean consoleWarnings = true;
+    private boolean notifyNoPlayersAround = true;
+    private BukkitRunnable announcer;
+    private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
     public Settings() {
         groups = new Groups();
@@ -103,6 +94,7 @@ public final class Settings {
 
     /**
      * Loads settings values from configuration file.
+     *
      * @param config Configuration file.
      */
     public void load(FileConfiguration config) {
@@ -112,16 +104,16 @@ public final class Settings {
         messagesIgnoringReset.clear();
         sounds.clear();
 
-        listChanger = PlayerListChanger.fromString(config.getString("hide-from-tab","full"));
+        listChanger = PlayerListChanger.fromString(config.getString("hide-from-tab", "full"));
         recommendedWorldsIDs.addAll(config.getIntegerList("recommended-worlds"));
         allowedResourcePackLinks.addAll(config.getStringList("allowed-links.resource-pack"));
         messagesIgnoringReset.addAll(config.getStringList("messages.do-not-reset"));
 
-        debug = config.getBoolean("debug",false);
-        maintenance = config.getBoolean("maintenance",false);
-        consoleCriticalErrors = config.getBoolean("messages.critical-errors",true);
-        consoleNotFoundMessage = config.getBoolean("messages.not-found",false);
-        consoleWarnings = config.getBoolean("messages.warnings",true);
+        debug = config.getBoolean("debug", false);
+        maintenance = config.getBoolean("maintenance", false);
+        consoleCriticalErrors = config.getBoolean("messages.critical-errors", true);
+        consoleNotFoundMessage = config.getBoolean("messages.not-found", false);
+        consoleWarnings = config.getBoolean("messages.warnings", true);
 
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
         notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
@@ -133,7 +125,7 @@ public final class Settings {
         groups.load();
         commands.load();
 
-        String soundsTheme = config.getString("sounds.theme","default");
+        String soundsTheme = config.getString("sounds.theme", "default");
         loadSounds(config, soundsTheme);
         loadWorldGenerators(config);
 
@@ -162,27 +154,28 @@ public final class Settings {
     private void loadWorldGenerators(FileConfiguration config) {
         WorldGenerators instance = WorldGenerators.getInstance();
         instance.clearWorldGenerators();
-        if (config.getBoolean("generators.flat",true)) instance.registerWorldGenerator(new FlatGenerator());
-        if (config.getBoolean("generators.empty",true)) instance.registerWorldGenerator(new EmptyGenerator());
-        if (config.getBoolean("generators.water",true)) instance.registerWorldGenerator(new OceanGenerator());
-        if (config.getBoolean("generators.survival",true)) instance.registerWorldGenerator(new SurvivalGenerator());
-        if (config.getBoolean("generators.large-biomes",true)) instance.registerWorldGenerator(new LargeBiomesGenerator());
+        if (config.getBoolean("generators.flat", true)) instance.registerWorldGenerator(new FlatGenerator());
+        if (config.getBoolean("generators.empty", true)) instance.registerWorldGenerator(new EmptyGenerator());
+        if (config.getBoolean("generators.water", true)) instance.registerWorldGenerator(new OceanGenerator());
+        if (config.getBoolean("generators.survival", true)) instance.registerWorldGenerator(new SurvivalGenerator());
+        if (config.getBoolean("generators.large-biomes", true))
+            instance.registerWorldGenerator(new LargeBiomesGenerator());
         ConfigurationSection customFlatsSection = config.getConfigurationSection("generators.custom-flats");
         if (customFlatsSection != null) {
             for (String customFlatId : customFlatsSection.getKeys(false)) {
                 String generation = customFlatsSection.getString(customFlatId + ".generation");
                 if (generation == null) continue;
-                String iconMaterial = customFlatsSection.getString(customFlatId + ".icon","GRASS_BLOCK");
+                String iconMaterial = customFlatsSection.getString(customFlatId + ".icon", "GRASS_BLOCK");
                 Material material = Material.getMaterial(iconMaterial.toUpperCase());
                 if (material == null || !material.isItem()) material = Material.GRASS_BLOCK;
-                boolean generateTrees = customFlatsSection.getBoolean(customFlatId + ".generate-trees",true);
+                boolean generateTrees = customFlatsSection.getBoolean(customFlatId + ".generate-trees", true);
                 instance.registerWorldGenerator(new CustomFlatGenerator(customFlatId, new ItemStack(material), generation, generateTrees));
             }
         }
         ConfigurationSection templatesSection = config.getConfigurationSection("generators.templates");
         if (templatesSection != null) {
             for (String templateId : templatesSection.getKeys(false)) {
-                boolean enabled = templatesSection.getBoolean(templateId + ".enabled",true);
+                boolean enabled = templatesSection.getBoolean(templateId + ".enabled", true);
                 if (!enabled) continue;
                 String folderName = templatesSection.getString(templateId + ".folder");
                 if (folderName == null) continue;
@@ -192,7 +185,7 @@ public final class Settings {
                     sendWarningErrorMessage("Can't register template world " + templateId + " because it's folder " + folderName + " doesn't exist.");
                     continue;
                 }
-                String iconMaterial = templatesSection.getString(templateId + ".icon","GRASS_BLOCK");
+                String iconMaterial = templatesSection.getString(templateId + ".icon", "GRASS_BLOCK");
                 Material material = Material.getMaterial(iconMaterial.toUpperCase());
                 if (material == null || !material.isItem()) material = Material.GRASS_BLOCK;
                 instance.registerWorldGenerator(new WorldTemplate(templateId, new ItemStack(material), folderName));
@@ -228,10 +221,10 @@ public final class Settings {
         if (soundsSection != null) {
             for (String key : soundsSection.getKeys(false)) {
                 try {
-                    Sounds type = Sounds.valueOf(key.toUpperCase().replace("-","_"));
-                    String sound = soundsSection.getString(key+".name","");
-                    float pitch = (float) soundsSection.getDouble(key+".pitch",1.0f);
-                    sounds.put(type,new SettingsSound(sound,pitch));
+                    Sounds type = Sounds.valueOf(key.toUpperCase().replace("-", "_"));
+                    String sound = soundsSection.getString(key + ".name", "");
+                    float pitch = (float) soundsSection.getDouble(key + ".pitch", 1.0f);
+                    sounds.put(type, new SettingsSound(sound, pitch));
                 } catch (Exception ignored) {
                     sendWarningErrorMessage("Sound " + key.toLowerCase() + " doesn't exist.");
                 }
@@ -285,7 +278,7 @@ public final class Settings {
             String typeString = section.getString(slot, "");
             Items itemType = Items.getById(typeString);
             if (itemType == null) {
-                sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot + ")");
                 return null;
             } else {
                 return new SettingsPresetItem(itemType);
@@ -310,7 +303,7 @@ public final class Settings {
                 String typeString = section.getString("type", "");
                 Items itemType = Items.getById(typeString);
                 if (itemType == null) {
-                    sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                    sendWarningErrorMessage("Unknown system item type " + typeString + " for item (kit: " + section.getName() + " in slot: " + slot + ")");
                 } else {
                     item.setPreset(itemType);
                 }
@@ -326,9 +319,9 @@ public final class Settings {
                 String materialString = section.getString("material", "");
                 Material material = Material.matchMaterial(materialString);
                 if (material == null) {
-                    sendWarningErrorMessage("Unknown material " + materialString + " for item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                    sendWarningErrorMessage("Unknown material " + materialString + " for item (kit: " + section.getName() + " in slot: " + slot + ")");
                 } else if (!material.isItem()) {
-                    sendWarningErrorMessage("Material " + materialString + " is not an obtainable item (kit: " + section.getName() + " in slot: " + slot  + ")");
+                    sendWarningErrorMessage("Material " + materialString + " is not an obtainable item (kit: " + section.getName() + " in slot: " + slot + ")");
                 } else {
                     item.setMaterial(material);
                 }
@@ -362,7 +355,7 @@ public final class Settings {
             return false;
         }
         loadSounds(config, theme);
-        OpenCreative.getPlugin().getConfig().set("sounds.theme",theme);
+        OpenCreative.getPlugin().getConfig().set("sounds.theme", theme);
         OpenCreative.getPlugin().saveConfig();
         return true;
     }
@@ -408,7 +401,7 @@ public final class Settings {
     }
 
     public void setCustomItem(ItemsGroup group, int slot, @NotNull ItemStack item) {
-        String path = "items." + group.name().toLowerCase().replace("_","-") + "." + slot;
+        String path = "items." + group.name().toLowerCase().replace("_", "-") + "." + slot;
         SettingsItemsGroup settingsGroup = itemsGroups.getOrDefault(group, new SettingsItemsGroup());
         if (item.isEmpty()) {
             OpenCreative.getPlugin().getConfig().set(path, null);
@@ -427,7 +420,7 @@ public final class Settings {
     }
 
     public void setCustomItem(ItemsGroup group, int slot, @NotNull Items item) {
-        String path = "items." + group.name().toLowerCase().replace("_","-") + "." + slot;
+        String path = "items." + group.name().toLowerCase().replace("_", "-") + "." + slot;
         SettingsItemsGroup settingsGroup = itemsGroups.getOrDefault(group, new SettingsItemsGroup());
         OpenCreative.getPlugin().getConfig().set(path, item.name().toLowerCase().replace("_", "-"));
         SettingsPresetItem customItem = new SettingsPresetItem(item);
@@ -440,7 +433,7 @@ public final class Settings {
         String path = "items." + group.name().toLowerCase();
         // Removes duplicate with underscore if exists
         OpenCreative.getPlugin().getConfig().set(path, null);
-        path = path.replace("_","-");
+        path = path.replace("_", "-");
         OpenCreative.getPlugin().getConfig().set(path, null);
 
         itemsGroups.remove(group);
@@ -459,7 +452,7 @@ public final class Settings {
     public void setDebug(boolean debug) {
         if (this.debug == debug) return;
         this.debug = debug;
-        OpenCreative.getPlugin().getConfig().set("debug",debug);
+        OpenCreative.getPlugin().getConfig().set("debug", debug);
         OpenCreative.getPlugin().saveConfig();
         OpenCreative.getPlugin().getLogger().info("Debug mode is " + (debug ? "enabled." : "disabled."));
         checkDebugAnnouncer();
@@ -467,6 +460,7 @@ public final class Settings {
 
     /**
      * Checks whether it's maintenance mode or not.
+     *
      * @return true - enabled, false - disabled.
      */
     public boolean isMaintenance() {
@@ -482,6 +476,7 @@ public final class Settings {
      * and then prevent them from browsing and connecting to worlds.
      * <p>
      * If false - will allow players to visit their worlds.
+     *
      * @param maintenance true - enabled, false - disabled.
      */
     public void setMaintenance(boolean maintenance) {
@@ -497,16 +492,18 @@ public final class Settings {
      * and then prevent them from browsing and connecting to worlds.
      * <p>
      * If false - will allow players to visit their worlds.
+     *
      * @param maintenance true - enabled, false - disabled.
-     * @param sender sender, who set maintenance mode.
+     * @param sender      sender, who set maintenance mode.
      */
     public void setMaintenance(boolean maintenance, @Nullable CommandSender sender) {
         if (this.maintenance == maintenance) return;
         this.maintenance = maintenance;
         try {
-            OpenCreative.getPlugin().getConfig().set("maintenance",maintenance);
+            OpenCreative.getPlugin().getConfig().set("maintenance", maintenance);
             OpenCreative.getPlugin().saveConfig();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         if (maintenance) {
             OpenCreative.getPlugin().getLogger().info("Maintenance mode started! Unloading planets, please wait...");
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -552,7 +549,7 @@ public final class Settings {
                     }
                 }
             };
-            announcer.runTaskTimer(OpenCreative.getPlugin(),20L,20L);
+            announcer.runTaskTimer(OpenCreative.getPlugin(), 20L, 20L);
         } else {
             announcer = null;
         }
@@ -566,16 +563,146 @@ public final class Settings {
         return recommendedWorldsIDs;
     }
 
-    public void setCreativeChatEnabled(boolean creativeChatEnabled) {
-        this.creativeChatEnabled = creativeChatEnabled;
-    }
-
     public boolean isCreativeChatEnabled() {
         return creativeChatEnabled;
     }
 
+    public void setCreativeChatEnabled(boolean creativeChatEnabled) {
+        this.creativeChatEnabled = creativeChatEnabled;
+    }
+
     public PlayerListChanger getListChanger() {
         return listChanger;
+    }
+
+    /**
+     * Returns instance of groups, that stores
+     * all groups and contains methods to
+     * get data from them.
+     *
+     * @return groups instance.
+     */
+    public @NotNull Groups getGroups() {
+        return groups;
+    }
+
+    /**
+     * Returns settings of item fixer.
+     *
+     * @return item fixer settings.
+     */
+    public @NotNull ItemFixerSettings getItemFixerSettings() {
+        return itemFixerSettings;
+    }
+
+    /**
+     * Returns settings of coding mode.
+     *
+     * @return coding settings.
+     */
+    public @NotNull CodingSettings getCodingSettings() {
+        return codingSettings;
+    }
+
+    /**
+     * Returns settings of requirements.
+     *
+     * @return requirements settings.
+     */
+    public @NotNull Requirements getRequirements() {
+        return requirements;
+    }
+
+    /**
+     * Returns settings of lobby world.
+     *
+     * @return lobby settings.
+     */
+    public @NotNull LobbySettings getLobbySettings() {
+        return lobbySettings;
+    }
+
+    /**
+     * Returns settings of economy.
+     *
+     * @return economy settings.
+     */
+    public @NotNull EconomySettings getEconomySettings() {
+        return economySettings;
+    }
+
+    /**
+     * Returns custom commands executions.
+     *
+     * @return commands events.
+     */
+    public @NotNull Commands getCommands() {
+        return commands;
+    }
+
+    /**
+     * Checks whether critical errors will be shown in console.
+     *
+     * @return true - will be shown, false - hidden.
+     */
+    public boolean shouldLogCriticalErrors() {
+        return consoleCriticalErrors;
+    }
+
+    /**
+     * Checks whether warnings will be shown in console.
+     *
+     * @return true - will be shown, false - hidden.
+     */
+    public boolean shouldLogWarnings() {
+        return consoleWarnings;
+    }
+
+    /**
+     * Checks whether not translated messages will be shown in console.
+     *
+     * @return true - will be shown, false - hidden.
+     */
+    public boolean shouldLogNotFoundMessages() {
+        return consoleNotFoundMessage;
+    }
+
+    /**
+     * Returns a map of sounds and custom sounds from config.
+     *
+     * @return map of sounds.
+     */
+    public Map<Sounds, SettingsSound> getSounds() {
+        return sounds;
+    }
+
+    /**
+     * Returns a map of item groups and custom item groups from config.
+     *
+     * @return map of item groups.
+     */
+    public Map<ItemsGroup, SettingsItemsGroup> getItemsGroups() {
+        return itemsGroups;
+    }
+
+    /**
+     * Checks whether player should see "No players around message"
+     * message, when there is no other players in their world.
+     *
+     * @return true - will be shown, false - will be hidden.
+     */
+    public boolean shouldNotifyAboutNoPlayersAround() {
+        return notifyNoPlayersAround;
+    }
+
+    /**
+     * Returns set of messages paths, that will be recovered
+     * on resetting locale from old localization file to new.
+     *
+     * @return set of messages paths, that should be saved.
+     */
+    public Set<String> getMessagesIgnoringReset() {
+        return messagesIgnoringReset;
     }
 
     public enum PlayerListChanger {
@@ -592,121 +719,5 @@ public final class Settings {
             }
             return FULL;
         }
-    }
-
-    /**
-     * Returns instance of groups, that stores
-     * all groups and contains methods to
-     * get data from them.
-     * @return groups instance.
-     */
-    public @NotNull Groups getGroups() {
-        return groups;
-    }
-
-    /**
-     * Returns settings of item fixer.
-     * @return item fixer settings.
-     */
-    public @NotNull ItemFixerSettings getItemFixerSettings() {
-        return itemFixerSettings;
-    }
-
-    /**
-     * Returns settings of coding mode.
-     * @return coding settings.
-     */
-    public @NotNull CodingSettings getCodingSettings() {
-        return codingSettings;
-    }
-
-    /**
-     * Returns settings of requirements.
-     * @return requirements settings.
-     */
-    public @NotNull Requirements getRequirements() {
-        return requirements;
-    }
-
-    /**
-     * Returns settings of lobby world.
-     * @return lobby settings.
-     */
-    public @NotNull LobbySettings getLobbySettings() {
-        return lobbySettings;
-    }
-
-    /**
-     * Returns settings of economy.
-     * @return economy settings.
-     */
-    public @NotNull EconomySettings getEconomySettings() {
-        return economySettings;
-    }
-
-    /**
-     * Returns custom commands executions.
-     * @return commands events.
-     */
-    public @NotNull Commands getCommands() {
-        return commands;
-    }
-
-    /**
-     * Checks whether critical errors will be shown in console.
-     * @return true - will be shown, false - hidden.
-     */
-    public boolean shouldLogCriticalErrors() {
-        return consoleCriticalErrors;
-    }
-
-    /**
-     * Checks whether warnings will be shown in console.
-     * @return true - will be shown, false - hidden.
-     */
-    public boolean shouldLogWarnings() {
-        return consoleWarnings;
-    }
-
-    /**
-     * Checks whether not translated messages will be shown in console.
-     * @return true - will be shown, false - hidden.
-     */
-    public boolean shouldLogNotFoundMessages() {
-        return consoleNotFoundMessage;
-    }
-
-    /**
-     * Returns a map of sounds and custom sounds from config.
-     * @return map of sounds.
-     */
-    public Map<Sounds, SettingsSound> getSounds() {
-        return sounds;
-    }
-
-    /**
-     * Returns a map of item groups and custom item groups from config.
-     * @return map of item groups.
-     */
-    public Map<ItemsGroup, SettingsItemsGroup> getItemsGroups() {
-        return itemsGroups;
-    }
-
-    /**
-     * Checks whether player should see "No players around message"
-     * message, when there is no other players in their world.
-     * @return true - will be shown, false - will be hidden.
-     */
-    public boolean shouldNotifyAboutNoPlayersAround() {
-        return notifyNoPlayersAround;
-    }
-
-    /**
-     * Returns set of messages paths, that will be recovered
-     * on resetting locale from old localization file to new.
-     * @return set of messages paths, that should be saved.
-     */
-    public Set<String> getMessagesIgnoringReset() {
-        return messagesIgnoringReset;
     }
 }

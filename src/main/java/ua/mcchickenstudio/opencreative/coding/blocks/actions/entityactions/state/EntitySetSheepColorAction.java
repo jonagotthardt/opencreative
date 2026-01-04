@@ -39,7 +39,7 @@ public final class EntitySetSheepColorAction extends EntityAction {
         String colorName = getArguments().getText("color", "white", this);
         DyeColor color;
         try {
-            color = DyeColor.valueOf(colorName.toUpperCase().replace("-","_"));
+            color = DyeColor.valueOf(colorName.toUpperCase().replace("-", "_"));
         } catch (Exception ignored) {
             color = DyeColor.WHITE;
         }

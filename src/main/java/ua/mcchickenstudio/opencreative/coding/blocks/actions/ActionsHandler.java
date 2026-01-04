@@ -18,6 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -31,12 +33,11 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.*;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -44,33 +45,33 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  * This class represents actions handler that executes every action in list.
  * Executors and code blocks with brackets use handlers to execute code inside
  * brackets.
+ *
+ * @author McChicken Studio
+ * @version 6.0
  * @see Executor
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 6.0
- * @author McChicken Studio
  */
 public class ActionsHandler {
 
     private final Executor executor;
     private final WorldEvent event;
     private final Action action;
-
     private final Set<Entity> selectedTargets;
     private final ActionsHandler parentActionsHandler;
     private final Queue<Action> actionsQueue = new LinkedList<>();
-
     private final boolean doNotUseTryFlag;
     private Entity lastSpawnedEntity;
     private boolean stopped = false;
     private long waitDelay = 0;
 
-    private static int MAX_DEPTH = 50;
+    private static final int MAX_DEPTH = 50;
 
     /**
      * Constructor of actions handler with executor.
      * <p>
      * The executor is main handler of actions.
+     *
      * @param executor executor that contains actions to execute.
      */
     public ActionsHandler(Executor executor) {
@@ -88,6 +89,7 @@ public class ActionsHandler {
      * <p>
      * Changes (to selection, or stopping code line) will be also
      * applied to parent actions handler.
+     *
      * @param action multi action that contains actions to execute.
      */
     public ActionsHandler(Action action) {
@@ -103,6 +105,7 @@ public class ActionsHandler {
 
     /**
      * Adds actions to queue and executes them.
+     *
      * @param actions actions to execute.
      */
     public final void executeActions(List<Action> actions) {
@@ -115,6 +118,7 @@ public class ActionsHandler {
      * Used in {@link ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function functions}.
      * <p>
      * Actions from previous queue will be moved to the end.
+     *
      * @param actions actions to execute first.
      */
     public final void addActions(List<Action> actions) {
@@ -156,10 +160,11 @@ public class ActionsHandler {
 
     /**
      * Prepares action and executes it.
+     *
      * @param action action to prepare and execute.
      */
     public void prepareAction(Action action) {
-        if (waitDelay < 1 ) {
+        if (waitDelay < 1) {
             executeAction(action);
         } else {
             BukkitRunnable executeActionLaterRunnable = new BukkitRunnable() {
@@ -175,12 +180,13 @@ public class ActionsHandler {
                 }
             };
             action.getPlanet().getTerritory().addBukkitRunnable(executeActionLaterRunnable);
-            executeActionLaterRunnable.runTaskLater(OpenCreative.getPlugin(),waitDelay);
+            executeActionLaterRunnable.runTaskLater(OpenCreative.getPlugin(), waitDelay);
         }
     }
 
     /**
      * Executes action or sends error to planet.
+     *
      * @param action action to execute.
      */
     private void executeAction(Action action) {
@@ -201,8 +207,8 @@ public class ActionsHandler {
                 removeAllActions();
                 if (action.getPlanet().getLimits().isTooManyCodingErrors()) {
                     action.getPlanet().getTerritory().getScript().getExecutors().stopCode("errors limit");
-                    sendPlanetCodeCriticalErrorMessage(action.getPlanet(),executor,getLocaleMessage("coding-error.errors-limit",false)
-                            .replace("%limit%",String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
+                    sendPlanetCodeCriticalErrorMessage(action.getPlanet(), executor, getLocaleMessage("coding-error.errors-limit", false)
+                            .replace("%limit%", String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
                     return;
                 }
             }
@@ -220,8 +226,9 @@ public class ActionsHandler {
     /**
      * Notifies planet about error, that has occurred
      * while executing action.
+     *
      * @param action action, that caused error.
-     * @param error exception, that has occurred.
+     * @param error  exception, that has occurred.
      */
     private void sendErrorMessage(Action action, Exception error) {
         String errorClass = error.getClass().getSimpleName();
@@ -232,10 +239,14 @@ public class ActionsHandler {
         errorMessage = errorMessage.replace("ua.mcchickenstudio.opencreative.coding.", "");
         String localizedMessage = getLocaleMessage("coding-error." + errorID);
         switch (error) {
-            case PlayerException exception -> localizedMessage = localizedMessage.replace("%player%", exception.getPlayerName());
-            case UnknownMethodException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
-            case UnknownCycleException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
-            case UnknownFunctionException exception -> localizedMessage = localizedMessage.replace("%name%", exception.getName());
+            case PlayerException exception ->
+                    localizedMessage = localizedMessage.replace("%player%", exception.getPlayerName());
+            case UnknownMethodException exception ->
+                    localizedMessage = localizedMessage.replace("%name%", exception.getName());
+            case UnknownCycleException exception ->
+                    localizedMessage = localizedMessage.replace("%name%", exception.getName());
+            case UnknownFunctionException exception ->
+                    localizedMessage = localizedMessage.replace("%name%", exception.getName());
             case UnsupportedEntityException exception -> {
                 String localizedRequired = toKebabCase(exception.getRequired().getSimpleName());
                 String localizedCurrent = toKebabCase(exception.getCurrent().getSimpleName()).replace("craft_", "");
@@ -256,7 +267,8 @@ public class ActionsHandler {
                         .replace("%type%", localizedRequired)
                         .replace("%old%", localizedCurrent);
             }
-            default -> {}
+            default -> {
+            }
         }
 
         StringBuilder description = new StringBuilder();
@@ -281,6 +293,7 @@ public class ActionsHandler {
     /**
      * Returns how many ticks should pass
      * before executing next action from queue.
+     *
      * @return wait delay.
      */
     public long getWaitDelay() {
@@ -288,7 +301,18 @@ public class ActionsHandler {
     }
 
     /**
+     * Sets how many ticks should pass before
+     * executing next action.
+     *
+     * @param waitDelay wait delay.
+     */
+    public void setWaitDelay(long waitDelay) {
+        this.waitDelay = waitDelay;
+    }
+
+    /**
      * Returns the main actions handler (executor thread).
+     *
      * @return the main handler of actions.
      */
     public @NotNull ActionsHandler getMainActionHandler() {
@@ -305,6 +329,7 @@ public class ActionsHandler {
 
     /**
      * Returns last spawned entity by code.
+     *
      * @return last spawned entity.
      */
     public @Nullable Entity getLastSpawnedEntity() {
@@ -313,6 +338,7 @@ public class ActionsHandler {
 
     /**
      * Sets last spawned entity.
+     *
      * @param lastSpawnedEntity last spawned entity.
      */
     public void setLastSpawnedEntity(Entity lastSpawnedEntity) {
@@ -321,6 +347,7 @@ public class ActionsHandler {
 
     /**
      * Checks whether action handler flagged to stop.
+     *
      * @return true - stopped, false - not.
      */
     public boolean isStopped() {
@@ -329,6 +356,7 @@ public class ActionsHandler {
 
     /**
      * Sets stopped flag to actions handler.
+     *
      * @param stopped true - will stop code, false - not.
      */
     public void setStopped(boolean stopped) {
@@ -337,6 +365,7 @@ public class ActionsHandler {
 
     /**
      * Returns parent actions handler, if exists.
+     *
      * @return parent actions handler, or null.
      */
     public @Nullable ActionsHandler getParentActionHandler() {
@@ -344,17 +373,9 @@ public class ActionsHandler {
     }
 
     /**
-     * Sets how many ticks should pass before
-     * executing next action.
-     * @param waitDelay wait delay.
-     */
-    public void setWaitDelay(long waitDelay) {
-        this.waitDelay = waitDelay;
-    }
-
-    /**
      * Returns world event, that launched
      * executor.
+     *
      * @return world event.
      */
     public WorldEvent getEvent() {
@@ -384,6 +405,7 @@ public class ActionsHandler {
      * Returns first parent action handler with specified category of action.
      * <p>
      * If it doesn't find an action handler, it will return null.
+     *
      * @param category category of action.
      * @return action handler with action category, or null - if not found.
      */
@@ -402,6 +424,7 @@ public class ActionsHandler {
     /**
      * Returns executor, that launched
      * actions handler.
+     *
      * @return executor.
      */
     public Executor getExecutor() {
@@ -411,6 +434,7 @@ public class ActionsHandler {
     /**
      * Returns multi action with brackets,
      * that launched actions handler, if exists.
+     *
      * @return action, or null.
      */
     public @Nullable Action getAction() {
@@ -420,6 +444,7 @@ public class ActionsHandler {
     /**
      * Returns selected targets, that can be modified
      * with selection action.
+     *
      * @return selected targets.
      */
     public Set<Entity> getSelectedTargets() {
@@ -428,6 +453,7 @@ public class ActionsHandler {
 
     /**
      * Sets selected targets for actions with "selection" target.
+     *
      * @param targets new targets.
      */
     public void setSelectedTargets(@NotNull Set<Entity> targets) {

@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.state;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 public final class SetGlidingAction extends PlayerAction {
     public SetGlidingAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,7 +33,7 @@ public final class SetGlidingAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        player.setGliding(getArguments().getBoolean("boolean",false,this));
+        player.setGliding(getArguments().getBoolean("boolean", false, this));
     }
 
     @Override

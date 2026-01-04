@@ -33,7 +33,7 @@ public final class EntitySetGlowingAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        entity.setGlowing(getArguments().getBoolean("glowing",true,this));
+        entity.setGlowing(getArguments().getBoolean("glowing", true, this));
     }
 
     @Override

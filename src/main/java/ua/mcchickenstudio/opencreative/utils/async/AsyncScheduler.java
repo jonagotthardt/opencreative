@@ -29,6 +29,7 @@ import java.util.function.Function;
  * <h1>AsyncScheduler</h1>
  * This class represents a scheduler, that executes
  * runnables by asynchronous way.
+ *
  * @author kireikosasha
  * @since 5.0
  */
@@ -37,7 +38,10 @@ public class AsyncScheduler {
     private static final char INNER_CLASS_SEPARATOR_CHAR = '$';
     private static final int STOP_WATCH_TIME_MILLIS = 750;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(36,
-        new ThreadFactoryBuilder().setNameFormat("opencreative-thread-%d").build());
+            new ThreadFactoryBuilder().setNameFormat("opencreative-thread-%d").build());
+
+    private AsyncScheduler() {
+    }
 
     public static ScheduledExecutorService getScheduler() {
         return scheduler;
@@ -47,17 +51,18 @@ public class AsyncScheduler {
         TryIgnore.ignore(schedulerCustom::shutdownNow);
     }
 
-    private AsyncScheduler() {}
-
     public static Future<?> run(Runnable runnable, ScheduledExecutorService schedulerCustom) {
         return schedulerCustom.submit(new DecoratedRunnable(runnable));
     }
+
     public static <T> Future<T> run(Callable<T> callable, ScheduledExecutorService schedulerCustom) {
         return schedulerCustom.submit(new DecoratedCallable<>(callable));
     }
+
     public static ScheduledFuture<?> later(Runnable runnable, ScheduledExecutorService schedulerCustom, long delay, TimeUnit time) {
         return schedulerCustom.schedule(new DecoratedRunnable(runnable), delay, time);
     }
+
     public static ScheduledFuture<?> timer(Runnable runnable, ScheduledExecutorService schedulerCustom, long delay, long period, TimeUnit time) {
         return schedulerCustom.scheduleAtFixedRate(new DecoratedRunnable(runnable), delay, period, time);
     }
@@ -69,6 +74,34 @@ public class AsyncScheduler {
             }
         } catch (Exception ignored) {
         }
+    }
+
+    public static String toString(Object object) {
+        if (object == null) {
+            return "null";
+        }
+        Class<?> clazz = object.getClass();
+        StringBuilder sb = new StringBuilder(clazz.getSimpleName() + "{");
+        Field[] fields = clazz.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            field.setAccessible(true);
+            try {
+                if (field.getName().indexOf(INNER_CLASS_SEPARATOR_CHAR) != -1) {
+                    sb.append(field.getName()).append("=");
+                    Object value = field.get(object);
+                    sb.append(value == null ? "null" : value.toString());
+                }
+            } catch (IllegalAccessException e) {
+                sb.append(field.getName()).append("=<access denied>");
+            }
+            if (i < fields.length - 1) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
 
     public static class DecoratedRunnable implements Runnable {
@@ -89,7 +122,7 @@ public class AsyncScheduler {
             try {
                 decoratedRunnable.run();
             } catch (Throwable throwable) {
-                ErrorUtils.sendCriticalErrorMessage("Asynchronous task error " + AsyncScheduler.toString(originalRunnable),new Exception(throwable));
+                ErrorUtils.sendCriticalErrorMessage("Asynchronous task error " + AsyncScheduler.toString(originalRunnable), new Exception(throwable));
             } finally {
                 long after = System.currentTimeMillis() - start;
                 if (after > STOP_WATCH_TIME_MILLIS) {
@@ -118,7 +151,7 @@ public class AsyncScheduler {
             try {
                 return decoratedCallable.call();
             } catch (Throwable throwable) {
-                ErrorUtils.sendCriticalErrorMessage("Asynchronous task error " + AsyncScheduler.toString(decoratedCallable),new Exception(throwable));
+                ErrorUtils.sendCriticalErrorMessage("Asynchronous task error " + AsyncScheduler.toString(decoratedCallable), new Exception(throwable));
                 throw throwable;
             } finally {
                 long after = System.currentTimeMillis() - start;
@@ -127,32 +160,5 @@ public class AsyncScheduler {
                 }
             }
         }
-    }
-    public static String toString(Object object) {
-        if (object == null) {
-            return "null";
-        }
-        Class<?> clazz = object.getClass();
-        StringBuilder sb = new StringBuilder(clazz.getSimpleName() + "{");
-        Field[] fields = clazz.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
-            field.setAccessible(true);
-            try {
-                if (field.getName().indexOf(INNER_CLASS_SEPARATOR_CHAR) != -1) {
-                    sb.append(field.getName()).append("=");
-                    Object value = field.get(object);
-                    sb.append(value == null ? "null" : value.toString());
-                }
-            } catch (IllegalAccessException e) {
-                sb.append(field.getName()).append("=<access denied>");
-            }
-            if (i < fields.length - 1) {
-                sb.append(", ");
-            }
-        }
-
-        sb.append("}");
-        return sb.toString();
     }
 }

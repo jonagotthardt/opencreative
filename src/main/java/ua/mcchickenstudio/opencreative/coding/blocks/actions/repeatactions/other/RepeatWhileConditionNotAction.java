@@ -46,9 +46,9 @@ public final class RepeatWhileConditionNotAction extends RepeatAction {
         Action action;
         try {
             action = conditionType.getActionClass().getConstructor(Executor.class,
-                    Target.class, int.class, Arguments.class,
-                    List.class, List.class, boolean.class)
-                    .newInstance(getExecutor(),getTarget(),getX(), getArguments(),
+                            Target.class, int.class, Arguments.class,
+                            List.class, List.class, boolean.class)
+                    .newInstance(getExecutor(), getTarget(), getX(), getArguments(),
                             new ArrayList<>(), new ArrayList<>(), false);
         } catch (Exception error) {
             throw new RuntimeException("Failed to construct condition for repeat while condition not: " + conditionType.name());

@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugExecutor;
 
@@ -54,7 +54,7 @@ public class Cycle extends Executor {
                 }
             };
             getPlanet().getTerritory().addBukkitRunnable(runnable);
-            runnable.runTaskTimer(OpenCreative.getPlugin(),0,repeatTime);
+            runnable.runTaskTimer(OpenCreative.getPlugin(), 0, repeatTime);
         }
     }
 

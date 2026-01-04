@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -35,9 +34,9 @@ public final class GetListSizeAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> list = getArguments().getList("list",this);
-        setVarValue(variable,list.size());
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> list = getArguments().getList("list", this);
+        setVarValue(variable, list.size());
     }
 
     @Override

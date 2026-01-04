@@ -90,7 +90,7 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                             code = code.substring(3);
                         }
                         if (code.endsWith("```")) {
-                            code = code.substring(0, code.length()-3);
+                            code = code.substring(0, code.length() - 3);
                         }
                         future.complete(code);
                     }
@@ -111,13 +111,8 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
                                        int actionsLimit) {
         return new Gson().toJson(new OpenAIRequest(model,
                 List.of(new Message("system", new PrompterInstruction(
-                        nickname, uuid.toString(), text, actionsLimit).get()),
+                                nickname, uuid.toString(), text, actionsLimit).get()),
                         new Message("user", text))));
-    }
-
-    @Override
-    public void setModel(@NotNull String model) {
-        this.model = model;
     }
 
     @Override
@@ -126,12 +121,18 @@ public final class OpenAIPrompter implements CodingPrompter, PrompterModelCapabl
     }
 
     @Override
+    public void setModel(@NotNull String model) {
+        this.model = model;
+    }
+
+    @Override
     public void setToken(@NotNull String token) {
         this.token = token.toCharArray();
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

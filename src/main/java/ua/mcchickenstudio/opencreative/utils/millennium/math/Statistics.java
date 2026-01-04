@@ -163,6 +163,7 @@ public final class Statistics {
             return data.get(data.size() / 2).doubleValue();
         }
     }
+
     public static double getMedianDouble(final List<Double> data) {
         if (data.size() % 2 == 0) {
             return (data.get(data.size() / 2).doubleValue() + data.get(data.size() / 2 - 1).doubleValue()) / 2;
@@ -207,6 +208,7 @@ public final class Statistics {
 
         return tuple;
     }
+
     public static List<List<Double>> getOutliersSimply(final Collection<? extends Number> collection) {
         Pair<List<Double>, List<Double>> result = getOutliers(collection);
         return Arrays.asList(result.getX(), result.getY());

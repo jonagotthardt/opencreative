@@ -18,16 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions;
 
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 
@@ -63,7 +63,7 @@ public abstract class Condition extends Action {
     @Override
     public final void prepareAndExecute(ActionsHandler handler) {
         if (getActionType() != null && getActionType().isDisabled()) {
-            sendCodingDebugLog(getPlanet(),"Action is disabled, cannot work: " + getActionType().getLocaleName());
+            sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
         }
         this.handler = handler;
@@ -80,7 +80,7 @@ public abstract class Condition extends Action {
                 }
             }
         }
-        sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.condition.returned-" + check,false).replace("%type%",getActionType().getLocaleName()));
+        sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.condition.returned-" + check, false).replace("%type%", getActionType().getLocaleName()));
         if (check ^ isOpposed) {
             new ActionsHandler(this).executeActions(actions);
         } else {
@@ -89,7 +89,8 @@ public abstract class Condition extends Action {
     }
 
     @Override
-    protected void execute(Entity entity) {}
+    protected void execute(Entity entity) {
+    }
 
     public abstract ActionCategory getActionCategory();
 

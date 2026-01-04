@@ -19,8 +19,6 @@
 package ua.mcchickenstudio.opencreative.listeners.player;
 
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,6 +27,7 @@ import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.TeleportEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
@@ -48,7 +47,8 @@ public final class TeleportListener implements Listener {
         }
         if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
             switch (event.getCause()) {
-                case UNKNOWN, PLUGIN, COMMAND -> {}
+                case UNKNOWN, PLUGIN, COMMAND -> {
+                }
                 default -> {
                     event.setCancelled(true);
                     return;

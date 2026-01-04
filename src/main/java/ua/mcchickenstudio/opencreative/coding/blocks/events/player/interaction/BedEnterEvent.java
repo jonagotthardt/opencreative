@@ -18,13 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction;
 
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.BlockEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerBedEnterEvent;
 
 public final class BedEnterEvent extends WorldEvent implements Cancellable, BlockEvent {
 
@@ -40,13 +40,13 @@ public final class BedEnterEvent extends WorldEvent implements Cancellable, Bloc
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 
     public PlayerBedEnterEvent.BedEnterResult getBedEnterResult() {

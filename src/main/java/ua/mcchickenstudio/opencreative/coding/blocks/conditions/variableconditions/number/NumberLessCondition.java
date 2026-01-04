@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -35,9 +34,9 @@ public class NumberLessCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        double first = getArguments().getDouble("first",2.0d,this);
-        double second = getArguments().getDouble("second",1.0d,this);
-        boolean equals = getArguments().getBoolean("equals",false,this);
+        double first = getArguments().getDouble("first", 2.0d, this);
+        double second = getArguments().getDouble("second", 1.0d, this);
+        boolean equals = getArguments().getBoolean("equals", false, this);
         if (equals) {
             return first <= second;
         }

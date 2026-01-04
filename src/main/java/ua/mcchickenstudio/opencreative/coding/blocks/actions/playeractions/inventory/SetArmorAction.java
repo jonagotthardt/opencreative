@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 public final class SetArmorAction extends PlayerAction {
     public SetArmorAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,11 +34,11 @@ public final class SetArmorAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        ItemStack helmet = getArguments().getItem("helmet", ItemStack.empty(),this);
-        ItemStack chestplate = getArguments().getItem("chestplate",ItemStack.empty(),this);
-        ItemStack leggings = getArguments().getItem("leggings",ItemStack.empty(),this);
-        ItemStack boots = getArguments().getItem("boots",ItemStack.empty(),this);
-        boolean replaceWithAir = getArguments().getBoolean("replace-with-air",false,this);
+        ItemStack helmet = getArguments().getItem("helmet", ItemStack.empty(), this);
+        ItemStack chestplate = getArguments().getItem("chestplate", ItemStack.empty(), this);
+        ItemStack leggings = getArguments().getItem("leggings", ItemStack.empty(), this);
+        ItemStack boots = getArguments().getItem("boots", ItemStack.empty(), this);
+        boolean replaceWithAir = getArguments().getBoolean("replace-with-air", false, this);
         if (replaceWithAir || !helmet.isEmpty()) {
             player.getInventory().setHelmet(helmet);
         }

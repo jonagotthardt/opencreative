@@ -51,13 +51,13 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     private final List<Planet> planets;
 
-    private final ItemStack CREATE_WORLD = createItem(Material.ENDER_EYE,1,"menus.own-worlds.items.create-world");
-    private final ItemStack WORLDS_LIMIT = createItem(Material.RED_STAINED_GLASS,1,"menus.own-worlds.items.limit");
-    private final ItemStack RECOMMENDED = createItem(Material.WIND_CHARGE,1,"menus.own-worlds.items.recommended");
+    private final ItemStack CREATE_WORLD = createItem(Material.ENDER_EYE, 1, "menus.own-worlds.items.create-world");
+    private final ItemStack WORLDS_LIMIT = createItem(Material.RED_STAINED_GLASS, 1, "menus.own-worlds.items.limit");
+    private final ItemStack RECOMMENDED = createItem(Material.WIND_CHARGE, 1, "menus.own-worlds.items.recommended");
 
     public OwnWorldsBrowserMenu(Player player) {
-        super(player,getLocaleMessage("menus.own-worlds.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45,49},new int[]{45,46,47,51,52,53});
+        super(player, getLocaleMessage("menus.own-worlds.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{45, 49}, new int[]{45, 46, 47, 51, 52, 53});
         this.planets = new ArrayList<>(OpenCreative.getPlanetsManager().getPlanetsByOwner(player));
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
@@ -74,10 +74,10 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
             if (loreLine.contains("%planetDescription%")) {
                 String[] newLines = planet.getInformation().getDescription().split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                    lore.add(loreLine.replace("%planetDescription%", ChatColor.translateAlternateColorCodes('&', newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parsePlanetLines(planet,loreLine));
+                lore.add(MessageUtils.parsePlanetLines(planet, loreLine));
             }
         }
         meta.setLore(lore);
@@ -89,27 +89,27 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         meta.addItemFlags(ItemFlag.HIDE_DYE);
         meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         item.setItemMeta(meta);
-        setPersistentData(item, getItemIdKey(),String.valueOf(planet.getId()));
+        setPersistentData(item, getItemIdKey(), String.valueOf(planet.getId()));
         return item;
     }
 
     @Override
     protected void fillOtherItems() {
-        setItem(45,RECOMMENDED);
+        setItem(45, RECOMMENDED);
         int amount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
         int limit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
         if (OpenCreative.getSettings().isWorldGenerationUnavailable()) {
-            setItem(createItem(Material.RED_STAINED_GLASS_PANE,1),47,51);
+            setItem(createItem(Material.RED_STAINED_GLASS_PANE, 1), 47, 51);
             setItem(49, DISABLED_ITEM);
             return;
         }
         if (amount >= limit) {
-            setItem(createItem(Material.RED_STAINED_GLASS_PANE,1),47,51);
-            replacePlaceholderInLore(WORLDS_LIMIT,"%limit%",limit);
-            replacePlaceholderInLore(WORLDS_LIMIT,"%planets%",amount);
+            setItem(createItem(Material.RED_STAINED_GLASS_PANE, 1), 47, 51);
+            replacePlaceholderInLore(WORLDS_LIMIT, "%limit%", limit);
+            replacePlaceholderInLore(WORLDS_LIMIT, "%planets%", amount);
             setItem(49, WORLDS_LIMIT);
         } else {
-            setItem(createItem(Material.LIME_STAINED_GLASS_PANE,1),47,51);
+            setItem(createItem(Material.LIME_STAINED_GLASS_PANE, 1), 47, 51);
             setItem(49, CREATE_WORLD);
         }
     }
@@ -121,9 +121,9 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
         if (item == null) {
             return;
         }
-        if (itemEquals(item,RECOMMENDED)) {
+        if (itemEquals(item, RECOMMENDED)) {
             new RecommendedWorldsMenu().open(getPlayer());
-        } else if (itemEquals(item,CREATE_WORLD)) {
+        } else if (itemEquals(item, CREATE_WORLD)) {
             if (isNotLimitReached()) {
                 long now = System.currentTimeMillis();
                 long minSeconds = OpenCreative.getSettings().getRequirements().getWorldCreationMinSeconds();
@@ -173,8 +173,8 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : RECOMMENDED);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : RECOMMENDED);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
         }
     }
 
@@ -185,17 +185,17 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,getCurrentPage()+1,"menus.own-worlds.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW, getCurrentPage() + 1, "menus.own-worlds.items.next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.own-worlds.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, Math.max(1, getCurrentPage() - 1), "menus.own-worlds.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.own-worlds.items.no-worlds");
+        return createItem(Material.BARRIER, 1, "menus.own-worlds.items.no-worlds");
     }
 
     @Override
@@ -206,7 +206,7 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     private int getAvailableAmount() {
         int planetsAmount = OpenCreative.getPlanetsManager().getPlanetsByOwner(getPlayer()).size();
         int planetsLimit = OpenCreative.getSettings().getGroups().getGroup(getPlayer()).getWorldsLimit();
-        return Math.max(1, planetsLimit-planetsAmount);
+        return Math.max(1, planetsLimit - planetsAmount);
     }
 
     private boolean isNotLimitReached() {

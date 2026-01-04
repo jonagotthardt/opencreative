@@ -18,14 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -34,8 +26,14 @@ import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.Piston;
-import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
@@ -46,8 +44,8 @@ public final class SetBlockPoweredAction extends WorldAction {
 
     @Override
     protected void execute() {
-        List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean powered = getArguments().getBoolean("powered",true,this);
+        List<Location> locations = getArguments().getLocationList("locations", this);
+        boolean powered = getArguments().getBoolean("powered", true, this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -57,7 +55,7 @@ public final class SetBlockPoweredAction extends WorldAction {
         getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
             if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                 getPlanet().getTerritory().removeBukkitRunnable(runnable);
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
@@ -82,12 +80,12 @@ public final class SetBlockPoweredAction extends WorldAction {
             if (data instanceof Door door) {
                 door.setOpen(powered);
             }
-            block.setBlockData(data,false);
-            block.getState().update(true,false);
+            block.setBlockData(data, false);
+            block.getState().update(true, false);
 
-            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
+            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
 
     }

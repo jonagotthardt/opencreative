@@ -32,12 +32,12 @@ public final class Pair<X, Y> {
         return x;
     }
 
-    public Y getY() {
-        return y;
-    }
-
     public void setX(X x) {
         this.x = x;
+    }
+
+    public Y getY() {
+        return y;
     }
 
     public void setY(Y y) {

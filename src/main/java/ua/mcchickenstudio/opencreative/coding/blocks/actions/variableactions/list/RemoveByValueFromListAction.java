@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -36,10 +35,10 @@ public final class RemoveByValueFromListAction extends VariableAction {
     @Override
     protected void execute() {
 
-        List<Object> list = new ArrayList<>(getArguments().getList("variable",this));
-        List<Object> elements = getArguments().getList("elements",this);
+        List<Object> list = new ArrayList<>(getArguments().getList("variable", this));
+        List<Object> elements = getArguments().getList("elements", this);
         if (list.isEmpty() || elements.isEmpty()) return;
-        VariableLink variable = getArguments().getVariableLink("variable",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
         String deletionType = getArguments().getText("deletion", "all", this);
 
         if (cannotChangeListElements(elements.size())) {

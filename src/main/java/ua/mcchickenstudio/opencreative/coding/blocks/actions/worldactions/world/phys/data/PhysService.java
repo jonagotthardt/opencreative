@@ -35,10 +35,11 @@ import java.util.concurrent.ScheduledExecutorService;
 public class PhysService {
 
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(40,
-                    new ThreadFactoryBuilder().setNameFormat("opencreative-phys-thread-%d").build());
+            new ThreadFactoryBuilder().setNameFormat("opencreative-phys-thread-%d").build());
     private static final Map<Integer, List<PhysObject>> objects = new ConcurrentHashMap<>();
 
-    private PhysService () {}
+    private PhysService() {
+    }
 
     public static void add(final PhysObject object, final int limit) {
         final World world = object.getWorld();

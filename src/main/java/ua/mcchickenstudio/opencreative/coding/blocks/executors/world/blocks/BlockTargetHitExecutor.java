@@ -33,6 +33,5 @@ public class BlockTargetHitExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_TARGET_HIT;
     }
 
-    
 
 }

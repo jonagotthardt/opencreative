@@ -19,17 +19,16 @@
 package ua.mcchickenstudio.opencreative.commands.world;
 
 import org.bukkit.Bukkit;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
-
 
 import java.util.Collections;
 import java.util.List;
@@ -46,49 +45,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
  * Available: For all players.
  */
 public class JoinCommand extends CommandHandler {
-
-    @Override
-    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (sender instanceof Player player) {
-            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
-        }
-
-        if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
-            sender.sendMessage(getLocaleMessage("maintenance"));
-            return;
-        }
-
-        if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
-            sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
-            return;
-        }
-
-        if (args.length == 2) {
-            if (!sender.hasPermission("opencreative.join.others")) {
-                sender.sendMessage(getLocaleMessage("no-perms"));
-                return;
-            }
-            Player player = Bukkit.getPlayer(args[1]);
-            if (player == null) {
-                sender.sendMessage(getLocaleMessage("not-found-player"));
-                return;
-            }
-            sender.sendMessage(MessageUtils.getPlayerLocaleMessage("commands.join.connecting", player).replace("%id%",args[0]));
-            if (!handlePlayerConnection(player, args[0])) {
-                sender.sendMessage(MessageUtils.getPlayerLocaleMessage("commands.join.failed", player));
-            }
-        } else if (args.length != 1) {
-            sender.sendMessage(getLocaleMessage("commands.join.help"));
-        } else if (sender instanceof Player player) {
-            if (player.isDead()) {
-                player.sendMessage(getLocaleMessage("only-alive"));
-                return;
-            }
-            handlePlayerConnection(player, args[0]);
-        } else {
-            sender.sendMessage(getLocaleMessage("only-players"));
-        }
-    }
 
     public static boolean handlePlayerConnection(@NotNull Player player, @NotNull String planetId) {
         Planet foundPlanet = findPlanet(planetId);
@@ -122,6 +78,49 @@ public class JoinCommand extends CommandHandler {
                         planet.getInformation().getCustomID().equalsIgnoreCase(planetId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (sender instanceof Player player) {
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+        }
+
+        if (OpenCreative.getSettings().isMaintenance() && !sender.hasPermission("opencreative.maintenance.bypass")) {
+            sender.sendMessage(getLocaleMessage("maintenance"));
+            return;
+        }
+
+        if (OpenCreative.getStability().isVeryBad() && !sender.hasPermission("opencreative.stability.bypass")) {
+            sender.sendMessage(getLocaleMessage("creative.stability.cannot"));
+            return;
+        }
+
+        if (args.length == 2) {
+            if (!sender.hasPermission("opencreative.join.others")) {
+                sender.sendMessage(getLocaleMessage("no-perms"));
+                return;
+            }
+            Player player = Bukkit.getPlayer(args[1]);
+            if (player == null) {
+                sender.sendMessage(getLocaleMessage("not-found-player"));
+                return;
+            }
+            sender.sendMessage(MessageUtils.getPlayerLocaleMessage("commands.join.connecting", player).replace("%id%", args[0]));
+            if (!handlePlayerConnection(player, args[0])) {
+                sender.sendMessage(MessageUtils.getPlayerLocaleMessage("commands.join.failed", player));
+            }
+        } else if (args.length != 1) {
+            sender.sendMessage(getLocaleMessage("commands.join.help"));
+        } else if (sender instanceof Player player) {
+            if (player.isDead()) {
+                player.sendMessage(getLocaleMessage("only-alive"));
+                return;
+            }
+            handlePlayerConnection(player, args[0]);
+        } else {
+            sender.sendMessage(getLocaleMessage("only-players"));
+        }
     }
 
     @Override

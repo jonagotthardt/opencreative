@@ -18,17 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public final class SetItemMaxDamageAction extends VariableAction {
     public SetItemMaxDamageAction(Executor executor, Target target, int x, Arguments args) {
@@ -37,10 +36,10 @@ public final class SetItemMaxDamageAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE,1),this),this);
-        int durability = getArguments().getInt("damage",item.getAmount(),this);
-        boolean add = getArguments().getBoolean("add",false,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE, 1), this), this);
+        int durability = getArguments().getInt("damage", item.getAmount(), this);
+        boolean add = getArguments().getBoolean("add", false, this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -49,7 +48,7 @@ public final class SetItemMaxDamageAction extends VariableAction {
             damageable.setMaxDamage(add ? damageable.getMaxDamage() + durability : durability);
             item.setItemMeta(meta);
         }
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override

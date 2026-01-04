@@ -18,19 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.WebResponseEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -40,6 +41,23 @@ import java.util.List;
 public final class SendWebRequestAction extends WorldAction {
     public SendWebRequestAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
+    }
+
+    private static HttpURLConnection getHttpURLConnection(int id, String url, String request, String media) throws IOException {
+        URL requestUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+        connection.setConnectTimeout(5000);
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod(request);
+        connection.setRequestProperty("User-Agent", "OpenCreative+ Web Request, World ID: " + id);
+        connection.setDoOutput("POST".equalsIgnoreCase(request));
+
+        if ("json".equalsIgnoreCase(media)) {
+            connection.setRequestProperty("Content-Type", "application/json");
+        } else {
+            connection.setRequestProperty("Content-Type", "text/plain");
+        }
+        return connection;
     }
 
     @Override
@@ -99,23 +117,6 @@ public final class SendWebRequestAction extends WorldAction {
             }
         }.runTaskAsynchronously(OpenCreative.getPlugin());
 
-    }
-
-    private static HttpURLConnection getHttpURLConnection(int id, String url, String request, String media) throws IOException {
-        URL requestUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
-        connection.setConnectTimeout(5000);
-        connection.setReadTimeout(5000);
-        connection.setRequestMethod(request);
-        connection.setRequestProperty("User-Agent", "OpenCreative+ Web Request, World ID: " + id);
-        connection.setDoOutput("POST".equalsIgnoreCase(request));
-
-        if ("json".equalsIgnoreCase(media)) {
-            connection.setRequestProperty("Content-Type", "application/json");
-        } else {
-            connection.setRequestProperty("Content-Type", "text/plain");
-        }
-        return connection;
     }
 
     @Override

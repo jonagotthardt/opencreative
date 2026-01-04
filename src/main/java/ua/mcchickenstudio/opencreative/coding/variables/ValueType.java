@@ -19,15 +19,15 @@
 package ua.mcchickenstudio.opencreative.coding.variables;
 
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Map;
@@ -116,42 +116,9 @@ public enum ValueType {
     }
 
     /**
-     * Returns stained-glass pane material,
-     * that's displayed in layout menu.
-     * @return material of glass pane.
-     */
-    public Material getGlass() {
-        return glass;
-    }
-
-    /**
-     * Returns localized glass item stack,
-     * that's displayed in layout menu.
-     * @param action type of action.
-     * @param path name of argument.
-     * @return stained-glass pane item with name and description.
-     */
-    public ItemStack getGlassItem(ActionType action, String path) {
-        String messagePath = "items.developer.actions." + action.name().toLowerCase().replace("_", "-") + ".placeholders." + path;
-        ItemStack itemStack = createItem(getGlass(), 1);
-        ItemMeta meta = itemStack.getItemMeta();
-        if (!messageExists(messagePath + ".name")) {
-            meta.setDisplayName(getLocaleItemName("items.developer.placeholders." + this.name().toLowerCase() + ".name"));
-        } else {
-            meta.setDisplayName(getLocaleItemName(messagePath + ".name"));
-        }
-        if (!messageExists(messagePath + ".lore")) {
-            meta.setLore(getLocaleItemDescription("items.developer.placeholders." + this.name().toLowerCase() + ".lore"));
-        } else {
-            meta.setLore(getLocaleItemDescription(messagePath + ".lore"));
-        }
-        itemStack.setItemMeta(meta);
-        return itemStack;
-    }
-
-    /**
      * Returns type of value by comparing
      * it with value types names.
+     *
      * @param type text with type name.
      * @return value type, or text value.
      */
@@ -165,6 +132,7 @@ public enum ValueType {
     /**
      * Returns type of value by comparing
      * material with value types materials.
+     *
      * @param material material to check.
      * @return value type, or text value.
      */
@@ -177,6 +145,7 @@ public enum ValueType {
 
     /**
      * Returns value type of object.
+     *
      * @param object object to check.
      * @return value type, or null if it's unknown type.
      */
@@ -210,8 +179,45 @@ public enum ValueType {
     }
 
     /**
+     * Returns stained-glass pane material,
+     * that's displayed in layout menu.
+     *
+     * @return material of glass pane.
+     */
+    public Material getGlass() {
+        return glass;
+    }
+
+    /**
+     * Returns localized glass item stack,
+     * that's displayed in layout menu.
+     *
+     * @param action type of action.
+     * @param path   name of argument.
+     * @return stained-glass pane item with name and description.
+     */
+    public ItemStack getGlassItem(ActionType action, String path) {
+        String messagePath = "items.developer.actions." + action.name().toLowerCase().replace("_", "-") + ".placeholders." + path;
+        ItemStack itemStack = createItem(getGlass(), 1);
+        ItemMeta meta = itemStack.getItemMeta();
+        if (!messageExists(messagePath + ".name")) {
+            meta.setDisplayName(getLocaleItemName("items.developer.placeholders." + this.name().toLowerCase() + ".name"));
+        } else {
+            meta.setDisplayName(getLocaleItemName(messagePath + ".name"));
+        }
+        if (!messageExists(messagePath + ".lore")) {
+            meta.setLore(getLocaleItemDescription("items.developer.placeholders." + this.name().toLowerCase() + ".lore"));
+        } else {
+            meta.setLore(getLocaleItemDescription(messagePath + ".lore"));
+        }
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
+    /**
      * Returns material of item, that will be
      * displayed in values menu.
+     *
      * @return material of value's item.
      */
     public Material getMaterial() {
@@ -220,10 +226,11 @@ public enum ValueType {
 
     /**
      * Returns localized name of value type.
+     *
      * @return localized name of value type.
      */
     public String getLocaleName() {
-        return getLocaleMessage("environment.values." + name().toLowerCase().replace("_","-"),false);
+        return getLocaleMessage("environment.values." + name().toLowerCase().replace("_", "-"), false);
     }
 
 }

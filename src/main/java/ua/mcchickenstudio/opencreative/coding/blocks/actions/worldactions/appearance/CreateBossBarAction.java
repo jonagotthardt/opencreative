@@ -18,14 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Entity;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -39,24 +38,26 @@ public final class CreateBossBarAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getText("name","boss",this);
-        Component displayName = getArguments().getComponent("display-name",Component.text(" "),this);
-        float progress = getArguments().getFloat("progress",100.0f,this)/100;
+        String name = getArguments().getText("name", "boss", this);
+        Component displayName = getArguments().getComponent("display-name", Component.text(" "), this);
+        float progress = getArguments().getFloat("progress", 100.0f, this) / 100;
 
-        String overlayString = getArguments().getText("overlay","progress",this);
+        String overlayString = getArguments().getText("overlay", "progress", this);
         BossBar.Overlay overlay = BossBar.Overlay.PROGRESS;
         try {
             overlay = BossBar.Overlay.valueOf(overlayString.toUpperCase());
-        } catch (IllegalArgumentException ignored) {}
-        String colorString = getArguments().getText("color","purple",this);
+        } catch (IllegalArgumentException ignored) {
+        }
+        String colorString = getArguments().getText("color", "purple", this);
         BossBar.Color color = BossBar.Color.PURPLE;
         try {
             color = BossBar.Color.valueOf(colorString.toUpperCase());
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
         if (getPlanet().getTerritory().getBossBars().size() >= getPlanet().getLimits().getBossBarsLimit()) {
             // FIXME: Replace with hard-coded message, sendMessageOnce()
-            sendCodingDebugLog(getPlanet(),"Limit of " + getPlanet().getLimits().getBossBarsLimit() + " boss bars reached.");
+            sendCodingDebugLog(getPlanet(), "Limit of " + getPlanet().getLimits().getBossBarsLimit() + " boss bars reached.");
             return;
         }
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
@@ -68,7 +69,7 @@ public final class CreateBossBarAction extends WorldAction {
             bossBar.overlay(overlay);
             bossBar.color(color);
         }
-        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(), bossBar);
     }
 
     @Override

@@ -30,12 +30,14 @@ public interface KillerVictimEvent {
 
     /**
      * Returns victim of damage event, that got damaged.
+     *
      * @return entity victim.
      */
     @NotNull Entity getVictim();
 
     /**
      * Returns killer of damage event, that attacked victim.
+     *
      * @return entity killer.
      */
     @NotNull Entity getKiller();

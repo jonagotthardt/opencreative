@@ -33,6 +33,5 @@ public class BlockCrafterCraftedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_CRAFTER_CRAFTED;
     }
 
-    
 
 }

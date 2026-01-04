@@ -33,6 +33,5 @@ public class BlockPhysicsExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_PHYSICS;
     }
 
-    
 
 }

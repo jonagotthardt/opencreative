@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement;
 
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 public final class LaunchVerticalAction extends PlayerAction {
     public LaunchVerticalAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,13 +34,13 @@ public final class LaunchVerticalAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        float power = getArguments().getFloat("power",1.0f,this);
+        float power = getArguments().getFloat("power", 1.0f, this);
         if (power < -20) {
             power = -20;
         } else if (power > 20) {
             power = 20;
         }
-        player.setVelocity(player.getVelocity().add(new Vector(player.getVelocity().getX(),power,player.getVelocity().getZ())));
+        player.setVelocity(player.getVelocity().add(new Vector(player.getVelocity().getX(), power, player.getVelocity().getZ())));
     }
 
     @Override

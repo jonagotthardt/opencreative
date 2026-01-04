@@ -33,6 +33,5 @@ public class BlockExperienceDropExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_EXPERIENCE_DROP;
     }
 
-    
 
 }

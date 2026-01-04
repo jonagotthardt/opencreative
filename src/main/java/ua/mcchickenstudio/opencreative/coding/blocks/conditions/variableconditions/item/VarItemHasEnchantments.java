@@ -19,10 +19,9 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.enchantments.Enchantment;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -41,7 +40,7 @@ public class VarItemHasEnchantments extends VariableCondition {
 
     @Override
     public boolean check() {
-        ItemStack item = getArguments().getItem("item", new ItemStack(Material.APPLE),this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.APPLE), this);
         ItemStack enchantedBook = getArguments().getItem("enchantment", new ItemStack(Material.ENCHANTED_BOOK), this);
         boolean requireAllEnchants = getArguments().getBoolean("all", true, this);
         String levelCheckMode = getArguments().getText("level-check", "exact", this);

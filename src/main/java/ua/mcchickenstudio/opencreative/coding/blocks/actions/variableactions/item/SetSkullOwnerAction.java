@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.it
 import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -39,9 +38,9 @@ public final class SetSkullOwnerAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String owner = getArguments().getText("owner","Notch",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.PLAYER_HEAD),this),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String owner = getArguments().getText("owner", "Notch", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.PLAYER_HEAD), this), this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return;
@@ -51,7 +50,7 @@ public final class SetSkullOwnerAction extends VariableAction {
             skullMeta.setPlayerProfile(profile);
             item.setItemMeta(skullMeta);
         }
-        setVarValue(link,item);
+        setVarValue(link, item);
     }
 
     @Override

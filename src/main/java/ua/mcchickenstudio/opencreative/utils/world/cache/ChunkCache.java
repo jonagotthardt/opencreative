@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <h1>ChunkCache</h1>
  * This class saves the state of the chunk in the
  * cache so as not to overload the memory.
+ *
  * @author Sasha Kireiko
  */
 public class ChunkCache {
@@ -36,9 +37,10 @@ public class ChunkCache {
 
     /**
      * Checks whether chunk is generated.
+     *
      * @param world world with chunk.
-     * @param x x coordinate of chunk.
-     * @param z z coordinate of chunk.
+     * @param x     x coordinate of chunk.
+     * @param z     z coordinate of chunk.
      * @return true - chunk is generated, false - not generated.
      */
     public static boolean isChunkGenerated(@NotNull World world, int x, final int z) {
@@ -48,9 +50,10 @@ public class ChunkCache {
 
     /**
      * Preloads chunk and saves it's hashcode into map.
+     *
      * @param world world with chunk.
-     * @param x x coordinate of chunk.
-     * @param z z coordinate of chunk.
+     * @param x     x coordinate of chunk.
+     * @param z     z coordinate of chunk.
      */
     public static void preLoad(@NotNull World world, int x, int z) {
         long hash = hash(world, x, z);
@@ -59,9 +62,10 @@ public class ChunkCache {
 
     /**
      * Marks chunk as unloaded.
+     *
      * @param world world with chunk.
-     * @param x x coordinate of chunk.
-     * @param z z coordinate of chunk.
+     * @param x     x coordinate of chunk.
+     * @param z     z coordinate of chunk.
      */
     public static void unload(@NotNull World world, int x, int z) {
         long hash = hash(world, x, z);
@@ -70,9 +74,10 @@ public class ChunkCache {
 
     /**
      * Returns chunk's hashcode.
+     *
      * @param world world with chunk.
-     * @param x x coordinate of chunk.
-     * @param z z coordinate of chunk.
+     * @param x     x coordinate of chunk.
+     * @param z     z coordinate of chunk.
      */
     private static long hash(@NotNull World world, int x, int z) {
         return (31L * x + z + world.getUID().hashCode()) * 31L;

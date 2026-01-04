@@ -21,41 +21,17 @@ package ua.mcchickenstudio.opencreative.listeners.player;
 import com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent;
 import com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent;
 import io.papermc.paper.event.player.PlayerNameEntityEvent;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.block.sign.Side;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.meta.SpawnEggMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
-import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
-import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.menus.*;
-import ua.mcchickenstudio.opencreative.coding.menus.blocks.*;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.coding.menus.variables.*;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
-import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
-import ua.mcchickenstudio.opencreative.planets.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,12 +40,45 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
+import ua.mcchickenstudio.opencreative.coding.menus.TargetSelectionMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.ValueTargetSelectionMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.BlocksCategorySelectionMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.FunctionChooserMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.MethodChooserMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.blocks.SelectionActionsMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.LayoutMaker;
+import ua.mcchickenstudio.opencreative.coding.menus.variables.EventValuesCategorySelectionMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.variables.ParticlesMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
+import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
+import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -93,6 +102,32 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 public final class InteractListener implements Listener {
 
+    private static VariableLink.VariableType getVariableType(ItemMeta meta) {
+        char colorCode = 'c';
+        String itemName = meta.getDisplayName();
+        if (itemName.length() >= 2) {
+            colorCode = itemName.charAt(1);
+        }
+        VariableLink.VariableType type = colorCode == 'a' ? VariableLink.VariableType.SAVED : colorCode == 'e' ? VariableLink.VariableType.GLOBAL : VariableLink.VariableType.LOCAL;
+        if (type == VariableLink.VariableType.LOCAL) {
+            type = VariableLink.VariableType.GLOBAL;
+        } else if (type == VariableLink.VariableType.GLOBAL) {
+            type = VariableLink.VariableType.SAVED;
+        } else {
+            type = VariableLink.VariableType.LOCAL;
+        }
+        return type;
+    }
+
+    public static String formatLocation(Location location) {
+        double x = Math.round(location.getX() * 100.0) / 100.0;
+        double y = Math.round(location.getY() * 100.0) / 100.0;
+        double z = Math.round(location.getZ() * 100.0) / 100.0;
+        float yaw = Math.round(location.getYaw() * 100.0f) / 100.0f;
+        float pitch = Math.round(location.getPitch() * 100.0f) / 100.0f;
+        return ChatColor.translateAlternateColorCodes('&', "&a" + x + " " + y + " " + z + " &7" + yaw + " " + pitch);
+    }
+
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -107,7 +142,7 @@ public final class InteractListener implements Listener {
         ItemStack currentItem = player.getInventory().getItemInMainHand();
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet == null) {
-            setPaperLocation(event, player,currentItem);
+            setPaperLocation(event, player, currentItem);
             return;
         }
         Block clickedBlock = event.getClickedBlock();
@@ -134,7 +169,7 @@ public final class InteractListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND) {
             return;
         }
-        if (itemEquals(currentItem,createItem(Material.IRON_INGOT,1,"items.developer.variables"))) {
+        if (itemEquals(currentItem, createItem(Material.IRON_INGOT, 1, "items.developer.variables"))) {
             new VariablesMenu().open(player);
             return;
         }
@@ -149,7 +184,8 @@ public final class InteractListener implements Listener {
             case PRISMARINE_SHARD -> handlePrismarineShardClick(event, player, currentItem);
             case NAME_TAG -> {
                 event.setCancelled(true);
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) return;
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    return;
                 if (player.isSneaking()) {
                     new ValueTargetSelectionMenu(player).open(player);
                 } else {
@@ -164,26 +200,29 @@ public final class InteractListener implements Listener {
             }
             case NETHER_STAR -> {
                 event.setCancelled(true);
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) return;
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    return;
                 if (player.isSneaking()) {
-                    String particleType = getPersistentData(currentItem,getCodingParticleTypeKey());
+                    String particleType = getPersistentData(currentItem, getCodingParticleTypeKey());
                     if (particleType.isEmpty()) return;
                     try {
                         Particle particle = Particle.valueOf(particleType.toUpperCase());
                         Vector direction = player.getLocation().getDirection().normalize().multiply(1.5);
-                        Location particleLocation = player.getLocation().add(direction).add(0,1,0);
-                        player.spawnParticle(particle,particleLocation,1);
-                    } catch (Exception ignored) {}
+                        Location particleLocation = player.getLocation().add(direction).add(0, 1, 0);
+                        player.spawnParticle(particle, particleLocation, 1);
+                    } catch (Exception ignored) {
+                    }
                 } else {
                     new ParticlesMenu(player).open(player);
                 }
             }
             case POTION, GLASS_BOTTLE, LINGERING_POTION, SPLASH_POTION -> {
                 event.setCancelled(true);
-                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) return;
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    return;
                 if (player.isSneaking() && currentItem.getType() != Material.GLASS_BOTTLE) {
                     if (player.hasCooldown(currentItem.getType())) return;
-                    player.setCooldown(currentItem.getType(),10);
+                    player.setCooldown(currentItem.getType(), 10);
                     try {
                         PotionMeta potionMeta = (PotionMeta) currentItem.getItemMeta();
                         List<PotionEffect> effects = new ArrayList<>();
@@ -200,7 +239,8 @@ public final class InteractListener implements Listener {
                                 player.addPotionEffect(potionEffect);
                             }
                         }
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                 } else {
                     new PotionsMenu(player, currentItem.getType()).open(player);
                 }
@@ -211,6 +251,7 @@ public final class InteractListener implements Listener {
     /**
      * Handles event, when player clicks coding container block, like chest or barrel.
      * Used for creating and opening layout menus of action.
+     *
      * @return true - opened container inventory, false - not opened.
      */
     private boolean handleContainerClick(PlayerInteractEvent event, Player player, DevPlanet devPlanet, Block clickedBlock) {
@@ -275,9 +316,9 @@ public final class InteractListener implements Listener {
             Layout layout = devPlanet.getOpenedMenu(clickedBlock.getLocation());
             event.setCancelled(true);
             if (layout == null) {
-                layout = new LayoutMaker(action,clickedBlock);
+                layout = new LayoutMaker(action, clickedBlock);
                 layout.open(player);
-                devPlanet.registerOpenedMenu(clickedBlock.getLocation(),layout);
+                devPlanet.registerOpenedMenu(clickedBlock.getLocation(), layout);
             } else {
                 player.openInventory(layout.getInventory());
             }
@@ -358,18 +399,18 @@ public final class InteractListener implements Listener {
             }
         } else if (player.isSneaking() && actionBlockCategory != null) {
             if (actionBlockCategory == ActionCategory.SELECTION_ACTION) {
-                String selectionAction = getSignLine(clickedBlock.getLocation(),(byte) 4);
+                String selectionAction = getSignLine(clickedBlock.getLocation(), (byte) 4);
                 switch (selectionAction) {
                     case "selection_set" -> {
-                        setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_add");
+                        setSignLine(clickedBlock.getLocation(), (byte) 4, "selection_add");
                         Sounds.DEV_ACTION_TARGET.play(player);
                     }
                     case "selection_add" -> {
-                        setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_remove");
+                        setSignLine(clickedBlock.getLocation(), (byte) 4, "selection_remove");
                         Sounds.DEV_ACTION_TARGET.play(player);
                     }
                     case null, default -> {
-                        setSignLine(clickedBlock.getLocation(),(byte) 4,"selection_set");
+                        setSignLine(clickedBlock.getLocation(), (byte) 4, "selection_set");
                         Sounds.DEV_ACTION_TARGET.play(player);
                     }
                 }
@@ -382,7 +423,8 @@ public final class InteractListener implements Listener {
             final Location clickedLocation = clickedBlock.getLocation();
             if (mainBlockCategory != null) {
                 menu = switch (mainBlockCategory) {
-                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER -> new BlocksCategorySelectionMenu(player, clickedLocation, mainBlockCategory);
+                    case EVENT_WORLD, EVENT_ENTITY, EVENT_PLAYER ->
+                            new BlocksCategorySelectionMenu(player, clickedLocation, mainBlockCategory);
                     default -> null;
                 };
             } else if (actionBlockCategory != null) {
@@ -390,10 +432,11 @@ public final class InteractListener implements Listener {
                     case PLAYER_ACTION, PLAYER_CONDITION, VARIABLE_ACTION,
                          VARIABLE_CONDITION, ENTITY_ACTION, ENTITY_CONDITION,
                          WORLD_ACTION, WORLD_CONDITION, CONTROL_ACTION,
-                         REPEAT_ACTION, CONTROLLER_ACTION -> new BlocksCategorySelectionMenu(player, clickedLocation, actionBlockCategory);
-                    case SELECTION_ACTION -> new SelectionActionsMenu(player,clickedLocation);
-                    case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet,clickedLocation);
-                    case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet,clickedLocation);
+                         REPEAT_ACTION, CONTROLLER_ACTION ->
+                            new BlocksCategorySelectionMenu(player, clickedLocation, actionBlockCategory);
+                    case SELECTION_ACTION -> new SelectionActionsMenu(player, clickedLocation);
+                    case LAUNCH_FUNCTION_ACTION -> new FunctionChooserMenu(player, devPlanet, clickedLocation);
+                    case LAUNCH_METHOD_ACTION -> new MethodChooserMenu(player, devPlanet, clickedLocation);
                     default -> null;
                 };
             }
@@ -401,13 +444,13 @@ public final class InteractListener implements Listener {
                 menu.open(player);
                 return true;
             } else if (mainBlockCategory == ExecutorCategory.CYCLE) {
-                String cycleTicksString = getSignLine(clickedBlock.getLocation(),(byte) 3);
+                String cycleTicksString = getSignLine(clickedBlock.getLocation(), (byte) 3);
                 if (cycleTicksString != null && !cycleTicksString.isEmpty()) {
                     int cycleTicks = 20;
                     try {
                         cycleTicks = Integer.parseInt(cycleTicksString);
-                    } catch (NumberFormatException exception){
-                        setSignLine(clickedBlock.getLocation(),(byte) 3,"20");
+                    } catch (NumberFormatException exception) {
+                        setSignLine(clickedBlock.getLocation(), (byte) 3, "20");
                     }
                     if (event.getAction().isRightClick()) {
                         if (event.getPlayer().isSneaking()) {
@@ -420,10 +463,11 @@ public final class InteractListener implements Listener {
                                 if (item.getType() == Material.SLIME_BALL) {
                                     try {
                                         cycleTicks = Math.round(Float.parseFloat(displayName));
-                                    } catch (NumberFormatException ignored) {}
+                                    } catch (NumberFormatException ignored) {
+                                    }
                                     Sounds.DEV_CYCLE_DELAY_SET.play(player);
                                 } else if (displayName.length() < 15) {
-                                    setSignLine(clickedBlock.getLocation(),(byte) 1,displayName);
+                                    setSignLine(clickedBlock.getLocation(), (byte) 1, displayName);
                                     Sounds.DEV_CYCLE_NAMED.play(player);
                                 }
                             } else {
@@ -438,7 +482,7 @@ public final class InteractListener implements Listener {
                     if (cycleTicks > 3600) {
                         cycleTicks = 3600;
                     }
-                    setSignLine(clickedBlock.getLocation(),(byte) 3,String.valueOf(cycleTicks));
+                    setSignLine(clickedBlock.getLocation(), (byte) 3, String.valueOf(cycleTicks));
                     translateBlockSign(clickedBlock);
                 }
             } else if (mainBlockCategory == ExecutorCategory.FUNCTION || mainBlockCategory == ExecutorCategory.METHOD) {
@@ -446,7 +490,7 @@ public final class InteractListener implements Listener {
                 if (!item.isEmpty() && item.hasItemMeta()) {
                     String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
                     if (displayName.length() < 15) {
-                        setSignLine(clickedBlock.getLocation(),(byte) 3,displayName);
+                        setSignLine(clickedBlock.getLocation(), (byte) 3, displayName);
                         (mainBlockCategory == ExecutorCategory.FUNCTION ?
                                 Sounds.DEV_FUNCTION_NAMED : Sounds.DEV_METHOD_NAMED).play(player);
                         translateBlockSign(clickedBlock);
@@ -480,7 +524,7 @@ public final class InteractListener implements Listener {
             Component displayName = meta.displayName();
             if (displayName != null) {
                 player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
-                setPersistentData(currentItem,getCodingValueKey(),"NUMBER");
+                setPersistentData(currentItem, getCodingValueKey(), "NUMBER");
             }
         }
     }
@@ -493,8 +537,8 @@ public final class InteractListener implements Listener {
             }
             Component displayName = meta.displayName();
             if (displayName != null) {
-                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§","&"))));
-                setPersistentData(currentItem,getCodingValueKey(),"TEXT");
+                player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(meta.getDisplayName().replace("§", "&"))));
+                setPersistentData(currentItem, getCodingValueKey(), "TEXT");
                 player.swingMainHand();
             }
         }
@@ -509,18 +553,19 @@ public final class InteractListener implements Listener {
                 String[] coords = vectorString.split(" ");
                 if (coords.length == 3) {
                     try {
-                        double x,y,z;
+                        double x, y, z;
                         x = Double.parseDouble(coords[0]);
                         y = Double.parseDouble(coords[1]);
                         z = Double.parseDouble(coords[2]);
-                        player.setVelocity(new Vector(x,y,z));
-                    } catch (Exception ignored) {}
+                        player.setVelocity(new Vector(x, y, z));
+                    } catch (Exception ignored) {
+                    }
                 }
             } else {
                 Component displayName = meta.displayName();
                 if (displayName != null) {
                     player.sendMessage(displayName.hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("world.dev-mode.click-to-copy")))).clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
-                    setPersistentData(currentItem,getCodingValueKey(),"VECTOR");
+                    setPersistentData(currentItem, getCodingValueKey(), "VECTOR");
                     player.swingMainHand();
                 }
             }
@@ -535,14 +580,14 @@ public final class InteractListener implements Listener {
         if (devPlanet == null) return;
         if (ActionCategory.getByMaterial(clickedBlock.getType()) != null) {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (move(clickedBlock.getRelative(BlockFace.WEST).getLocation(),BlockFace.EAST)) {
+                if (move(clickedBlock.getRelative(BlockFace.WEST).getLocation(), BlockFace.EAST)) {
                     Sounds.DEV_MOVE_BLOCKS_RIGHT.play(player);
                 } else {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                 }
                 devPlanet.setCodeChanged(true);
             } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if (move(clickedBlock.getRelative(-2,0,0).getLocation(),BlockFace.WEST)) {
+                if (move(clickedBlock.getRelative(-2, 0, 0).getLocation(), BlockFace.WEST)) {
                     Sounds.DEV_MOVE_BLOCKS_LEFT.play(player);
                 } else {
                     Sounds.DEV_NOT_ALLOWED.play(player);
@@ -629,7 +674,7 @@ public final class InteractListener implements Listener {
                 player.teleport(planet.getTerritory().getSpawnLocation());
                 player.getInventory().setItemInMainHand(currentItem); // Fix for Multi-Verse Inventories
                 Sounds.DEV_LOCATION_TELEPORT.play(player);
-                player.setCooldown(currentItem.getType(),60);
+                player.setCooldown(currentItem.getType(), 60);
             }
         }
     }
@@ -654,29 +699,12 @@ public final class InteractListener implements Listener {
                 Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(2), Duration.ofSeconds(1))
         ));
         currentItem.setItemMeta(meta);
-        setPersistentData(currentItem,getCodingValueKey(),"VARIABLE");
-        setPersistentData(currentItem,getCodingVariableTypeKey(),type.name());
+        setPersistentData(currentItem, getCodingValueKey(), "VARIABLE");
+        setPersistentData(currentItem, getCodingVariableTypeKey(), type.name());
         Sounds.DEV_VARIABLE_CHANGE.play(player);
         player.swingMainHand();
         player.sendMessage(Component.text(meta.getDisplayName())
                 .clickEvent(ClickEvent.suggestCommand(ChatColor.stripColor(meta.getDisplayName()))));
-    }
-
-    private static VariableLink.VariableType getVariableType(ItemMeta meta) {
-        char colorCode = 'c';
-        String itemName = meta.getDisplayName();
-        if (itemName.length() >= 2) {
-            colorCode = itemName.charAt(1);
-        }
-        VariableLink.VariableType type = colorCode == 'a' ? VariableLink.VariableType.SAVED : colorCode == 'e' ? VariableLink.VariableType.GLOBAL : VariableLink.VariableType.LOCAL;
-        if (type == VariableLink.VariableType.LOCAL) {
-            type = VariableLink.VariableType.GLOBAL;
-        } else if (type == VariableLink.VariableType.GLOBAL) {
-            type = VariableLink.VariableType.SAVED;
-        } else {
-            type = VariableLink.VariableType.LOCAL;
-        }
-        return type;
     }
 
     private void handleFeatherInteraction(PlayerInteractEvent event, Player player, ItemStack currentItem) {
@@ -711,8 +739,8 @@ public final class InteractListener implements Listener {
         if (meta != null && meta.hasDisplayName()) {
             value = meta.getDisplayName().contains("true");
         }
-        String displayName = ChatColor.translateAlternateColorCodes('&',!value ? "&atrue" : "&cfalse");
-        setDisplayName(currentItem,displayName);
+        String displayName = ChatColor.translateAlternateColorCodes('&', !value ? "&atrue" : "&cfalse");
+        setDisplayName(currentItem, displayName);
         (!value ? Sounds.DEV_BOOLEAN_TRUE : Sounds.DEV_BOOLEAN_FALSE).play(player);
         player.swingMainHand();
         player.showTitle(Title.title(
@@ -736,43 +764,34 @@ public final class InteractListener implements Listener {
                 location = clickedBlock.getLocation();
             }
             String locationString = formatLocation(location);
-            setDisplayName(currentItem,locationString);
+            setDisplayName(currentItem, locationString);
             player.showTitle(Title.title(
                     toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(locationString),
                     Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
             ));
-            spawnGlowingBlock(player,location);
+            spawnGlowingBlock(player, location);
             Sounds.DEV_LOCATION_SET.play(player);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {
             if (planet != null && planet.getDevPlanet().isLoaded()) {
-                player.setCooldown(currentItem.getType(),60);
+                player.setCooldown(currentItem.getType(), 60);
                 player.teleportAsync(getOldLocationPlayerWithLocation(player)).thenAccept(success -> {
                     Sounds.DEV_LOCATION_TELEPORT_BACK.play(player);
                     player.getInventory().setItemInMainHand(currentItem); // Fix for Multi-Verse Inventories
                     for (Player developer : planet.getDevPlanet().getWorld().getPlayers()) {
                         WorldBorder border = Bukkit.createWorldBorder();
                         border.setCenter(planet.getDevPlanet().getWorld().getWorldBorder().getCenter());
-                        border.setSize(planet.getDevPlanet().getWorld().getWorldBorder().getSize()*5);
+                        border.setSize(planet.getDevPlanet().getWorld().getWorldBorder().getSize() * 5);
                         developer.setWorldBorder(border);
                     }
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            translateSigns(player,10);
+                            translateSigns(player, 10);
                         }
-                    }.runTaskLater(OpenCreative.getPlugin(),10L);
+                    }.runTaskLater(OpenCreative.getPlugin(), 10L);
                 });
             }
         }
-    }
-
-    public static String formatLocation(Location location) {
-        double x = Math.round(location.getX() * 100.0)/100.0;
-        double y = Math.round(location.getY() * 100.0)/100.0;
-        double z = Math.round(location.getZ() * 100.0)/100.0;
-        float yaw = Math.round(location.getYaw() * 100.0f)/100.0f;
-        float pitch = Math.round(location.getPitch() * 100.0f)/100.0f;
-        return ChatColor.translateAlternateColorCodes('&',"&a" + x + " " + y + " " + z + " &7" + yaw + " " + pitch);
     }
 
     @EventHandler
@@ -797,7 +816,7 @@ public final class InteractListener implements Listener {
                     player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                     return;
                 }
-                player.setCooldown(currentItem.getType(),60);
+                player.setCooldown(currentItem.getType(), 60);
                 new RecommendedWorldsMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menus.
@@ -809,7 +828,7 @@ public final class InteractListener implements Listener {
                     player.sendMessage(getLocaleMessage("creative.stability.cannot"));
                     return;
                 }
-                player.setCooldown(currentItem.getType(),60);
+                player.setCooldown(currentItem.getType(), 60);
                 new OwnWorldsBrowserMenu(player).open(player);
             }
         } else if (planet != null && getItemType(currentItem).equals("world_settings")) {
@@ -823,8 +842,8 @@ public final class InteractListener implements Listener {
                 return;
             }
             if (planet.isOwner(player)) {
-                player.setCooldown(currentItem.getType(),60);
-                new WorldSettingsMenu(planet,player).open(player);
+                player.setCooldown(currentItem.getType(), 60);
+                new WorldSettingsMenu(planet, player).open(player);
             }
         }
     }
@@ -852,21 +871,21 @@ public final class InteractListener implements Listener {
             return;
         }
         switch (event.getAction()) {
-            case LEFT_CLICK_AIR -> new LeftClickEvent(player,event).callEvent();
+            case LEFT_CLICK_AIR -> new LeftClickEvent(player, event).callEvent();
             case LEFT_CLICK_BLOCK -> {
-                new LeftClickEvent(player,event).callEvent();
-                new BlockInteractionEvent(player,event).callEvent();
+                new LeftClickEvent(player, event).callEvent();
+                new BlockInteractionEvent(player, event).callEvent();
             }
-            case PHYSICAL -> new WorldInteractEvent(player,event).callEvent();
+            case PHYSICAL -> new WorldInteractEvent(player, event).callEvent();
             case RIGHT_CLICK_AIR -> {
                 if (event.getHand() == EquipmentSlot.HAND) {
-                    new RightClickEvent(player,event).callEvent();
+                    new RightClickEvent(player, event).callEvent();
                 }
             }
             case RIGHT_CLICK_BLOCK -> {
                 if (event.getHand() == EquipmentSlot.HAND) {
-                    new RightClickEvent(player,event).callEvent();
-                    new BlockInteractionEvent(player,event).callEvent();
+                    new RightClickEvent(player, event).callEvent();
+                    new BlockInteractionEvent(player, event).callEvent();
                 }
             }
         }
@@ -877,7 +896,7 @@ public final class InteractListener implements Listener {
             if (planet.getWorldPlayers().canBuild(player)) {
                 return;
             }
-            switch(planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT)) {
+            switch (planet.getFlagValue(PlanetFlags.PlanetFlag.BLOCK_INTERACT)) {
                 // Disallow every block interact.
                 case 2 -> {
                     player.sendActionBar(getLocaleMessage("world.cant-block-interact"));
@@ -934,7 +953,7 @@ public final class InteractListener implements Listener {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             if (event.getHand() == EquipmentSlot.HAND) {
-                new MobInteractionEvent(player,event).callEvent();
+                new MobInteractionEvent(player, event).callEvent();
             }
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow entire mob interaction.
@@ -962,7 +981,7 @@ public final class InteractListener implements Listener {
         }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
-            new MobInteractionEvent(player,event).callEvent();
+            new MobInteractionEvent(player, event).callEvent();
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 2 && !planet.getWorldPlayers().canBuild(player)) {
                 player.sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                 event.setCancelled(true);
@@ -983,7 +1002,7 @@ public final class InteractListener implements Listener {
         }
         if (event.getCaught().getType() == EntityType.ITEM) {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-            if (planet != null) new FishEvent(event.getPlayer(),event).callEvent();
+            if (planet != null) new FishEvent(event.getPlayer(), event).callEvent();
         }
     }
 
@@ -1002,31 +1021,31 @@ public final class InteractListener implements Listener {
     @EventHandler
     public void onBedInteract(PlayerBedEnterEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new BedEnterEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new BedEnterEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
     public void onBedInteract(PlayerBedLeaveEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new BedLeaveEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new BedLeaveEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new BucketFillEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new BucketFillEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new BucketEmptyEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new BucketEmptyEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
     public void onBucketEntity(PlayerBucketEntityEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
-        if (planet != null) new BucketEntityEvent(event.getPlayer(),event).callEvent();
+        if (planet != null) new BucketEntityEvent(event.getPlayer(), event).callEvent();
     }
 
     @EventHandler
@@ -1036,7 +1055,7 @@ public final class InteractListener implements Listener {
         int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxEntityNameLength();
         if (text.length() > limit) {
             event.setName(PlainTextComponentSerializer.plainText()
-                    .deserialize(text.substring(0,limit)));
+                    .deserialize(text.substring(0, limit)));
         }
     }
 }

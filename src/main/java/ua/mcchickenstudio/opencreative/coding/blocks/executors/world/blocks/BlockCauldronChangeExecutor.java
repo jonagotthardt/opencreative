@@ -33,6 +33,5 @@ public class BlockCauldronChangeExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_CAULDRON_CHANGE;
     }
 
-    
 
 }

@@ -21,14 +21,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
@@ -44,15 +42,15 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
         if (!getArguments().pathExists("first") || !getArguments().pathExists("second")) {
             return;
         }
-        Location firstLocation = getArguments().getLocation("first",getPlanet().getTerritory().getSpawnLocation(),this);
-        Location secondLocation = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
-        Material type = getArguments().getMaterial("type", Material.AIR,this);
-        int minX = Math.min(firstLocation.getBlockX(),secondLocation.getBlockX());
-        int minY = Math.min(firstLocation.getBlockY(),secondLocation.getBlockY());
-        int minZ = Math.min(firstLocation.getBlockZ(),secondLocation.getBlockZ());
-        int maxX = Math.max(firstLocation.getBlockX(),secondLocation.getBlockX());
-        int maxY = Math.max(firstLocation.getBlockY(),secondLocation.getBlockY());
-        int maxZ = Math.max(firstLocation.getBlockZ(),secondLocation.getBlockZ());
+        Location firstLocation = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
+        Location secondLocation = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
+        Material type = getArguments().getMaterial("type", Material.AIR, this);
+        int minX = Math.min(firstLocation.getBlockX(), secondLocation.getBlockX());
+        int minY = Math.min(firstLocation.getBlockY(), secondLocation.getBlockY());
+        int minZ = Math.min(firstLocation.getBlockZ(), secondLocation.getBlockZ());
+        int maxX = Math.max(firstLocation.getBlockX(), secondLocation.getBlockX());
+        int maxY = Math.max(firstLocation.getBlockY(), secondLocation.getBlockY());
+        int maxZ = Math.max(firstLocation.getBlockZ(), secondLocation.getBlockZ());
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -71,20 +69,20 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                         getPlanet().getTerritory().removeBukkitRunnable(runnable);
                         new LimitReachedBlocksEvent(getPlanet()).callEvent();
                         return;
                     }
-                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
-                    Block block = getWorld().getBlockAt(x,y,z);
+                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
+                    Block block = getWorld().getBlockAt(x, y, z);
                     if (type.isBlock() && !isOutOfBorders(block.getLocation())) {
-                        block.setType(type,false);
+                        block.setType(type, false);
                     }
                 }
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
     }
 

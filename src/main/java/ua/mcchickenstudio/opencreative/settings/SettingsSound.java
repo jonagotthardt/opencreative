@@ -18,4 +18,5 @@
 
 package ua.mcchickenstudio.opencreative.settings;
 
-public record SettingsSound(String sound, float pitch) {}
+public record SettingsSound(String sound, float pitch) {
+}

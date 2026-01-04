@@ -18,13 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import net.kyori.adventure.bossbar.BossBar;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.entity.Entity;
 
 public final class BossBarProgressAction extends WorldAction {
     public BossBarProgressAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,13 +35,13 @@ public final class BossBarProgressAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getText("name","boss",this);
-        float progress = getArguments().getFloat("progress",100.0f,this)/100;
+        String name = getArguments().getText("name", "boss", this);
+        float progress = getArguments().getFloat("progress", 100.0f, this) / 100;
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             bossBar.progress(progress);
         }
-        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(),bossBar);
+        getPlanet().getTerritory().getBossBars().put(name.toLowerCase(), bossBar);
     }
 
     @Override

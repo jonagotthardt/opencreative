@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -35,11 +34,11 @@ public class NumberInRangeCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        double min = getArguments().getDouble("min",0.0d,this);
-        boolean minEquals = getArguments().getBoolean("min-equals",false,this);
-        double number = getArguments().getDouble("number",5.0d,this);
-        double max = getArguments().getDouble("max",10.0d,this);
-        boolean maxEquals = getArguments().getBoolean("max-equals",false,this);
+        double min = getArguments().getDouble("min", 0.0d, this);
+        boolean minEquals = getArguments().getBoolean("min-equals", false, this);
+        double number = getArguments().getDouble("number", 5.0d, this);
+        double max = getArguments().getDouble("max", 10.0d, this);
+        boolean maxEquals = getArguments().getBoolean("max-equals", false, this);
 
         boolean minCondition = minEquals ? number >= min : number > min;
         boolean maxCondition = maxEquals ? number <= max : number < max;

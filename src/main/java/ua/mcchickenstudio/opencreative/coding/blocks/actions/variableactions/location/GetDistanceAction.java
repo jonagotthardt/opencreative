@@ -18,14 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location;
 
+import org.bukkit.Location;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 
 public final class GetDistanceAction extends VariableAction {
     public GetDistanceAction(Executor executor, Target target, int x, Arguments args) {
@@ -34,10 +33,10 @@ public final class GetDistanceAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Location first = getArguments().getLocation("first",getDefaultLocation(),this);
-        Location second = getArguments().getLocation("second",getPlanet().getTerritory().getSpawnLocation(),this);
-        setVarValue(link,first.distance(second));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Location first = getArguments().getLocation("first", getDefaultLocation(), this);
+        Location second = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
+        setVarValue(link, first.distance(second));
     }
 
     @Override

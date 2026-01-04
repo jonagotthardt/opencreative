@@ -18,15 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import net.kyori.adventure.text.Component;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Entity;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 public final class ScoreboardSetDisplayNameAction extends WorldAction {
     public ScoreboardSetDisplayNameAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,7 +37,7 @@ public final class ScoreboardSetDisplayNameAction extends WorldAction {
         if (!getArguments().pathExists("name") || !getArguments().pathExists("display-name")) {
             return;
         }
-        String name = getArguments().getText("name","board",this);
+        String name = getArguments().getText("name", "board", this);
         Component displayName = getArguments().getComponent("display-name", Component.text("Scoreboard"), this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
         if (scoreboard == null) {

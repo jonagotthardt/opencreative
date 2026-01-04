@@ -43,6 +43,7 @@ public abstract class LocationEventValue extends EventValue {
     /**
      * Returns a location that can be got from
      * player, event, action, or null.
+     *
      * @return location, or null.
      */
     public abstract @Nullable Location getLocation(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);

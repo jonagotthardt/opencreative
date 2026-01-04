@@ -44,14 +44,15 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
 
     /**
      * Constructor of world generator.
-     * @param id short id of world generator that will be used in world generation menu.
-     *           <p>
-     *           It must be lower-snake-cased, for example: "flat", "nostalgia_world".
-     *           If some of registered generators has same ID as new, it will be not added.
+     *
+     * @param id          short id of world generator that will be used in world generation menu.
+     *                    <p>
+     *                    It must be lower-snake-cased, for example: "flat", "nostalgia_world".
+     *                    If some of registered generators has same ID as new, it will be not added.
      * @param displayIcon icon of world generator that will be displayed in world generation menu.
      */
     public WorldGenerator(@NotNull String id, @NotNull ItemStack displayIcon) {
-        this.id = id.replace("-","_").toLowerCase();
+        this.id = id.replace("-", "_").toLowerCase();
         this.displayIcon = displayIcon;
     }
 
@@ -59,12 +60,14 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
      * Changes world creator before creating or loading world.
      * Useful to set generator as itself, if it overrides
      * {@link ChunkGenerator#generateSurface(WorldInfo, Random, int, int, ChunkData) generateSurface} method.
+     *
      * @param creator creator to change.
      */
     public abstract void modifyWorldCreator(@NotNull WorldCreator creator);
 
     /**
      * Executes world operations, when it's created or loaded.
+     *
      * @param world world to execute code in it.
      */
     public abstract void afterCreation(@NotNull World world);
@@ -72,6 +75,7 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
     /**
      * Returns an icon that will be used
      * in world generation menu.
+     *
      * @return icon of event value to display.
      */
     public ItemStack getDisplayIcon() {
@@ -81,23 +85,26 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
     /**
      * Returns name of world generator for displaying in
      * registry by converting id. Not used in menus.
+     *
      * @return display name of world generator.
      */
     public @NotNull String getName() {
-        return StringUtils.capitalize(id.replace("_"," "));
+        return StringUtils.capitalize(id.replace("_", " "));
     }
 
     /**
      * Returns localized name for displaying.
+     *
      * @return localized name.
      */
     public @NotNull String getLocaleName() {
-        return getLocaleMessage("menus.world-creation.items.type.choices." + id,false);
+        return getLocaleMessage("menus.world-creation.items.type.choices." + id, false);
     }
 
     /**
      * Returns id of world generator, that will be used
      * to find it in registry.
+     *
      * @return id of world generator.
      */
     public final @NotNull String getID() {

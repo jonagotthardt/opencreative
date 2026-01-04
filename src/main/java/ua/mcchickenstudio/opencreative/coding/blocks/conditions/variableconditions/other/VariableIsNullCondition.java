@@ -26,7 +26,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditio
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.EventValueLink;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -37,8 +36,8 @@ public class VariableIsNullCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        List<Object> values = getArguments().getList("values",this);
-        boolean requireAll = getArguments().getBoolean("all",false,this);
+        List<Object> values = getArguments().getList("values", this);
+        boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean isNull = false;
         for (Object value : values) {
             if (value instanceof EventValueLink || value instanceof VariableLink) {

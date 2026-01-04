@@ -18,11 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.utils.hooks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.blocks.DisabledBlocksManager;
 import ua.mcchickenstudio.opencreative.managers.blocks.WorldEditManager;
@@ -39,7 +39,7 @@ public final class HookUtils {
     public static boolean isWorldEditEnabled = false;
 
     /**
-     Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
+     * Load hooks into other plugins for working with them. For example: Creative+ can hook into PlaceholderAPI.
      **/
     public static void loadHooks() {
         isPlaceholderAPIEnabled = isPluginEnabled("PlaceholderAPI");

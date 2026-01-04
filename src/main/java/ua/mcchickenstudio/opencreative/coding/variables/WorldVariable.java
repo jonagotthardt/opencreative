@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.variables;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
-import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 import java.util.Map;
@@ -48,10 +47,11 @@ public final class WorldVariable {
     /**
      * Creates instance of variable, that has name, value, type,
      * value type and actions handler.
-     * @param name name of variable.
+     *
+     * @param name    name of variable.
      * @param varType type of variable (local, global, saved).
-     * @param type type of value.
-     * @param value value.
+     * @param type    type of value.
+     * @param value   value.
      * @param handler actions handler.
      */
     public WorldVariable(@NotNull String name, @NotNull VariableLink.VariableType varType, @NotNull ValueType type, @Nullable Object value, @Nullable ActionsHandler handler) {
@@ -68,6 +68,7 @@ public final class WorldVariable {
      * is loaded from storage, or when
      * player creates variable with
      * command.
+     *
      * @return actions handler, or null.
      */
     public @Nullable ActionsHandler getHandler() {
@@ -76,6 +77,7 @@ public final class WorldVariable {
 
     /**
      * Returns value of variable.
+     *
      * @return value of variable.
      */
     public @Nullable Object getValue() {
@@ -83,7 +85,17 @@ public final class WorldVariable {
     }
 
     /**
+     * Sets a new value to variable.
+     *
+     * @param value new value.
+     */
+    public void setValue(@Nullable Object value) {
+        this.value = value;
+    }
+
+    /**
      * Returns type of value.
+     *
      * @return value type.
      */
     public @NotNull ValueType getType() {
@@ -91,7 +103,17 @@ public final class WorldVariable {
     }
 
     /**
+     * Sets a new value type to variable.
+     *
+     * @param type new type.
+     */
+    public void setType(@NotNull ValueType type) {
+        this.valueType = type;
+    }
+
+    /**
      * Returns type of variable (local, global, saved).
+     *
      * @return type of variable.
      */
     public @NotNull VariableLink.VariableType getVarType() {
@@ -100,6 +122,7 @@ public final class WorldVariable {
 
     /**
      * Returns name of variable.
+     *
      * @return name of variable.
      */
     public @NotNull String getName() {
@@ -107,34 +130,19 @@ public final class WorldVariable {
     }
 
     /**
-     * Sets a new value type to variable.
-     * @param type new type.
-     */
-    public void setType(@NotNull ValueType type) {
-        this.valueType = type;
-    }
-
-    /**
-     * Sets a new value to variable.
-     * @param value new value.
-     */
-    public void setValue(@Nullable Object value) {
-        this.value = value;
-    }
-
-    /**
      * Returns a size of variable.
      * <p>If value is map, then keys amount will be added to size.
      * <p>If value is list, then elements amount will be added to size.
      * <p>Otherwise, it will return 1.
+     *
      * @return size of variable.
      */
     public int getSize() {
         int size = 1;
         if (value instanceof List<?> list) {
             size += list.size();
-        } else if (value instanceof Map<?,?> map) {
-            size += 2*map.size();
+        } else if (value instanceof Map<?, ?> map) {
+            size += 2 * map.size();
         }
         return size;
     }

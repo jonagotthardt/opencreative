@@ -33,6 +33,5 @@ public class BlockSculkBloomedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_SCULK_BLOOMED;
     }
 
-    
 
 }

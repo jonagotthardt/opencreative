@@ -33,10 +33,11 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLo
  * This class represents an action, that has actions
  * inside to execute. All multi-actions have piston
  * as additional block.
+ *
+ * @author McChicken Studio
+ * @version 5.7
  * @see ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition
  * @since 5.0
- * @version 5.7
- * @author McChicken Studio
  */
 public abstract class MultiAction extends Action {
 
@@ -44,11 +45,12 @@ public abstract class MultiAction extends Action {
 
     /**
      * Creates MultiAction, that will execute actions inside.
+     *
      * @param executor Executor, from which this action will be executed.
-     * @param target Target, that will execute action.
-     * @param x X Coordinate of coding block in developer's world.
-     * @param args Arguments for action.
-     * @param actions Actions, that will be executed with this action.
+     * @param target   Target, that will execute action.
+     * @param x        X Coordinate of coding block in developer's world.
+     * @param args     Arguments for action.
+     * @param actions  Actions, that will be executed with this action.
      */
     public MultiAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args);
@@ -58,7 +60,7 @@ public abstract class MultiAction extends Action {
     @Override
     public final void prepareAndExecute(ActionsHandler handler) {
         if (getActionType() != null && getActionType().isDisabled()) {
-            sendCodingDebugLog(getPlanet(),"Action is disabled, cannot work: " + getActionType().getLocaleName());
+            sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
         }
         this.handler = handler;

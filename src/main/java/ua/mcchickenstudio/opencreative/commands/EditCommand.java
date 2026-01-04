@@ -18,14 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,6 +30,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,7 +131,7 @@ public class EditCommand extends CommandHandler {
             String message = joinArgs(args, 1);
             Component newName = fromInputToComponent(message);
             if (getComponentLength(newName) > TEXT_LIMIT) {
-                player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+                player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%", String.valueOf(TEXT_LIMIT))));
                 return;
             }
             if (!newName.hasDecoration(TextDecoration.ITALIC)) {
@@ -162,7 +162,7 @@ public class EditCommand extends CommandHandler {
                 lineNumber = 1;
             } else if (lineNumber > LINES_LIMIT) {
                 player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit")
-                        .replace("%limit%",String.valueOf(LINES_LIMIT))));
+                        .replace("%limit%", String.valueOf(LINES_LIMIT))));
                 return;
             }
         } catch (NumberFormatException ignored) {
@@ -173,7 +173,7 @@ public class EditCommand extends CommandHandler {
         String message = joinArgs(args, 2);
         Component newLoreLine = fromInputToComponent(message);
         if (getComponentLength(newLoreLine) > TEXT_LIMIT) {
-            player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+            player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%", String.valueOf(TEXT_LIMIT))));
             return;
         }
         if (!newLoreLine.hasDecoration(TextDecoration.ITALIC)) {
@@ -187,12 +187,12 @@ public class EditCommand extends CommandHandler {
             }
         }
         if (args.length == 2) {
-            player.sendMessage(newLore.get(lineNumber-1)
+            player.sendMessage(newLore.get(lineNumber - 1)
                     .clickEvent(ClickEvent.suggestCommand(
-                            LegacyComponentSerializer.legacyAmpersand().serialize(newLore.get(lineNumber-1)))));
+                            LegacyComponentSerializer.legacyAmpersand().serialize(newLore.get(lineNumber - 1)))));
             return;
         }
-        newLore.set(lineNumber-1, newLoreLine);
+        newLore.set(lineNumber - 1, newLoreLine);
         meta.lore(newLore);
         item.setItemMeta(meta);
         player.sendMessage(getComponentWithPlaceholders("commands.edit.set-lore",
@@ -205,14 +205,14 @@ public class EditCommand extends CommandHandler {
         String message = joinArgs(args, 1);
         Component newLoreLine = fromInputToComponent(message);
         if (getComponentLength(newLoreLine) > TEXT_LIMIT) {
-            player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%",String.valueOf(TEXT_LIMIT))));
+            player.sendMessage(toComponent(getLocaleMessage("commands.edit.text-limit").replace("%limit%", String.valueOf(TEXT_LIMIT))));
             return;
         }
         List<Component> newLore = meta.lore();
         if (newLore == null) newLore = new ArrayList<>();
         if (newLore.size() > LINES_LIMIT) {
             player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit")
-                    .replace("%limit%",String.valueOf(LINES_LIMIT))));
+                    .replace("%limit%", String.valueOf(LINES_LIMIT))));
             return;
         }
         if (!newLoreLine.hasDecoration(TextDecoration.ITALIC)) {
@@ -237,7 +237,7 @@ public class EditCommand extends CommandHandler {
             if (lineNumber < 1) {
                 lineNumber = 1;
             } else if (lineNumber > LINES_LIMIT) {
-                player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%",String.valueOf(LINES_LIMIT))));
+                player.sendMessage(toComponent(getLocaleMessage("commands.edit.lines-limit").replace("%limit%", String.valueOf(LINES_LIMIT))));
                 return;
             }
         } catch (NumberFormatException ignored) {
@@ -248,11 +248,11 @@ public class EditCommand extends CommandHandler {
         List<Component> newLore = meta.lore();
         if (newLore == null) newLore = new ArrayList<>();
         if (newLore.size() >= lineNumber) {
-            newLore.remove(lineNumber-1);
+            newLore.remove(lineNumber - 1);
         }
         meta.lore(newLore);
         item.setItemMeta(meta);
-        player.sendMessage(toComponent(getLocaleMessage("commands.edit.removed-lore").replace("%number%",String.valueOf(lineNumber))));
+        player.sendMessage(toComponent(getLocaleMessage("commands.edit.removed-lore").replace("%number%", String.valueOf(lineNumber))));
 
     }
 

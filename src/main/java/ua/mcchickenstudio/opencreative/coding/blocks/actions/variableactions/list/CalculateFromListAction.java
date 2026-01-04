@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list;
 
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -38,15 +37,15 @@ public final class CalculateFromListAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> elements = getArguments().getList("list",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> elements = getArguments().getList("list", this);
         final String type = getArguments().getText("calculation", "get-min", this);
 
         if (elements != null && !elements.isEmpty() && elements.getFirst() instanceof Number) {
             List<Number> numbers = elements.stream()
-                            .filter(o -> o instanceof Number)
-                            .map(o -> (Number) o)
-                            .toList();
+                    .filter(o -> o instanceof Number)
+                    .map(o -> (Number) o)
+                    .toList();
             setVarValue(variable, switch (type) {
                 case ("get-min") -> Statistics.getMin(numbers);
                 case ("get-max") -> Statistics.getMax(numbers);

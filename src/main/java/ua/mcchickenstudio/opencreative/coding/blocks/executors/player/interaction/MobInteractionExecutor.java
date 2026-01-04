@@ -32,5 +32,5 @@ public class MobInteractionExecutor extends PlayerExecutor {
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_MOB_INTERACT;
     }
-    
+
 }

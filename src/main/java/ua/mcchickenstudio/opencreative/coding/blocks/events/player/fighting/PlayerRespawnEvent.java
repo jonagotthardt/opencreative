@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 
 public final class PlayerRespawnEvent extends WorldEvent {
 

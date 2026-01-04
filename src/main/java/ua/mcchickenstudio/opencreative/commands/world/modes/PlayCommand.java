@@ -18,35 +18,32 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-
+import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.jetbrains.annotations.NotNull;
-
 
 import java.util.Arrays;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-
-
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 /**
@@ -72,7 +69,7 @@ public class PlayCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("only-alive"));
             return;
         }
-        
+
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet == null) {
             player.sendMessage(getLocaleMessage("only-in-world"));
@@ -86,7 +83,7 @@ public class PlayCommand extends CommandHandler {
 
         DevPlanet playerDevPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (playerDevPlanet != null) {
-            playerDevPlanet.getLastLocations().put(player,player.getLocation());
+            playerDevPlanet.getLastLocations().put(player, player.getLocation());
         }
 
         removePlayerWithLocation(player);
@@ -108,7 +105,7 @@ public class PlayCommand extends CommandHandler {
                     player.teleport(planet.getTerritory().getSpawnLocation());
                     planet.getTerritory().showBorders(player);
                     if (planet.isOwner(sender.getName())) {
-                        player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                        player.getInventory().setItem(8, createItem(Material.COMPASS, 1, "items.developer.world-settings"));
                     }
                     givePlayPermissions(player);
                     new JoinEvent(player).callEvent();
@@ -146,7 +143,7 @@ public class PlayCommand extends CommandHandler {
                 player.teleport(planet.getTerritory().getSpawnLocation());
                 planet.getTerritory().showBorders(player);
                 if (planet.isOwner(sender.getName())) {
-                    player.getInventory().setItem(8,createItem(Material.COMPASS,1,"items.developer.world-settings"));
+                    player.getInventory().setItem(8, createItem(Material.COMPASS, 1, "items.developer.world-settings"));
                 }
                 if (planet.getWorldPlayers().canDevelop(player)) {
                     givePlayPermissions(player);

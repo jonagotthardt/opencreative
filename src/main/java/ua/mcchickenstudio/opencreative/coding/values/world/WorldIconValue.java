@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.world;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +36,7 @@ public final class WorldIconValue extends ItemEventValue {
 
     @Override
     public @NotNull ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return new ItemStack(action.getExecutor().getPlanet().getInformation().getIcon().getType(),1);
+        return new ItemStack(action.getExecutor().getPlanet().getInformation().getIcon().getType(), 1);
     }
 
     @Override

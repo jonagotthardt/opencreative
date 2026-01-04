@@ -18,13 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.*;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
 public final class SetEntityTargetAction extends EntityAction {
@@ -37,7 +39,7 @@ public final class SetEntityTargetAction extends EntityAction {
         if (!(entity instanceof Mob mob)) {
             throw new UnsupportedEntityException(Mob.class, entity);
         }
-        String text = getArguments().getText("entity","",this);
+        String text = getArguments().getText("entity", "", this);
         for (Entity foundEntity : getEntitiesByNameOrUUID(text)) {
             if (foundEntity instanceof LivingEntity livingEntity) {
                 mob.setTarget(livingEntity);

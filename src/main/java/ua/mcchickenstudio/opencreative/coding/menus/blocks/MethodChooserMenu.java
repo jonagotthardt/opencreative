@@ -55,7 +55,7 @@ public final class MethodChooserMenu extends ListBrowserMenu<Location> {
     private final Location signLocation;
 
     public MethodChooserMenu(Player player, DevPlanet planet, Location location) {
-        super(player,getLocaleMessage("menus.developer.method-chooser.title"),PlacementLayout.LOCATION_CHOOSER);
+        super(player, getLocaleMessage("menus.developer.method-chooser.title"), PlacementLayout.LOCATION_CHOOSER);
         this.devPlanet = planet;
         this.signLocation = location;
     }
@@ -63,20 +63,20 @@ public final class MethodChooserMenu extends ListBrowserMenu<Location> {
     @Override
     protected ItemStack getElementIcon(Location location) {
         Block signBlock = location.getBlock().getRelative(BlockFace.SOUTH);
-        String line = getSignLine(signBlock.getLocation(),3);
+        String line = getSignLine(signBlock.getLocation(), 3);
         if (line != null && !line.isEmpty()) {
-            ItemStack itemStack = createItem(Material.EMERALD,1,"menus.developer.method-chooser.items.method");
+            ItemStack itemStack = createItem(Material.EMERALD, 1, "menus.developer.method-chooser.items.method");
             ItemMeta meta = itemStack.getItemMeta();
             if (meta != null) {
                 meta.setDisplayName(ChatColor.GREEN + line);
             }
             itemStack.setItemMeta(meta);
-            setPersistentData(itemStack,getCodingLocationX(),location.getX());
-            setPersistentData(itemStack,getCodingLocationY(),location.getY());
-            setPersistentData(itemStack,getCodingLocationZ(),location.getZ());
-            replacePlaceholderInLore(itemStack,"%x%",location.getX());
-            replacePlaceholderInLore(itemStack,"%y%",location.getY());
-            replacePlaceholderInLore(itemStack,"%z%",location.getZ());
+            setPersistentData(itemStack, getCodingLocationX(), location.getX());
+            setPersistentData(itemStack, getCodingLocationY(), location.getY());
+            setPersistentData(itemStack, getCodingLocationZ(), location.getZ());
+            replacePlaceholderInLore(itemStack, "%x%", location.getX());
+            replacePlaceholderInLore(itemStack, "%y%", location.getY());
+            replacePlaceholderInLore(itemStack, "%z%", location.getZ());
             return itemStack;
         }
         return ItemStack.empty();
@@ -85,18 +85,20 @@ public final class MethodChooserMenu extends ListBrowserMenu<Location> {
     @Override
     protected void fillDecorationItems() {
         for (int slot = 0; slot <= 8; slot++) {
-            setItem(slot,DECORATION_PANE_ITEM);
+            setItem(slot, DECORATION_PANE_ITEM);
         }
         for (int slot = 45; slot <= 53; slot++) {
-            setItem(slot,DECORATION_PANE_ITEM);
+            setItem(slot, DECORATION_PANE_ITEM);
         }
     }
 
     @Override
-    protected void fillOtherItems() {}
+    protected void fillOtherItems() {
+    }
 
     @Override
-    protected void onCharmsBarClick(InventoryClickEvent event) {}
+    protected void onCharmsBarClick(InventoryClickEvent event) {
+    }
 
     @Override
     protected void onElementClick(InventoryClickEvent event) {
@@ -113,12 +115,13 @@ public final class MethodChooserMenu extends ListBrowserMenu<Location> {
                         double x = container.get(getCodingLocationX(), PersistentDataType.DOUBLE);
                         double y = container.get(getCodingLocationY(), PersistentDataType.DOUBLE);
                         double z = container.get(getCodingLocationZ(), PersistentDataType.DOUBLE);
-                        event.getWhoClicked().teleport(new Location(event.getWhoClicked().getWorld(),x,y,z+2,180,0));
-                    } catch (NullPointerException ignored) {}
+                        event.getWhoClicked().teleport(new Location(event.getWhoClicked().getWorld(), x, y, z + 2, 180, 0));
+                    } catch (NullPointerException ignored) {
+                    }
                 }
             } else {
                 devPlanet.setCodeChanged(true);
-                setSignLine(signLocation,3,name);
+                setSignLine(signLocation, 3, name);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().showTitle(Title.title(
                         toComponent(getLocaleMessage("menus.developer.method-chooser.chosen")), Component.text(name).color(NamedTextColor.GREEN),
@@ -142,8 +145,8 @@ public final class MethodChooserMenu extends ListBrowserMenu<Location> {
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : DECORATION_PANE_ITEM);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_PANE_ITEM);
         }
     }
 
@@ -154,19 +157,20 @@ public final class MethodChooserMenu extends ListBrowserMenu<Location> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return createItem(Material.SPECTRAL_ARROW,1,"menus.developer.method-chooser.items.next-page");
+        return createItem(Material.SPECTRAL_ARROW, 1, "menus.developer.method-chooser.items.next-page");
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return createItem(Material.ARROW,1,"menus.developer.method-chooser.items.previous-page");
+        return createItem(Material.ARROW, 1, "menus.developer.method-chooser.items.previous-page");
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.developer.method-chooser.items.no-elements");
+        return createItem(Material.BARRIER, 1, "menus.developer.method-chooser.items.no-elements");
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+    }
 }

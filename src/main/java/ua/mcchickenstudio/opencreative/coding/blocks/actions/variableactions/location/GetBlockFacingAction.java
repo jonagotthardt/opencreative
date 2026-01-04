@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.lo
 
 import org.bukkit.Location;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;

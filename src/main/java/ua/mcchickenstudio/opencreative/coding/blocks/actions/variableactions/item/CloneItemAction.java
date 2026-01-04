@@ -18,15 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 
 public final class CloneItemAction extends VariableAction {
     public CloneItemAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,10 +34,10 @@ public final class CloneItemAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",new ItemStack(Material.WOODEN_SWORD,1),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", new ItemStack(Material.WOODEN_SWORD, 1), this);
         ItemStack result = item.clone();
-        setVarValue(link,result);
+        setVarValue(link, result);
     }
 
     @Override

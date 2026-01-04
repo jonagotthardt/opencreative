@@ -33,6 +33,5 @@ public class BlockPistonExtendedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_PISTON_EXTENDED;
     }
 
-    
 
 }

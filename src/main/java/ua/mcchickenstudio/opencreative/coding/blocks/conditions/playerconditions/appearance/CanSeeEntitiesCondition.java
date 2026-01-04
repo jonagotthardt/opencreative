@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.appearance;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -43,8 +43,8 @@ public class CanSeeEntitiesCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        List<String> names = getArguments().getTextList("players",this);
-        boolean requireAll = getArguments().getBoolean("all",false,this);
+        List<String> names = getArguments().getTextList("players", this);
+        boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean canSee = false;
         for (String name : names) {
             for (Entity entity : getEntitiesByNameOrUUID(name)) {

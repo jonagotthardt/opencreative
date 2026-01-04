@@ -18,13 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance;
 
+import net.kyori.adventure.bossbar.BossBar;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.entity.Entity;
 
 public final class DeleteBossBarAction extends WorldAction {
     public DeleteBossBarAction(Executor executor, Target target, int x, Arguments args) {
@@ -36,7 +35,7 @@ public final class DeleteBossBarAction extends WorldAction {
         if (!getArguments().pathExists("name")) {
             return;
         }
-        String name = getArguments().getText("name","boss",this);
+        String name = getArguments().getText("name", "boss", this);
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
         if (bossBar != null) {
             getPlanet().getTerritory().getWorld().audiences().forEach(bossBar::removeViewer);

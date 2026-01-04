@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 import java.util.HashSet;
 import java.util.List;
@@ -37,9 +36,9 @@ public class ListContainsCondition extends VariableCondition {
 
     @Override
     public boolean check() {
-        List<Object> list = getArguments().getList("list",this);
-        List<Object> elements = getArguments().getList("elements",this);
-        boolean allElements = getArguments().getBoolean("all",true,this);
+        List<Object> list = getArguments().getList("list", this);
+        List<Object> elements = getArguments().getList("elements", this);
+        boolean allElements = getArguments().getBoolean("all", true, this);
         if (allElements) {
             return new HashSet<>(list).containsAll(elements);
         } else {

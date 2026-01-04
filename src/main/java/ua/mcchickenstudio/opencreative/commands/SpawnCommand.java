@@ -18,21 +18,20 @@
 
 package ua.mcchickenstudio.opencreative.commands;
 
-import org.jetbrains.annotations.Nullable;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
  * <h1>SpawnCommand</h1>

@@ -18,19 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.scheduler.BukkitRunnable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -41,8 +39,8 @@ public final class SetSignWaxedAction extends WorldAction {
 
     @Override
     protected void execute() {
-        List<Location> locations = getArguments().getLocationList("locations",this);
-        boolean waxed = getArguments().getBoolean("waxed",true,this);
+        List<Location> locations = getArguments().getLocationList("locations", this);
+        boolean waxed = getArguments().getBoolean("waxed", true, this);
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -52,7 +50,7 @@ public final class SetSignWaxedAction extends WorldAction {
         getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
             if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
                 getPlanet().getTerritory().removeBukkitRunnable(runnable);
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
@@ -61,10 +59,10 @@ public final class SetSignWaxedAction extends WorldAction {
             if (block.getState() instanceof Sign sign) {
                 sign.setWaxed(waxed);
                 sign.update();
-                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount()+1);
+                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(),20L);
+        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
         getPlanet().getTerritory().removeBukkitRunnable(runnable);
 
     }

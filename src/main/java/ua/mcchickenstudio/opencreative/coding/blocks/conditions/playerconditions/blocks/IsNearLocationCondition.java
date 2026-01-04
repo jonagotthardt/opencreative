@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.blocks;
 
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class IsNearLocationCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        List<Location> locations = getArguments().getLocationList("locations",this);
-        float radius = getArguments().getFloat("distance",5.0f,this);
+        List<Location> locations = getArguments().getLocationList("locations", this);
+        float radius = getArguments().getFloat("distance", 5.0f, this);
         if (locations.isEmpty()) return false;
         boolean isPlayerNear = false;
         for (Location location : locations) {

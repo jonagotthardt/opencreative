@@ -32,5 +32,5 @@ public class PlayExecutor extends PlayerExecutor {
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_PLAY;
     }
-    
+
 }

@@ -40,8 +40,8 @@ public final class SetScaleAction extends EntityAction {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new UnsupportedEntityException(LivingEntity.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
-        double scale = getArguments().getDouble("scale",1.0d,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        double scale = getArguments().getDouble("scale", 1.0d, this);
         AttributeInstance instance = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
         if (instance == null) return;
         if (add) scale += instance.getBaseValue();

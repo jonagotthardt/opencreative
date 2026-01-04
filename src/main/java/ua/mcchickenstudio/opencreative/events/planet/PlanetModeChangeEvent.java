@@ -18,11 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 
 /**
  * Called when planet's mode will be changed.
@@ -77,13 +77,13 @@ public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
         return cancel;
     }
 
-    public @NotNull Cause getCause() {
-        return cause;
-    }
-
     @Override
     public void setCancelled(boolean cancel) {
         this.cancel = cancel;
+    }
+
+    public @NotNull Cause getCause() {
+        return cause;
     }
 
     public enum Cause {

@@ -33,6 +33,5 @@ public class BlockFormedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_FORMED;
     }
 
-    
 
 }

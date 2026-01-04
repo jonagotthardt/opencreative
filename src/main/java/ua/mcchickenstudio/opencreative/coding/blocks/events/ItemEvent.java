@@ -30,6 +30,7 @@ public interface ItemEvent {
 
     /**
      * Returns item, involved in event.
+     *
      * @return item from event.
      */
     @NotNull ItemStack getItem();

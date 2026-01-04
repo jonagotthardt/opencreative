@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.world;
 
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -37,8 +36,8 @@ public class IsWorldCycleEnabledCondition extends WorldCondition {
 
     @Override
     public boolean check() {
-        List<String> list = getArguments().getTextList("names",this);
-        boolean requireAll = getArguments().getBoolean("all",true,this);
+        List<String> list = getArguments().getTextList("names", this);
+        boolean requireAll = getArguments().getBoolean("all", true, this);
         boolean isEnabled = false;
         for (String name : list) {
             for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {

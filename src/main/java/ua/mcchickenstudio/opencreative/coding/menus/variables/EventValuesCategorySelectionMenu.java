@@ -25,18 +25,19 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.menus.blocks.ContentWithMenusCategoryMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.blocks.MenusCategorySelectionMenu;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
+
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * This class represents a menu where player
  * can select category of event values.
  */
-public final class EventValuesCategorySelectionMenu extends MenusCategorySelectionMenu{
+public final class EventValuesCategorySelectionMenu extends MenusCategorySelectionMenu {
 
     public EventValuesCategorySelectionMenu(@NotNull Player player,
                                             @NotNull ItemStack currentItem) {
         super(player, currentItem, Material.ORANGE_STAINED_GLASS_PANE, EventValues.getInstance().getCategories(),
-                getLocaleMessage("menus.developer.event-values.title",false),
+                getLocaleMessage("menus.developer.event-values.title", false),
                 "event-values", "");
     }
 

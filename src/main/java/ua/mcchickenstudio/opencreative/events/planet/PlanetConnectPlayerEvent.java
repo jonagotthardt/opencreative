@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.entity.Player;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
  * Called when player connects to planet.

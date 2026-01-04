@@ -43,21 +43,21 @@ public final class RepeatForEntryAction extends RepeatAction {
         VariableLink keyLink = getArguments().getVariableLink("key", this);
         VariableLink valueLink = getArguments().getVariableLink("value", this);
 
-        Map<Object, Object> map = getArguments().getMap("map",this);
+        Map<Object, Object> map = getArguments().getMap("map", this);
         if ((keyLink == null && valueLink == null) || map.isEmpty()) {
             return false;
         }
-        int index = getArguments().getInt("index",1,this);
+        int index = getArguments().getInt("index", 1, this);
         if (index > map.size()) {
             arguments.removeArgumentValue("index");
             return false;
         }
         List<Map.Entry<Object, Object>> entries = new ArrayList<>(map.entrySet());
-        Object key = entries.get(index-1).getKey();
-        Object value = entries.get(index-1).getValue();
+        Object key = entries.get(index - 1).getKey();
+        Object value = entries.get(index - 1).getValue();
         setVarValue(keyLink, key);
         setVarValue(valueLink, value);
-        getArguments().setArgumentValue("index", ValueType.NUMBER, index+1);
+        getArguments().setArgumentValue("index", ValueType.NUMBER, index + 1);
         return true;
     }
 

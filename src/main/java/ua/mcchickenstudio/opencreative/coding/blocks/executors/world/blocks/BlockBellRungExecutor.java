@@ -33,6 +33,5 @@ public class BlockBellRungExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_BELL_RUNG;
     }
 
-    
 
 }

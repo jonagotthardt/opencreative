@@ -33,6 +33,5 @@ public class BlockSpongeAbsorbedExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_SPONGE_ABSORBED;
     }
 
-    
 
 }

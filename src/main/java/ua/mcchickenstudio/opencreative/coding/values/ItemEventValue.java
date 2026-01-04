@@ -40,6 +40,7 @@ public abstract class ItemEventValue extends EventValue {
     /**
      * Returns an item stack that can be got from
      * player, event, action, or null.
+     *
      * @return item, or null.
      */
     public abstract @Nullable ItemStack getItem(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity);

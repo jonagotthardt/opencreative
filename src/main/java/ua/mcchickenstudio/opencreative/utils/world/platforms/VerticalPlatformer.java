@@ -48,7 +48,7 @@ public final class VerticalPlatformer extends DevPlatformer {
         World world = devPlanet.getWorld();
         world.getWorldBorder().setWarningDistance(0);
 
-        world.getWorldBorder().setCenter(50,50);
+        world.getWorldBorder().setCenter(50, 50);
         world.getWorldBorder().setSize(120);
 
     }
@@ -65,7 +65,7 @@ public final class VerticalPlatformer extends DevPlatformer {
             int end = platform.getEndCoordinate();
             if (x >= begin && x <= end) {
                 if (z >= begin && z <= end) {
-                    if (y >= height && y <= height+9) {
+                    if (y >= height && y <= height + 9) {
                         return platform;
                     }
                 }
@@ -77,15 +77,15 @@ public final class VerticalPlatformer extends DevPlatformer {
     @Override
     public @NotNull DevPlatform getFarPlatformByX(@NotNull DevPlanet devPlanet) {
         // Floors are stacking on each other, so we return 1, 1.
-        return new DevPlatform(devPlanet,1,1);
+        return new DevPlatform(devPlanet, 1, 1);
     }
 
     @Override
     public @NotNull DevPlatform getFarPlatformByZ(@NotNull DevPlanet devPlanet) {
-        DevPlatform farPlatform = new DevPlatform(devPlanet,1,1);
+        DevPlatform farPlatform = new DevPlatform(devPlanet, 1, 1);
         if (!devPlanet.isLoaded()) return farPlatform;
         for (int z = 2; z <= 25; z++) {
-            DevPlatform current = new DevPlatform(devPlanet,1,z);
+            DevPlatform current = new DevPlatform(devPlanet, 1, z);
             if (current.exists()) {
                 farPlatform = current;
             }
@@ -98,7 +98,7 @@ public final class VerticalPlatformer extends DevPlatformer {
         List<DevPlatform> platforms = new ArrayList<>();
         if (!devPlanet.isLoaded()) return platforms;
         for (int z = 1; z <= getFarPlatformByZ(devPlanet).getZ(); z++) {
-            DevPlatform platform = new DevPlatform(devPlanet,1,z);
+            DevPlatform platform = new DevPlatform(devPlanet, 1, z);
             if (platform.exists()) {
                 platforms.add(platform);
             }
@@ -126,10 +126,10 @@ public final class VerticalPlatformer extends DevPlatformer {
         int endX = end.getBlockX();
         int beginZ = begin.getBlockZ();
         int endZ = end.getBlockZ();
-        int executorX = beginX+4;
+        int executorX = beginX + 4;
         for (int x = beginX; x <= endX; x++) {
             for (int z = beginZ; z <= endZ; z++) {
-                Block block = platform.getWorld().getBlockAt(x,height,z);
+                Block block = platform.getWorld().getBlockAt(x, height, z);
                 if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
                     block.setType(eventMaterial);
                 } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
@@ -150,12 +150,12 @@ public final class VerticalPlatformer extends DevPlatformer {
 
     @Override
     public @NotNull Location getPlatformEndLocation(@NotNull DevPlatform platform) {
-        return getPlatformBeginLocation(platform).clone().add(100,0,100);
+        return getPlatformBeginLocation(platform).clone().add(100, 0, 100);
     }
 
     @Override
     public @NotNull DevPlatform getNextAvailablePlatform(@NotNull DevPlanet planet) {
-        DevPlatform platform = new DevPlatform(planet, 1, 1);;
+        DevPlatform platform = new DevPlatform(planet, 1, 1);
         for (int y = 1; y <= 25; y++) {
             platform = new DevPlatform(planet, 1, y);
             if (!platform.exists()) return platform;

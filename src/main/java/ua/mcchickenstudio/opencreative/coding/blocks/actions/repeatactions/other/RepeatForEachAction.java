@@ -39,17 +39,17 @@ public final class RepeatForEachAction extends RepeatAction {
     @Override
     public boolean checkCanContinue() {
         VariableLink link = getArguments().getVariableLink("variable", this);
-        List<Object> list = getArguments().getList("list",this);
+        List<Object> list = getArguments().getList("list", this);
         if (link == null || list.isEmpty()) {
             return false;
         }
-        int index = getArguments().getInt("index",1,this);
+        int index = getArguments().getInt("index", 1, this);
         if (index > list.size()) {
             arguments.removeArgumentValue("index");
             return false;
         }
-        setVarValue(link, list.get(index-1));
-        getArguments().setArgumentValue("index", ValueType.NUMBER, index+1);
+        setVarValue(link, list.get(index - 1));
+        getArguments().setArgumentValue("index", ValueType.NUMBER, index + 1);
         return true;
     }
 

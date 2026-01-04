@@ -51,7 +51,8 @@ public final class DisguiseUtils {
                     .newInstance(name, skin);
             disguise.setEntity(entity);
             disguise.startDisguise();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     public static void disguiseAsMob(Entity entity, EntityType type) {

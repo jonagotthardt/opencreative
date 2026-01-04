@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.values.events.EventItemValue;
 import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -41,25 +41,25 @@ public class IsItemEqualsCondition extends PlayerCondition {
     @Override
     public boolean checkPlayer(Player player) {
         if (!(getEventValue(EventItemValue.class) instanceof ItemStack eventItem)) {
-            ErrorUtils.sendCodingNotFoundEventValue(getPlanet(),getExecutor(), EventItemValue.class);
+            ErrorUtils.sendCodingNotFoundEventValue(getPlanet(), getExecutor(), EventItemValue.class);
             return false;
         }
 
-        boolean ignoreAmount = getArguments().getBoolean("ignore-amount",true,this);
-        boolean ignoreName = getArguments().getBoolean("ignore-name",false,this);
-        boolean ignoreLore = getArguments().getBoolean("ignore-lore",false,this);
-        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments",false,this);
-        boolean ignoreFlags = getArguments().getBoolean("ignore-flags",false,this);
-        boolean ignoreMaterial = getArguments().getBoolean("ignore-material",false,this);
-        boolean ignoreDamage = getArguments().getBoolean("ignore-damage",false,this);
+        boolean ignoreAmount = getArguments().getBoolean("ignore-amount", true, this);
+        boolean ignoreName = getArguments().getBoolean("ignore-name", false, this);
+        boolean ignoreLore = getArguments().getBoolean("ignore-lore", false, this);
+        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments", false, this);
+        boolean ignoreFlags = getArguments().getBoolean("ignore-flags", false, this);
+        boolean ignoreMaterial = getArguments().getBoolean("ignore-material", false, this);
+        boolean ignoreDamage = getArguments().getBoolean("ignore-damage", false, this);
 
         boolean check = false;
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         if (items.isEmpty()) return false;
 
-        eventItem = ItemUtils.getItemWithIgnoreData(eventItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
+        eventItem = ItemUtils.getItemWithIgnoreData(eventItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
         for (ItemStack checkItem : items) {
-            checkItem = ItemUtils.getItemWithIgnoreData(checkItem,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial,ignoreDamage);
+            checkItem = ItemUtils.getItemWithIgnoreData(checkItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
             if (eventItem.equals(checkItem)) {
                 check = true;
             }

@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -34,10 +33,10 @@ public final class AngleVectorAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Vector first = getArguments().getVector("first",new Vector(),this);
-        Vector second = getArguments().getVector("second",new Vector(),this);
-        setVarValue(link,first.angle(second));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Vector first = getArguments().getVector("first", new Vector(), this);
+        Vector second = getArguments().getVector("second", new Vector(), this);
+        setVarValue(link, first.angle(second));
     }
 
     @Override

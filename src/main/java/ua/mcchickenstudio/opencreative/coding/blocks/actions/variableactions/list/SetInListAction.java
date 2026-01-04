@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +35,16 @@ public final class SetInListAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> elements = new ArrayList<>(getArguments().getList("variable",this));
-        Object value = getArguments().getValue("value",this);
-        int index = getArguments().getInt("index",1,this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> elements = new ArrayList<>(getArguments().getList("variable", this));
+        Object value = getArguments().getValue("value", this);
+        int index = getArguments().getInt("index", 1, this);
         if (cannotChangeListElements(1)) {
             return;
         }
         changeListElementsChangesAmount(1);
-        elements.set(index-1,value);
-        setVarValue(variable,elements);
+        elements.set(index - 1, value);
+        setVarValue(variable, elements);
     }
 
     @Override

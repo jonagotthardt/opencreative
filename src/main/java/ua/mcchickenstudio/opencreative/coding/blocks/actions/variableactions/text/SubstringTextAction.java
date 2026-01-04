@@ -19,12 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class SubstringTextAction extends VariableAction {
     public SubstringTextAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,17 +32,17 @@ public final class SubstringTextAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getText("text", " ",this);
-        int from = getArguments().getInt("from", 1,this);
-        int to = getArguments().getInt("to", text.length()-1,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String text = getArguments().getText("text", " ", this);
+        int from = getArguments().getInt("from", 1, this);
+        int to = getArguments().getInt("to", text.length() - 1, this);
         if (from < 1 || from > text.length()) {
             from = 0;
         }
         if (to < from || to > text.length()) {
-            to = text.length()-1;
+            to = text.length() - 1;
         }
-        setVarValue(link, text.substring(from-1,to));
+        setVarValue(link, text.substring(from - 1, to));
     }
 
     @Override

@@ -20,29 +20,29 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.entity.minecart.CommandMinecart;
-import org.bukkit.event.hanging.HangingPlaceEvent;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedEntitiesEvent;
-import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedEntitiesEvent;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
 
@@ -72,7 +72,8 @@ public final class EntitySpawnListener implements Listener {
                     minecart.customName(Component.text(""));
                 }
             }
-            default -> {}
+            default -> {
+            }
         }
         Component customName = entity.customName();
         if (customName != null) {
@@ -80,7 +81,7 @@ public final class EntitySpawnListener implements Listener {
             int limit = OpenCreative.getSettings().getItemFixerSettings().getMaxEntityNameLength();
             if (text.length() > limit) {
                 entity.customName(PlainTextComponentSerializer.plainText()
-                        .deserialize(text.substring(0,limit)));
+                        .deserialize(text.substring(0, limit)));
             }
         }
         World world = event.getLocation().getWorld();
@@ -174,13 +175,13 @@ public final class EntitySpawnListener implements Listener {
                         }
                         break;
                 }
-                if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() /2) {
+                if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() / 2) {
                     event.setCancelled(true);
                 }
             }
             if (planet.getTerritory().getEnvironment() == World.Environment.THE_END) {
                 if (event.getEntity() instanceof EnderDragon dragon) {
-                    if (System.currentTimeMillis()- planet.getLastActivityTime() < 10000) {
+                    if (System.currentTimeMillis() - planet.getLastActivityTime() < 10000) {
                         dragon.setHealth(0);
                     }
                 }
@@ -202,7 +203,7 @@ public final class EntitySpawnListener implements Listener {
         World world = event.getWorld();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null && event.isNewChunk()) {
-            if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() /2) {
+            if (world.getEntityCount() >= planet.getLimits().getEntitiesLimit() / 2) {
                 for (Entity entity : event.getChunk().getEntities()) {
                     entity.remove();
                 }

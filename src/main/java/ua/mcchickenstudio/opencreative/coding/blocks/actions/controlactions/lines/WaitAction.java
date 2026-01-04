@@ -18,12 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines;
 
+import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.ControlAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Entity;
 
 public final class WaitAction extends ControlAction {
 
@@ -35,7 +35,7 @@ public final class WaitAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
-        time = getArguments().getInt("time",20,this);
+        time = getArguments().getInt("time", 20, this);
     }
 
     @Override

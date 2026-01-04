@@ -87,11 +87,12 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(getPlayer());
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
-            String typeString = getPersistentData(item,getCodingValueKey());
+            String typeString = getPersistentData(item, getCodingValueKey());
             ActionType actionType = null;
             try {
                 actionType = ActionType.valueOf(typeString);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
             if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
                 new RepeatConditionSelectionMenu(getPlayer(), signLocation, actionType == ActionType.REPEAT_WHILE_NOT)
                         .open(getPlayer());
@@ -102,9 +103,9 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
                 devPlanet.setCodeChanged(true);
                 if (!actionCategory.isCondition()) setSignLine(signLocation, 1, "");
                 if (firstLine != null) setSignLine(signLocation, 1, firstLine);
-                setSignLine(signLocation,2, actionCategory.name().toLowerCase());
+                setSignLine(signLocation, 2, actionCategory.name().toLowerCase());
             }
-            if (setSignLine(signLocation,3,typeString.toLowerCase())) {
+            if (setSignLine(signLocation, 3, typeString.toLowerCase())) {
                 devPlanet.setCodeChanged(true);
                 translateBlockSign(signLocation.getBlock());
                 getPlayer().closeInventory();
@@ -119,14 +120,14 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
              Setting a chest block if action requires container.
              Executors don't have arguments, neither chests.
             */
-            if (actionCategory != null)  {
+            if (actionCategory != null) {
                 Block containerBlock = codingBlock.getRelative(BlockFace.UP);
                 if (containerBlock.getState() instanceof InventoryHolder container) {
                     if (devPlanet.isDropItems()) {
                         for (ItemStack chestItem : container.getInventory().getContents()) {
                             if (chestItem != null) {
                                 if (chestItem.getItemMeta() == null || !chestItem.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
-                                    containerBlock.getWorld().dropItem(containerBlock.getLocation(),chestItem);
+                                    containerBlock.getWorld().dropItem(containerBlock.getLocation(), chestItem);
                                 }
                             }
                         }
@@ -138,7 +139,7 @@ public final class ActionTypeSelectionMenu extends BlocksWithMenusCategoryMenu<A
                     BlockData blockData = containerBlock.getBlockData();
                     ((Directional) blockData).setFacing(BlockFace.SOUTH);
                     containerBlock.setBlockData(blockData);
-                    getPlayer().spawnParticle(Particle.BLOCK,containerBlock.getLocation(),1,0,0.5f,0.5f,containerBlock.getBlockData());
+                    getPlayer().spawnParticle(Particle.BLOCK, containerBlock.getLocation(), 1, 0, 0.5f, 0.5f, containerBlock.getBlockData());
                     Sounds.DEV_ACTION_WITH_CHEST.play(getPlayer());
                 }
             }

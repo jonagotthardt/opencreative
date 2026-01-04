@@ -39,17 +39,17 @@ public final class EntityGetItemAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        int index = getArguments().getInt("slot",1,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        int index = getArguments().getInt("slot", 1, this);
         ItemStack item;
         if (entity instanceof InventoryHolder holder) {
-            item = holder.getInventory().getItem(index-1);
+            item = holder.getInventory().getItem(index - 1);
         } else if (entity instanceof LivingEntity living && living.getEquipment() != null) {
-            item = living.getEquipment().getItem(EquipmentSlot.values()[index-1]);
+            item = living.getEquipment().getItem(EquipmentSlot.values()[index - 1]);
         } else {
             throw new UnsupportedEntityException(InventoryHolder.class, entity);
         }
-        if (item != null) setVarValue(link,item);
+        if (item != null) setVarValue(link, item);
     }
 
     @Override

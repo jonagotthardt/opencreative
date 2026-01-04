@@ -18,13 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import org.bukkit.WorldBorder;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.WorldBorder;
-import org.bukkit.entity.Entity;
 
 public final class SetWorldBorderAction extends WorldAction {
     public SetWorldBorderAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,14 +32,14 @@ public final class SetWorldBorderAction extends WorldAction {
 
     @Override
     protected void execute() {
-        double radius = getArguments().getDouble("radius",(getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()),this);
-        int time = getArguments().getInt("time",0,this);
-        int warningDistance = getArguments().getInt("warning-distance",5,this);
-        int warningTime = getArguments().getInt("warning-time",15,this);
-        double damage = getArguments().getDouble("damage",0.2d,this);
-        int safeDistance = getArguments().getInt("safe-distance",5,this);
+        double radius = getArguments().getDouble("radius", (getWorld() == null ? 10d : getWorld().getWorldBorder().getSize()), this);
+        int time = getArguments().getInt("time", 0, this);
+        int warningDistance = getArguments().getInt("warning-distance", 5, this);
+        int warningTime = getArguments().getInt("warning-time", 15, this);
+        double damage = getArguments().getDouble("damage", 0.2d, this);
+        int safeDistance = getArguments().getInt("safe-distance", 5, this);
         WorldBorder border = getWorld().getWorldBorder();
-        border.setSize(Math.min(getPlanet().getTerritory().getWorldSize(),radius),time);
+        border.setSize(Math.min(getPlanet().getTerritory().getWorldSize(), radius), time);
         border.setWarningTime(warningTime);
         border.setWarningDistance(warningDistance);
         border.setDamageAmount(damage);

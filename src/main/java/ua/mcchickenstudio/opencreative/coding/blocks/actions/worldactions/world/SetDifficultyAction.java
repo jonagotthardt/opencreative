@@ -18,13 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world;
 
+import org.bukkit.Difficulty;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.Difficulty;
-import org.bukkit.entity.Entity;
 
 public final class SetDifficultyAction extends WorldAction {
     public SetDifficultyAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,7 +32,7 @@ public final class SetDifficultyAction extends WorldAction {
 
     @Override
     protected void execute() {
-        String difficultyString = getArguments().getText("difficulty", "normal",this);
+        String difficultyString = getArguments().getText("difficulty", "normal", this);
         Difficulty difficulty;
         try {
             difficulty = Difficulty.valueOf(difficultyString.toUpperCase());

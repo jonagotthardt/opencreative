@@ -36,13 +36,13 @@ public final class ChangedSignEvent extends WorldEvent implements Cancellable, B
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 
     @Override

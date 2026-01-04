@@ -19,12 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.map;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,14 +37,14 @@ public final class CreateMapAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        List<Object> keys = getArguments().getList("keys",this);
-        List<Object> values = getArguments().getList("values",this);
-        Map<Object,Object> map = new LinkedHashMap<>();
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        List<Object> keys = getArguments().getList("keys", this);
+        List<Object> values = getArguments().getList("values", this);
+        Map<Object, Object> map = new LinkedHashMap<>();
         if (!keys.isEmpty() && !values.isEmpty()) {
             for (int i = 0; i < keys.size(); i++) {
                 if (i != values.size()) {
-                    map.put(keys.get(i),values.get(i));
+                    map.put(keys.get(i), values.get(i));
                 }
             }
         }

@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.values.events;
 
-import org.bukkit.entity.Entity;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public final class TransferKeyValue extends EventValue {
 
     @Override
     public @Nullable Object getValue(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
-        return action.getEvent() instanceof VariableTransferEvent event ? event.getValue(): null;
+        return action.getEvent() instanceof VariableTransferEvent event ? event.getValue() : null;
     }
 
     @Override

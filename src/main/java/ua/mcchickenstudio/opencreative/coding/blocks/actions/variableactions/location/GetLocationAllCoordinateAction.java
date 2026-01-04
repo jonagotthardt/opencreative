@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
@@ -34,13 +33,13 @@ public class GetLocationAllCoordinateAction extends VariableAction {
 
     @Override
     protected void execute() {
-        Location location = getArguments().getLocation("location",getDefaultLocation(),this);
+        Location location = getArguments().getLocation("location", getDefaultLocation(), this);
 
-        VariableLink x = getArguments().getVariableLink("x",this);
-        VariableLink y = getArguments().getVariableLink("y",this);
-        VariableLink z = getArguments().getVariableLink("z",this);
-        VariableLink pitch = getArguments().getVariableLink("pitch",this);
-        VariableLink yaw = getArguments().getVariableLink("yaw",this);
+        VariableLink x = getArguments().getVariableLink("x", this);
+        VariableLink y = getArguments().getVariableLink("y", this);
+        VariableLink z = getArguments().getVariableLink("z", this);
+        VariableLink pitch = getArguments().getVariableLink("pitch", this);
+        VariableLink yaw = getArguments().getVariableLink("yaw", this);
 
         if (getArguments().pathExists("location")) {
             if (x != null) setVarValue(x, location.getX());

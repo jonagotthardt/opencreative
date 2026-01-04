@@ -18,21 +18,21 @@
 
 package ua.mcchickenstudio.opencreative.commands.minecraft;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.commands.CommandHandler;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.commands.CommandHandler;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
@@ -79,7 +79,8 @@ public class TimeCommand extends CommandHandler {
         boolean add = args[0].equalsIgnoreCase("add");
         try {
             time = Integer.parseInt(args[1]);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         time += add ? (int) player.getWorld().getTime() : 0;
         player.getWorld().setTime(time);
         sender.sendMessage(getLocaleMessage("commands.time.changed")

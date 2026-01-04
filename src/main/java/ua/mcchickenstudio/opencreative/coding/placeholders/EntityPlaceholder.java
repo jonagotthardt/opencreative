@@ -28,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.interaction.M
 public final class EntityPlaceholder extends KeyPlaceholder {
 
     public EntityPlaceholder() {
-        super("entity","entity_uuid");
+        super("entity", "entity_uuid");
     }
 
     @Override

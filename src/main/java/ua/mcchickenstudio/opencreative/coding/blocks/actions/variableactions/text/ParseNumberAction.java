@@ -21,13 +21,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.te
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.regex.Pattern;
 
@@ -42,17 +41,17 @@ public final class ParseNumberAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Component component = getArguments().getComponent("text", Component.text("0.0"),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Component component = getArguments().getComponent("text", Component.text("0.0"), this);
         String text = PlainTextComponentSerializer.plainText().serialize(component);
         if (text.length() > 1024) {
             throw new TooLongTextException(1024);
         }
         text = text.replaceAll("[^-0-9.]", "");
         if (INT_PATTERN.matcher(text).matches()) {
-            setVarValue(link,Long.parseLong(text));
+            setVarValue(link, Long.parseLong(text));
         } else if (FLOAT_PATTERN.matcher(text).matches()) {
-            setVarValue(link,Double.parseDouble(text));
+            setVarValue(link, Double.parseDouble(text));
         }
     }
 

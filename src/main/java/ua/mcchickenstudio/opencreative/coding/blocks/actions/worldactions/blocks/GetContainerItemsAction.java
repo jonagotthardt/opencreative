@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -42,14 +41,14 @@ public final class GetContainerItemsAction extends WorldAction {
     @Override
     protected void execute() {
         List<ItemStack> items = new ArrayList<>();
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Location location = getArguments().getLocation("location",getPlanet().getTerritory().getSpawnLocation(),this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Location location = getArguments().getLocation("location", getPlanet().getTerritory().getSpawnLocation(), this);
         if (location.getBlock().getState() instanceof InventoryHolder container) {
             for (ItemStack item : container.getInventory().getContents()) {
                 items.add(Objects.requireNonNullElseGet(item, () -> new ItemStack(Material.AIR)));
             }
         }
-        setVarValue(link,items);
+        setVarValue(link, items);
     }
 
     @Override

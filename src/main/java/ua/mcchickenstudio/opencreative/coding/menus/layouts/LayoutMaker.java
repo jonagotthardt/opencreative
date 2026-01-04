@@ -18,8 +18,8 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import org.bukkit.block.Block;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 
 public final class LayoutMaker extends Layout {
 
@@ -37,19 +37,19 @@ public final class LayoutMaker extends Layout {
                         setRows(6);
                     }
                     for (int slot = 0; slot < 9; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                     for (int slot = 9; slot < 18; slot++) {
-                        setArgSlot(1,slot);
+                        setArgSlot(1, slot);
                     }
                     for (int slot = 18; slot < 27; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                     if (actionType == ActionType.WORLD_SPAWN_ENTITY) {
                         int slot = 36;
                         for (int argNumber = 2; argNumber <= actionType.getArgumentsSlots().length; argNumber++) {
                             if (slot <= 44) {
-                                setArgSlotVertical(argNumber,slot);
+                                setArgSlotVertical(argNumber, slot);
                                 slot++;
                             }
                         }
@@ -59,30 +59,30 @@ public final class LayoutMaker extends Layout {
                         if (actionType.getArgumentsSlots()[1].isList()) {
                             setRows(6);
                             for (int slot = 27; slot < 36; slot++) {
-                                setGlass(2,slot);
+                                setGlass(2, slot);
                             }
                             for (int slot = 36; slot < 45; slot++) {
-                                setArgSlot(2,slot);
+                                setArgSlot(2, slot);
                             }
                             for (int slot = 45; slot < 54; slot++) {
-                                setGlass(2,slot);
+                                setGlass(2, slot);
                             }
                             if (actionType.getArgumentsSlots().length > 2) {
-                                setArgSlotHorizontal(3,49);
+                                setArgSlotHorizontal(3, 49);
                             }
                         } else {
                             setRows(4);
                             for (int slot = 27; slot < 36; slot++) {
-                                setItem(slot,DECORATION_PANE_ITEM);
+                                setItem(slot, DECORATION_PANE_ITEM);
                             }
-                            int remainingSlots = actionType.getArgumentsSlots().length-1;
+                            int remainingSlots = actionType.getArgumentsSlots().length - 1;
                             int i = 2;
-                            for (int slot : getCentredSlots(remainingSlots,4)) {
+                            for (int slot : getCentredSlots(remainingSlots, 4)) {
                                 if (remainingSlots > 3) {
-                                    setGlass(i,(slot-9));
-                                    setArgSlot(i,slot);
+                                    setGlass(i, (slot - 9));
+                                    setArgSlot(i, slot);
                                 } else {
-                                    setArgSlotHorizontal(i,slot);
+                                    setArgSlotHorizontal(i, slot);
                                 }
                                 i++;
                             }
@@ -93,27 +93,27 @@ public final class LayoutMaker extends Layout {
                 case 18: {
                     setRows(4);
                     for (int slot = 0; slot < 9; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                     for (int slot = 9; slot < 27; slot++) {
-                        setArgSlot(1,slot);
+                        setArgSlot(1, slot);
                     }
                     for (int slot = 27; slot < 36; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
                         setRows(6);
                         for (int slot = 36; slot < 54; slot++) {
-                            setItem(slot,DECORATION_PANE_ITEM);
+                            setItem(slot, DECORATION_PANE_ITEM);
                         }
-                        int remainingSlots = actionType.getArgumentsSlots().length-1;
+                        int remainingSlots = actionType.getArgumentsSlots().length - 1;
                         int i = 2;
-                        for (int slot : getCentredSlots(remainingSlots,6)) {
+                        for (int slot : getCentredSlots(remainingSlots, 6)) {
                             if (remainingSlots > 3) {
-                                setGlass(i,(slot-9));
-                                setArgSlot(i,slot);
+                                setGlass(i, (slot - 9));
+                                setArgSlot(i, slot);
                             } else {
-                                setArgSlotHorizontal(i,slot);
+                                setArgSlotHorizontal(i, slot);
                             }
                             i++;
                         }
@@ -123,16 +123,16 @@ public final class LayoutMaker extends Layout {
                 case 27: {
                     setRows(5);
                     for (int slot = 0; slot < 9; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                     for (int slot = 9; slot < 36; slot++) {
-                        setArgSlot(1,slot);
+                        setArgSlot(1, slot);
                     }
                     for (int slot = 36; slot < 45; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                     if (actionType.getArgumentsSlots().length > 1 && !actionType.getArgumentsSlots()[1].isList()) {
-                        setArgSlotHorizontal(2,40);
+                        setArgSlotHorizontal(2, 40);
                     }
                     break;
                 }
@@ -140,10 +140,10 @@ public final class LayoutMaker extends Layout {
                     setRows(6);
                     int number = 1;
                     for (int slot = 9; slot < 45; slot++) {
-                        setArgSlot(number++,slot);
+                        setArgSlot(number++, slot);
                     }
                     for (int slot = 45; slot < 54; slot++) {
-                        setGlass(1,slot);
+                        setGlass(1, slot);
                     }
                 }
             }
@@ -151,67 +151,67 @@ public final class LayoutMaker extends Layout {
         }
         switch (getRequiredSlots().length) {
             case 1:
-                setArgSlotCross(1,13);
+                setArgSlotCross(1, 13);
                 break;
             case 2:
-                setArgSlotCross(1,11);
-                setArgSlotCross(2,15);
+                setArgSlotCross(1, 11);
+                setArgSlotCross(2, 15);
                 break;
             case 3:
-                setArgSlotCross(1,10);
-                setArgSlotCross(2,13);
-                setArgSlotCross(3,16);
+                setArgSlotCross(1, 10);
+                setArgSlotCross(2, 13);
+                setArgSlotCross(3, 16);
                 break;
             case 4:
-                setArgSlotVertical(1,10);
-                setArgSlotVertical(2,12);
-                setArgSlotVertical(3,14);
-                setArgSlotVertical(4,16);
+                setArgSlotVertical(1, 10);
+                setArgSlotVertical(2, 12);
+                setArgSlotVertical(3, 14);
+                setArgSlotVertical(4, 16);
                 break;
             case 5:
-                setArgSlotVertical(1,9);
-                setArgSlotVertical(2,11);
-                setArgSlotVertical(3,13);
-                setArgSlotVertical(4,15);
-                setArgSlotVertical(5,17);
+                setArgSlotVertical(1, 9);
+                setArgSlotVertical(2, 11);
+                setArgSlotVertical(3, 13);
+                setArgSlotVertical(4, 15);
+                setArgSlotVertical(5, 17);
                 break;
             case 6:
-                setArgSlotVertical(1,10);
-                setArgSlotVertical(2,11);
-                setArgSlotVertical(3,12);
-                setArgSlotVertical(4,14);
-                setArgSlotVertical(5,15);
-                setArgSlotVertical(6,16);
+                setArgSlotVertical(1, 10);
+                setArgSlotVertical(2, 11);
+                setArgSlotVertical(3, 12);
+                setArgSlotVertical(4, 14);
+                setArgSlotVertical(5, 15);
+                setArgSlotVertical(6, 16);
                 break;
             case 7:
-                setArgSlotVertical(1,10);
-                setArgSlotVertical(2,11);
-                setArgSlotVertical(3,12);
-                setArgSlotVertical(4,13);
-                setArgSlotVertical(5,14);
-                setArgSlotVertical(6,15);
-                setArgSlotVertical(7,16);
+                setArgSlotVertical(1, 10);
+                setArgSlotVertical(2, 11);
+                setArgSlotVertical(3, 12);
+                setArgSlotVertical(4, 13);
+                setArgSlotVertical(5, 14);
+                setArgSlotVertical(6, 15);
+                setArgSlotVertical(7, 16);
                 break;
             case 8:
-                setArgSlotVertical(1,9);
-                setArgSlotVertical(2,10);
-                setArgSlotVertical(3,11);
-                setArgSlotVertical(4,12);
-                setArgSlotVertical(5,14);
-                setArgSlotVertical(6,15);
-                setArgSlotVertical(7,16);
-                setArgSlotVertical(8,17);
+                setArgSlotVertical(1, 9);
+                setArgSlotVertical(2, 10);
+                setArgSlotVertical(3, 11);
+                setArgSlotVertical(4, 12);
+                setArgSlotVertical(5, 14);
+                setArgSlotVertical(6, 15);
+                setArgSlotVertical(7, 16);
+                setArgSlotVertical(8, 17);
                 break;
             case 9:
-                setArgSlotVertical(1,9);
-                setArgSlotVertical(2,10);
-                setArgSlotVertical(3,11);
-                setArgSlotVertical(4,12);
-                setArgSlotVertical(5,13);
-                setArgSlotVertical(6,14);
-                setArgSlotVertical(7,15);
-                setArgSlotVertical(8,16);
-                setArgSlotVertical(9,17);
+                setArgSlotVertical(1, 9);
+                setArgSlotVertical(2, 10);
+                setArgSlotVertical(3, 11);
+                setArgSlotVertical(4, 12);
+                setArgSlotVertical(5, 13);
+                setArgSlotVertical(6, 14);
+                setArgSlotVertical(7, 15);
+                setArgSlotVertical(8, 16);
+                setArgSlotVertical(9, 17);
                 break;
         }
     }

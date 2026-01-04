@@ -33,5 +33,5 @@ public class StartSneakingExecutor extends PlayerExecutor {
         return ExecutorType.PLAYER_SNEAKING;
     }
 
-    
+
 }

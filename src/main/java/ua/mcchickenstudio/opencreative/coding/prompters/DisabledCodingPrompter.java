@@ -40,10 +40,12 @@ public final class DisabledCodingPrompter implements CodingPrompter {
 
 
     @Override
-    public void setToken(@NotNull String token) {}
+    public void setToken(@NotNull String token) {
+    }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 
     @Override
     public boolean isEnabled() {

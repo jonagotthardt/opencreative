@@ -31,6 +31,7 @@ public interface SettingsItem {
 
     /**
      * Returns item, that will be given to player.
+     *
      * @param player player for parsing item translation, if required.
      * @return item to give.
      */

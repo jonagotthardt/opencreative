@@ -43,12 +43,12 @@ public final class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     private final List<Module> modules;
 
-    private final ItemStack TUTORIAL = createItem(Material.ENDER_EYE,1,"menus.own-modules.items.tutorial");
-    private final ItemStack BACK_TO_ALL_MODULES = createItem(Material.MANGROVE_CHEST_BOAT,1,"menus.own-modules.items.all-modules");
+    private final ItemStack TUTORIAL = createItem(Material.ENDER_EYE, 1, "menus.own-modules.items.tutorial");
+    private final ItemStack BACK_TO_ALL_MODULES = createItem(Material.MANGROVE_CHEST_BOAT, 1, "menus.own-modules.items.all-modules");
 
     public OwnModulesBrowserMenu(Player player) {
-        super(player,getLocaleMessage("menus.own-modules.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45},new int[]{45,46,52,53});
+        super(player, getLocaleMessage("menus.own-modules.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{45}, new int[]{45, 46, 52, 53});
         this.modules = new ArrayList<>(OpenCreative.getModuleManager().getPlayerModules(player.getUniqueId()));
         Comparator<Module> sortByOnline = Comparator.comparingLong(module -> module.getInformation().getCreationTime());
         this.modules.sort(sortByOnline);
@@ -64,10 +64,10 @@ public final class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
             if (loreLine.contains("%moduleDescription%")) {
                 String[] newLines = module.getInformation().getDescription().split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&',newLine)));
+                    lore.add(loreLine.replace("%moduleDescription%", ChatColor.translateAlternateColorCodes('&', newLine)));
                 }
             } else {
-                lore.add(MessageUtils.parseModuleLines(module,loreLine));
+                lore.add(MessageUtils.parseModuleLines(module, loreLine));
             }
         }
         meta.setLore(lore);
@@ -86,7 +86,7 @@ public final class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
     @Override
     protected void fillOtherItems() {
         setItem(45, BACK_TO_ALL_MODULES);
-        setItem(createItem(Material.GREEN_STAINED_GLASS_PANE, 1), 47,51);
+        setItem(createItem(Material.GREEN_STAINED_GLASS_PANE, 1), 47, 51);
         setItem(49, TUTORIAL);
     }
 
@@ -130,8 +130,8 @@ public final class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : BACK_TO_ALL_MODULES);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : BACK_TO_ALL_MODULES);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
         }
     }
 
@@ -142,17 +142,17 @@ public final class OwnModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,getCurrentPage()+1,"menus.own-modules.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW, getCurrentPage() + 1, "menus.own-modules.items.next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.own-modules.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, Math.max(1, getCurrentPage() - 1), "menus.own-modules.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.own-modules.items.no-modules");
+        return createItem(Material.BARRIER, 1, "menus.own-modules.items.no-modules");
     }
 
     @Override

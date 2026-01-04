@@ -35,8 +35,8 @@ public class ChunkPacketListener extends PacketAdapter {
 
     public ChunkPacketListener(Plugin plugin) {
         super(plugin, ListenerPriority.HIGHEST,
-                        Collections.singletonList(PacketType.Play.Server.MAP_CHUNK),
-                        ListenerOptions.ASYNC);
+                Collections.singletonList(PacketType.Play.Server.MAP_CHUNK),
+                ListenerOptions.ASYNC);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class ChunkPacketListener extends PacketAdapter {
         if (!isDevPlanet(world)) return;
         try {
             final int
-            chunkX = event.getPacket().getIntegers().read(0),
-            chunkZ = event.getPacket().getIntegers().read(1);
+                    chunkX = event.getPacket().getIntegers().read(0),
+                    chunkZ = event.getPacket().getIntegers().read(1);
             ChunkCache.preLoad(world, chunkX, chunkZ);
         } catch (Exception error) {
             sendDebugError("Cannot preload chunks.", error);

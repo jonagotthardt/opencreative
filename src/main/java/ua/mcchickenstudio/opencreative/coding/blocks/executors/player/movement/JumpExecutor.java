@@ -32,5 +32,5 @@ public class JumpExecutor extends PlayerExecutor {
     public ExecutorType getExecutorType() {
         return ExecutorType.PLAYER_JUMP;
     }
-    
+
 }

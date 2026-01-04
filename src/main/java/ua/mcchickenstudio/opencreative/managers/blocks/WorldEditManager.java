@@ -43,7 +43,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.settings.Command;
 import ua.mcchickenstudio.opencreative.utils.SystemUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorld;
@@ -97,17 +96,25 @@ public final class WorldEditManager implements BlocksManager {
         WorldEdit.getInstance().getEventBus().register(onSessionEvent);
     }
 
+    @Override
+    public boolean isEnabled() {
+        return WorldEdit.getInstance() != null;
+    }
+
+    @Override
+    public String getName() {
+        return "WorldEdit Blocks Manager";
+    }
+
     static class PlanetExtent extends AbstractDelegateExtent {
 
+        public static BlockState AIRSTATE = BlockTypes.AIR.getDefaultState();
+        public static BaseBlock AIRBASE = BlockTypes.AIR.getDefaultState().toBaseBlock();
         private final Planet planet;
-
         public PlanetExtent(Planet planet, Extent extent) {
             super(extent);
             this.planet = planet;
         }
-
-        public static BlockState AIRSTATE = BlockTypes.AIR.getDefaultState();
-        public static BaseBlock AIRBASE = BlockTypes.AIR.getDefaultState().toBaseBlock();
 
         @SuppressWarnings("unchecked")
         @Override
@@ -172,12 +179,11 @@ public final class WorldEditManager implements BlocksManager {
 
     static class DisallowedExtent extends AbstractDelegateExtent {
 
+        public static BlockState AIRSTATE = BlockTypes.AIR.getDefaultState();
+        public static BaseBlock AIRBASE = BlockTypes.AIR.getDefaultState().toBaseBlock();
         public DisallowedExtent(Extent extent) {
             super(extent);
         }
-
-        public static BlockState AIRSTATE = BlockTypes.AIR.getDefaultState();
-        public static BaseBlock AIRBASE = BlockTypes.AIR.getDefaultState().toBaseBlock();
 
         @Override
         public boolean setBlock(BlockVector3 location, BlockStateHolder block) {
@@ -203,16 +209,5 @@ public final class WorldEditManager implements BlocksManager {
         public BaseBlock getFullBlock(BlockVector3 location) {
             return AIRBASE;
         }
-    }
-
-
-    @Override
-    public boolean isEnabled() {
-        return WorldEdit.getInstance() != null;
-    }
-
-    @Override
-    public String getName() {
-        return "WorldEdit Blocks Manager";
     }
 }

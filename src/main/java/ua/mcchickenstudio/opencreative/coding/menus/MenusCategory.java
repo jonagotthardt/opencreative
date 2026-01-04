@@ -21,7 +21,8 @@ package ua.mcchickenstudio.opencreative.coding.menus;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getItemType;
 
 public enum MenusCategory {
 
@@ -71,10 +72,6 @@ public enum MenusCategory {
         this.material = material;
     }
 
-    public ItemStack getItem(String blockCategory) {
-        return createItem(material,1,"items.developer.categories." + blockCategory + "." + this.name().toLowerCase(),this.name().toLowerCase());
-    }
-
     public static MenusCategory getByIcon(ItemStack icon) {
         if (icon == null) return null;
         String type = getItemType(icon);
@@ -84,6 +81,10 @@ public enum MenusCategory {
             }
         }
         return null;
+    }
+
+    public ItemStack getItem(String blockCategory) {
+        return createItem(material, 1, "items.developer.categories." + blockCategory + "." + this.name().toLowerCase(), this.name().toLowerCase());
     }
 
 }

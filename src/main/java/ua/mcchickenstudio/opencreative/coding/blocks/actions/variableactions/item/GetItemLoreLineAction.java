@@ -18,16 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -38,9 +37,9 @@ public final class GetItemLoreLineAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        ItemStack item = getArguments().getItem("item",getArguments().getItem("variable",new ItemStack(Material.APPLE),this),this);
-        int index = getArguments().getInt("index",1,this);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        ItemStack item = getArguments().getItem("item", getArguments().getItem("variable", new ItemStack(Material.APPLE), this), this);
+        int index = getArguments().getInt("index", 1, this);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             setVarValue(link, "");
@@ -48,18 +47,18 @@ public final class GetItemLoreLineAction extends VariableAction {
         }
         List<String> lore = meta.getLore();
         if (lore == null) {
-            setVarValue(link,"");
+            setVarValue(link, "");
             return;
         }
         if (lore.size() > 64 || index > 64) {
-            setVarValue(link,"");
+            setVarValue(link, "");
             return;
         }
         if (index > lore.size()) {
-            setVarValue(link,"");
+            setVarValue(link, "");
             return;
         }
-        setVarValue(link,lore.get(index-1));
+        setVarValue(link, lore.get(index - 1));
     }
 
     @Override

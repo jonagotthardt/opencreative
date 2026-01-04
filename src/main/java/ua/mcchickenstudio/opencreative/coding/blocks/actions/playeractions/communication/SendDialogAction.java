@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.CreativeRunnable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +38,11 @@ public final class SendDialogAction extends PlayerAction {
     @Override
     public void executePlayer(@NotNull Player player) {
         List<Player> players = new ArrayList<>(List.of(player));
-        int cooldown = getArguments().getInt("cooldown",20,this);
-        List<String> text = getArguments().getTextList("messages",this);
+        int cooldown = getArguments().getInt("cooldown", 20, this);
+        List<String> text = getArguments().getTextList("messages", this);
         new CreativeRunnable(getPlanet()) {
             byte current = 0;
+
             @Override
             public void execute(Player player) {
                 if (current == text.size()) {
@@ -52,7 +53,7 @@ public final class SendDialogAction extends PlayerAction {
                     current++;
                 }
             }
-        }.runTaskTimer(players,0,cooldown);
+        }.runTaskTimer(players, 0, cooldown);
     }
 
 

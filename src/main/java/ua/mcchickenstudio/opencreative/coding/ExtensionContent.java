@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * <h1>ExtensionContent</h1>
  * This interface is used in additional content,
  * that can be added by developers to OpenCreative+.
+ *
  * @see ua.mcchickenstudio.opencreative.coding.placeholders.Placeholder
  */
 public interface ExtensionContent {
@@ -32,6 +33,7 @@ public interface ExtensionContent {
      * Returns lower-cased simple id of extension.
      * Will be used to identify author of content.
      * <p>ID "default" is reserved for OpenCreative+ developers.
+     *
      * @return id of extension.
      */
     @NotNull String getExtensionId();
@@ -40,6 +42,7 @@ public interface ExtensionContent {
      * Returns name of extension content.
      * Will be displayed in list of extension
      * content.
+     *
      * @return name of content.
      */
     @NotNull String getName();
@@ -47,6 +50,7 @@ public interface ExtensionContent {
     /**
      * Returns description of extension content.
      * Describes purpose of new additional content.
+     *
      * @return description of content.
      */
     @NotNull String getDescription();

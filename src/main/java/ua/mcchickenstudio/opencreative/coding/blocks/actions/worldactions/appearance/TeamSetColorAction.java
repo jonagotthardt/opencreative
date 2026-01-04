@@ -21,7 +21,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appea
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
-import org.bukkit.entity.Entity;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -40,10 +39,10 @@ public final class TeamSetColorAction extends WorldAction {
         if (!getArguments().pathExists("scoreboard") || !getArguments().pathExists("team")) {
             return;
         }
-        String scoreboardName = getArguments().getText("scoreboard","board",this);
-        String teamName = getArguments().getText("team","team",this);
+        String scoreboardName = getArguments().getText("scoreboard", "board", this);
+        String teamName = getArguments().getText("team", "team", this);
         Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(scoreboardName.toLowerCase());
-        Color color = getArguments().getColor("color",Color.BLUE,this);
+        Color color = getArguments().getColor("color", Color.BLUE, this);
         if (scoreboard == null) {
             return;
         }

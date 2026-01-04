@@ -19,18 +19,18 @@
 package ua.mcchickenstudio.opencreative.commands;
 
 import org.bukkit.Bukkit;
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
+import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**

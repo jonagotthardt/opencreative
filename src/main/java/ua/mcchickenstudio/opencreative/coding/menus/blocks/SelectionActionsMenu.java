@@ -18,13 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,6 +26,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.menus.layouts.Layout;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
@@ -46,40 +46,40 @@ public final class SelectionActionsMenu extends AbstractMenu {
     private final Player player;
     private final Location signLocation;
 
-    private final ItemStack varCondition = createItem(Material.OBSIDIAN,1,"items.developer.variable-condition");
-    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS,1,"items.developer.player-condition");
-    private final ItemStack entityCondition = createItem(Material.BRICKS,1,"items.developer.entity-condition");
+    private final ItemStack varCondition = createItem(Material.OBSIDIAN, 1, "items.developer.variable-condition");
+    private final ItemStack playerCondition = createItem(Material.OAK_PLANKS, 1, "items.developer.player-condition");
+    private final ItemStack entityCondition = createItem(Material.BRICKS, 1, "items.developer.entity-condition");
 
-    private final ItemStack defaultItem = createItem(Target.DEFAULT.getIcon(),1,"menus.developer.selection.items.default");
-    private final ItemStack allPlayers = createItem(Target.ALL_PLAYERS.getIcon(),1,"menus.developer.selection.items.all-players");
-    private final ItemStack allEntities = createItem(Target.ALL_ENTITIES.getIcon(),1,"menus.developer.selection.items.all-entities");
-    private final ItemStack randomTarget = createItem(Target.RANDOM_TARGET.getIcon(),1,"menus.developer.selection.items.random-target");
-    private final ItemStack randomPlayer = createItem(Target.RANDOM_PLAYER.getIcon(),1,"menus.developer.selection.items.random-player");
-    private final ItemStack victim = createItem(Target.VICTIM.getIcon(),1,"menus.developer.selection.items.victim");
-    private final ItemStack killer = createItem(Target.KILLER.getIcon(),1,"menus.developer.selection.items.killer");
-    private final ItemStack lastSpawned = createItem(Target.LAST_SPAWNED.getIcon(),1,"menus.developer.selection.items.last-spawned");
+    private final ItemStack defaultItem = createItem(Target.DEFAULT.getIcon(), 1, "menus.developer.selection.items.default");
+    private final ItemStack allPlayers = createItem(Target.ALL_PLAYERS.getIcon(), 1, "menus.developer.selection.items.all-players");
+    private final ItemStack allEntities = createItem(Target.ALL_ENTITIES.getIcon(), 1, "menus.developer.selection.items.all-entities");
+    private final ItemStack randomTarget = createItem(Target.RANDOM_TARGET.getIcon(), 1, "menus.developer.selection.items.random-target");
+    private final ItemStack randomPlayer = createItem(Target.RANDOM_PLAYER.getIcon(), 1, "menus.developer.selection.items.random-player");
+    private final ItemStack victim = createItem(Target.VICTIM.getIcon(), 1, "menus.developer.selection.items.victim");
+    private final ItemStack killer = createItem(Target.KILLER.getIcon(), 1, "menus.developer.selection.items.killer");
+    private final ItemStack lastSpawned = createItem(Target.LAST_SPAWNED.getIcon(), 1, "menus.developer.selection.items.last-spawned");
 
     public SelectionActionsMenu(Player player, Location location) {
-        super(5, getLocaleMessage("blocks.selection_action",false));
+        super(5, getLocaleMessage("blocks.selection_action", false));
         this.player = player;
         this.signLocation = location;
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(10,defaultItem);
-        setItem(12,randomTarget);
-        setItem(13,randomPlayer);
-        setItem(16,playerCondition);
+        setItem(10, defaultItem);
+        setItem(12, randomTarget);
+        setItem(13, randomPlayer);
+        setItem(16, playerCondition);
 
-        setItem(19,allPlayers);
-        setItem(24,lastSpawned);
-        setItem(25,entityCondition);
+        setItem(19, allPlayers);
+        setItem(24, lastSpawned);
+        setItem(25, entityCondition);
 
-        setItem(28,allEntities);
-        setItem(30,killer);
-        setItem(31,victim);
-        setItem(34,varCondition);
+        setItem(28, allEntities);
+        setItem(30, killer);
+        setItem(31, victim);
+        setItem(34, varCondition);
     }
 
     @Override
@@ -91,11 +91,11 @@ public final class SelectionActionsMenu extends AbstractMenu {
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
         if (itemEquals(currentItem, playerCondition)) {
-            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.PLAYER_CONDITION).open(player);
+            new BlocksCategorySelectionMenu(player, signLocation, ActionCategory.PLAYER_CONDITION).open(player);
         } else if (itemEquals(currentItem, entityCondition)) {
-            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.ENTITY_CONDITION).open(player);
+            new BlocksCategorySelectionMenu(player, signLocation, ActionCategory.ENTITY_CONDITION).open(player);
         } else if (itemEquals(currentItem, varCondition)) {
-            new BlocksCategorySelectionMenu(player,signLocation, ActionCategory.VARIABLE_CONDITION).open(player);
+            new BlocksCategorySelectionMenu(player, signLocation, ActionCategory.VARIABLE_CONDITION).open(player);
         } else if (itemEquals(currentItem, allPlayers)) {
             setLine("all_players");
             Sounds.DEV_SET_TARGET.play(player);
@@ -140,9 +140,9 @@ public final class SelectionActionsMenu extends AbstractMenu {
     }
 
     private void setLine(String text) {
-        setSignLine(signLocation, 1,"");
-        setSignLine(signLocation, 2,text);
-        setSignLine(signLocation, 3,"");
+        setSignLine(signLocation, 1, "");
+        setSignLine(signLocation, 2, text);
+        setSignLine(signLocation, 3, "");
         translateBlockSign(signLocation.getBlock());
         Block containerBlock = signLocation.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH);
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(signLocation.getWorld());

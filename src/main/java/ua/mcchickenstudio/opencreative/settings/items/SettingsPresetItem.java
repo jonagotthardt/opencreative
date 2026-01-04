@@ -32,6 +32,7 @@ public class SettingsPresetItem implements SettingsItem {
 
     /**
      * Creates instance of preset item.
+     *
      * @param type type of system item.
      */
     public SettingsPresetItem(@NotNull Items type) {

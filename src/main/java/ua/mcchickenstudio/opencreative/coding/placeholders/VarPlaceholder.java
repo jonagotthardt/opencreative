@@ -29,26 +29,23 @@ import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 public final class VarPlaceholder extends KeyValuePlaceholder {
 
     public VarPlaceholder() {
-        super("var","var_local","var_game","var_global","var_save","var_saved");
+        super("var", "var_local", "var_game", "var_global", "var_save", "var_saved");
     }
 
     @Override
     public @Nullable String parseKeyValue(String type, String name, ActionsHandler handler, Action action) {
         WorldVariables variables = action.getExecutor().getPlanet().getVariables();
         VariableLink link = switch (type) {
-            case "var_local" ->
-                    new VariableLink(name, VariableLink.VariableType.LOCAL);
-            case "var", "var_game", "var_global" ->
-                    new VariableLink(name, VariableLink.VariableType.GLOBAL);
-            case "var_save", "var_saved" ->
-                    new VariableLink(name, VariableLink.VariableType.SAVED);
+            case "var_local" -> new VariableLink(name, VariableLink.VariableType.LOCAL);
+            case "var", "var_game", "var_global" -> new VariableLink(name, VariableLink.VariableType.GLOBAL);
+            case "var_save", "var_saved" -> new VariableLink(name, VariableLink.VariableType.SAVED);
             default -> null;
         };
         if (link == null) return null;
-        WorldVariable variable = variables.getVariable(link,action);
+        WorldVariable variable = variables.getVariable(link, action);
         String replacement = "null! " + name + " - " + link.getVariableType().name();
         if (variable != null) {
-            replacement = String.valueOf(variable.getValue()).substring(0,Math.min(100,String.valueOf(variable.getValue()).length()));
+            replacement = String.valueOf(variable.getValue()).substring(0, Math.min(100, String.valueOf(variable.getValue()).length()));
         }
         return replacement;
     }

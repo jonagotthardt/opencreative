@@ -26,15 +26,15 @@ import org.jetbrains.annotations.NotNull;
  * <h1>CreativeEvent</h1>
  * This class represents event, that happened in OpenCreative+.
  */
-public abstract class CreativeEvent extends Event  {
+public abstract class CreativeEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    public @NotNull HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 

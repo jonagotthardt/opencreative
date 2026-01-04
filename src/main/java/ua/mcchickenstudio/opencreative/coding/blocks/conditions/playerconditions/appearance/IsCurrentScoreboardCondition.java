@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.appearance;
 
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class IsCurrentScoreboardCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        List<String> names = getArguments().getTextList("scoreboards",this);
+        List<String> names = getArguments().getTextList("scoreboards", this);
         for (String name : names) {
             Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());
             if (player.getScoreboard().equals(scoreboard)) {

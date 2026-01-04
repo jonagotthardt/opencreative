@@ -18,12 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.menus.buttons;
 
-import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>RadioButton</h1>
@@ -32,34 +35,37 @@ import java.util.*;
  */
 public class RadioButton {
 
+    static final Map<ItemStack, RadioButton> radioButtonList = new HashMap<>();
     private int currentChoice;
     private int maxChoicesAmount;
-
     private List<Runnable> choiceActions;
     private ItemStack buttonItem;
     private List<String> originalLore;
     private String turnedPath;
     private String itemLocalePath;
 
-    static final Map<ItemStack,RadioButton> radioButtonList = new HashMap<>();
-
     /**
      * Creates RadioButton with specified parameters.
-     * @param material Item's material
-     * @param name Display name of item
-     * @param lore Lore of item
-     * @param currentChoice Current choice
+     *
+     * @param material         Item's material
+     * @param name             Display name of item
+     * @param lore             Lore of item
+     * @param currentChoice    Current choice
      * @param maxChoicesAmount Limit of choices
-     * @param choicesActions Runnables that are executing on choice change
-     * @param itemLocalePath Path of item in localization file
-     * @param turnedPath Path of 'turnedOn' 'turnedOff' messages
+     * @param choicesActions   Runnables that are executing on choice change
+     * @param itemLocalePath   Path of item in localization file
+     * @param turnedPath       Path of 'turnedOn' 'turnedOff' messages
      */
     public RadioButton(Material material, String name, List<String> lore, int currentChoice,
                        int maxChoicesAmount, List<Runnable> choicesActions, String itemLocalePath,
                        String turnedPath) {
         setChoices(currentChoice, maxChoicesAmount, choicesActions);
         setItemButton(material, name, lore, itemLocalePath, turnedPath);
-        radioButtonList.put(getButtonItem(),this);
+        radioButtonList.put(getButtonItem(), this);
+    }
+
+    public static RadioButton getRadioButtonByItemStack(ItemStack itemStack) {
+        return radioButtonList.get(itemStack);
     }
 
     private void setChoices(int currentChoice, int maxChoicesAmount, List<Runnable> choicesActions) {
@@ -73,7 +79,7 @@ public class RadioButton {
         this.itemLocalePath = itemLocalePath;
         this.turnedPath = chosenLocalePath;
 
-        ItemStack buttonItem = new ItemStack(material,1);
+        ItemStack buttonItem = new ItemStack(material, 1);
         ItemMeta buttonItemMeta = buttonItem.getItemMeta();
         buttonItemMeta.setDisplayName(name);
         buttonItem.setItemMeta(buttonItemMeta);
@@ -86,13 +92,13 @@ public class RadioButton {
         ItemMeta buttonItemMeta = buttonItem.getItemMeta();
         List<String> lore = new ArrayList<>();
 
-        String turnedOn = MessageUtils.getLocaleMessage(turnedPath+".turned-on");
-        String turnedOff = MessageUtils.getLocaleMessage(turnedPath+".turned-off");
+        String turnedOn = MessageUtils.getLocaleMessage(turnedPath + ".turned-on");
+        String turnedOff = MessageUtils.getLocaleMessage(turnedPath + ".turned-off");
         String turned;
 
         for (String loreLine : originalLore) {
             if (loreLine.matches("%[0-9]+%")) {
-                int choiceNumber = Integer.parseInt((loreLine.replace("%","")));
+                int choiceNumber = Integer.parseInt((loreLine.replace("%", "")));
                 if (choiceNumber == currentChoice) turned = turnedOn;
                 else turned = turnedOff;
                 loreLine = loreLine.replace("%" + choiceNumber + "%", turned + MessageUtils.getLocaleMessage(itemLocalePath + "." + choiceNumber, false));
@@ -112,28 +118,24 @@ public class RadioButton {
 
 
         if (this.currentChoice == 0) this.currentChoice = 1;
-        int nextChoice = this.currentChoice+1;
+        int nextChoice = this.currentChoice + 1;
         if (nextChoice > this.maxChoicesAmount) {
             this.currentChoice = 1;
             nextChoice = 1;
         }
 
-        if (nextChoice-1 < choiceActions.size()) {
-            Runnable actions = this.choiceActions.get(nextChoice-1);
+        if (nextChoice - 1 < choiceActions.size()) {
+            Runnable actions = this.choiceActions.get(nextChoice - 1);
             actions.run();
         }
 
         this.currentChoice = nextChoice;
         radioButtonList.remove(buttonItem);
         updateItem();
-        radioButtonList.put(buttonItem,this);
+        radioButtonList.put(buttonItem, this);
     }
 
     public ItemStack getButtonItem() {
         return buttonItem;
-    }
-
-    public static RadioButton getRadioButtonByItemStack(ItemStack itemStack) {
-        return radioButtonList.get(itemStack);
     }
 }

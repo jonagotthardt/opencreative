@@ -18,16 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +39,8 @@ public class HasPotionEffectsCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        List<ItemStack> potionsItems = getArguments().getItemList("potions",this);
-        boolean requireAll = getArguments().getBoolean("all",false,this);
+        List<ItemStack> potionsItems = getArguments().getItemList("potions", this);
+        boolean requireAll = getArguments().getBoolean("all", false, this);
         boolean hasEffect = false;
         for (ItemStack potionItem : potionsItems) {
             PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();

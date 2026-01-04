@@ -32,29 +32,29 @@ import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.getCooldown;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.setCooldown;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 public final class BlocksManipulatorMenu extends AbstractMenu {
 
     private final Player player;
     private final DevPlanet devPlanet;
 
-    private final ItemStack duplicate = createItem(Material.BOOKSHELF,1,"menus.developer.manipulator.items.duplicate","duplicate");
-    private final ItemStack createModule = createItem(Material.CHERRY_CHEST_BOAT,1,"menus.developer.manipulator.items.create-module","module");
-    private final ItemStack createModuleLimit = createItem(Material.RED_STAINED_GLASS,1,"menus.developer.manipulator.items.create-module-limit","module");
+    private final ItemStack duplicate = createItem(Material.BOOKSHELF, 1, "menus.developer.manipulator.items.duplicate", "duplicate");
+    private final ItemStack createModule = createItem(Material.CHERRY_CHEST_BOAT, 1, "menus.developer.manipulator.items.create-module", "module");
+    private final ItemStack createModuleLimit = createItem(Material.RED_STAINED_GLASS, 1, "menus.developer.manipulator.items.create-module-limit", "module");
 
     public BlocksManipulatorMenu(@NotNull Player player, @NotNull DevPlanet devPlanet, int selectedAmount) {
-        super(3, getLocaleMessage("menus.developer.manipulator.title",false)
+        super(3, getLocaleMessage("menus.developer.manipulator.title", false)
                 .replace("%amount%", String.valueOf(selectedAmount))
                 .replace("%limit%", String.valueOf(OpenCreative.getSettings().getGroups().getGroup(player)
                         .getLimit(LimitType.SELECTED_LINES_AMOUNT).calculateLimit(1)))
@@ -68,7 +68,7 @@ public final class BlocksManipulatorMenu extends AbstractMenu {
         setItem(12, duplicate);
         int amount = OpenCreative.getModuleManager().getPlayerModules(player.getUniqueId()).size();
         int limit = OpenCreative.getSettings().getGroups().getGroup(player).getModulesLimit();
-        int left = limit-amount;
+        int left = limit - amount;
         if (left >= 1) {
             replacePlaceholderInLore(createModule, "%amount%", amount);
             replacePlaceholderInLore(createModule, "%limit%", limit);

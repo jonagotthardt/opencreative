@@ -33,8 +33,8 @@ public final class SetBeeStingersInBodyAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        boolean add = getArguments().getBoolean("add",false,this);
-        int count = getArguments().getInt("count",0,this);
+        boolean add = getArguments().getBoolean("add", false, this);
+        int count = getArguments().getInt("count", 0, this);
         if (add) {
             count = count + player.getBeeStingersInBody();
         }

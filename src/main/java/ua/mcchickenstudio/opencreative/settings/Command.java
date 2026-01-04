@@ -29,30 +29,30 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.parsePAPI;
 
 public record Command(String commandLine, boolean console, long delay) {
 
-    public void execute(Player player, Map<String,Object> placeholders) {
+    public void execute(Player player, Map<String, Object> placeholders) {
         if (delay > 0) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    dispatch(player,placeholders);
+                    dispatch(player, placeholders);
                 }
-            }.runTaskLater(OpenCreative.getPlugin(),delay);
+            }.runTaskLater(OpenCreative.getPlugin(), delay);
         } else {
-            dispatch(player,placeholders);
+            dispatch(player, placeholders);
         }
     }
 
-    private void dispatch(Player player, Map<String,Object> placeholders) {
+    private void dispatch(Player player, Map<String, Object> placeholders) {
         String dispatchedCommand = commandLine;
         for (String placeholder : placeholders.keySet()) {
             dispatchedCommand = dispatchedCommand.replace(placeholder, placeholders.get(placeholder).toString());
         }
         if (player != null) {
-            dispatchedCommand = parsePAPI(player,dispatchedCommand);
+            dispatchedCommand = parsePAPI(player, dispatchedCommand);
         }
         if (console) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(),dispatchedCommand);
-        } else if (player != null){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), dispatchedCommand);
+        } else if (player != null) {
             player.performCommand(dispatchedCommand);
         }
     }

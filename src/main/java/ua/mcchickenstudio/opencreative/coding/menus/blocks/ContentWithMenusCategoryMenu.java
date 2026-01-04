@@ -38,10 +38,8 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
     private final Player player;
     private final String mainCategory;
     private final Material stainedPane;
-
-    protected MenusCategory currentCategory;
-
     private final ItemStack BACK_TO_CATEGORIES;
+    protected MenusCategory currentCategory;
     private MenusCategorySelectionMenu categoriesMenu;
 
     public ContentWithMenusCategoryMenu(@NotNull Player player,
@@ -49,12 +47,12 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
                                         @NotNull String title,
                                         @NotNull Material stainedPane,
                                         @NotNull MenusCategory defaultCategory) {
-        super(player, title, PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45},new int[]{45,46,52,53});
+        super(player, title, PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45}, new int[]{45, 46, 52, 53});
         this.mainCategory = mainCategory;
         this.player = player;
         this.stainedPane = stainedPane;
         this.currentCategory = defaultCategory;
-        this.BACK_TO_CATEGORIES = createItem(Material.ARROW, 1, "items.developer.categories." + mainCategory + ".back-to-categories","categories");
+        this.BACK_TO_CATEGORIES = createItem(Material.ARROW, 1, "items.developer.categories." + mainCategory + ".back-to-categories", "categories");
     }
 
     public void setCategoriesMenu(MenusCategorySelectionMenu categoriesMenu) {
@@ -76,16 +74,16 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : BACK_TO_CATEGORIES);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : BACK_TO_CATEGORIES);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
         }
     }
 
     @Override
     protected void fillOtherItems() {
-        setItem(BACK_TO_CATEGORIES,45);
-        setItem(createItem(stainedPane,1),47,51);
-        setItem(setPersistentData(currentCategory.getItem(mainCategory), getItemTypeKey(), "categories"),49);
+        setItem(BACK_TO_CATEGORIES, 45);
+        setItem(createItem(stainedPane, 1), 47, 51);
+        setItem(setPersistentData(currentCategory.getItem(mainCategory), getItemTypeKey(), "categories"), 49);
     }
 
     @Override
@@ -104,17 +102,17 @@ public abstract class ContentWithMenusCategoryMenu<T> extends ListBrowserMenu<T>
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW,1,"items.developer.categories." + mainCategory + ".next-page"),"%page%", getCurrentPage() +1);
+        return replacePlaceholderInName(createItem(Material.SPECTRAL_ARROW, 1, "items.developer.categories." + mainCategory + ".next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInName(createItem(Material.ARROW,1,"items.developer.categories." + mainCategory + ".previous-page"),"%page%", getCurrentPage() -1);
+        return replacePlaceholderInName(createItem(Material.ARROW, 1, "items.developer.categories." + mainCategory + ".previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"items.developer.categories." + mainCategory + ".empty");
+        return createItem(Material.BARRIER, 1, "items.developer.categories." + mainCategory + ".empty");
     }
 
     @Override

@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance;
 
+import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import net.kyori.adventure.bossbar.BossBar;
-import org.bukkit.entity.Player;
 
 public final class ShowBossBarAction extends PlayerAction {
     public ShowBossBarAction(Executor executor, Target target, int x, Arguments args) {
@@ -35,7 +35,7 @@ public final class ShowBossBarAction extends PlayerAction {
     @Override
     public void executePlayer(@NotNull Player player) {
         if (getArguments().pathExists("bossbar")) {
-            String name = getArguments().getText("bossbar"," ",this);
+            String name = getArguments().getText("bossbar", " ", this);
             BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());
             if (bossBar != null) {
                 player.showBossBar(bossBar);

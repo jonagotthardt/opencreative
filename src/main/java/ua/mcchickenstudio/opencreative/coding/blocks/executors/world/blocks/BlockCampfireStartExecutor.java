@@ -33,6 +33,5 @@ public class BlockCampfireStartExecutor extends WorldExecutor {
         return ExecutorType.WORLD_BLOCK_CAMPFIRE_START;
     }
 
-    
 
 }

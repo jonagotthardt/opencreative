@@ -40,8 +40,8 @@ public final class ModulesBrowserMenu extends ListBrowserMenu<Module> {
     private final List<Module> modules = new ArrayList<>();
 
     public ModulesBrowserMenu(Player player, List<Module> modules) {
-        super(player, getLocaleMessage("menus.modules.title",false),PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{49},new int[]{45,46,52,53});
+        super(player, getLocaleMessage("menus.modules.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{49}, new int[]{45, 46, 52, 53});
         this.modules.addAll(modules);
     }
 
@@ -56,8 +56,8 @@ public final class ModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     @Override
     protected void fillOtherItems() {
-        setItem(createItem(Material.BROWN_STAINED_GLASS_PANE,1),47,51);
-        setItem(createItem(Material.CHEST_MINECART,1,"menus.modules.items.own-modules","own-modules"),49);
+        setItem(createItem(Material.BROWN_STAINED_GLASS_PANE, 1), 47, 51);
+        setItem(createItem(Material.CHEST_MINECART, 1, "menus.modules.items.own-modules", "own-modules"), 49);
     }
 
     @Override
@@ -83,8 +83,8 @@ public final class ModulesBrowserMenu extends ListBrowserMenu<Module> {
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : DECORATION_ITEM);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : DECORATION_ITEM);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
         }
     }
 
@@ -118,17 +118,17 @@ public final class ModulesBrowserMenu extends ListBrowserMenu<Module> {
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW,getCurrentPage()+1,"menus.modules.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.SPECTRAL_ARROW, getCurrentPage() + 1, "menus.modules.items.next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,getCurrentPage()-1,"menus.modules.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, getCurrentPage() - 1, "menus.modules.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.modules.items.no-modules");
+        return createItem(Material.BARRIER, 1, "menus.modules.items.no-modules");
     }
 
     @Override

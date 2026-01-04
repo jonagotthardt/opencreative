@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
@@ -36,12 +36,12 @@ public final class SetItemsAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         for (byte slot = 9; slot < 36; slot++) {
-            if (slot-9 == items.size()) {
+            if (slot - 9 == items.size()) {
                 return;
             }
-            player.getInventory().setItem(slot,items.get(slot-9));
+            player.getInventory().setItem(slot, items.get(slot - 9));
         }
     }
 

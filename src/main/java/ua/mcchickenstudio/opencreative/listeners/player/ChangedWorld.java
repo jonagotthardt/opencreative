@@ -18,23 +18,27 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import org.bukkit.*;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
-import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
-import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
-import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
+import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
+import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
@@ -78,12 +82,12 @@ public final class ChangedWorld implements Listener {
         Planet newPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(newWorld);
 
         for (Player oldWorldPlayer : oldWorld.getPlayers()) {
-            hidePlayerInTab(player,oldWorldPlayer);
-            hidePlayerInTab(oldWorldPlayer,player);
+            hidePlayerInTab(player, oldWorldPlayer);
+            hidePlayerInTab(oldWorldPlayer, player);
         }
         for (Player newWorldPlayer : newWorld.getPlayers()) {
-            showPlayerFromTab(player,newWorldPlayer);
-            showPlayerFromTab(newWorldPlayer,player);
+            showPlayerFromTab(player, newWorldPlayer);
+            showPlayerFromTab(newWorldPlayer, player);
         }
 
         if (oldPlanet != null && oldPlanet == newPlanet) {
@@ -97,8 +101,8 @@ public final class ChangedWorld implements Listener {
                     removePlayerWithLocation(player);
                 }
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
-                    showPlayerFromTab(onlinePlayer,player);
-                    showPlayerFromTab(player,onlinePlayer);
+                    showPlayerFromTab(onlinePlayer, player);
+                    showPlayerFromTab(player, onlinePlayer);
                 }
             } else {
                 // Player entered build world
@@ -123,7 +127,7 @@ public final class ChangedWorld implements Listener {
                 PlanetPlayer planetPlayer = oldPlanet.getWorldPlayers().getPlanetPlayer(player);
                 if (planetPlayer != null) planetPlayer.save();
                 oldPlanet.getWorldPlayers().unregisterPlayer(player);
-                new PlanetDisconnectPlayerEvent(oldPlanet,player).callEvent();
+                new PlanetDisconnectPlayerEvent(oldPlanet, player).callEvent();
                 if (oldPlanet.getOnline() > 0) {
                     if (oldPlanet.getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
                         for (Player onlinePlayer : oldPlanet.getPlayers()) {
@@ -150,8 +154,8 @@ public final class ChangedWorld implements Listener {
                         }
                     }
                     for (Player oldPlanetPlayer : oldPlanet.getPlayers()) {
-                        hidePlayerInTab(player,oldPlanetPlayer);
-                        hidePlayerInTab(oldPlanetPlayer,player);
+                        hidePlayerInTab(player, oldPlanetPlayer);
+                        hidePlayerInTab(oldPlanetPlayer, player);
                     }
                 } else {
                     if (oldPlanet.isLoaded()) {
@@ -164,8 +168,8 @@ public final class ChangedWorld implements Listener {
                 // Player connected to other planet
                 newPlanet.getWorldPlayers().registerPlayer(player);
                 for (Player onlinePlayer : newPlanet.getPlayers()) {
-                    showPlayerFromTab(onlinePlayer,player);
-                    showPlayerFromTab(player,onlinePlayer);
+                    showPlayerFromTab(onlinePlayer, player);
+                    showPlayerFromTab(player, onlinePlayer);
                     newPlanet.getTerritory().showBorders(onlinePlayer);
                 }
                 if (newPlanet.isOwner(player)) {

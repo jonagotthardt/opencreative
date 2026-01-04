@@ -18,19 +18,19 @@
 
 package ua.mcchickenstudio.opencreative.menus.world;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.utils.world.generators.*;
-import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
-import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
-import ua.mcchickenstudio.opencreative.settings.Sounds;
-import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
+import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 
 import java.util.List;
 import java.util.Random;
@@ -45,31 +45,31 @@ public final class WorldGenerationMenu extends AbstractMenu {
     private final ParameterButton generatorButton;
     private final ParameterButton environmentButton;
     private final ParameterButton generateStructures;
-    private final ItemStack createButton = createItem(Material.PUFFERFISH_BUCKET,1,"menus.world-creation.items.create");
+    private final ItemStack createButton = createItem(Material.PUFFERFISH_BUCKET, 1, "menus.world-creation.items.create");
 
     public WorldGenerationMenu(Player player, String generator, String environment, boolean generateStructures) {
-        super(3, getLocaleMessage("menus.world-creation.title",false));
+        super(3, getLocaleMessage("menus.world-creation.title", false));
         this.player = player;
         this.generatorButton = new ParameterButton(generator,
                 WorldGenerators.getInstance().getGeneratorsIDs(),
                 "type", "menus.world-creation", "menus.world-creation.items.type",
                 WorldGenerators.getInstance().getGeneratorsMaterials());
-        this.environmentButton = new ParameterButton(environment, List.of("normal","nether","the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
-        this.generateStructures = new ParameterButton(generateStructures, List.of(false,true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
+        this.environmentButton = new ParameterButton(environment, List.of("normal", "nether", "the_end"), "environment", "menus.world-creation", "menus.world-creation.items.environment", List.of(Material.GRASS_BLOCK, Material.NETHERRACK, Material.END_STONE));
+        this.generateStructures = new ParameterButton(generateStructures, List.of(false, true), "generate-structures", "menus.world-creation", "menus.world-creation.items.generate-structures", List.of(Material.DECORATED_POT, Material.BOOKSHELF));
     }
 
     public WorldGenerationMenu(Player player) {
-        this(player,"flat","normal",true);
+        this(player, "flat", "normal", true);
     }
 
     @Override
     public void fillItems(Player player) {
-        setItem(10,generatorButton.getItem());
-        setItem(11,environmentButton.getItem());
-        setItem(12,generateStructures.getItem());
-        setItem(7,createItem(Material.LIME_STAINED_GLASS_PANE,1));
-        setItem(16,createButton);
-        setItem(25,createItem(Material.LIME_STAINED_GLASS_PANE,1));
+        setItem(10, generatorButton.getItem());
+        setItem(11, environmentButton.getItem());
+        setItem(12, generateStructures.getItem());
+        setItem(7, createItem(Material.LIME_STAINED_GLASS_PANE, 1));
+        setItem(16, createButton);
+        setItem(25, createItem(Material.LIME_STAINED_GLASS_PANE, 1));
     }
 
     @Override
@@ -85,7 +85,7 @@ public final class WorldGenerationMenu extends AbstractMenu {
         switch (event.getRawSlot()) {
             case 10 -> {
                 generatorButton.next();
-                setItem(event.getRawSlot(),generatorButton.getItem());
+                setItem(event.getRawSlot(), generatorButton.getItem());
                 WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
                 if (generator != null) {
                     setItem(11, generator instanceof EnvironmentCapable ? environmentButton.getItem() : DECORATION_ITEM);
@@ -96,12 +96,12 @@ public final class WorldGenerationMenu extends AbstractMenu {
             }
             case 11 -> {
                 environmentButton.next();
-                setItem(event.getRawSlot(),environmentButton.getItem());
+                setItem(event.getRawSlot(), environmentButton.getItem());
                 Sounds.MENU_ENVIRONMENT_CHANGE.play(player);
             }
             case 12 -> {
                 generateStructures.next();
-                setItem(event.getRawSlot(),generateStructures.getItem());
+                setItem(event.getRawSlot(), generateStructures.getItem());
                 Sounds.MENU_GENERATE_STRUCTURES_CHANGE.play(player);
             }
             case 16 -> {

@@ -47,44 +47,6 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
     public RayTraceVectorMultiEntitiesAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
-    @Override
-    protected void execute() {
-        VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
-        final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
-        final Location from = getArguments().getLocation("from", new Location(getPlanet().getWorld(), 0, 0, 0), this);
-        AsyncScheduler.run(() -> {
-            final double range = getArguments().getDouble("range", 3.0, this);
-            final List<Entity> list = getEntitiesAroundPoint(from, range + 1.0);
-            final List<Location> resultList = new ArrayList<>();
-            final String filter = getArguments().getText("filter", "no-filter", this);
-            for (final Entity e : list) {
-                final boolean isPlayer = (e instanceof Player);
-                if (filter.equals("only-players") && !isPlayer) continue;
-                if (filter.equals("only-entities") && (isPlayer || !(e instanceof LivingEntity))) continue;
-                if (e.isDead()) continue;
-                final Location to = e.getLocation();
-                final double
-                x = to.getX(),
-                y = to.getY(),
-                z = to.getZ();
-                final BuildSpeed buildSpeed =
-                                (getArguments().getText("calculation", "vanilla-java", this)
-                                                .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
-                final Vec2f rotation = getYawPitch(vector);
-                final AxisAlignedBB aabb = new AxisAlignedBB(
-                                x - 0.3, y - 0.1, z - 0.3,
-                                x + 0.3, y + 1.9, z + 0.3
-                );
-                final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
-                                aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
-                if (result != null) {
-                    final Vec3 hit = result.hitVec;
-                    resultList.add(new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
-                }
-            }
-            setVarValue(hitVec, resultList);
-        }, AsyncScheduler.getScheduler());
-    }
 
     private static List<Entity> getEntitiesAroundPoint(Location location, double radius) {
         List<Entity> entities = new ArrayList<>();
@@ -103,6 +65,45 @@ public final class RayTraceVectorMultiEntitiesAction extends VariableAction {
         }
         entities.removeIf(entity -> entity.getLocation().distanceSquared(location) > radius * radius);
         return entities;
+    }
+
+    @Override
+    protected void execute() {
+        VariableLink hitVec = getArguments().getVariableLink("hitVec", this);
+        final Vector vector = getArguments().getVector("vector", new Vector(0, 0, 0), this);
+        final Location from = getArguments().getLocation("from", new Location(getPlanet().getWorld(), 0, 0, 0), this);
+        AsyncScheduler.run(() -> {
+            final double range = getArguments().getDouble("range", 3.0, this);
+            final List<Entity> list = getEntitiesAroundPoint(from, range + 1.0);
+            final List<Location> resultList = new ArrayList<>();
+            final String filter = getArguments().getText("filter", "no-filter", this);
+            for (final Entity e : list) {
+                final boolean isPlayer = (e instanceof Player);
+                if (filter.equals("only-players") && !isPlayer) continue;
+                if (filter.equals("only-entities") && (isPlayer || !(e instanceof LivingEntity))) continue;
+                if (e.isDead()) continue;
+                final Location to = e.getLocation();
+                final double
+                        x = to.getX(),
+                        y = to.getY(),
+                        z = to.getZ();
+                final BuildSpeed buildSpeed =
+                        (getArguments().getText("calculation", "vanilla-java", this)
+                                .equals("vanilla-java") ? BuildSpeed.NORMAL : BuildSpeed.FAST);
+                final Vec2f rotation = getYawPitch(vector);
+                final AxisAlignedBB aabb = new AxisAlignedBB(
+                        x - 0.3, y - 0.1, z - 0.3,
+                        x + 0.3, y + 1.9, z + 0.3
+                );
+                final MovingObjectPosition result = RayTrace.rayCast(rotation.getX(), rotation.getY(),
+                        aabb, new Vec3(from.getX(), from.getY(), from.getZ()), range, buildSpeed);
+                if (result != null) {
+                    final Vec3 hit = result.hitVec;
+                    resultList.add(new Location(to.getWorld(), hit.xCoord, hit.yCoord, hit.zCoord));
+                }
+            }
+            setVarValue(hitVec, resultList);
+        }, AsyncScheduler.getScheduler());
     }
 
     @Override

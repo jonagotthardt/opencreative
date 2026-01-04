@@ -18,16 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.listeners.player;
 
-import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerTotemRespawnEvent;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerTotemRespawnEvent;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 

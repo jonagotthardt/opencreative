@@ -18,12 +18,12 @@
 
 package ua.mcchickenstudio.opencreative.coding;
 
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.planets.DevPlanet;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.planets.DevPlanet;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public abstract class CreativeRunnable {
                             cancel();
                         }
                         if (player == null) {
-                           continue;
+                            continue;
                         }
                         if (!player.isOnline()) {
                             currentPlayers.remove(player);
@@ -81,7 +81,7 @@ public abstract class CreativeRunnable {
                     cancel();
                 }
             }
-        }.runTaskTimer(OpenCreative.getPlugin(),period,timer).getTaskId();
+        }.runTaskTimer(OpenCreative.getPlugin(), period, timer).getTaskId();
     }
 
     public synchronized void runTaskLater(List<Player> onlinePlayers, long delay) {
@@ -120,7 +120,7 @@ public abstract class CreativeRunnable {
                     cancel();
                 }
             }
-        }.runTaskLater(OpenCreative.getPlugin(),delay).getTaskId();
+        }.runTaskLater(OpenCreative.getPlugin(), delay).getTaskId();
     }
 
     public synchronized void cancel() {

@@ -40,12 +40,12 @@ public final class LightningStrikeEvent extends WorldEvent implements BlockEvent
     }
 
     @Override
-    public void setCancelled(boolean cancelled) {
-        event.setCancelled(cancelled);
+    public boolean isCancelled() {
+        return event.isCancelled();
     }
 
     @Override
-    public boolean isCancelled() {
-        return event.isCancelled();
+    public void setCancelled(boolean cancelled) {
+        event.setCancelled(cancelled);
     }
 }

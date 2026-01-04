@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class ReplaceTextAction extends VariableAction {
     public ReplaceTextAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,11 +32,11 @@ public final class ReplaceTextAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        String text = getArguments().getText("text", "Hello World",this);
-        String target = getArguments().getText("target", " ",this);
-        String replacement = getArguments().getText("replacement", "",this);
-        setVarValue(link, text.replace(target,replacement));
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        String text = getArguments().getText("text", "Hello World", this);
+        String target = getArguments().getText("target", " ", this);
+        String replacement = getArguments().getText("replacement", "", this);
+        setVarValue(link, text.replace(target, replacement));
     }
 
     @Override

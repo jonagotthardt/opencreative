@@ -19,17 +19,14 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication;
 
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.entity.Player;
-import ua.mcchickenstudio.opencreative.settings.SettingsSound;
 
 import java.util.List;
 
@@ -40,7 +37,7 @@ public final class StopSoundsAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        List<String> sounds = getArguments().getTextList("sounds",this);
+        List<String> sounds = getArguments().getTextList("sounds", this);
         if (sounds.isEmpty()) {
             player.stopAllSounds();
         } else {

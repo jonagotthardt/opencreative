@@ -43,11 +43,6 @@ public final class BlockBrewingFuelEvent extends WorldEvent implements BlockEven
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        event.setCancelled(cancel);
-    }
-
-    @Override
     public @NotNull ItemStack getItem() {
         return event.getFuel();
     }
@@ -55,5 +50,10 @@ public final class BlockBrewingFuelEvent extends WorldEvent implements BlockEven
     @Override
     public boolean isCancelled() {
         return event.isCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        event.setCancelled(cancel);
     }
 }

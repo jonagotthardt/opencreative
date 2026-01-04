@@ -40,18 +40,18 @@ public final class EntitySetDisplayScaleAction extends EntityAction {
         if (!(entity instanceof Display display)) {
             throw new UnsupportedEntityException(Display.class, entity);
         }
-        boolean add = getArguments().getBoolean("add",false,this);
+        boolean add = getArguments().getBoolean("add", false, this);
         float x = (add ? 0.0f : display.getTransformation().getScale().x());
         float y = (add ? 0.0f : display.getTransformation().getScale().y());
         float z = (add ? 0.0f : display.getTransformation().getScale().z());
         if (getArguments().pathExists("x")) {
-            x = getArguments().getFloat("x",x,this);
+            x = getArguments().getFloat("x", x, this);
         }
         if (getArguments().pathExists("y")) {
-            y = getArguments().getFloat("y",y,this);
+            y = getArguments().getFloat("y", y, this);
         }
         if (getArguments().pathExists("z")) {
-            z = getArguments().getFloat("z",z,this);
+            z = getArguments().getFloat("z", z, this);
         }
         Vector3f vector3f = new Vector3f();
         if (add) {
@@ -60,10 +60,10 @@ public final class EntitySetDisplayScaleAction extends EntityAction {
             vector3f.z = display.getTransformation().getScale().z() + z;
         }
         display.setTransformation(new Transformation(
-            display.getTransformation().getTranslation(),
-            display.getTransformation().getLeftRotation(),
-            vector3f,
-            display.getTransformation().getRightRotation()
+                display.getTransformation().getTranslation(),
+                display.getTransformation().getLeftRotation(),
+                vector3f,
+                display.getTransformation().getRightRotation()
         ));
     }
 

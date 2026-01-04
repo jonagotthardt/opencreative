@@ -72,7 +72,8 @@ public final class EntityStateListener implements Listener {
     @EventHandler
     public void onWitchReady(WitchReadyPotionEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getEntity().getWorld());
-        if (planet != null) new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.WitchReadyPotionEvent(event).callEvent();
+        if (planet != null)
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.state.WitchReadyPotionEvent(event).callEvent();
     }
 
     @EventHandler

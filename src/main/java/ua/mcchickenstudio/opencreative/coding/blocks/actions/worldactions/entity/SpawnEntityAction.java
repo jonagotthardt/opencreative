@@ -18,17 +18,17 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity;
 
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
@@ -47,21 +47,21 @@ public final class SpawnEntityAction extends WorldAction {
         }
 
         String typeString;
-        String customName = getArguments().getText("name","",this);
+        String customName = getArguments().getText("name", "", this);
 
-        boolean ai = getArguments().getBoolean("ai",true,this);
-        boolean gravity = getArguments().getBoolean("gravity",true,this);
-        boolean glowing = getArguments().getBoolean("glowing",false,this);
-        boolean invisible = getArguments().getBoolean("invisible",false,this);
-        boolean invulnerable = getArguments().getBoolean("invulnerable",false,this);
-        boolean customNameVisible = getArguments().getBoolean("show-name",true,this);
-        boolean visibleByDefault = getArguments().getBoolean("visible-for-all",true,this);
+        boolean ai = getArguments().getBoolean("ai", true, this);
+        boolean gravity = getArguments().getBoolean("gravity", true, this);
+        boolean glowing = getArguments().getBoolean("glowing", false, this);
+        boolean invisible = getArguments().getBoolean("invisible", false, this);
+        boolean invulnerable = getArguments().getBoolean("invulnerable", false, this);
+        boolean customNameVisible = getArguments().getBoolean("show-name", true, this);
+        boolean visibleByDefault = getArguments().getBoolean("visible-for-all", true, this);
 
-        ItemStack spawnEgg = getArguments().getItem("type",new ItemStack(Material.AIR),this);
+        ItemStack spawnEgg = getArguments().getItem("type", new ItemStack(Material.AIR), this);
         if (spawnEgg.getType() != Material.AIR && spawnEgg.getType().name().endsWith("_SPAWN_EGG")) {
-            typeString = spawnEgg.getType().name().replace("_SPAWN_EGG","");
+            typeString = spawnEgg.getType().name().replace("_SPAWN_EGG", "");
         } else {
-            typeString = getArguments().getText("type","chicken",this);
+            typeString = getArguments().getText("type", "chicken", this);
         }
 
         EntityType type;
@@ -74,8 +74,8 @@ public final class SpawnEntityAction extends WorldAction {
             throw new IllegalArgumentException("Cannot spawn " + type.name() + ", because it's disallowed entity type.");
         }
 
-        for (Location location : getArguments().getLocationList("locations",this)) {
-            Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location,type);
+        for (Location location : getArguments().getLocationList("locations", this)) {
+            Entity spawnedEntity = getPlanet().getTerritory().getWorld().spawnEntity(location, type);
 
             spawnedEntity.setGravity(gravity);
             if (!customName.isEmpty()) {

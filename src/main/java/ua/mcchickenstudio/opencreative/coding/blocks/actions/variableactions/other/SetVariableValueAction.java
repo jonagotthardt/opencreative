@@ -19,12 +19,11 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class SetVariableValueAction extends VariableAction {
     public SetVariableValueAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,9 +32,9 @@ public final class SetVariableValueAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink link = getArguments().getVariableLink("variable",this);
-        Object value = getArguments().getValue("value",this);
-        setVarValue(link,value);
+        VariableLink link = getArguments().getVariableLink("variable", this);
+        Object value = getArguments().getValue("value", this);
+        setVarValue(link, value);
     }
 
     @Override

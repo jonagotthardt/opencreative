@@ -26,22 +26,22 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -53,6 +53,47 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 public class ChatCommand extends CommandHandler {
 
     public static final List<Player> creativeChatOff = new ArrayList<>();
+
+    private static @NotNull Component parseAdvertisementInMessage(@NotNull Component component) {
+        Component result = parseAdvertisementCommand(component, "join");
+        if (!component.equals(result)) {
+            // If message already has /join invite then return it.
+            return result;
+        }
+        return parseAdvertisementCommand(component, "ad");
+    }
+
+    private static @NotNull Component parseAdvertisementCommand(@NotNull Component component, @NotNull String commandLabel) {
+        AtomicBoolean alreadyReplaced = new AtomicBoolean(false);
+        return component.replaceText(TextReplacementConfig.builder()
+                .match("(/" + commandLabel + ")\\s+(\\S+)")
+                .once()
+                .condition((match, matchCount, replaced) -> {
+                    String id = match.group(2);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(id);
+                    if (planet == null) {
+                        return PatternReplacementResult.CONTINUE;
+                    }
+                    if (alreadyReplaced.get()) return PatternReplacementResult.STOP;
+                    alreadyReplaced.set(true);
+                    return PatternReplacementResult.REPLACE;
+                })
+                .replacement((match, builder) -> {
+                    String command = match.group(1) + " " + match.group(2);
+                    String id = match.group(2);
+                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(id);
+                    if (planet == null) {
+                        return Component.text(command);
+                    }
+                    Component hover = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
+                    return Component.text(command)
+                            .color(NamedTextColor.YELLOW)
+                            .decorate(TextDecoration.UNDERLINED)
+                            .hoverEvent(HoverEvent.showText(hover))
+                            .clickEvent(ClickEvent.suggestCommand(command));
+                })
+                .build());
+    }
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -96,10 +137,10 @@ public class ChatCommand extends CommandHandler {
             }
         }
         OpenCreative.getPlugin().getLogger().info("[CREATIVE-CHAT] " + sender.getName()
-                + ": " + String.join(" ",args));
+                + ": " + String.join(" ", args));
 
         String text = String.join(" ", args);
-        String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix","&6 Chat &8| &7");
+        String prefix = OpenCreative.getPlugin().getConfig().getString("messages.cc-prefix", "&6 Chat &8| &7");
         if (!(sender instanceof Player player)) {
             // If sender is console
             Component formatted = toComponent(prefix + sender.getName() + text);
@@ -115,9 +156,9 @@ public class ChatCommand extends CommandHandler {
             }
             return;
         }
-        String format = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat","&6%cc-prefix% &7%player%: %message%")
-            .replace("%player%", sender.getName())
-            .replace("%cc-prefix%", prefix);
+        String format = OpenCreative.getPlugin().getConfig().getString("messages.cc-chat", "&6%cc-prefix% &7%player%: %message%")
+                .replace("%player%", sender.getName())
+                .replace("%cc-prefix%", prefix);
         format = parsePAPI(player, format);
         Component formatted = toComponent(format
                 .replace("%message%", MiniMessage.miniMessage().escapeTags(text)));
@@ -134,47 +175,6 @@ public class ChatCommand extends CommandHandler {
                 onlinePlayer.sendMessage(formatted);
             }
         }
-    }
-
-    private static @NotNull Component parseAdvertisementInMessage(@NotNull Component component) {
-        Component result = parseAdvertisementCommand(component, "join");
-        if (!component.equals(result)) {
-            // If message already has /join invite then return it.
-            return result;
-        }
-        return parseAdvertisementCommand(component, "ad");
-    }
-
-    private static @NotNull Component parseAdvertisementCommand(@NotNull Component component, @NotNull String commandLabel) {
-        AtomicBoolean alreadyReplaced = new AtomicBoolean(false);
-        return component.replaceText(TextReplacementConfig.builder()
-                .match("(/" + commandLabel + ")\\s+(\\S+)")
-                .once()
-                .condition((match, matchCount, replaced) -> {
-                    String id = match.group(2);
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(id);
-                    if (planet == null) {
-                        return PatternReplacementResult.CONTINUE;
-                    }
-                    if (alreadyReplaced.get()) return PatternReplacementResult.STOP;
-                    alreadyReplaced.set(true);
-                    return PatternReplacementResult.REPLACE;
-                })
-                .replacement((match, builder) -> {
-                    String command = match.group(1) + " " + match.group(2);
-                    String id = match.group(2);
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(id);
-                    if (planet == null) {
-                        return Component.text(command);
-                    }
-                    Component hover = parsePlanetLines(planet, getLocaleComponent("advertisement.hover"));
-                    return Component.text(command)
-                            .color(NamedTextColor.YELLOW)
-                            .decorate(TextDecoration.UNDERLINED)
-                            .hoverEvent(HoverEvent.showText(hover))
-                            .clickEvent(ClickEvent.suggestCommand(command));
-                })
-                .build());
     }
 
     @Override

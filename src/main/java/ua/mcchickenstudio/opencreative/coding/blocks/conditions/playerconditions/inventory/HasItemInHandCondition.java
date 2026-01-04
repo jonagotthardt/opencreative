@@ -18,15 +18,15 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.PlayerCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -38,22 +38,22 @@ public class HasItemInHandCondition extends PlayerCondition {
 
     @Override
     public boolean checkPlayer(Player player) {
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         if (items.isEmpty()) return false;
 
-        String hand = getArguments().getText("hand","main-hand",this);
-        boolean ignoreAmount = getArguments().getBoolean("ignore-amount",true,this);
-        boolean ignoreName = getArguments().getBoolean("ignore-name",false,this);
-        boolean ignoreLore = getArguments().getBoolean("ignore-lore",false,this);
-        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments",false,this);
-        boolean ignoreFlags = getArguments().getBoolean("ignore-flags",false,this);
-        boolean ignoreMaterial = getArguments().getBoolean("ignore-material",false,this);
-        boolean ignoreDamage = getArguments().getBoolean("ignore-damage",false,this);
+        String hand = getArguments().getText("hand", "main-hand", this);
+        boolean ignoreAmount = getArguments().getBoolean("ignore-amount", true, this);
+        boolean ignoreName = getArguments().getBoolean("ignore-name", false, this);
+        boolean ignoreLore = getArguments().getBoolean("ignore-lore", false, this);
+        boolean ignoreEnchantments = getArguments().getBoolean("ignore-enchantments", false, this);
+        boolean ignoreFlags = getArguments().getBoolean("ignore-flags", false, this);
+        boolean ignoreMaterial = getArguments().getBoolean("ignore-material", false, this);
+        boolean ignoreDamage = getArguments().getBoolean("ignore-damage", false, this);
 
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-        itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial, ignoreDamage);
+        itemInMainHand = ItemUtils.getItemWithIgnoreData(itemInMainHand, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
         ItemStack itemInOffHand = player.getInventory().getItemInOffHand();
-        itemInOffHand = ItemUtils.getItemWithIgnoreData(itemInOffHand,ignoreAmount,ignoreName,ignoreLore,ignoreFlags,ignoreEnchantments,ignoreMaterial, ignoreDamage);
+        itemInOffHand = ItemUtils.getItemWithIgnoreData(itemInOffHand, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
         for (ItemStack checkItem : items) {
             checkItem = ItemUtils.getItemWithIgnoreData(checkItem, ignoreAmount, ignoreName, ignoreLore, ignoreFlags, ignoreEnchantments, ignoreMaterial, ignoreDamage);
             if (hand.equals("main-hand")) {

@@ -22,7 +22,7 @@ package ua.mcchickenstudio.opencreative.menus.world.settings;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
@@ -50,12 +50,12 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
 
-    private final ItemStack KICK_ALL = createItem(Material.STRUCTURE_VOID,1,"menus.players-browser.items.kick-all");
-    private final ItemStack BACK_TO_SETTINGS = createItem(Material.ARROW,1,"menus.players-browser.items.back");
+    private final ItemStack KICK_ALL = createItem(Material.STRUCTURE_VOID, 1, "menus.players-browser.items.kick-all");
+    private final ItemStack BACK_TO_SETTINGS = createItem(Material.ARROW, 1, "menus.players-browser.items.back");
 
     public PlayersBrowserMenu(Player player, Planet planet) {
-        super(player,getLocaleMessage("menus.players-browser.title",false),
-                PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45,48,50}, new int[]{46,52});
+        super(player, getLocaleMessage("menus.players-browser.title", false),
+                PlacementLayout.BOTTOM_NO_DECORATION, new int[]{45, 48, 50}, new int[]{46, 52});
         this.planet = planet;
     }
 
@@ -94,7 +94,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
         replacePlaceholderInLore(item, "%name%", displayName);
 
         replacePlaceholderInLore(item, "%status%",
-            getLocaleMessage("menus.players-browser.items.player." + statusKey));
+                getLocaleMessage("menus.players-browser.items.player." + statusKey));
 
         String devKey;
         if (player != null && planet.getWorldPlayers().isDeveloperGuest(player)) {
@@ -107,7 +107,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
             devKey = "none";
         }
         replacePlaceholderInLore(item, "%dev%",
-            getLocaleMessage("menus.players-browser.items.player.dev." + devKey));
+                getLocaleMessage("menus.players-browser.items.player.dev." + devKey));
 
         String buildKey;
         if (planet.getWorldPlayers().getBuildersTrusted().contains(nickname)) {
@@ -118,11 +118,11 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
             buildKey = "none";
         }
         replacePlaceholderInLore(item, "%build%",
-            getLocaleMessage("menus.players-browser.items.player.build." + buildKey));
+                getLocaleMessage("menus.players-browser.items.player.build." + buildKey));
 
         String whitelistKey = String.valueOf(planet.getWorldPlayers().isWhitelisted(nickname));
         replacePlaceholderInLore(item, "%white-list%",
-            getLocaleMessage("menus.players-browser.items.player.white-list." + whitelistKey));
+                getLocaleMessage("menus.players-browser.items.player.white-list." + whitelistKey));
 
         String flightKey;
         if (player == null || !player.getWorld().equals(planet.getWorld())) {
@@ -131,7 +131,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
             flightKey = String.valueOf(player.getAllowFlight());
         }
         replacePlaceholderInLore(item, "%flight%",
-            getLocaleMessage("menus.players-browser.items.player.flight." + flightKey));
+                getLocaleMessage("menus.players-browser.items.player.flight." + flightKey));
 
         setPersistentData(item, getItemTypeKey(), nickname);
         return item;
@@ -141,16 +141,16 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
     protected void fillOtherItems() {
         ParameterButton type = new ParameterButton(
                 "all",
-                List.of("all","online","builders","developers","whitelisted","banned","offline"),
+                List.of("all", "online", "builders", "developers", "whitelisted", "banned", "offline"),
                 "type",
                 "menus.all-worlds",
                 "menus.players-browser.items.type",
                 List.of(Material.HOPPER, Material.BEACON, Material.BRICKS, Material.COMMAND_BLOCK_MINECART, Material.FILLED_MAP, Material.STRUCTURE_VOID, Material.BARRIER)
         );
         buttons.add(type);
-        setItem(47, createItem(Material.BLUE_STAINED_GLASS_PANE,1));
+        setItem(47, createItem(Material.BLUE_STAINED_GLASS_PANE, 1));
         setItem(48, type.getItem());
-        setItem(51, createItem(Material.BLUE_STAINED_GLASS_PANE,1));
+        setItem(51, createItem(Material.BLUE_STAINED_GLASS_PANE, 1));
     }
 
     @Override
@@ -161,7 +161,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
             return;
         }
         for (ParameterButton button : buttons) {
-            if (itemEquals(item,button.getItem(true))) {
+            if (itemEquals(item, button.getItem(true))) {
                 if (event.getRawSlot() == 48) {
                     button.next();
                     elements.clear();
@@ -170,10 +170,14 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
                             Player player = Bukkit.getPlayerExact(nickname);
                             return player != null && planet.getPlayers().contains(player);
                         }));
-                        case 3 -> elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().getAllBuilders().contains(nickname)));
-                        case 4 -> elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().getAllDevelopers().contains(nickname)));
-                        case 5 -> elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().getWhitelistedPlayers().contains(nickname)));
-                        case 6 -> elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().isBanned(nickname)));
+                        case 3 ->
+                                elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().getAllBuilders().contains(nickname)));
+                        case 4 ->
+                                elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().getAllDevelopers().contains(nickname)));
+                        case 5 ->
+                                elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().getWhitelistedPlayers().contains(nickname)));
+                        case 6 ->
+                                elements.addAll(filterList(getElements(), nickname -> planet.getWorldPlayers().isBanned(nickname)));
                         case 7 -> elements.addAll(filterList(getElements(), nickname -> {
                             Player player = Bukkit.getPlayerExact(nickname);
                             return player == null || !planet.getPlayers().contains(player);
@@ -188,7 +192,7 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
                 }
             }
         }
-        if (itemEquals(item,BACK_TO_SETTINGS) && planet.isOwner(getPlayer())) {
+        if (itemEquals(item, BACK_TO_SETTINGS) && planet.isOwner(getPlayer())) {
             new WorldSettingsMenu(planet, getPlayer()).open(getPlayer());
         } else if (itemEquals(item, KICK_ALL)) {
             if (elements.isEmpty()) return;
@@ -262,8 +266,8 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 this.setCurrentPage(1);
             }
-            setItem(getPreviousPageButtonSlot(),currentPage > 1 ? getPreviousPageButton() : planet.isOwner(getPlayer()) ? BACK_TO_SETTINGS : DECORATION_ITEM);
-            setItem(getNextPageButtonSlot(),currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : planet.isOwner(getPlayer()) ? BACK_TO_SETTINGS : DECORATION_ITEM);
+            setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
             if (planet.getPlayers().size() > 1) {
                 setItem(50, KICK_ALL);
             } else {
@@ -282,17 +286,17 @@ public final class PlayersBrowserMenu extends ListBrowserMenu<String> implements
 
     @Override
     protected ItemStack getNextPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,getCurrentPage()+1,"menus.players-browser.items.next-page"),"%page%",getCurrentPage()+1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, getCurrentPage() + 1, "menus.players-browser.items.next-page"), "%page%", getCurrentPage() + 1);
     }
 
     @Override
     protected ItemStack getPreviousPageButton() {
-        return replacePlaceholderInLore(createItem(Material.ARROW,Math.max(1, getCurrentPage()-1),"menus.players-browser.items.previous-page"),"%page%",getCurrentPage()-1);
+        return replacePlaceholderInLore(createItem(Material.ARROW, Math.max(1, getCurrentPage() - 1), "menus.players-browser.items.previous-page"), "%page%", getCurrentPage() - 1);
     }
 
     @Override
     protected ItemStack getNoElementsButton() {
-        return createItem(Material.BARRIER,1,"menus.players-browser.items.no-players");
+        return createItem(Material.BARRIER, 1, "menus.players-browser.items.no-players");
     }
 
     @Override

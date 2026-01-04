@@ -21,18 +21,19 @@ package ua.mcchickenstudio.opencreative.planets;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
-
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
@@ -69,16 +70,14 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
  * and states.
  *
  * <p>Planet files are stored in ./planets/planetID folder.</p>
+ *
  * @author McChicken Studio
- * @since 1.0
  * @version 6.0
+ * @since 1.0
  */
 public class Planet {
 
     private final int id;
-    private String owner;
-    private String ownerGroup;
-
     private final PlanetInfo info;
     private final DevPlanet devPlanet;
     private final PlanetLimits limits;
@@ -86,7 +85,8 @@ public class Planet {
     private final PlanetPlayers worldPlayers;
     private final WorldVariables variables;
     private final PlanetExperiments experiments;
-
+    private String owner;
+    private String ownerGroup;
     private long creationTime;
     private long lastActivityTime;
 
@@ -98,7 +98,7 @@ public class Planet {
     private boolean changingOwner;
 
     /**
-     Loads a planet with world name.
+     * Loads a planet with world name.
      **/
     public Planet(int id) {
 
@@ -123,6 +123,7 @@ public class Planet {
     /**
      * Returns information of planet, that stores
      * display name, description, custom ID and icon.
+     *
      * @return planet's info.
      */
     public PlanetInfo getInformation() {
@@ -132,6 +133,7 @@ public class Planet {
     /**
      * Returns players registry of planet, that stores
      * builders, developers, whitelisted and banned players.
+     *
      * @return planet's registry of players.
      */
     public PlanetPlayers getWorldPlayers() {
@@ -140,6 +142,7 @@ public class Planet {
 
     /**
      * Checks whether world's coding is in debug mode.
+     *
      * @return true - in debug mode, false - not.
      */
     public boolean isDebug() {
@@ -147,7 +150,17 @@ public class Planet {
     }
 
     /**
+     * Sets debug mode for coding in world.
+     *
+     * @param debug true - enabled, false - disabled.
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    /**
      * Returns holder of global and saved variables in planet.
+     *
      * @return planet's variables.
      */
     public WorldVariables getVariables() {
@@ -157,6 +170,7 @@ public class Planet {
     /**
      * Returns whether world is corrupted (doesn't have
      * owner information) or not.
+     *
      * @return true - corrupted, false - not.
      */
     public boolean isCorrupted() {
@@ -165,6 +179,7 @@ public class Planet {
 
     /**
      * Returns holder of planet's limits and modifiers.
+     *
      * @return planet's limits.
      */
     public PlanetLimits getLimits() {
@@ -173,6 +188,7 @@ public class Planet {
 
     /**
      * Returns holder of planet's experiments.
+     *
      * @return planet's experiments.
      */
     public PlanetExperiments getExperiments() {
@@ -183,6 +199,7 @@ public class Planet {
      * Return group of planet's owner.
      * <p>
      * Useful to get limits and modifiers.
+     *
      * @return group of owner.
      */
     public Group getGroup() {
@@ -194,6 +211,7 @@ public class Planet {
      * <p>Public - all players can connect to the world.</p>
      * <p>Private - only world owner can connect to the world.</p>
      * <p>Closed - no one can connect to the world, deleting mode.</p>
+     *
      * @return sharing mode.
      */
     public Sharing getSharing() {
@@ -201,10 +219,25 @@ public class Planet {
     }
 
     /**
+     * Sharing is ability for players to connect to the world.
+     * <p>Public - all players can connect to the world.</p>
+     * <p>Private - only world owner can connect to the world.</p>
+     * <p>Closed - no one can connect to the world, deleting mode.</p>
+     *
+     * @param sharing sharing mode.
+     */
+    public void setSharing(Sharing sharing) {
+        if (this.sharing == sharing) return;
+        this.sharing = sharing;
+        setPlanetConfigParameter(this, "sharing", sharing.name());
+    }
+
+    /**
      * Returns world's name on server in the format:
      * {@code ./planets/planetID}
      * <p>
      * Can be used for getting world from server.
+     *
      * @return world's name on server.
      */
     public String getWorldName() {
@@ -213,6 +246,7 @@ public class Planet {
 
     /**
      * Returns numeric ID of world.
+     *
      * @return numeric ID.
      */
     public int getId() {
@@ -222,6 +256,7 @@ public class Planet {
     /**
      * Returns developer's planet of world, that has
      * coding platforms to create a code.
+     *
      * @return developer's planet.
      */
     public DevPlanet getDevPlanet() {
@@ -230,6 +265,7 @@ public class Planet {
 
     /**
      * Checks whether world is in a state of changing owner.
+     *
      * @return true - owner requested to transfer world, false - not.
      */
     public boolean isChangingOwner() {
@@ -237,7 +273,17 @@ public class Planet {
     }
 
     /**
+     * Sets state of changing world's owner.
+     *
+     * @param changingOwner true - owner requested to transfer world, false - not.
+     */
+    public void setChangingOwner(boolean changingOwner) {
+        this.changingOwner = changingOwner;
+    }
+
+    /**
      * Checks whether the player is owner of planet.
+     *
      * @param player player to check.
      * @return true - is owner, false - not owner.
      */
@@ -249,6 +295,7 @@ public class Planet {
      * Checks whether the owner's nickname same as specified.
      * <p>
      * Ignores caps consideration.
+     *
      * @param nickname name to check.
      * @return true - is owner, false - not owner.
      */
@@ -260,6 +307,7 @@ public class Planet {
      * Returns territory of planet, that contains planet's world,
      * environment, flags, boss bars, scoreboards, code script
      * and other temporary values.
+     *
      * @return planet's territory.
      */
     public PlanetTerritory getTerritory() {
@@ -268,6 +316,7 @@ public class Planet {
 
     /**
      * Checks if loaded main world of planet.
+     *
      * @return true - if loaded, false - unloaded.
      */
     public boolean isLoaded() {
@@ -276,6 +325,7 @@ public class Planet {
 
     /**
      * Returns world if planet is loaded, null - planet is unloaded.
+     *
      * @return world, or null.
      */
     public World getWorld() {
@@ -284,6 +334,7 @@ public class Planet {
 
     /**
      * Returns current mode of planet.
+     *
      * @return playing or build mode.
      */
     public Mode getMode() {
@@ -291,9 +342,21 @@ public class Planet {
     }
 
     /**
+     * Changes planet's mode to Play or Build.
+     * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
+     * <p>In the Play mode code script will work, player damaging is enabled.</p>
+     *
+     * @param mode Mode to set.
+     */
+    public void setMode(@NotNull Mode mode) {
+        setMode(mode, false);
+    }
+
+    /**
      * Returns total players count in world.
      * <p>
      * Includes all players from build world and developer's world.
+     *
      * @return online of planet.
      */
     public int getOnline() {
@@ -305,6 +368,7 @@ public class Planet {
      * <p>
      * If value is unknown (0), will return {@code 1670573410000L}
      * (publication of OpenCreative+).
+     *
      * @return unix time, when world was created.
      */
     public long getCreationTime() {
@@ -315,10 +379,22 @@ public class Planet {
     }
 
     /**
+     * Sets creation unix time of world.
+     *
+     * @param creationTime time, when world was created.
+     */
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+        FileUtils.setPlanetConfigParameter(this, "creation-time", creationTime);
+        info.updateIconAsync();
+    }
+
+    /**
      * Returns last activity time of world.
      * <p>
      * If value is unknown (0), will return {@code 1670573410000L}
      * (publication of OpenCreative+).
+     *
      * @return unix last time, when someone joined the world.
      */
     public long getLastActivityTime() {
@@ -329,9 +405,20 @@ public class Planet {
     }
 
     /**
+     * Sets last activity unix time in world.
+     *
+     * @param activityTime last activity time.
+     */
+    public void setLastActivityTime(long activityTime) {
+        this.lastActivityTime = activityTime;
+        FileUtils.setPlanetConfigParameter(this, "last-activity-time", activityTime);
+    }
+
+    /**
      * Returns list of all players in world.
      * <p>
      * Includes all players from build world and developer's world.
+     *
      * @return list of all online players in world.
      */
     public List<Player> getPlayers() {
@@ -347,6 +434,7 @@ public class Planet {
     /**
      * Returns audience of world, that contains
      * players in world and players from developer's world.
+     *
      * @return audience of world.
      */
     public Audience getAudience() {
@@ -362,6 +450,7 @@ public class Planet {
 
     /**
      * Returns owner's nickname of planet.
+     *
      * @return owner's name.
      */
     public String getOwner() {
@@ -369,7 +458,20 @@ public class Planet {
     }
 
     /**
+     * Sets new owner of world.
+     *
+     * @param owner owner to set.
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+        FileUtils.setPlanetConfigParameter(this, "owner", owner);
+        FileUtils.setPlanetConfigParameter(this, "owner-uuid", Bukkit.getOfflinePlayer(owner).getUniqueId().toString());
+        info.updateIconAsync();
+    }
+
+    /**
      * Returns owner's group of planet.
+     *
      * @return owner's group.
      */
     public String getOwnerGroup() {
@@ -380,22 +482,13 @@ public class Planet {
      * Changes planet's mode to Play or Build.
      * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
      * <p>In the Play mode code script will work, player damaging is enabled.</p>
-     * @param mode Mode to set.
-     */
-    public void setMode(@NotNull Mode mode) {
-        setMode(mode, false);
-    }
-
-    /**
-     * Changes planet's mode to Play or Build.
-     * <p>In the Build mode players cannot get damaged, they only can look at builders which are creating a map.</p>
-     * <p>In the Play mode code script will work, player damaging is enabled.</p>
-     * @param mode Mode to set.
+     *
+     * @param mode         Mode to set.
      * @param ignoreEvents Don't call world start, player join or player quit events on mode change.
      */
     public void setMode(@NotNull Mode mode, boolean ignoreEvents) {
         if (this.mode == mode) return;
-        setPlanetConfigParameter(this,"mode", mode.name());
+        setPlanetConfigParameter(this, "mode", mode.name());
         if (!isLoaded()) {
             this.mode = mode;
             return;
@@ -471,38 +564,9 @@ public class Planet {
                 }
             }
         } catch (Exception error) {
-            sendPlanetErrorMessage(this,"Failed to change mode to " + mode.name());
+            sendPlanetErrorMessage(this, "Failed to change mode to " + mode.name());
         }
         this.mode = mode;
-    }
-
-    /**
-     * Sharing is ability for players to connect to the world.
-     * <p>Public - all players can connect to the world.</p>
-     * <p>Private - only world owner can connect to the world.</p>
-     * <p>Closed - no one can connect to the world, deleting mode.</p>
-     * @param sharing sharing mode.
-     */
-    public void setSharing(Sharing sharing) {
-        if (this.sharing == sharing) return;
-        this.sharing = sharing;
-        setPlanetConfigParameter(this,"sharing",sharing.name());
-    }
-
-    /**
-     * Sets debug mode for coding in world.
-     * @param debug true - enabled, false - disabled.
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-
-    /**
-     * Sets state of changing world's owner.
-     * @param changingOwner true - owner requested to transfer world, false - not.
-     */
-    public void setChangingOwner(boolean changingOwner) {
-        this.changingOwner = changingOwner;
     }
 
     /**
@@ -526,12 +590,14 @@ public class Planet {
         if (config.getString("mode") != null && OpenCreative.getSettings().getCodingSettings().isEnabled()) {
             try {
                 mode = Mode.valueOf(config.getString("mode"));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         if (config.getString("sharing") != null) {
             try {
                 sharing = Sharing.valueOf(config.getString("sharing"));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         if (config.get("creation-time") != null) {
             try {
@@ -558,6 +624,7 @@ public class Planet {
 
     /**
      * Returns byte value of flag.
+     *
      * @param flag flag to get value.
      * @return value of flag.
      */
@@ -567,11 +634,12 @@ public class Planet {
 
     /**
      * Sets byte value of flag.
-     * @param flag flag to set value.
+     *
+     * @param flag  flag to set value.
      * @param value new value.
      */
     public void setFlagValue(PlanetFlags.PlanetFlag flag, byte value) {
-        territory.getFlags().setFlag(flag,value);
+        territory.getFlags().setFlag(flag, value);
     }
 
     /**
@@ -581,10 +649,11 @@ public class Planet {
      * <p>
      * For example: stability is not good, world is private, player is banned in world,
      * error while loading spawn location.
+     *
      * @param player player to connect.
      */
     public void connectPlayer(@NotNull Player player) {
-        connectPlayer(player,false);
+        connectPlayer(player, false);
     }
 
     /**
@@ -594,7 +663,8 @@ public class Planet {
      * <p>
      * For example: stability is not good, world is private, player is banned in world,
      * error while loading spawn location.
-     * @param player player to connect.
+     *
+     * @param player     player to connect.
      * @param hidePlayer hide player's join message, and make him in spectator mode or not.
      */
     public void connectPlayer(@NotNull Player player, boolean hidePlayer) {
@@ -623,8 +693,8 @@ public class Planet {
         }
         wander.setConnectingToPlanet(true);
         player.showTitle(Title.title(
-            toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
-            Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
+                toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
+                Title.Times.times(Duration.ofMillis(710), Duration.ofSeconds(30), Duration.ofMillis(130))
         ));
         Sounds.WORLD_CONNECTION.play(player);
 
@@ -691,10 +761,11 @@ public class Planet {
 
     /**
      * Returns process of player connection to planet.
-     * @param player player to connect.
-     * @param wasLoaded whether world was loaded before.
+     *
+     * @param player     player to connect.
+     * @param wasLoaded  whether world was loaded before.
      * @param hidePlayer whether player join message should be hidden.
-     * @param success chunks are loaded successfully to teleport or not.
+     * @param success    chunks are loaded successfully to teleport or not.
      */
     private void getConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
         clearPlayer(player);
@@ -707,7 +778,7 @@ public class Planet {
             }
             clearPlayer(player);
             Sounds.WORLD_CONNECTED.play(player);
-            mode.onPlayerConnect(player,this);
+            mode.onPlayerConnect(player, this);
             getWorldPlayers().getPlanetPlayer(player).load();
             player.clearTitle();
             territory.showBorders(player);
@@ -715,16 +786,16 @@ public class Planet {
                 /*
                  * When player joins connects to the world for first time.
                  */
-                addPlayerInPlanetList(this,player.getName(), PlayersType.UNIQUE);
-                info.setUniques(info.getUniques()+1);
+                addPlayerInPlanetList(this, player.getName(), PlayersType.UNIQUE);
+                info.setUniques(info.getUniques() + 1);
                 if (this.isOwner(player)) {
                     /*
                      * When world's owner connects to the world for first time
                      * (after world's creation).
                      */
                     player.showTitle(Title.title(
-                        toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title",player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle",player)),
-                        Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
+                            toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-title", player)), toComponent(MessageUtils.getPlayerLocaleMessage("creating-world.welcome-subtitle", player)),
+                            Title.Times.times(Duration.ofMillis(750), Duration.ofSeconds(9), Duration.ofSeconds(2))
                     ));
                     player.sendMessage(getLocaleMessage("creating-world.welcome"));
                     Sounds.WELCOME_TO_NEW_WORLD.play(player);
@@ -733,7 +804,7 @@ public class Planet {
                 }
             } else {
                 if (isOwner(player) && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
-                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.connecting.owner-help",player));
+                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("world.connecting.owner-help", player));
                 }
             }
             if (this.isOwner(player.getName())) {
@@ -765,28 +836,30 @@ public class Planet {
                 player.setGameMode(GameMode.SPECTATOR);
                 ChangedWorld.addPlayerWithLocation(player);
                 for (Player onlinePlayer : getPlayers()) {
-                    onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
+                    onlinePlayer.hidePlayer(OpenCreative.getPlugin(), player);
                 }
             }
-            new PlanetConnectPlayerEvent(this,player).callEvent();
+            new PlanetConnectPlayerEvent(this, player).callEvent();
             info.updateIconAsync();
         } else {
-            sendPlayerErrorMessage(player,"Can't join planet. World is unloaded.");
+            sendPlayerErrorMessage(player, "Can't join planet. World is unloaded.");
             OpenCreative.getWander(player).setConnectingToPlanet(false);
         }
     }
 
     /**
      * Connects player to developer's world.
+     *
      * @param player player to connect.
      */
     public void connectToDevPlanet(Player player) {
-        connectToDevPlanet(player,false);
+        connectToDevPlanet(player, false);
     }
 
     /**
      * Connects player to developer's planet.
-     * @param player player to connect.
+     *
+     * @param player     player to connect.
      * @param hidePlayer whether hide player's join message and make him in spectator mode or not.
      */
     public void connectToDevPlanet(Player player, boolean hidePlayer) {
@@ -804,7 +877,7 @@ public class Planet {
             lastLocation = getDevPlanet().getWorld().getSpawnLocation();
         }
         PlayerInventory playerInventory = player.getInventory();
-        ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ?  playerInventory.getContents() : new ItemStack[]{});
+        ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ? playerInventory.getContents() : new ItemStack[]{});
         clearPlayer(player);
         player.teleportAsync(lastLocation).thenAccept(success -> {
             if (success) {
@@ -831,11 +904,12 @@ public class Planet {
                      */
                     player.setGameMode(GameMode.SPECTATOR);
                     for (Player onlinePlayer : player.getWorld().getPlayers()) {
-                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(),player);
+                        onlinePlayer.hidePlayer(OpenCreative.getPlugin(), player);
                     }
                 }
-                if (devPlanet.isSaveLocation()) devPlanet.getLastLocations().put(player,player.getLocation());
-                if (devPlanet.isNightVision()) player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,Integer.MAX_VALUE,0,false,false,false));
+                if (devPlanet.isSaveLocation()) devPlanet.getLastLocations().put(player, player.getLocation());
+                if (devPlanet.isNightVision())
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, false, false, false));
                 Sounds.DEV_CONNECTED.play(player);
                 Sounds.WORLD_MODE_DEV.play(player);
                 devPlanet.displayWorldBorders();
@@ -861,52 +935,23 @@ public class Planet {
      * to block on specified coordinates.
      * <p>
      * Will make block glowing.
+     *
      * @param player player to connect.
-     * @param x x coordinate of block.
-     * @param y y coordinate of block.
-     * @param z z coordinate of block.
+     * @param x      x coordinate of block.
+     * @param y      y coordinate of block.
+     * @param z      z coordinate of block.
      */
     public void connectToDevPlanet(Player player, double x, double y, double z) {
         connectToDevPlanet(player);
-        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlanet.getWorld(),x+1,y,z+2))) {
-            Location location = new Location(this.getDevPlanet().getWorld(), x+1,y,z+2,180,5);
+        if (x > 0 && y > 0 && z > 0 && y < 30 && !isOutOfBorders(new Location(devPlanet.getWorld(), x + 1, y, z + 2))) {
+            Location location = new Location(this.getDevPlanet().getWorld(), x + 1, y, z + 2, 180, 5);
             player.teleportAsync(location).thenAccept(success -> {
                 if (success) {
-                    spawnGlowingBlock(player, new Location(this.getDevPlanet().getWorld(),x+0.5,y,z+0.5));
+                    spawnGlowingBlock(player, new Location(this.getDevPlanet().getWorld(), x + 0.5, y, z + 0.5));
                     translateSigns(player, 5);
                 }
             });
         }
-    }
-
-    /**
-     * Sets last activity unix time in world.
-     * @param activityTime last activity time.
-     */
-    public void setLastActivityTime(long activityTime) {
-        this.lastActivityTime = activityTime;
-        FileUtils.setPlanetConfigParameter(this,"last-activity-time", activityTime);
-    }
-
-    /**
-     * Sets creation unix time of world.
-     * @param creationTime time, when world was created.
-     */
-    public void setCreationTime(long creationTime) {
-        this.creationTime = creationTime;
-        FileUtils.setPlanetConfigParameter(this,"creation-time", creationTime);
-        info.updateIconAsync();
-    }
-
-    /**
-     * Sets new owner of world.
-     * @param owner owner to set.
-     */
-    public void setOwner(String owner) {
-        this.owner = owner;
-        FileUtils.setPlanetConfigParameter(this,"owner",owner);
-        FileUtils.setPlanetConfigParameter(this,"owner-uuid",Bukkit.getOfflinePlayer(owner).getUniqueId().toString());
-        info.updateIconAsync();
     }
 
     public enum Mode {
@@ -925,17 +970,18 @@ public class Planet {
         };
 
         public String getName() {
-            return getLocaleMessage("world." + (this == PLAYING ? "play-mode" : "build-mode") + ".name",false);
+            return getLocaleMessage("world." + (this == PLAYING ? "play-mode" : "build-mode") + ".name", false);
         }
 
-        public void onPlayerConnect(Player player, Planet planet) {}
+        public void onPlayerConnect(Player player, Planet planet) {
+        }
     }
 
     public enum Sharing {
         PUBLIC, PRIVATE, CLOSED;
 
         public String getName() {
-            return getLocaleMessage("world.sharing." + (this == PUBLIC ? "public" : "private"),false);
+            return getLocaleMessage("world.sharing." + (this == PUBLIC ? "public" : "private"), false);
         }
     }
 

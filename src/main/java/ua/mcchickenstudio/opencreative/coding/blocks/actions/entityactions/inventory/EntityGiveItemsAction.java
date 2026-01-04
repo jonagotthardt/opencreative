@@ -39,7 +39,7 @@ public final class EntityGiveItemsAction extends EntityAction {
         if (!(entity instanceof InventoryHolder holder)) {
             throw new UnsupportedEntityException(InventoryHolder.class, entity);
         }
-        for (ItemStack item : getArguments().getItemList("items",this)) {
+        for (ItemStack item : getArguments().getItemList("items", this)) {
             holder.getInventory().addItem(item);
         }
     }

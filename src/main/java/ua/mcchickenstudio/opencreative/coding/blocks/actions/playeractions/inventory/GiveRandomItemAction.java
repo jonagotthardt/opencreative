@@ -18,14 +18,14 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory;
 
-import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 import java.util.Random;
@@ -37,7 +37,7 @@ public final class GiveRandomItemAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
-        List<ItemStack> items = getArguments().getItemList("items",this);
+        List<ItemStack> items = getArguments().getItemList("items", this);
         if (items.isEmpty()) return;
         ItemStack randomItem = items.getFirst();
         if (items.size() > 1) {

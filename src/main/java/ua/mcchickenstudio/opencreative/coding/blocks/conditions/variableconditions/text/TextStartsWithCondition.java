@@ -18,14 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text;
 
+import org.bukkit.ChatColor;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.VariableCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 
 import java.util.List;
 
@@ -39,10 +38,10 @@ public class TextStartsWithCondition extends VariableCondition {
         if (!getArguments().pathExists("text") || !getArguments().pathExists("start")) {
             return false;
         }
-        String text = getArguments().getText("text","",this);
+        String text = getArguments().getText("text", "", this);
         List<String> starts = getArguments().getTextList("start", this);
-        boolean ignoreColors = getArguments().getBoolean("ignore-colors",false,this);
-        boolean ignoreCaps = getArguments().getBoolean("ignore-caps",false,this);
+        boolean ignoreColors = getArguments().getBoolean("ignore-colors", false, this);
+        boolean ignoreCaps = getArguments().getBoolean("ignore-caps", false, this);
         if (ignoreColors) text = ChatColor.stripColor(text);
         if (ignoreCaps) text = text.toLowerCase();
         for (String start : starts) {

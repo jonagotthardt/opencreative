@@ -19,13 +19,12 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.map;
 
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.CollectionWithCollectionException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 import java.util.Map;
 
@@ -36,18 +35,18 @@ public final class PutIntoMapAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        Map<Object,Object> map = getArguments().getMap("variable",this);
-        Object key = getArguments().getValue("key",this);
-        Object value = getArguments().getValue("value",this);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        Map<Object, Object> map = getArguments().getMap("variable", this);
+        Object key = getArguments().getValue("key", this);
+        Object value = getArguments().getValue("value", this);
         if (cannotChangeListElements(1)) {
             return;
         }
         changeListElementsChangesAmount(1);
-        if (value instanceof Map<?,?>) {
+        if (value instanceof Map<?, ?>) {
             throw new CollectionWithCollectionException(value.getClass(), value.getClass());
         }
-        map.put(key,value);
+        map.put(key, value);
         setVarValue(variable, map);
     }
 

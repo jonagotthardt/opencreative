@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
-import org.bukkit.entity.Entity;
 
 public final class PowerNumberAction extends VariableAction {
     public PowerNumberAction(Executor executor, Target target, int x, Arguments args) {
@@ -33,10 +32,10 @@ public final class PowerNumberAction extends VariableAction {
 
     @Override
     protected void execute() {
-        VariableLink variable = getArguments().getVariableLink("variable",this);
-        double number = getArguments().getDouble("number",2.0d,this);
-        double power = getArguments().getDouble("power",2.0d,this);
-        double result = Math.pow(number,power);
+        VariableLink variable = getArguments().getVariableLink("variable", this);
+        double number = getArguments().getDouble("number", 2.0d, this);
+        double power = getArguments().getDouble("power", 2.0d, this);
+        double result = Math.pow(number, power);
         setVarValue(variable, result);
     }
 
