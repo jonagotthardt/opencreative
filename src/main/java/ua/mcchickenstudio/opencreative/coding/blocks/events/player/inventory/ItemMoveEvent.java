@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.events.player.inventory;
 
+import org.bukkit.Material;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
@@ -35,7 +36,7 @@ public final class ItemMoveEvent extends WorldEvent implements Cancellable, Item
         super(player);
         this.event = event;
         ItemStack item = event.getCurrentItem();
-        this.item = (item == null ? ItemStack.empty() : item);
+        this.item = (item == null ? new ItemStack(Material.AIR) : item);
     }
 
     @Override

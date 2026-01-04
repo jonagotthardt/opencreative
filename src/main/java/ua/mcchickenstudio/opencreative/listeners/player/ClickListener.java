@@ -88,11 +88,9 @@ public final class ClickListener implements Listener {
 
         Planet planet1 = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet1 != null) {
-            if (event.getCurrentItem() != null) {
-                new ItemClickEvent(player,event).callEvent();
-                if (event.getAction() == InventoryAction.PLACE_ALL) {
-                    new ItemMoveEvent(player,event).callEvent();
-                }
+            new ItemClickEvent(player,event).callEvent();
+            if (event.getAction().name().startsWith("PLACE")) {
+                new ItemMoveEvent(player,event).callEvent();
             }
         }
 

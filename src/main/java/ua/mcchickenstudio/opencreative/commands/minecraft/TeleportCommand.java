@@ -37,6 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.clearPlayer;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.removePassengers;
 
 /**
  * <h1>TeleportCommand</h1>
@@ -112,9 +113,11 @@ public class TeleportCommand extends CommandHandler {
                     if (teleportPlanet != null) {
                         teleportPlanet.connectPlayer(player);
                     } else {
+                        removePassengers(player);
                         player.teleport(teleportToPlayer.getLocation());
                     }
                 } else {
+                    removePassengers(player);
                     player.teleport(teleportToPlayer.getLocation());
                 }
             } else {
@@ -156,6 +159,7 @@ public class TeleportCommand extends CommandHandler {
             if (!firstPlayer.getWorld().equals(secondPlayer.getWorld()) && !player.hasPermission("opencreative.teleport.clear-bypass")) {
                 clearPlayer(firstPlayer);
             }
+            removePassengers(firstPlayer);
             firstPlayer.teleport(secondPlayer.getLocation());
             player.sendMessage(getLocaleMessage("commands.teleport.teleported-player")
                     .replace("%first%", firstPlayer.getName())
@@ -187,6 +191,7 @@ public class TeleportCommand extends CommandHandler {
                 }
                 Location newLocation = new Location(location.getWorld(),x,y,z,yaw,pitch);
                 if (!isOutOfBorders(newLocation)) {
+                    removePassengers(player);
                     player.teleport(newLocation);
                     player.sendMessage(getLocaleMessage("commands.teleport.teleported-coords")
                             .replace("%x%", String.valueOf(Math.round(x)))

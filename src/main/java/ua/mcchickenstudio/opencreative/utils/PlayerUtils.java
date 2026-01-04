@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
-import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
@@ -86,11 +85,9 @@ public final class PlayerUtils {
         player.resetPlayerTime();
         player.resetPlayerWeather();
         resetResourcePack(player);
-        player.releaseLeftShoulderEntity();
-        player.releaseRightShoulderEntity();
-        player.eject();
+        removePassengers(player);
         player.setSimulationDistance(Bukkit.getSimulationDistance());
-        player.setViewDistance(Math.min(player.getClientViewDistance(),Bukkit.getViewDistance()));
+        player.setViewDistance(Math.min(player.getClientViewDistance(), Bukkit.getViewDistance()));
         player.setWorldBorder(player.getWorld().getWorldBorder());
         player.stopAllSounds();
         for (Entity entity : player.getWorld().getEntities()) {
@@ -103,6 +100,14 @@ public final class PlayerUtils {
         clearBossBars(player);
         HookUtils.clearPlayerHook(player);
         player.setGameMode(GameMode.ADVENTURE);
+    }
+
+    public static void removePassengers(@NotNull Player player) {
+        player.releaseLeftShoulderEntity();
+        player.releaseRightShoulderEntity();
+        for (Entity passenger : new ArrayList<>(player.getPassengers())) {
+            player.eject();
+        }
     }
 
     /**

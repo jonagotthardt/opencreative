@@ -94,6 +94,7 @@ public final class Moduler implements ModuleManager {
             }
             OpenCreative.getModuleManager().registerModule(module);
             owner.sendMessage(getLocaleMessage("modules.created"));
+            new ModuleSettingsMenu(module, owner).open(owner);
             Sounds.DEV_MODULE_CREATED.play(owner);
         } catch (Exception e) {
             sendPlayerErrorMessage(owner,"Can't create a module",e);

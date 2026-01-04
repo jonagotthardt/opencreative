@@ -22,12 +22,14 @@ import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting.*;
@@ -41,6 +43,13 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 public final class EntityStateListener implements Listener {
+
+    @EventHandler
+    public void onCollision(VehicleEntityCollisionEvent event) {
+        if (event.getEntity() instanceof Minecart && event.getVehicle() instanceof Minecart) {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onEntityEvent(PigZombieAngerEvent event) {
