@@ -60,7 +60,7 @@ public abstract class MultiAction extends Action {
 
     @Override
     public final void prepareAndExecute(@NotNull ActionsHandler handler) {
-        if (getActionType() != null && getActionType().isDisabled()) {
+        if (getActionType().isDisabled()) {
             sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
         }

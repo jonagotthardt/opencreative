@@ -74,7 +74,7 @@ public class ActionsHandler {
      *
      * @param executor executor that contains actions to execute.
      */
-    public ActionsHandler(Executor executor) {
+    public ActionsHandler(@NotNull Executor executor) {
         this.executor = executor;
         this.event = executor.getEvent();
         this.selectedTargets = new HashSet<>(event.getSelection());
@@ -92,7 +92,7 @@ public class ActionsHandler {
      *
      * @param action multi action that contains actions to execute.
      */
-    public ActionsHandler(Action action) {
+    public ActionsHandler(@NotNull Action action) {
         this.parentActionsHandler = action.getHandler();
         ActionsHandler mainHandler = getMainActionHandler();
         this.executor = mainHandler.executor;
@@ -108,7 +108,7 @@ public class ActionsHandler {
      *
      * @param actions actions to execute.
      */
-    public final void executeActions(List<Action> actions) {
+    public final void executeActions(@NotNull List<Action> actions) {
         actionsQueue.addAll(actions);
         executeNextAction();
     }
@@ -121,7 +121,7 @@ public class ActionsHandler {
      *
      * @param actions actions to execute first.
      */
-    public final void addActions(List<Action> actions) {
+    public final void addActions(@NotNull List<Action> actions) {
         List<Action> current = new ArrayList<>(actionsQueue);
         actionsQueue.clear();
         actionsQueue.addAll(actions);

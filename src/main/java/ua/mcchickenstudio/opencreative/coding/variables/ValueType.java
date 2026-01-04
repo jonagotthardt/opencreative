@@ -47,10 +47,6 @@ public enum ValueType {
      */
     BOOLEAN(Material.CLOCK, Material.YELLOW_STAINED_GLASS_PANE),
     /**
-     * Entity Type stores Minecraft mob type, for example: AXOLOTL.
-     */
-    ENTITY_TYPE(Material.PIG_SPAWN_EGG, Material.RED_STAINED_GLASS_PANE),
-    /**
      * Item stores ItemStack with material and item meta.
      */
     ITEM(Material.ITEM_FRAME, Material.ORANGE_STAINED_GLASS_PANE),
@@ -101,7 +97,7 @@ public enum ValueType {
     /**
      * Color stores RGB color.
      */
-    COLOR(Material.BLACK_DYE, Material.LIGHT_BLUE_STAINED_GLASS),
+    COLOR(Material.BLACK_DYE, Material.BLACK_STAINED_GLASS_PANE),
     /**
      * Any stores ItemStack.
      */

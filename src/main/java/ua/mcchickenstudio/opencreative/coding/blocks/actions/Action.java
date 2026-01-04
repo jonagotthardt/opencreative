@@ -80,7 +80,7 @@ public abstract class Action {
      * @param handler ActionsHandler that stores event data and temporary variables.
      */
     public void prepareAndExecute(@NotNull ActionsHandler handler) {
-        if (getActionType() != null && getActionType().isDisabled()) {
+        if (getActionType().isDisabled()) {
             sendCodingDebugLog(getPlanet(), "Action is disabled, cannot work: " + getActionType().getLocaleName());
             return;
         }
@@ -107,9 +107,21 @@ public abstract class Action {
      */
     protected abstract void execute(@Nullable Entity entity);
 
-    public @NotNull abstract ActionType getActionType();
+    /**
+     * Returns type of action, that contains information
+     * about action: icon material, arguments list.
+     *
+     * @return Type of action.
+     */
+    public abstract @NotNull ActionType getActionType();
 
-    public @NotNull abstract ActionCategory getActionCategory();
+    /**
+     * Returns category of action, that contains information
+     * about action: glass pane materials, block materials.
+     *
+     * @return Category of action.
+     */
+    public abstract @NotNull ActionCategory getActionCategory();
 
     /**
      * Returns arguments of action.
