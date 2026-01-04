@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.utils.millennium.math;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 public final class MovingObjectPosition {
+
     /**
      * What type of ray trace hit was this? 0 = block, 1 = entity
      */
@@ -31,11 +32,6 @@ public final class MovingObjectPosition {
      */
     public Vec3 hitVec;
     private BlockPos blockPos;
-
-
-    public MovingObjectPosition(Vec3 hitVecIn, EnumFacing facing, BlockPos blockPosIn) {
-        this(MovingObjectType.BLOCK, hitVecIn, facing, blockPosIn);
-    }
 
     public MovingObjectPosition(Vec3 vec3, EnumFacing facing) {
         this(MovingObjectType.BLOCK, vec3, facing, BlockPos.ORIGIN);
@@ -48,20 +44,11 @@ public final class MovingObjectPosition {
         this.hitVec = new Vec3(hitVecIn.xCoord, hitVecIn.yCoord, hitVecIn.zCoord);
     }
 
-    public MovingObjectPosition(Vec3 hitVecIn) {
-        this.typeOfHit = MovingObjectType.ENTITY;
-        this.hitVec = hitVecIn;
-    }
-
-    public BlockPos getBlockPos() {
-        return this.blockPos;
-    }
-
     public String toString() {
         return "HitResult{type=" + this.typeOfHit + ", blockpos=" + this.blockPos + ", f=" + this.sideHit + ", pos=" + this.hitVec + '}';
     }
 
-    public static enum MovingObjectType {
+    public enum MovingObjectType {
         MISS,
         BLOCK,
         ENTITY;

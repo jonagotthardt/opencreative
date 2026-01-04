@@ -61,29 +61,11 @@ public final class Vec3 {
     }
 
     /**
-     * Returns a new vector with the result of the specified vector minus this.
-     */
-    public Vec3 subtractReverse(Vec3 vec) {
-        return new Vec3(vec.xCoord - this.xCoord, vec.yCoord - this.yCoord, vec.zCoord - this.zCoord);
-    }
-
-    /**
      * Normalizes the vector to a length of 1 (except if it is the zero vector)
      */
     public Vec3 normalize() {
         double d0 = Math.sqrt(this.xCoord * this.xCoord + this.yCoord * this.yCoord + this.zCoord * this.zCoord);
         return d0 < 1.0E-4D ? new Vec3(0.0D, 0.0D, 0.0D) : new Vec3(this.xCoord / d0, this.yCoord / d0, this.zCoord / d0);
-    }
-
-    public double dotProduct(Vec3 vec) {
-        return this.xCoord * vec.xCoord + this.yCoord * vec.yCoord + this.zCoord * vec.zCoord;
-    }
-
-    /**
-     * Returns a new vector with the result of this vector x the specified vector.
-     */
-    public Vec3 crossProduct(Vec3 vec) {
-        return new Vec3(this.yCoord * vec.zCoord - this.zCoord * vec.yCoord, this.zCoord * vec.xCoord - this.xCoord * vec.zCoord, this.xCoord * vec.yCoord - this.yCoord * vec.xCoord);
     }
 
     public Vec3 subtract(Vec3 vec) {
@@ -124,13 +106,6 @@ public final class Vec3 {
         double d1 = vec.yCoord - this.yCoord;
         double d2 = vec.zCoord - this.zCoord;
         return d0 * d0 + d1 * d1 + d2 * d2;
-    }
-
-    /**
-     * Returns the length of the vector.
-     */
-    public double lengthVector() {
-        return Math.sqrt(this.xCoord * this.xCoord + this.yCoord * this.yCoord + this.zCoord * this.zCoord);
     }
 
     /**
@@ -188,28 +163,8 @@ public final class Vec3 {
         return "(" + this.xCoord + ", " + this.yCoord + ", " + this.zCoord + ")";
     }
 
-    public Vec3 rotatePitch(float pitch) {
-        float f = (float) Math.cos(pitch);
-        float f1 = (float) Math.sin(pitch);
-        double d1 = this.yCoord * (double) f + this.zCoord * (double) f1;
-        double d2 = this.zCoord * (double) f - this.yCoord * (double) f1;
-        return new Vec3(this.xCoord, d1, d2);
-    }
-
-    public Vec3 rotateYaw(float yaw) {
-        float f = (float) Math.cos(yaw);
-        float f1 = (float) Math.sin(yaw);
-        double d0 = this.xCoord * (double) f + this.zCoord * (double) f1;
-        double d2 = this.zCoord * (double) f - this.xCoord * (double) f1;
-        return new Vec3(d0, this.yCoord, d2);
-    }
-
     public Vec3 multiply(double m) {
         return new Vec3(this.xCoord * m, this.yCoord * m, this.zCoord);
-    }
-
-    public double lengthSquared() {
-        return xCoord * xCoord + yCoord * yCoord + zCoord * zCoord;
     }
 
     public double speed() {

@@ -18,7 +18,6 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.types;
 
-import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class EvictingList<T> extends CopyOnWriteArrayList<T> {
@@ -26,11 +25,6 @@ public final class EvictingList<T> extends CopyOnWriteArrayList<T> {
     private final int maxSize;
 
     public EvictingList(final int maxSize) {
-        this.maxSize = maxSize;
-    }
-
-    public EvictingList(final Collection<? extends T> c, final int maxSize) {
-        super(c);
         this.maxSize = maxSize;
     }
 

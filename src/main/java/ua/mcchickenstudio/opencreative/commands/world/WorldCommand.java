@@ -179,7 +179,7 @@ public class WorldCommand extends CommandHandler {
                     return;
                 }
                 sender.sendMessage(getPlayerLocaleMessage("world.players.white-list.added", playerToWhitelist));
-                planet.getWorldPlayers().banPlayer(args[1]);
+                planet.getWorldPlayers().whitelistPlayer(args[1]);
             }
             case "ban", "block", "blacklist" -> {
                 if (!planet.isOwner(player)) {

@@ -18,23 +18,9 @@
 
 package ua.mcchickenstudio.opencreative.utils.millennium.math;
 
-import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec2;
 import ua.mcchickenstudio.opencreative.utils.millennium.vectors.Vec3;
 
 public final class RayTrace {
-    public static boolean doRayTrace(BuildSpeed s, Vec2 rotation, Vec3 from, AxisAlignedBB box, double dist) {
-        boolean intersection = false;
-        intersection = isIntersection(from, rotation, intersection, box, dist, s);
-        return intersection;
-    }
-
-    private static boolean isIntersection(Vec3 location, Vec2 rotation, boolean intersection, AxisAlignedBB boundingBox, double dist, BuildSpeed s) {
-        final float yaw = (float) rotation.getY();
-        final float pitch = (float) rotation.getX();
-        final MovingObjectPosition result = rayCast(yaw, pitch, boundingBox, location, dist, s);
-        intersection |= result != null && result.hitVec != null;
-        return intersection;
-    }
 
     public static MovingObjectPosition rayCast(final float yaw, final float pitch, final AxisAlignedBB bb, Vec3 locationIn, double dist, BuildSpeed s) {
         double lastX = locationIn.xCoord,
