@@ -35,12 +35,12 @@ public class IsPlayerDead extends PlayerCondition {
     }
 
     @Override
-    public boolean checkEntity(@NotNull Player player) {
+    public boolean checkPlayer(@NotNull Player player) {
         return player.isDead();
     }
 
     @Override
     public @NotNull ActionType getActionType() {
-        return ActionType.IF_PLAYER;
+        return ActionType.IF_PLAYER_IS_DEAD;
     }
 }
