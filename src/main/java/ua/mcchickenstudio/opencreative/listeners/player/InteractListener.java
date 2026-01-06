@@ -73,7 +73,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsCompassMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
@@ -817,7 +817,7 @@ public final class InteractListener implements Listener {
                     return;
                 }
                 player.setCooldown(currentItem.getType(), 60);
-                new RecommendedWorldsMenu().open(player);
+                new WorldsCompassMenu().open(player);
             } else if (getItemType(currentItem).equals("own_worlds")) {
                 // Opens player's worlds menus.
                 if (OpenCreative.getSettings().isMaintenance() && !player.hasPermission("opencreative.maintenance.bypass")) {

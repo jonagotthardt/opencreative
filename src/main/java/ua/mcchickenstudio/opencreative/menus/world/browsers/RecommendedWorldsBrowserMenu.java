@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.menus.ListBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -41,32 +42,29 @@ import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
- * This class represents a menu, that displays specified list of worlds.
- * Player can sort worlds and change pages.
+ * This class represents a menu, that displays recommended worlds
+ * with specified category. Player can sort worlds and change pages.
  */
-public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
+public class RecommendedWorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
-    private final List<Planet> planets;
+    private final List<Planet> planets = new ArrayList<>();
     private final List<ParameterButton> buttons = new ArrayList<>();
-    private final ItemStack RECOMMENDED;
+    private final ItemStack BACK_TO_CATEGORIES;
     private int sortType = 1;
 
-    public WorldsBrowserMenu(Player player, Set<Planet> planets) {
-        super(player, getLocaleMessage("menus.all-worlds.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45, 48, 50}, new int[]{45, 46, 52, 53});
-        this.planets = new ArrayList<>(planets);
+    public RecommendedWorldsBrowserMenu(Player player, PlanetInfo.Category category) {
+        super(player, getLocaleMessage("menus.recommended-worlds.items."
+                        + category.name().toLowerCase().replace("_", "-") + ".title",
+                        false), PlacementLayout.BOTTOM_NO_DECORATION,
+                new int[]{45, 49}, new int[]{45, 46, 52, 53});
+        for (Planet planet : OpenCreative.getPlanetsManager().getRecommendedPlanets()) {
+            if (planet.getInformation().getCategory() == category) {
+                this.planets.add(planet);
+            }
+        }
         Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
         this.planets.sort(sortByOnline);
-        RECOMMENDED = createItem(Material.WIND_CHARGE, 1, "menus.all-worlds.items.recommended");
-    }
-
-    public WorldsBrowserMenu(Player player, Set<Planet> planets, boolean withRecommendedButton) {
-        super(player, getLocaleMessage("menus.all-worlds.title", false), PlacementLayout.BOTTOM_NO_DECORATION,
-                new int[]{45, 48, 50}, new int[]{45, 46, 52, 53});
-        this.planets = new ArrayList<>(planets);
-        Comparator<Planet> sortByOnline = (planet1, planet2) -> Integer.compare(planet2.getOnline(), planet1.getOnline());
-        this.planets.sort(sortByOnline);
-        RECOMMENDED = withRecommendedButton ? createItem(Material.WIND_CHARGE, 1, "menus.all-worlds.items.recommended") : DECORATION_ITEM;
+        BACK_TO_CATEGORIES = createItem(Material.ARROW, 1, "menus.all-worlds.items.back-to-categories");
     }
 
     @Override
@@ -84,21 +82,11 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
                 "menus.all-worlds.items.sort",
                 List.of(Material.HOPPER, Material.GOLDEN_APPLE, Material.CLOCK)
         );
-        ParameterButton category = new ParameterButton(
-                "online",
-                List.of("all", "sandbox", "adventure", "arcade", "roleplay", "simulator", "experiment", "story", "strategy"),
-                "category",
-                "menus.all-worlds",
-                "menus.all-worlds.items.category",
-                List.of(Material.CHERRY_CHEST_BOAT, Material.SANDSTONE, Material.DARK_PRISMARINE_STAIRS, Material.TARGET, Material.AXOLOTL_BUCKET, Material.CAMPFIRE, Material.TNT, Material.WRITABLE_BOOK, Material.CROSSBOW)
-        );
         buttons.add(sort);
-        buttons.add(category);
-        setItem(45, RECOMMENDED);
-        setItem(47, createItem(Material.CYAN_STAINED_GLASS_PANE, 1));
-        setItem(48, category.getItem());
-        setItem(50, sort.getItem());
-        setItem(51, createItem(Material.CYAN_STAINED_GLASS_PANE, 1));
+        setItem(45, BACK_TO_CATEGORIES);
+        setItem(47, createItem(Material.PURPLE_STAINED_GLASS_PANE, 1));
+        setItem(49, sort.getItem());
+        setItem(51, createItem(Material.PURPLE_STAINED_GLASS_PANE, 1));
     }
 
     @Override
@@ -110,34 +98,20 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
         }
         for (ParameterButton button : buttons) {
             if (itemEquals(item, button.getItem(true))) {
-                if (event.getRawSlot() == 50) {
+                if (event.getRawSlot() == 49) {
                     button.next();
                     sortType = button.getCurrentChoice();
                     sortElements();
                     fillElements(getCurrentPage());
                     fillArrowsItems(getCurrentPage());
-                    setItem(50, button.getItem());
+                    setItem(49, button.getItem());
                     Sounds.MENU_WORLDS_BROWSER_SORT.play(getPlayer());
-                } else if (event.getRawSlot() == 48) {
-                    button.next();
-                    elements.clear();
-                    if (button.getCurrentValue().equals("all")) {
-                        elements.addAll(getElements());
-                    } else {
-                        elements.addAll(new ArrayList<>(planets).stream().filter(planet -> planet.getInformation().getCategory().name().equalsIgnoreCase(button.getCurrentValue().toString())).toList());
-                    }
-                    sortElements();
-                    fillElements(getCurrentPage());
-                    fillArrowsItems(getCurrentPage());
-                    setItem(48, button.getItem());
-                    Sounds.MENU_WORLDS_BROWSER_CATEGORY.play(getPlayer());
                 }
             }
         }
-        if (itemEquals(item, RECOMMENDED)) {
+        if (itemEquals(item, BACK_TO_CATEGORIES)) {
             new WorldsCompassMenu().open(getPlayer());
         }
-
     }
 
     @Override
@@ -174,14 +148,14 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
     protected void fillArrowsItems(int currentPage) {
         if (elements.isEmpty()) {
             setItem(getNoElementsPageButtonSlot(), getNoElementsButton());
-            setItem(getPreviousPageButtonSlot(), RECOMMENDED);
+            setItem(getPreviousPageButtonSlot(), BACK_TO_CATEGORIES);
             setItem(getNextPageButtonSlot(), DECORATION_ITEM);
         } else {
             int maxPagesAmount = getPages();
             if (currentPage > maxPagesAmount || currentPage < 1) {
                 currentPage = 1;
             }
-            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : RECOMMENDED);
+            setItem(getPreviousPageButtonSlot(), currentPage > 1 ? getPreviousPageButton() : BACK_TO_CATEGORIES);
             setItem(getNextPageButtonSlot(), currentPage < maxPagesAmount ? getNextPageButton() : DECORATION_ITEM);
         }
     }

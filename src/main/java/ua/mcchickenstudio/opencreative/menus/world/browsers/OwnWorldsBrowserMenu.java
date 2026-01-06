@@ -122,7 +122,7 @@ public final class OwnWorldsBrowserMenu extends ListBrowserMenu<Planet> {
             return;
         }
         if (itemEquals(item, RECOMMENDED)) {
-            new RecommendedWorldsMenu().open(getPlayer());
+            new WorldsCompassMenu().open(getPlayer());
         } else if (itemEquals(item, CREATE_WORLD)) {
             if (isNotLimitReached()) {
                 long now = System.currentTimeMillis();

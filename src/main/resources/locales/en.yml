@@ -13672,6 +13672,94 @@ menus:
           - "&7  a list of all worlds"
           - "&7  that have ever been created."
           - ""
+      sandbox:
+        title: "&5⛏ Sandboxes"
+        name: " "
+        lore:
+          - "&e ⛏ Sandboxes"
+          - " "
+          - "&7  Create and build"
+          - "&7  anything you want."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      adventure:
+        title: "&5🌊 Adventures"
+        name: " "
+        lore:
+          - "&9 🌊 Adventures"
+          - " "
+          - "&7  Running, jumping,"
+          - "&7  falling, pure action!"
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      strategy:
+        title: "&5🏹 Strategy"
+        name: " "
+        lore:
+          - "&2 🏹 Strategy"
+          - " "
+          - "&7  Think before"
+          - "&7  every move."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      arcade:
+        title: "&5♫ Arcade"
+        name: " "
+        lore:
+          - "&b ♫ Arcade"
+          - " "
+          - "&7  Fun worlds with"
+          - "&7  unique mechanics."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      roleplay:
+        title: "&5☻ Roleplay"
+        name: " "
+        lore:
+          - "&d ☻ Roleplay"
+          - " "
+          - "&7  Chat, characters,"
+          - "&7  interactions."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      story:
+        title: "&5✎ Story"
+        name: " "
+        lore:
+          - "&6 ✎ Story"
+          - " "
+          - "&7  Discover lore"
+          - "&7  and characters."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      experiment:
+        title: "&5⌘ Experimental"
+        name: " "
+        lore:
+          - "&c ⌘ Experimental"
+          - " "
+          - "&7  Test something"
+          - "&7  completely new."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
+      simulator:
+        title: "&5🍖 Simulator"
+        name: " "
+        lore:
+          - "&c 🍖 Simulator"
+          - " "
+          - "&7  Be a pilot of plane,"
+          - "&7  or just a hamster."
+          - " "
+          - "&e  Click to view worlds."
+          - ""
   all-worlds:
     title: "&3⌂ Player Worlds"
     title-pages: "&3⌂ Player Worlds (%page% of %pages%)"
@@ -13710,6 +13798,14 @@ menus:
           - "&7  Click to view"
           - "&7  worlds that many"
           - "&7  server players liked."
+          - ""
+      back-to-categories:
+        name: " "
+        lore:
+          - " &6← &eBack..."
+          - ""
+          - "&7  Click to view categories"
+          - "&7  of recommended worlds."
           - ""
       category:
         name: " "
@@ -13789,7 +13885,7 @@ menus:
       own-worlds:
         name: " "
         lore:
-          - "&a ⚑ My Worlds List"
+          - "&d ☺ My Worlds List"
           - ""
           - "&7  See the list of your worlds,"
           - "&7  showing their rating,"

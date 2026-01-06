@@ -386,14 +386,14 @@ public class PlanetInfo {
 
     public enum Category {
 
-        SANDBOX(Material.YELLOW_CONCRETE_POWDER),
-        ADVENTURE(Material.NETHERITE_BOOTS),
+        SANDBOX(Material.HORN_CORAL),
+        ADVENTURE(Material.FIRE_CHARGE),
         STRATEGY(Material.ZOMBIE_HEAD),
         ARCADE(Material.HEART_OF_THE_SEA),
-        ROLEPLAY(Material.CHERRY_CHEST_BOAT),
-        STORY(Material.WRITABLE_BOOK),
-        SIMULATOR(Material.NETHERITE_PICKAXE),
-        EXPERIMENT(Material.TNT_MINECART);
+        ROLEPLAY(Material.CHERRY_SAPLING),
+        STORY(Material.ENCHANTED_BOOK),
+        SIMULATOR(Material.PUFFERFISH),
+        EXPERIMENT(Material.NETHER_WART);
 
         private final Material material;
 

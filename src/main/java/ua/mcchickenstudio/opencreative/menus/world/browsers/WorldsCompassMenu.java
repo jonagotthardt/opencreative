@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.listeners.player.ChatListener;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.planets.PlanetInfo;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
@@ -42,15 +43,16 @@ import java.util.List;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
-public final class RecommendedWorldsMenu extends AbstractMenu {
+public final class WorldsCompassMenu extends AbstractMenu {
 
     private final int[] featuredWorldsSlots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
     private final ItemStack OWN_WORLDS = createItem(Material.REPEATING_COMMAND_BLOCK, 1, "menus.all-worlds.items.own-worlds");
     private final ItemStack DECORATION_OWN_WORLDS = createItem(Material.PURPLE_STAINED_GLASS_PANE, 1);
     private final ItemStack SEARCH = createItem(Material.SPYGLASS, 1, "menus.all-worlds.items.search");
     private final ItemStack ALL_WORLDS = createItem(Material.ARROW, 1, "menus.recommended-worlds.items.all-worlds");
+    private boolean showingCategoriesInsteadOfWorlds = false;
 
-    public RecommendedWorldsMenu() {
+    public WorldsCompassMenu() {
         super(6, getLocaleMessage("menus.recommended-worlds.title", false));
     }
 
@@ -64,6 +66,18 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
         setItem(52, DECORATION_PANE_ITEM);
         setItem(53, ALL_WORLDS);
         List<Planet> featuredPlanets = OpenCreative.getPlanetsManager().getRecommendedPlanets();
+        if (featuredPlanets.size() > 21) {
+            showingCategoriesInsteadOfWorlds = true;
+            setItem(10, createButton(PlanetInfo.Category.SANDBOX, featuredPlanets));
+            setItem(12, createButton(PlanetInfo.Category.ADVENTURE, featuredPlanets));
+            setItem(14, createButton(PlanetInfo.Category.STRATEGY, featuredPlanets));
+            setItem(16, createButton(PlanetInfo.Category.ARCADE, featuredPlanets));
+            setItem(28, createButton(PlanetInfo.Category.ROLEPLAY, featuredPlanets));
+            setItem(30, createButton(PlanetInfo.Category.STORY, featuredPlanets));
+            setItem(32, createButton(PlanetInfo.Category.SIMULATOR, featuredPlanets));
+            setItem(34, createButton(PlanetInfo.Category.EXPERIMENT, featuredPlanets));
+            return;
+        }
         if (featuredPlanets.isEmpty()) {
             for (int slot : featuredWorldsSlots) {
                 setItem(slot, DECORATION_ITEM);
@@ -125,17 +139,44 @@ public final class RecommendedWorldsMenu extends AbstractMenu {
             if (worldID.isEmpty()) {
                 return;
             }
-            Planet planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(worldID);
-            if (planet != null) {
-                player.closeInventory();
-                if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
-                    player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
-                    Sounds.PLAYER_FAIL.play(player);
+            if (showingCategoriesInsteadOfWorlds) {
+                PlanetInfo.Category category;
+                try {
+                     category = PlanetInfo.Category.valueOf(worldID);
+                } catch (Exception ignored) {
                     return;
                 }
-                planet.connectPlayer(player);
+                new RecommendedWorldsBrowserMenu(player, category).open(player);
+            } else {
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(worldID);
+                if (planet != null) {
+                    player.closeInventory();
+                    if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
+                        player.sendMessage(MessageUtils.getPlayerLocaleMessage("same-world", player));
+                        Sounds.PLAYER_FAIL.play(player);
+                        return;
+                    }
+                    planet.connectPlayer(player);
+                }
             }
         }
+    }
+
+    private ItemStack createButton(PlanetInfo.Category category, List<Planet> planets) {
+        int amount = 0;
+        for (Planet planet : planets) {
+            if (planet.getInformation().getCategory() == category) {
+                amount += 1;
+            }
+        }
+        if (amount == 0) {
+            return DECORATION_ITEM;
+        }
+        return setPersistentData(
+                createItem(category.getMaterial(), amount,
+                        "menus.recommended-worlds.items." +
+                                category.name().toLowerCase()),
+                getItemIdKey(), category.name());
     }
 
     @Override
