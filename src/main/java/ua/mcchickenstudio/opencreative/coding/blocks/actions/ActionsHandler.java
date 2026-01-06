@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -190,6 +191,17 @@ public class ActionsHandler {
      * @param action action to execute.
      */
     private void executeAction(Action action) {
+        if (Thread.currentThread().getStackTrace().length > 500) {
+            /*
+             * Prevents from crashes if somehow
+             * executors bypassed the limit check.
+             */
+            executor.getPlanet().getVariables().garbageCollector(getMainActionHandler());
+            executor.getPlanet().getTerritory().getScript().getExecutors().stopCode("stack over flow");
+            sendPlanetCodeCriticalErrorMessage(executor.getPlanet(), executor, getLocaleMessage("coding-error.operations-limit", false)
+                    .replace("%limit%", String.valueOf(executor.getPlanet().getLimits().getCodeOperationsLimit())));
+            return;
+        }
         if (stopped) {
             if (action instanceof MeasureTimeAction timer) {
                 timer.measure();
@@ -209,6 +221,7 @@ public class ActionsHandler {
                     action.getPlanet().getTerritory().getScript().getExecutors().stopCode("errors limit");
                     sendPlanetCodeCriticalErrorMessage(action.getPlanet(), executor, getLocaleMessage("coding-error.errors-limit", false)
                             .replace("%limit%", String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
+                    executor.getPlanet().getVariables().garbageCollector(getMainActionHandler());
                     return;
                 }
             }

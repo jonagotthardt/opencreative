@@ -735,7 +735,7 @@ public enum ActionType {
 
     ENTITY_SET_SITTING(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSittingAction.class, Material.WOLF_SPAWN_EGG, new ParameterSlot("boolean")),
     ENTITY_SET_SADDLE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSaddleAction.class, Material.SADDLE, new ParameterSlot("boolean")),
-    ENTITY_SET_MINECART_BLOCK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetMinecartBlockAction.class, Material.HOPPER_MINECART, new ArgumentSlot("item", ValueType.ITEM)),
+    ENTITY_SET_MINECART_BLOCK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetMinecartBlockAction.class, Material.HOPPER_MINECART, new ArgumentSlot("block", ValueType.ITEM)),
     ENTITY_SET_PIGLIN_CROSSBOW(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPiglinChargingAction.class, Material.CROSSBOW, new ParameterSlot("boolean")),
     //ENTITY_SET_TURTLE_HOME(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.TURTLE_SPAWN_EGG,      new ArgumentSlot("location", ValueType.LOCATION)),
     //ENTITY_SET_BEE_HIVE(            ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.BEEHIVE,               new ArgumentSlot("location", ValueType.LOCATION)),
