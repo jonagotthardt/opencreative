@@ -185,7 +185,7 @@ public enum ActionType {
     PLAYER_SET_WORLD_BORDER(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("center", ValueType.LOCATION), new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
     PLAYER_SET_TIME(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     PLAYER_SET_WEATHER(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean", "storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
-    PLAYER_SET_VISUAL_FIRE(ActionCategory.ENTITY_ACTION, MenusCategory.APPEARANCE, SetVisualFireAction.class, Material.CAMPFIRE, new ParameterSlot("boolean")),
+    PLAYER_SET_VISUAL_FIRE(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetVisualFireAction.class, Material.CAMPFIRE, new ParameterSlot("boolean")),
     PLAYER_SHOW_SCOREBOARD(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowScoreboardAction.class, Material.PAINTING, new ArgumentSlot("scoreboard", ValueType.TEXT)),
     PLAYER_HIDE_SCOREBOARD(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, HideScoreboardAction.class, Material.ITEM_FRAME),
     PLAYER_SHOW_BOSS_BAR(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowBossBarAction.class, Material.DRAGON_BREATH, new ArgumentSlot("bossbar", ValueType.TEXT)),

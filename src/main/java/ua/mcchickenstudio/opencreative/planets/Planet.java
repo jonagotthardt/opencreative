@@ -708,6 +708,7 @@ public class Planet {
         }
 
         if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
+            removePassengers(player);
             player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                 getConnectionProcess(player, wasLoaded, hidePlayer, success);
             }).exceptionally(error -> {
@@ -721,6 +722,7 @@ public class Planet {
 
         switch (NewWorldScreenExperiment.getType()) {
             case DARKNESS -> {
+                removePassengers(player);
                 player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
                 player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
@@ -732,6 +734,7 @@ public class Planet {
                 });
             }
             case PERCENTS -> {
+                removePassengers(player);
                 player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
                 }).exceptionally(error -> {
