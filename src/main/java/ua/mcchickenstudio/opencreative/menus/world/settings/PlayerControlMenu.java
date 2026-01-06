@@ -55,7 +55,6 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPla
  */
 public final class PlayerControlMenu extends AbstractMenu implements WorldMenu {
 
-    private final static Map<Player, String> newOwners = new HashMap<>();
     private final String nickname;
     private final Planet planet;
     private final List<ParameterButton> buttons = new ArrayList<>();
@@ -75,14 +74,6 @@ public final class PlayerControlMenu extends AbstractMenu implements WorldMenu {
                 .replace("%name%", substring(nickname, 20)));
         this.nickname = nickname;
         this.planet = planet;
-    }
-
-    public static void removeConfirmation(@NotNull Player player) {
-        newOwners.remove(player);
-    }
-
-    public static @Nullable String getConfirmationNewOwner(@NotNull Player player) {
-        return newOwners.get(player);
     }
 
     @Override
@@ -263,8 +254,8 @@ public final class PlayerControlMenu extends AbstractMenu implements WorldMenu {
                 }
                 clicker.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-old")
                         .replace("%player%", nickname).replace("%id%", String.valueOf(planet.getId())));
-                if (!(ChatListener.confirmation.containsKey(clicker))) {
-                    ChatListener.confirmation.put(clicker, PlayerConfirmation.TRANSFER_OWNERSHIP);
+                if (!PlayerConfirmation.hasConfirmation(clicker)) {
+                    PlayerConfirmation.setConfirmation(clicker, PlayerConfirmation.TRANSFER_OWNERSHIP, nickname);
                 }
             }
             case "back" -> new PlayersBrowserMenu(clicker, planet).open(clicker);

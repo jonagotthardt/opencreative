@@ -58,8 +58,7 @@ public enum ItemsGroup {
     /**
      * Items, that will be given, when world's owner enters play mode.
      */
-    PLAY_OWNER(),
-
+    PLAY_OWNER(new ItemPair(9, Items.WORLD_SETTINGS)),
     /**
      * Coding blocks and other coding items, that will be given, when
      * world's developer enters the coding world.

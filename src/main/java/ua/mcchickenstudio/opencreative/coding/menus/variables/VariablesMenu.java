@@ -69,7 +69,9 @@ public final class VariablesMenu extends AbstractMenu {
         if (currentItem.equals(VARIABLE_ITEM)) {
             setPersistentData(currentItem, getCodingVariableTypeKey(), "LOCAL");
         }
-        setPersistentData(currentItem, getCodingValueKey(), ValueType.getByMaterial(currentItem.getType()).name());
+        ValueType valueType = ValueType.getByMaterial(currentItem.getType());
+        if (valueType == null) valueType = ValueType.TEXT;
+        setPersistentData(currentItem, getCodingValueKey(), valueType.name());
         event.getWhoClicked().getInventory().addItem(currentItem);
         event.setCursor(null);
         Sounds.DEV_TAKE_VALUE.play(event.getWhoClicked());

@@ -167,7 +167,9 @@ public class ValueCommand extends CommandHandler {
             }
         }
         if (itemStack != null) {
-            setPersistentData(itemStack, getCodingValueKey(), ValueType.getByMaterial(itemStack.getType()).name());
+            ValueType valueType = ValueType.getByMaterial(itemStack.getType());
+            if (valueType == null) valueType = ValueType.TEXT;
+            setPersistentData(itemStack, getCodingValueKey(), valueType.name());
             Sounds.DEV_TAKE_VALUE.play(player);
             player.getInventory().addItem(itemStack);
         }

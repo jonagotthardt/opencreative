@@ -36,12 +36,12 @@ public final class SubstringTextAction extends VariableAction {
         VariableLink link = getArguments().getVariableLink("variable", this);
         String text = getArguments().getText("text", " ", this);
         int from = getArguments().getInt("from", 1, this);
-        int to = getArguments().getInt("to", text.length() - 1, this);
+        int to = getArguments().getInt("to", text.length(), this);
         if (from < 1 || from > text.length()) {
             from = 0;
         }
         if (to < from || to > text.length()) {
-            to = text.length() - 1;
+            to = text.length();
         }
         setVarValue(link, text.substring(from - 1, to));
     }

@@ -126,7 +126,6 @@ public final class Moduler implements ModuleManager {
     public void deleteModule(@NotNull Module module) {
         ModuleDeletionEvent event = new ModuleDeletionEvent(module);
         event.callEvent();
-        ModuleSettingsMenu.removeFromCurrentEditing(module);
         modules.remove(module.getId());
         File file = getModuleConfigFile(module.getId());
         try {

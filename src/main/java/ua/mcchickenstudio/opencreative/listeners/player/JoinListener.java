@@ -52,7 +52,9 @@ public final class JoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         loadPermissions(event.getPlayer());
-        PlayerUtils.teleportToLobby(event.getPlayer());
+        if (OpenCreative.getSettings().getLobbySettings().shouldTeleportOnJoin()) {
+            PlayerUtils.teleportToLobby(event.getPlayer());
+        }
         new BukkitRunnable() {
             @Override
             public void run() {

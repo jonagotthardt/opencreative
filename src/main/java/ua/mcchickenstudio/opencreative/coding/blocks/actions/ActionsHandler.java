@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.actions;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -209,6 +210,7 @@ public class ActionsHandler {
                     action.getPlanet().getTerritory().getScript().getExecutors().stopCode("errors limit");
                     sendPlanetCodeCriticalErrorMessage(action.getPlanet(), executor, getLocaleMessage("coding-error.errors-limit", false)
                             .replace("%limit%", String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
+                    executor.getPlanet().getVariables().garbageCollector(getMainActionHandler());
                     return;
                 }
             }

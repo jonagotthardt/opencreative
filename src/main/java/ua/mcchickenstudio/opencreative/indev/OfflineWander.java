@@ -25,14 +25,16 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebugError;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getWanderJsonFile;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 
 /**
  * <h1>OfflineWander</h1>
@@ -43,6 +45,7 @@ import static ua.mcchickenstudio.opencreative.utils.FileUtils.getWanderJsonFile;
  */
 public class OfflineWander {
 
+    private static final Logger log = LoggerFactory.getLogger(OfflineWander.class);
     @Since(5.6)
     protected final @NotNull UUID uuid;
     @Since(5.6)
@@ -52,9 +55,13 @@ public class OfflineWander {
     @Since(5.6)
     protected @Nullable Gender gender;
     @Since(5.6)
-    protected @Nullable List<Integer> favoriteWorlds;
+    protected @Nullable Set<Integer> favoriteWorlds;
     @Since(5.6)
     protected int lastPlayedWorldId = -1;
+    @Since(6.0)
+    protected int visits = 0;
+    @Since(6.0)
+    protected Links links;
     @Since(5.6)
     protected boolean hideHints;
     @Since(5.8)
@@ -100,16 +107,37 @@ public class OfflineWander {
         return lastLocation;
     }
 
+    public @Nullable String getLink(@NotNull String type) {
+        if (links == null) return null;
+        return links.getLink(type);
+    }
+
+    public void setLink(@NotNull String type, @NotNull String link) {
+        if (links == null) this.links = new Links();
+        links.setLink(type, link);
+        saveData();
+    }
+
+    public void removeLink(@NotNull String type) {
+        if (links == null) return;
+        links.setLink(type, null);
+        saveData();
+    }
+
     public int getLastPlayedWorldId() {
         return lastPlayedWorldId;
     }
 
-    public boolean isHideHints() {
+    public int getVisits() {
+        return visits;
+    }
+
+    public boolean shouldHideHints() {
         return hideHints;
     }
 
-    public @NotNull List<Integer> getFavoriteWorlds() {
-        return favoriteWorlds != null ? favoriteWorlds : List.of();
+    public @NotNull Set<Integer> getFavoriteWorlds() {
+        return favoriteWorlds != null ? favoriteWorlds : Set.of();
     }
 
     public @NotNull List<UUID> getFriends() {
@@ -118,6 +146,11 @@ public class OfflineWander {
 
     public void setLastPlayedWorldId(int lastPlayedWorldId) {
         this.lastPlayedWorldId = lastPlayedWorldId;
+        saveData();
+    }
+
+    public void setVisits(int visits) {
+        this.visits = visits;
         saveData();
     }
 
@@ -160,7 +193,7 @@ public class OfflineWander {
         if (getFavoriteWorlds().contains(worldId)) {
             return false;
         }
-        if (favoriteWorlds == null) favoriteWorlds = new ArrayList<>();
+        if (favoriteWorlds == null) favoriteWorlds = new HashSet<>();
         favoriteWorlds.add(worldId);
         saveData();
         return true;
@@ -226,7 +259,7 @@ public class OfflineWander {
 
             if (json.has("favoriteWorlds")) {
                 JsonArray arr = json.getAsJsonArray("favoriteWorlds");
-                this.favoriteWorlds = new ArrayList<>();
+                this.favoriteWorlds = new HashSet<>();
                 for (JsonElement el : arr) {
                     this.favoriteWorlds.add(el.getAsInt());
                 }
@@ -303,6 +336,7 @@ public class OfflineWander {
         }
         if (!favoriteWorlds.isEmpty()) json.add("favoriteWorlds", favoriteWorlds);
         if (lastPlayedWorldId != -1) json.addProperty("lastPlayedWorldId", lastPlayedWorldId);
+        if (visits > 0) json.addProperty("visits", visits);
         if (hideHints) json.addProperty("hideHints", true);
         if (lastLocation != null) {
             JsonObject lastLoc = new JsonObject();
@@ -320,7 +354,8 @@ public class OfflineWander {
 
         MALE,
         FEMALE,
-        OTHER;
+        NON_BINARY,
+        UNKNOWN;
 
         public static @NotNull Gender getGender(@NotNull String text) {
             for (Gender gender : values()) {
@@ -328,7 +363,11 @@ public class OfflineWander {
                     return gender;
                 }
             }
-            return OTHER;
+            return UNKNOWN;
+        }
+
+        public final @NotNull String getLocaleName() {
+            return getLocaleMessage("profiles.genders." + name().toLowerCase().replace("_", "-"), false);
         }
     }
 

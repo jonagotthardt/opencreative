@@ -192,7 +192,7 @@ public enum Items {
      *
      * @return material.
      */
-    public Material getMaterial() {
+    public @NotNull Material getMaterial() {
         return material;
     }
 

@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -53,6 +54,7 @@ public final class Hints implements HintManager {
         }
         Block block = player.getTargetBlockExact(5);
         if (block != null && block.getBlockData() instanceof WallSign) {
+            // Looking at sign of coding block
             Block farBlock = block.getRelative(BlockFace.NORTH);
             ExecutorCategory executor = ExecutorCategory.getByMaterial(farBlock.getType());
             if (executor != null) {
@@ -79,23 +81,43 @@ public final class Hints implements HintManager {
             }
             return;
         }
+        // Holding item
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.isEmpty()) return;
-        ValueType type = ValueType.getByMaterial(item.getType());
-        if (type == ValueType.TEXT && item.getType() != Material.BOOK) {
-            if (item.getType() == Material.SPLASH_POTION || item.getType() == Material.LINGERING_POTION) {
-                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints.potion", player));
-            }
-            return;
-        }
-        String hint = switch (type) {
-            case TEXT, NUMBER, EVENT_VALUE, VECTOR, POTION, PARTICLE, VARIABLE, BOOLEAN ->
-                    type.name().toLowerCase().replace("_", "-");
-            case LOCATION -> "location.dev";
+        String hint = switch (item.getType()) {
+            case COMPARATOR -> "lines-controller";
+            case FEATHER -> "fly-speed-changer";
+            case ARROW -> "arrow-not";
+            case REDSTONE_TORCH -> "debug-torch";
+            case SPLASH_POTION, LINGERING_POTION -> "potion";
             default -> "";
         };
-        if (!hint.isEmpty())
+        if (!hint.isEmpty()) {
             player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints." + hint, player));
+            return;
+        }
+        ValueType type = ValueType.getByMaterial(item.getType());
+        if (type != null) {
+            hint = switch (type) {
+                case TEXT, NUMBER, EVENT_VALUE, VECTOR, POTION, PARTICLE, VARIABLE, BOOLEAN, COLOR ->
+                        type.name().toLowerCase().replace("_", "-");
+                case LOCATION -> "location.dev";
+                default -> "";
+            };
+            if (!hint.isEmpty()) {
+                player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints." + hint, player));
+                return;
+            }
+        }
+        ExecutorCategory event = ExecutorCategory.getByMaterial(item.getType());
+        if (event != null) {
+            player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints.holding-event", player));
+            return;
+        }
+        ActionCategory action = ActionCategory.getByMaterial(item.getType());
+        if (action != null) {
+            player.sendActionBar(MessageUtils.getPlayerLocaleComponent("environment.hints.holding-action", player));
+        }
     }
 
     @Override

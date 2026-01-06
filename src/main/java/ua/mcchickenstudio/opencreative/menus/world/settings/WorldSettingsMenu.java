@@ -158,8 +158,8 @@ public final class WorldSettingsMenu extends AbstractMenu implements WorldMenu {
             ));
             player.sendMessage(getLocaleMessage("settings.world-name.usage").replace("%player%", player.getName()));
             player.closeInventory();
-            if (!(ChatListener.confirmation.containsKey(player))) {
-                ChatListener.confirmation.put(player, PlayerConfirmation.WORLD_NAME_CHANGE);
+            if (!PlayerConfirmation.hasConfirmation(player)) {
+                PlayerConfirmation.setConfirmation(player, PlayerConfirmation.WORLD_NAME_CHANGE);
             }
         } else if (itemEquals(currentItem, description)) {
             player.showTitle(Title.title(
@@ -168,8 +168,8 @@ public final class WorldSettingsMenu extends AbstractMenu implements WorldMenu {
             ));
             player.sendMessage(getLocaleMessage("settings.world-description.usage"));
             player.closeInventory();
-            if (!(ChatListener.confirmation.containsKey(player))) {
-                ChatListener.confirmation.put(player, PlayerConfirmation.WORLD_DESCRIPTION_CHANGE);
+            if (!PlayerConfirmation.hasConfirmation(player)) {
+                PlayerConfirmation.setConfirmation(player, PlayerConfirmation.WORLD_DESCRIPTION_CHANGE);
             }
         } else if (itemEquals(currentItem, customID)) {
             player.showTitle(Title.title(
@@ -178,8 +178,8 @@ public final class WorldSettingsMenu extends AbstractMenu implements WorldMenu {
             ));
             player.sendMessage(getLocaleMessage("settings.world-id.usage").replace("%player%", player.getName()));
             player.closeInventory();
-            if (!(ChatListener.confirmation.containsKey(player))) {
-                ChatListener.confirmation.put(player, PlayerConfirmation.WORLD_CUSTOM_ID_CHANGE);
+            if (!PlayerConfirmation.hasConfirmation(player)) {
+                PlayerConfirmation.setConfirmation(player, PlayerConfirmation.WORLD_CUSTOM_ID_CHANGE);
             }
         } else if (itemEquals(currentItem, spawn)) {
             if (isEntityInDevPlanet(player)) {

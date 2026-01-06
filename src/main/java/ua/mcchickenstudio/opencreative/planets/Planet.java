@@ -545,6 +545,9 @@ public class Planet {
                         } else {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                         }
+                        if (isOwner(player)) {
+                            ItemsGroup.PLAY_OWNER.setItems(player);
+                        }
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                     }
@@ -708,6 +711,7 @@ public class Planet {
         }
 
         if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
+            removePassengers(player);
             player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                 getConnectionProcess(player, wasLoaded, hidePlayer, success);
             }).exceptionally(error -> {
@@ -721,6 +725,7 @@ public class Planet {
 
         switch (NewWorldScreenExperiment.getType()) {
             case DARKNESS -> {
+                removePassengers(player);
                 player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
                 player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
@@ -732,6 +737,7 @@ public class Planet {
                 });
             }
             case PERCENTS -> {
+                removePassengers(player);
                 player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
                     getConnectionProcess(player, wasLoaded, hidePlayer, success);
                 }).exceptionally(error -> {
@@ -783,6 +789,10 @@ public class Planet {
             player.clearTitle();
             territory.showBorders(player);
             if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
+                if (Experiments.isEnabled("wanders") && !isOwner(player)) {
+                    Wander wander = OpenCreative.getWander(player);
+                    wander.setVisits(wander.getVisits() + 1);
+                }
                 /*
                  * When player joins connects to the world for first time.
                  */
@@ -957,6 +967,9 @@ public class Planet {
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Planet planet) {
+                if (planet.isOwner(player)) {
+                    ItemsGroup.PLAY_OWNER.setItems(player);
+                }
                 player.setGameMode(GameMode.ADVENTURE);
             }
         }, BUILD() {

@@ -185,7 +185,7 @@ public enum ActionType {
     PLAYER_SET_WORLD_BORDER(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("center", ValueType.LOCATION), new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
     PLAYER_SET_TIME(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     PLAYER_SET_WEATHER(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, PlayerSetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean", "storm"), Material.SUNFLOWER, Material.WATER_BUCKET)),
-    PLAYER_SET_VISUAL_FIRE(ActionCategory.ENTITY_ACTION, MenusCategory.APPEARANCE, SetVisualFireAction.class, Material.CAMPFIRE, new ParameterSlot("boolean")),
+    PLAYER_SET_VISUAL_FIRE(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, SetVisualFireAction.class, Material.CAMPFIRE, new ParameterSlot("boolean")),
     PLAYER_SHOW_SCOREBOARD(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowScoreboardAction.class, Material.PAINTING, new ArgumentSlot("scoreboard", ValueType.TEXT)),
     PLAYER_HIDE_SCOREBOARD(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, HideScoreboardAction.class, Material.ITEM_FRAME),
     PLAYER_SHOW_BOSS_BAR(ActionCategory.PLAYER_ACTION, MenusCategory.APPEARANCE, ShowBossBarAction.class, Material.DRAGON_BREATH, new ArgumentSlot("bossbar", ValueType.TEXT)),
@@ -735,7 +735,7 @@ public enum ActionType {
 
     ENTITY_SET_SITTING(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSittingAction.class, Material.WOLF_SPAWN_EGG, new ParameterSlot("boolean")),
     ENTITY_SET_SADDLE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetSaddleAction.class, Material.SADDLE, new ParameterSlot("boolean")),
-    ENTITY_SET_MINECART_BLOCK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetMinecartBlockAction.class, Material.HOPPER_MINECART, new ArgumentSlot("item", ValueType.ITEM)),
+    ENTITY_SET_MINECART_BLOCK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetMinecartBlockAction.class, Material.HOPPER_MINECART, new ArgumentSlot("block", ValueType.ITEM)),
     ENTITY_SET_PIGLIN_CROSSBOW(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, EntitySetPiglinChargingAction.class, Material.CROSSBOW, new ParameterSlot("boolean")),
     //ENTITY_SET_TURTLE_HOME(         ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.TURTLE_SPAWN_EGG,      new ArgumentSlot("location", ValueType.LOCATION)),
     //ENTITY_SET_BEE_HIVE(            ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_STATE, null,                               Material.BEEHIVE,               new ArgumentSlot("location", ValueType.LOCATION)),
@@ -1005,6 +1005,11 @@ public enum ActionType {
     public boolean isDisabled() {
         if (this == PLAYER_SET_RESOURCE_PACK || this == IF_PLAYER_HAS_RESOURCE_PACK) {
             if (HookUtils.isPluginEnabled("ItemsAdder")) {
+                return true;
+            }
+        }
+        if (this == PLAYER_SET_VIEW_DISTANCE || this == PLAYER_SET_SIMULATION_DISTANCE) {
+            if (!OpenCreative.getSettings().getLobbySettings().shouldResetViewDistance()) {
                 return true;
             }
         }

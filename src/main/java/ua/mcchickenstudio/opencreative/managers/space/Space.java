@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -176,6 +177,19 @@ public final class Space implements PlanetsManager {
             }
         }
         return featuredPlanets;
+    }
+
+    @Override
+    public @NotNull Set<Planet> getFavoritePlanets(@NotNull OfflineWander wander) {
+        Set<Planet> favoritePlanets = new LinkedHashSet<>();
+        Set<Integer> favoriteIds = wander.getFavoriteWorlds();
+        for (int id : favoriteIds) {
+            Planet planet = getPlanetById(String.valueOf(id));
+            if (planet != null) {
+                favoritePlanets.add(planet);
+            }
+        }
+        return favoritePlanets;
     }
 
     public @NotNull Set<Planet> getPlanetsContainingName(@NotNull String worldName) {

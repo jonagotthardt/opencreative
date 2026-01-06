@@ -31,6 +31,10 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.LazyMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.fighting.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.interaction.*;
@@ -46,9 +50,41 @@ public final class EntityStateListener implements Listener {
 
     @EventHandler
     public void onCollision(VehicleEntityCollisionEvent event) {
-        if (event.getEntity() instanceof Minecart && event.getVehicle() instanceof Minecart) {
-            event.setCancelled(true);
+        if (event.getEntity() instanceof Minecart first && event.getVehicle() instanceof Minecart second) {
+            long firstLastCollision = getMetadata(first, "oc_vehicle_last_collision");
+            long secondLastCollision = getMetadata(second, "oc_vehicle_last_collision");
+            long firstCollisions = getMetadata(first, "oc_vehicle_collisions");
+            long secondCollisions = getMetadata(second, "oc_vehicle_collisions");
+
+            long collisionsAmount = Math.max(firstCollisions, secondCollisions);
+            long lastCollision = Math.max(firstLastCollision, secondLastCollision);
+            if (System.currentTimeMillis() - lastCollision < 1000) {
+                if (collisionsAmount > 10) {
+                    event.setCancelled(true);
+                } else {
+                    first.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
+                            firstCollisions+1));
+                    second.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
+                            secondCollisions+1));
+                }
+            } else {
+                first.setMetadata("oc_vehicle_last_collision", new FixedMetadataValue(OpenCreative.getPlugin(),
+                        System.currentTimeMillis()));
+                second.setMetadata("oc_vehicle_last_collision", new FixedMetadataValue(OpenCreative.getPlugin(),
+                        System.currentTimeMillis()));
+                first.removeMetadata("oc_vehicle_collisions", OpenCreative.getPlugin());
+                second.removeMetadata("oc_vehicle_collisions", OpenCreative.getPlugin());
+            }
         }
+    }
+
+    public long getMetadata(@NotNull Entity entity, @NotNull String key) {
+        for (MetadataValue value : entity.getMetadata(key)) {
+            if (OpenCreative.getPlugin().equals(value.getOwningPlugin())) {
+                return value.asLong();
+            }
+        }
+        return 0L;
     }
 
     @EventHandler

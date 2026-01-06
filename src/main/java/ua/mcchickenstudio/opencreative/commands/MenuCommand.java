@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.menus.world.browsers.RecommendedWorldsMenu;
+import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsCompassMenu;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class MenuCommand extends CommandHandler {
                 sender.sendMessage(getLocaleMessage("not-found-player"));
                 return;
             }
-            new RecommendedWorldsMenu().open(player);
+            new WorldsCompassMenu().open(player);
             return;
         }
         if (!(sender instanceof Player player)) {
@@ -69,7 +69,7 @@ public class MenuCommand extends CommandHandler {
             return;
         }
         if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
-        new RecommendedWorldsMenu().open(player);
+        new WorldsCompassMenu().open(player);
     }
 
     @Override

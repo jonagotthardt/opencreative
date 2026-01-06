@@ -91,8 +91,10 @@ public final class PlayerUtils {
         player.resetPlayerWeather();
         resetResourcePack(player);
         removePassengers(player);
-        player.setSimulationDistance(Bukkit.getSimulationDistance());
-        player.setViewDistance(Math.min(player.getClientViewDistance(), Bukkit.getViewDistance()));
+        if (OpenCreative.getSettings().getLobbySettings().shouldResetViewDistance()) {
+            player.setSimulationDistance(Bukkit.getSimulationDistance());
+            player.setViewDistance(Math.min(player.getClientViewDistance(), Bukkit.getViewDistance()));
+        }
         player.setWorldBorder(player.getWorld().getWorldBorder());
         player.stopAllSounds();
         for (Entity entity : player.getWorld().getEntities()) {

@@ -161,6 +161,10 @@ lobby:
   disallow-world-edit: true        # To bypass with true, add permission: opencreative.lobby.world-edit.bypass
   disable-explosions: true # If true, any explosion in lobby will be cancelled.
   clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
+  reset-view-distance: true # View and simulation distances will be reset on server join, world change.
+                            # If it makes "almost all chunks not visible", set to false.
+                            # If false, will disable "Set View Distance" and "Set Simulation Distance" player actions.
+  teleport-on-join: true # Will teleport player to lobby on join
   #spawn: # You can set spawn location with /oc setspawn command.
   #  x: 1
   #  y: 60
