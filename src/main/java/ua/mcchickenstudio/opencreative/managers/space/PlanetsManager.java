@@ -22,6 +22,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.managers.Manager;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -30,6 +31,7 @@ import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * <h1>PlanetsManager</h1>
@@ -153,6 +155,14 @@ public interface PlanetsManager extends Manager {
      * @return list of recommended planets.
      */
     @NotNull List<Planet> getRecommendedPlanets();
+
+    /**
+     * Returns a list of player's favorite worlds.
+     *
+     * @param wander player as wander.
+     * @return set of player's favorite planets.
+     */
+    @NotNull Set<Planet> getFavoritePlanets(@NotNull OfflineWander wander);
 
     /**
      * Returns a set of planets, that contain

@@ -66,8 +66,6 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
 public final class ChatListener implements Listener {
 
-    public static final Map<Player, PlayerConfirmation> confirmation = new HashMap<>();
-
     private static List<String> splitDescription(String input, int maxLength) {
         List<String> setDescriptionWords = new ArrayList<>();
         if (input.contains("\\n")) {
@@ -431,12 +429,13 @@ public final class ChatListener implements Listener {
     }
 
     private void checkConfirmation(Player player, String input) {
-        if (confirmation.isEmpty()) return;
-        if (!confirmation.containsKey(player)) return;
-        PlayerConfirmation confirm = confirmation.get(player);
+        if (!PlayerConfirmation.hasConfirmation(player)) return;
+        PlayerConfirmation confirm = PlayerConfirmation.getConfirmation(player);
+        Object data = PlayerConfirmation.getConfirmationData(player);
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         player.clearTitle();
-        confirmation.remove(player);
+        PlayerConfirmation.clearConfirmations(player);
+        if (confirm == null) return;
         switch (confirm) {
             case WORLD_NAME_CHANGE -> {
                 if (planet == null || !planet.isOwner(player)) return;
@@ -515,8 +514,8 @@ public final class ChatListener implements Listener {
                 }
             }
             case TRANSFER_OWNERSHIP -> {
-                String newOwner = PlayerControlMenu.getConfirmationNewOwner(player);
-                if (planet != null && newOwner != null && planet.isOwner(player)) {
+                String newOwner = (String) data;
+                if (planet != null && planet.isOwner(player)) {
                     if (input.equals(String.valueOf(planet.getId()))) {
                         Player newOwnerPlayer = Bukkit.getPlayerExact(newOwner);
                         if (newOwnerPlayer == null) {
@@ -535,7 +534,7 @@ public final class ChatListener implements Listener {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.awaiting").replace("%player%", newOwner));
                         newOwnerPlayer.sendMessage(getLocaleMessage("world.players.transfer-ownership.confirm-new")
                                 .replace("%player%", player.getName()).replace("%id%", String.valueOf(planet.getId())));
-                        confirmation.put(newOwnerPlayer, PlayerConfirmation.GET_OWNERSHIP);
+                        PlayerConfirmation.setConfirmation(newOwnerPlayer, PlayerConfirmation.GET_OWNERSHIP);
                     } else {
                         player.sendMessage(getLocaleMessage("world.players.transfer-ownership.wrong-id"));
                     }
@@ -584,8 +583,7 @@ public final class ChatListener implements Listener {
                 }
             }
             case MODULE_NAME_CHANGE -> {
-                Module module = ModuleSettingsMenu.getCurrentEditingModule(player);
-                ModuleSettingsMenu.removeFromCurrentEditing(player);
+                Module module = OpenCreative.getModuleManager().getModuleById((String) data);
                 if (module == null || !module.isOwner(player)) return;
                 String newName = "§f" + ChatColor.translateAlternateColorCodes('&', input);
                 String uncoloredName = ChatColor.stripColor(newName);
@@ -600,8 +598,7 @@ public final class ChatListener implements Listener {
                 player.sendMessage(getLocaleMessage("settings.module-name.changed").replace("%name%", newName));
             }
             case MODULE_DESCRIPTION_CHANGE -> {
-                Module module = ModuleSettingsMenu.getCurrentEditingModule(player);
-                ModuleSettingsMenu.removeFromCurrentEditing(player);
+                Module module = OpenCreative.getModuleManager().getModuleById((String) data);
                 if (module == null || !module.isOwner(player)) return;
                 String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&', input);
                 String uncoloredDescription = ChatColor.stripColor(newDescription);

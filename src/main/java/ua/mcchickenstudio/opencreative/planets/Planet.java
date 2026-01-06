@@ -545,6 +545,9 @@ public class Planet {
                         } else {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                         }
+                        if (isOwner(player)) {
+                            ItemsGroup.PLAY_OWNER.setItems(player);
+                        }
                     } else {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                     }
@@ -786,6 +789,10 @@ public class Planet {
             player.clearTitle();
             territory.showBorders(player);
             if (!getPlayersFromPlanetList(this, PlayersType.UNIQUE).contains(player.getName())) {
+                if (Experiments.isEnabled("wanders") && !isOwner(player)) {
+                    Wander wander = OpenCreative.getWander(player);
+                    wander.setVisits(wander.getVisits() + 1);
+                }
                 /*
                  * When player joins connects to the world for first time.
                  */
@@ -960,6 +967,9 @@ public class Planet {
     public enum Mode {
         PLAYING() {
             public void onPlayerConnect(Player player, Planet planet) {
+                if (planet.isOwner(player)) {
+                    ItemsGroup.PLAY_OWNER.setItems(player);
+                }
                 player.setGameMode(GameMode.ADVENTURE);
             }
         }, BUILD() {

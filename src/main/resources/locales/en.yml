@@ -123,6 +123,13 @@ modules:
   list:
     amount: "%prefix%List of all modules (%amount%):"
     module: "&6%moduleID% &7- %moduleOwner%&7 - &7%moduleName%&f"
+profiles:
+  default-description: "&7I create awesome worlds!"
+  genders:
+    male: "&3Male ♂"
+    female: "&dFemale ♀"
+    non-binary: "&eNon-binary 🜬"
+    unknown: "&7Not specified"
 environment:
   help: "%prefix%Manage code, variables, and the world for developers.\n \n&6 /env variables clear &f- Clear variables\n&6 /env variables size &f- Number of variables\n&6 /env variables list &f- List of variables"
   variables:
@@ -198,6 +205,13 @@ environment:
       dev: "&7LMB &f- Teleport to world, &7F &f- Teleport to location"
     vector: "&7Chat &f- Set coordinates of vector"
     particle: "&7RMB &f- Select a type, &7Shift+RMB &f- Show particle"
+    color: "&7Chat &f- Set color"
+    lines-controller: "&7LMB/RMB &f- Move action or condition"
+    arrow-not: "&7LMB &f- Add/remove NOT in condition"
+    fly-speed-changer: "&7RMB &f- Change flight speed"
+    debug-torch: "&7RMB &f- Mark event for debugging"
+    holding-event: "&fPlace the block at the &bbeginning of the line"
+    holding-action: "&fPlace the block &7after the event"
   duplication:
     success: "%prefix%&fCode lines successfully &6copied &fto the new location :)"
     fail: "%prefix%&cThere was a problem copying the code lines.. :("
@@ -16341,6 +16355,158 @@ menus:
           - "&e ⏵ &nDrag item here to change icon&e..."
           - "&8  ID: %moduleID%"
           - " "
+  player-profile:
+    title: "&8☻ Profile %player%"
+    items:
+      player:
+        name: " "
+        lore:
+          - "&7 %player%"
+          - "&f Gender: &7%gender%"
+          - ""
+          - "%description%"
+          - ""
+      worlds:
+        name: " "
+        lore:
+          - "&a 🌊 Created worlds"
+          - ""
+          - "&7  Click to show"
+          - "&7  worlds that were created"
+          - "&7  by this player."
+          - ""
+      modules:
+        name: " "
+        lore:
+          - "&6 🪓 Created modules"
+          - ""
+          - "&7  Click to show"
+          - "&7  modules that were created"
+          - "&7  by this player."
+          - ""
+      favorite-worlds:
+        name: " "
+        lore:
+          - "&d ❤ Favorite worlds"
+          - ""
+          - "&7  Click to show"
+          - "&7  this player's favorite worlds."
+          - ""
+      statistics:
+        name: " "
+        lore:
+          - "&a 🌊 &fWorlds: &a%worlds%"
+          - "&6 🪓 &fModules: &6%modules%"
+          - ""
+          - "&e ⌚ &fPlaytime: &e%playtime%"
+          - "&2 🎣 &fVisited: &2%visits% worlds"
+          - ""
+      social-links:
+        name: " "
+        unknown: "Not specified"
+        lore:
+          - "&9 ✉ &fDiscord: &9%discord%"
+          - "&b ✉ &fTelegram: &b%telegram%"
+          - "&3 ✉ &fX (Twitter): &3%twitter%"
+          - "&c ✉ &fYouTube: &c%youtube%"
+          - ""
+  profile-settings:
+    title: "&8⌘ Your profile settings"
+    turned-on: "&a  ⏺ &n"
+    turned-off: "&7  ○ "
+    items:
+      player:
+        name: " "
+        lore:
+          - "&7 %player%"
+          - "&f Gender: &7%gender%"
+          - ""
+          - "%description%"
+          - ""
+      change-description:
+        name: " "
+        lore:
+          - "&6 ✂ About me"
+          - "&7 Short phrases about you."
+          - ""
+          - "&7 Tell players who you are,"
+          - "&7 how good you are at coding"
+          - "&7 and building worlds."
+          - " "
+          - "&f Examples:"
+          - "&7  &6Bob, I like trains."
+          - "&7  &aBest coder on the server!"
+          - "&7  &cDaizy, Daizy, give me your answer.."
+          - " "
+          - "&e Click to change the description."
+          - ""
+      change-social-discord:
+        name: " "
+        lore:
+          - "&9 ✉ Discord tag"
+          - "&7 Your social networks."
+          - ""
+          - "&7 You can add a tag"
+          - "&7 so players can contact"
+          - "&7 you on Discord."
+          - " "
+          - "&e Click to change."
+          - ""
+      change-social-telegram:
+        name: " "
+        lore:
+          - "&b ✉ Telegram username"
+          - "&7 Your social networks."
+          - ""
+          - "&7 You can add a username"
+          - "&7 so players can contact"
+          - "&7 you on Telegram."
+          - " "
+          - "&e Click to change."
+          - ""
+      change-social-twitter:
+        name: " "
+        lore:
+          - "&3 ✉ X (Twitter) username"
+          - "&7 Your social networks."
+          - ""
+          - "&7 You can add a username"
+          - "&7 so players can contact"
+          - "&7 you on X (Twitter)."
+          - " "
+          - "&e Click to change."
+          - ""
+      change-social-youtube:
+        name: " "
+        lore:
+          - "&c ✉ YouTube channel"
+          - "&7 Your social networks."
+          - ""
+          - "&7 You can add a tag"
+          - "&7 so players can find"
+          - "&7 your YouTube channel."
+          - " "
+          - "&e Click to change."
+          - ""
+      gender:
+        name: " "
+        choices:
+          none: "Not selected"
+          male: "Male"
+          female: "Female"
+          non-binary: "Non-binary"
+        lore:
+          - "&d Gender selection"
+          - ""
+          - "&e  Click to change"
+          - "&e  your profile gender."
+          - ""
+          - "&f Options:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - ""
   own-modules:
     title: "&2☄ My Modules"
     items:

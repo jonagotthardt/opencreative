@@ -28,9 +28,11 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.indev.WanderMenu;
+import ua.mcchickenstudio.opencreative.indev.WanderSettingsMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -76,7 +78,7 @@ public final class WandersExperiment extends Experiment {
                 } else {
                     wander.getPlayer().sendMessage("Already in favorites!");
                 }
-                List<Integer> favoriteWorlds = wander.getFavoriteWorlds();
+                Set<Integer> favoriteWorlds = wander.getFavoriteWorlds();
                 if (favoriteWorlds.isEmpty()) {
                     wander.getPlayer().sendMessage("No favorite worlds");
                 }
@@ -97,7 +99,7 @@ public final class WandersExperiment extends Experiment {
                 } else {
                     wander.getPlayer().sendMessage("Not in favorites!");
                 }
-                List<Integer> favoriteWorlds = wander.getFavoriteWorlds();
+                Set<Integer> favoriteWorlds = wander.getFavoriteWorlds();
                 if (favoriteWorlds.isEmpty()) {
                     wander.getPlayer().sendMessage("No favorite worlds");
                 }
@@ -121,6 +123,9 @@ public final class WandersExperiment extends Experiment {
             case "menu" -> {
                 new WanderMenu(player.getName()).open(player);
             }
+            case "settings" -> {
+                new WanderSettingsMenu(player.getName()).open(player);
+            }
             case "info" -> {
                 if (args.length == 1) {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
@@ -137,7 +142,7 @@ public final class WandersExperiment extends Experiment {
                 sender.sendMessage("   Description: " + (wander.getDescription() == null ? "None" : wander.getDescription()));
                 sender.sendMessage("   Last World: " + (wander.getLastPlayedWorldId() == -1 ? "None" : wander.getLastPlayedWorldId()));
 
-                List<Integer> favorites = wander.getFavoriteWorlds();
+                Set<Integer> favorites = wander.getFavoriteWorlds();
                 sender.sendMessage("   Favorite Worlds (" + favorites.size() + "): " +
                         String.join(", ", favorites.stream().map(Object::toString).toList()));
 
@@ -156,11 +161,11 @@ public final class WandersExperiment extends Experiment {
     @Override
     public @Nullable List<String> tabCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (args.length == 0) {
-            return List.of("favorite", "unfavorite", "info", "gender", "menu");
+            return List.of("favorite", "unfavorite", "info", "gender", "menu", "settings");
         }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("gender")) {
-                return List.of("male", "female", "other");
+                return List.of("male", "female", "non_binary", "unknown");
             }
         }
         return null;

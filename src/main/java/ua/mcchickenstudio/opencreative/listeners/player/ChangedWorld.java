@@ -34,6 +34,7 @@ import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
+import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,9 +74,7 @@ public final class ChangedWorld implements Listener {
         clearWorldModePermissions(player);
         World oldWorld = event.getFrom();
         World newWorld = player.getWorld();
-        ChatListener.confirmation.remove(player);
-        PlayerControlMenu.removeConfirmation(player);
-        ModuleSettingsMenu.removeFromCurrentEditing(player);
+        PlayerConfirmation.clearConfirmations(player);
         player.clearTitle();
 
         Planet oldPlanet = OpenCreative.getPlanetsManager().getPlanetByWorld(oldWorld);

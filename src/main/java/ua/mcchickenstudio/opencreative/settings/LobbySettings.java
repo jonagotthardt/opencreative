@@ -40,6 +40,7 @@ public final class LobbySettings {
     private boolean disallowWorldEdit = true;
     private boolean disableExplosions = true;
     private boolean resetViewDistance = true;
+    private boolean teleportOnJoin = true;
 
     /**
      * Loads settings of lobby from configuration.
@@ -61,6 +62,7 @@ public final class LobbySettings {
         disallowPlacingBlocks = section.getBoolean("disallow-placing-blocks", true);
         disallowDestroyingBlocks = section.getBoolean("disallow-destroying-blocks", true);
         resetViewDistance = section.getBoolean("reset-view-distance", true);
+        teleportOnJoin = section.getBoolean("teleport-on-join", true);
     }
 
     /**
@@ -143,5 +145,15 @@ public final class LobbySettings {
      */
     public boolean shouldResetViewDistance() {
         return resetViewDistance;
+    }
+
+    /**
+     * Checks whether player will be teleported to lobby
+     * when he connects to server.
+     *
+     * @return true - teleport to lobby on join, false - not.
+     */
+    public boolean shouldTeleportOnJoin() {
+        return teleportOnJoin;
     }
 }

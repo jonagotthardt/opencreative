@@ -129,7 +129,7 @@ public final class WorldsCompassMenu extends AbstractMenu {
             ));
             player.sendMessage(MessageUtils.getPlayerLocaleMessage("menus.all-worlds.items.search.usage", player).replace("%search%", getLocaleMessage("menus.all-worlds.items.search." + searchQuery)));
             Sounds.MENU_WORLD_SEARCH.play(player);
-            ChatListener.confirmation.put(player, request);
+            PlayerConfirmation.setConfirmation(player, request);
         } else if (itemEquals(currentItem, ALL_WORLDS)) {
             new WorldsBrowserMenu(player, OpenCreative.getPlanetsManager().getPlanets()).open(player);
         } else if (itemEquals(currentItem, OWN_WORLDS)) {

@@ -34,6 +34,7 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetModeChangeEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.settings.items.ItemsGroup;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.Arrays;
@@ -105,7 +106,7 @@ public class PlayCommand extends CommandHandler {
                     player.teleport(planet.getTerritory().getSpawnLocation());
                     planet.getTerritory().showBorders(player);
                     if (planet.isOwner(sender.getName())) {
-                        player.getInventory().setItem(8, createItem(Material.COMPASS, 1, "items.developer.world-settings"));
+                        ItemsGroup.PLAY_OWNER.setItems(player);
                     }
                     givePlayPermissions(player);
                     new JoinEvent(player).callEvent();
@@ -143,7 +144,7 @@ public class PlayCommand extends CommandHandler {
                 player.teleport(planet.getTerritory().getSpawnLocation());
                 planet.getTerritory().showBorders(player);
                 if (planet.isOwner(sender.getName())) {
-                    player.getInventory().setItem(8, createItem(Material.COMPASS, 1, "items.developer.world-settings"));
+                    ItemsGroup.PLAY_OWNER.setItems(player);
                 }
                 if (planet.getWorldPlayers().canDevelop(player)) {
                     givePlayPermissions(player);

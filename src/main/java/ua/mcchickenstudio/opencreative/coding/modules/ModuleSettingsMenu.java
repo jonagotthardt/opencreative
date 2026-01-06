@@ -48,7 +48,6 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public final class ModuleSettingsMenu extends AbstractMenu {
 
-    private static final Map<UUID, Integer> settingsSessions = new HashMap<>();
     private final Module module;
     private final Player player;
     private final ItemStack name = createItem(Material.JUNGLE_SIGN, 1, "menus.module-settings.items.change-name", "name");
@@ -66,29 +65,6 @@ public final class ModuleSettingsMenu extends AbstractMenu {
         access = new ParameterButton(module.getInformation().isPublic() ? "public" : "private",
                 List.of("public", "private"), "access", "menus.module-settings", "menus.module-settings.items.change-sharing",
                 List.of(Material.LIME_DYE, Material.GRAY_DYE));
-    }
-
-    public static void setCurrentEditingModule(@NotNull Player player, @NotNull Module module) {
-        settingsSessions.put(player.getUniqueId(), module.getId());
-    }
-
-    public static @Nullable Module getCurrentEditingModule(@NotNull Player player) {
-        Integer id = settingsSessions.get(player.getUniqueId());
-        if (id == null) return null;
-        Module module = OpenCreative.getModuleManager().getModuleById(String.valueOf(id));
-        if (module == null) {
-            settingsSessions.values().removeIf(i -> i.equals(id));
-            return null;
-        }
-        return module;
-    }
-
-    public static void removeFromCurrentEditing(@NotNull Player player) {
-        settingsSessions.remove(player.getUniqueId());
-    }
-
-    public static void removeFromCurrentEditing(@NotNull Module module) {
-        settingsSessions.values().removeIf(i -> i.equals(module.getId()));
     }
 
     @Override
@@ -147,9 +123,8 @@ public final class ModuleSettingsMenu extends AbstractMenu {
             ));
             player.sendMessage(getLocaleMessage("settings.module-name.usage").replace("%player%", player.getName()));
             player.closeInventory();
-            if (!(ChatListener.confirmation.containsKey(player))) {
-                ChatListener.confirmation.put(player, PlayerConfirmation.MODULE_NAME_CHANGE);
-                setCurrentEditingModule(player, module);
+            if (!PlayerConfirmation.hasConfirmation(player)) {
+                PlayerConfirmation.setConfirmation(player, PlayerConfirmation.MODULE_NAME_CHANGE, module.getId());
             }
         } else if (itemEquals(currentItem, description)) {
             player.showTitle(Title.title(
@@ -158,9 +133,8 @@ public final class ModuleSettingsMenu extends AbstractMenu {
             ));
             player.sendMessage(getLocaleMessage("settings.module-description.usage"));
             player.closeInventory();
-            if (!(ChatListener.confirmation.containsKey(player))) {
-                ChatListener.confirmation.put(player, PlayerConfirmation.MODULE_DESCRIPTION_CHANGE);
-                setCurrentEditingModule(player, module);
+            if (!PlayerConfirmation.hasConfirmation(player)) {
+                PlayerConfirmation.setConfirmation(player, PlayerConfirmation.MODULE_DESCRIPTION_CHANGE, module.getId());
             }
         } else if (itemEquals(currentItem, access.getItem())) {
             access.next();

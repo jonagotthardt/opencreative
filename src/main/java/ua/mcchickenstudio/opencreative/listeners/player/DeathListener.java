@@ -35,6 +35,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
+import ua.mcchickenstudio.opencreative.settings.items.Items;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.time.Duration;
@@ -62,7 +63,7 @@ public final class DeathListener implements Listener {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));
                 }
             }
-            event.getDrops().remove(createItem(Material.COMPASS, 1, "items.developer.world-settings"));
+            event.getDrops().remove(Items.WORLD_SETTINGS.get(player));
             new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerDeathEvent(player, event).callEvent();
             Player killer = player.getKiller();
             if (killer != null) {

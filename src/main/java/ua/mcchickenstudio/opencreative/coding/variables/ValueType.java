@@ -130,13 +130,13 @@ public enum ValueType {
      * material with value types materials.
      *
      * @param material material to check.
-     * @return value type, or text value.
+     * @return value type, or null - if not found.
      */
-    public static @NotNull ValueType getByMaterial(Material material) {
+    public static @Nullable ValueType getByMaterial(@NotNull Material material) {
         for (ValueType varType : values()) {
             if (varType.material == material) return varType;
         }
-        return TEXT;
+        return null;
     }
 
     /**

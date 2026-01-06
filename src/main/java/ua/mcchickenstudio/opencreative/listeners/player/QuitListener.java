@@ -33,6 +33,7 @@ import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
+import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -69,10 +70,8 @@ public final class QuitListener implements Listener {
         player.setGameMode(GameMode.ADVENTURE);
         teleportToLobby(player);
 
-        ChatListener.confirmation.remove(player);
+        PlayerConfirmation.clearConfirmations(player);
         ChatCommand.creativeChatOff.remove(player);
-        PlayerControlMenu.removeConfirmation(player);
-        ModuleSettingsMenu.removeFromCurrentEditing(player);
         removeFromPermissionsMap(player);
         CooldownUtils.clearPlayerCooldowns(player);
         disableSpying(player);

@@ -182,7 +182,9 @@ public abstract class Layout extends AbstractMenu {
                         }
                         itemMeta.lore(null);
                         itemStack.setItemMeta(itemMeta);
-                        setPersistentData(itemStack, getCodingValueKey(), ValueType.getByMaterial(itemStack.getType()).name());
+                        ValueType valueType = ValueType.getByMaterial(itemStack.getType());
+                        if (valueType == null) valueType = ValueType.TEXT;
+                        setPersistentData(itemStack, getCodingValueKey(), valueType.name());
                         setPersistentData(itemStack, getCodingDoNotDropMeKey(), "1");
                         container.getInventory().setItem(chestSlot, itemStack);
                     }

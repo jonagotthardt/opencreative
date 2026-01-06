@@ -18,14 +18,28 @@
 
 package ua.mcchickenstudio.opencreative.indev;
 
-/**
- * In development.
- */
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+
 public class Links {
 
-    private String x;
-    private String facebook;
-    private String youtube;
-    private String tiktok;
+    private Map<String, String> links;
 
+    public Map<String, String> getLinks() {
+        return links;
+    }
+
+    public @Nullable String getLink(@NotNull String type) {
+        return links.get(type);
+    }
+
+    public void setLink(@NotNull String type, @Nullable String link) {
+        if (link == null) {
+            links.remove(type);
+            return;
+        }
+        links.put(type, link);
+    }
 }
