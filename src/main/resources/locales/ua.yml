@@ -10042,8 +10042,8 @@ items:
               - "%1%"
               - "%2%"
             choices:
-              ceil: "До меншого"
-              floor: "До більшого"
+              floor: "До меншого"
+              ceil: "До більшого"
       var-subtract-numbers:
         name: "&9Віднімання чисел -"
         lore:

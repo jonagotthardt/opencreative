@@ -10126,8 +10126,8 @@ items:
               - "%1%"
               - "%2%"
             choices:
-              ceil: "К меньшему"
-              floor: "К большему"
+              floor: "К меньшему"
+              ceil: "К большему"
       var-subtract-numbers:
         name: "&9Вычитание чисел -"
         lore:

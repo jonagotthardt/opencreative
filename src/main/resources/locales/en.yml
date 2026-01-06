@@ -10031,8 +10031,8 @@ items:
               - "%1%"
               - "%2%"
             choices:
-              ceil: "Down"
-              floor: "Up"
+              floor: "Down"
+              ceil: "Up"
       var-subtract-numbers:
         name: "&9Subtract numbers"
         lore:
