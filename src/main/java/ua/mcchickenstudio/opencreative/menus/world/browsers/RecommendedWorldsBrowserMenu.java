@@ -54,7 +54,7 @@ public class RecommendedWorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     public RecommendedWorldsBrowserMenu(Player player, PlanetInfo.Category category) {
         super(player, getLocaleMessage("menus.recommended-worlds.items."
-                        + category.name().toLowerCase().replace("_", "-") + ".title",
+                                + category.name().toLowerCase().replace("_", "-") + ".title",
                         false), PlacementLayout.BOTTOM_NO_DECORATION,
                 new int[]{45, 49}, new int[]{45, 46, 52, 53});
         for (Planet planet : OpenCreative.getPlanetsManager().getRecommendedPlanets()) {

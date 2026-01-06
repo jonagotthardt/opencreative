@@ -113,5 +113,6 @@ public final class WorldSettingsCategoryMenu extends AbstractMenu implements Wor
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+    }
 }

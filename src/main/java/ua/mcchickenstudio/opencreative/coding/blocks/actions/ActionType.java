@@ -1008,6 +1008,11 @@ public enum ActionType {
                 return true;
             }
         }
+        if (this == PLAYER_SET_VIEW_DISTANCE || this == PLAYER_SET_SIMULATION_DISTANCE) {
+            if (!OpenCreative.getSettings().getLobbySettings().shouldResetViewDistance()) {
+                return true;
+            }
+        }
         return getActionClass() == null
                 || (requiredPlugin != null && !HookUtils.isPluginEnabled(requiredPlugin))
                 || (isCondition() && OpenCreative.getSettings().getCodingSettings().isDisabledCondition(this))

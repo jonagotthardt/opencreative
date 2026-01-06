@@ -142,7 +142,7 @@ public final class WorldsCompassMenu extends AbstractMenu {
             if (showingCategoriesInsteadOfWorlds) {
                 PlanetInfo.Category category;
                 try {
-                     category = PlanetInfo.Category.valueOf(worldID);
+                    category = PlanetInfo.Category.valueOf(worldID);
                 } catch (Exception ignored) {
                     return;
                 }
