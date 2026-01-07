@@ -39,7 +39,7 @@ public final class SetBlockTypeAction extends WorldAction {
     @Override
     protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations", this);
-        Material material = getArguments().getMaterial("type", Material.AIR, this);
+        Material material = getArguments().getBlockMaterial("type", Material.AIR, this);
         PlanetRunnable planetRunnable = new PlanetRunnable(getPlanet()) {
             @Override
             public void execute() {
@@ -52,14 +52,6 @@ public final class SetBlockTypeAction extends WorldAction {
                 new LimitReachedBlocksEvent(getPlanet()).callEvent();
                 return;
             }
-            material = switch (material) {
-                case BUCKET -> Material.AIR;
-                case WATER_BUCKET -> Material.WATER;
-                case LAVA_BUCKET -> Material.LAVA;
-                case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
-                case FLINT_AND_STEEL -> Material.FIRE;
-                default -> material;
-            };
             location.getBlock().setType(material);
             getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
         }

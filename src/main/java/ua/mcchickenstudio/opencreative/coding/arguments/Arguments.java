@@ -553,6 +553,52 @@ public class Arguments {
     }
 
     /**
+     * Returns block material value stored in arguments.
+     *
+     * @param path         key of argument, that stores block material value.
+     * @param defaultValue default value.
+     * @param action       action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull Material getBlockMaterial(@NotNull String path, @NotNull Material defaultValue, @NotNull Action action) {
+        Argument arg = getArg(path);
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(planet, path);
+            return defaultValue;
+        }
+        Material material = null;
+        if (arg.getValue(action) instanceof ItemStack item) {
+            material = item.getType();
+            material = switch (material) {
+                case BUCKET -> Material.AIR;
+                case WATER_BUCKET -> Material.WATER;
+                case LAVA_BUCKET -> Material.LAVA;
+                case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
+                case FLINT_AND_STEEL -> Material.FIRE;
+                default -> material;
+            };
+        }
+        if (arg.getValue(action) instanceof String text) {
+            Material found = Material.getMaterial(text.toUpperCase());
+            if (found != null) {
+                material = found;
+            }
+        }
+        if (arg.getValue(action) instanceof Block block) {
+            material = block.getType();
+        }
+        if (arg.getValue(action) instanceof Location location) {
+            material = location.getBlock().getType();
+        }
+        if (material != null && material.isBlock()) {
+            sendCodingDebugVariable(planet, path, arg.getValue(action));
+            return material;
+        }
+        sendCodingDebugNotFoundVariable(planet, path);
+        return defaultValue;
+    }
+
+    /**
      * Returns item value stored in arguments.
      *
      * @param path         key of argument, that stores item value.

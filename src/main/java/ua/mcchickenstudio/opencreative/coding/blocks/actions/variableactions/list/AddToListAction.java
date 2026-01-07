@@ -45,7 +45,7 @@ public final class AddToListAction extends VariableAction {
         if (cannotChangeListElements(elements.size())) {
             return;
         }
-        changeListElementsChangesAmount(list.size());
+        changeListElementsChangesAmount(elements.size());
         for (Object element : elements) {
             if (element instanceof Collection<?> || element instanceof Map<?, ?>) {
                 throw new CollectionWithCollectionException(list.getClass(), element.getClass());

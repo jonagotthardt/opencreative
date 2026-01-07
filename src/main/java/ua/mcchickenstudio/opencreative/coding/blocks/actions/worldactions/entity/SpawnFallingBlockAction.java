@@ -52,7 +52,7 @@ public final class SpawnFallingBlockAction extends WorldAction {
         }
 
         Component customName = getArguments().getComponent("name", Component.text(""), this);
-        Material block = getArguments().getMaterial("block", Material.GRASS_BLOCK, this);
+        Material block = getArguments().getBlockMaterial("block", Material.GRASS_BLOCK, this);
         float damagePerBlock = getArguments().getFloat("damage", 0.0f, this);
         boolean cancelDrop = !getArguments().getBoolean("drop", true, this);
 

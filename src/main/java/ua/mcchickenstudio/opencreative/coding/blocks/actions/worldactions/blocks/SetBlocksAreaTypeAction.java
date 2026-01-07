@@ -45,7 +45,7 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
         }
         Location firstLocation = getArguments().getLocation("first", getPlanet().getTerritory().getSpawnLocation(), this);
         Location secondLocation = getArguments().getLocation("second", getPlanet().getTerritory().getSpawnLocation(), this);
-        Material type = getArguments().getMaterial("type", Material.AIR, this);
+        Material type = getArguments().getBlockMaterial("type", Material.AIR, this);
         int minX = Math.min(firstLocation.getBlockX(), secondLocation.getBlockX());
         int minY = Math.min(firstLocation.getBlockY(), secondLocation.getBlockY());
         int minZ = Math.min(firstLocation.getBlockZ(), secondLocation.getBlockZ());
@@ -59,13 +59,6 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
             }
         };
         getPlanet().getTerritory().addBukkitRunnable(runnable);
-        type = switch (type) {
-            case WATER_BUCKET -> Material.WATER;
-            case LAVA_BUCKET -> Material.LAVA;
-            case POWDER_SNOW_BUCKET -> Material.POWDER_SNOW;
-            case FLINT_AND_STEEL -> Material.FIRE;
-            default -> type;
-        };
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {

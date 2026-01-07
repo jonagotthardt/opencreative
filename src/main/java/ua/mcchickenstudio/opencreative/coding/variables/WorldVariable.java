@@ -142,7 +142,15 @@ public final class WorldVariable {
         if (value instanceof List<?> list) {
             size += list.size();
         } else if (value instanceof Map<?, ?> map) {
-            size += 2 * map.size();
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                if (entry.getValue() instanceof List<?> list) {
+                    size += list.size() + 1;
+                } else if (entry.getKey() instanceof List<?> list) {
+                    size += list.size() + 1;
+                } else {
+                    size += 2 * map.size();
+                }
+            }
         }
         return size;
     }
