@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.module;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 /**
@@ -25,7 +26,7 @@ import ua.mcchickenstudio.opencreative.coding.modules.Module;
  */
 public class ModuleDeletionEvent extends ModuleEvent {
 
-    public ModuleDeletionEvent(Module module) {
+    public ModuleDeletionEvent(@NotNull Module module) {
         super(module);
     }
 

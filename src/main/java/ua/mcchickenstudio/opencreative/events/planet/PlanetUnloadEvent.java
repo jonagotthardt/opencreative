@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
@@ -25,7 +26,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
  */
 public class PlanetUnloadEvent extends PlanetEvent {
 
-    public PlanetUnloadEvent(Planet planet) {
+    public PlanetUnloadEvent(@NotNull Planet planet) {
         super(planet);
     }
 

@@ -24,6 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetCreationEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
@@ -77,6 +78,18 @@ public final class CreativeListener implements Listener {
         placeholders.put("%player%", event.getPlayer().getName());
         placeholders.put("%planet%", event.getPlanet().getId());
         OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onPlanetDisconnect", placeholders);
+    }
+
+    @EventHandler
+    public void onEvent(PlanetCreationEvent event) {
+        Map<String, Object> placeholders = new HashMap<>();
+        placeholders.put("%planet%", event.getPlanet().getId());
+        placeholders.put("%player%", event.getPlayer().getName());
+        placeholders.put("%generator%", event.getGenerator().getID());
+        placeholders.put("%environment%", event.getEnvironment().name().toLowerCase());
+        placeholders.put("%structures%", event.shouldGenerateStructures());
+        placeholders.put("%seed%", event.getSeed());
+        OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onPlanetCreation", placeholders);
     }
 
     @EventHandler

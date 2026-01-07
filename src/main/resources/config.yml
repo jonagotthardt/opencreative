@@ -311,6 +311,7 @@ commands:
       console: true # true - Execute as console, false - as player
   onPlanetConnect: {} # %planet% %player%
   onPlanetDisconnect: {} # %planet% %player%
+  onPlanetCreation: { } # %planet% %player% %generator% %environment% %structures% %seed%
   onWorldChat: {} # %world% %player% %message% %formatted%
   onCreativeChat: {} # %player% %message% %formatted%
   onMaintenanceStart: {} # %player%

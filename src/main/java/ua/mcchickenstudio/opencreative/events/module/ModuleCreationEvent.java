@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.events.module;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 /**
@@ -32,7 +33,7 @@ public class ModuleCreationEvent extends ModuleEvent implements Cancellable {
     private final Player player;
     private boolean cancel;
 
-    public ModuleCreationEvent(Module module, Player player) {
+    public ModuleCreationEvent(@NotNull Module module, @NotNull Player player) {
         super(module);
         this.player = player;
     }
@@ -47,7 +48,7 @@ public class ModuleCreationEvent extends ModuleEvent implements Cancellable {
         this.cancel = cancel;
     }
 
-    public Player getPlayer() {
+    public @NotNull Player getPlayer() {
         return player;
     }
 }

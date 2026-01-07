@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.events.planet;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
@@ -35,7 +36,7 @@ public class PlanetInviteEvent extends PlanetEvent implements Cancellable {
     private final Player receiver;
     private boolean cancel;
 
-    public PlanetInviteEvent(Planet planet, Player player, Player receiver) {
+    public PlanetInviteEvent(@NotNull Planet planet, Player player, Player receiver) {
         super(planet);
         this.player = player;
         this.receiver = receiver;

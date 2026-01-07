@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.events.planet;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
@@ -30,7 +31,7 @@ public class PlanetDisconnectPlayerEvent extends PlanetEvent {
 
     private final Player player;
 
-    public PlanetDisconnectPlayerEvent(Planet planet, Player player) {
+    public PlanetDisconnectPlayerEvent(@NotNull Planet planet, Player player) {
         super(planet);
         this.player = player;
     }

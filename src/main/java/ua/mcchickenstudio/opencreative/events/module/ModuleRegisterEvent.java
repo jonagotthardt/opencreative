@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.module;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 
 /**
@@ -27,7 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.modules.Module;
  */
 public class ModuleRegisterEvent extends ModuleEvent {
 
-    public ModuleRegisterEvent(Module module) {
+    public ModuleRegisterEvent(@NotNull Module module) {
         super(module);
     }
 

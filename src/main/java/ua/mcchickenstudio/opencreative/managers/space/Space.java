@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDeletionEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.events.planet.PlanetCreationEvent;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -123,6 +124,7 @@ public final class Space implements PlanetsManager {
         if (planet.getTerritory().generateWorld(generator, environment, seed, generateStructures) != null) {
             long endTime = System.currentTimeMillis();
             OpenCreative.getPlugin().getLogger().info("World for planet " + id + " successfully generated in " + (endTime - startTime) + " ms");
+            new PlanetCreationEvent(planet, owner, generator, environment, seed, generateStructures).callEvent();
             planet.connectPlayer(owner);
         } else {
             ErrorUtils.sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". World is null.");
