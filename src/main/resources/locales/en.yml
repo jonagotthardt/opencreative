@@ -498,6 +498,30 @@ settings:
     usage: "%prefix%Enter a new &6profile description&f, for example &aCreating beautiful worlds&f.\n&f - The description must not violate the server rules."
     error: "%prefix%The profile description violates one of the requirements:\n&f- The description must not be shorter than %min% characters or longer than %max%."
     changed: "%prefix%You have set a new &6profile description&f: %description%"
+  profile-social-discord:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &9Discord tag&f."
+    usage: "%prefix%Enter your &6Discord tag&f, for example &9@wampus&f."
+    error: "%prefix%&cYour Discord tag must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &6Discord tag&f: %social%"
+  profile-social-twitter:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &3X username&f."
+    usage: "%prefix%Enter your &6X username&f, for example &3@twitter&f."
+    error: "%prefix%&cYour X username must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &3X tag&f: %social%"
+  profile-social-youtube:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &cYouTube username&f."
+    usage: "%prefix%Enter your &6YouTube username&f, for example &c@youtube&f."
+    error: "%prefix%&cYour YouTube username must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &cYouTube username&f: %social%"
+  profile-social-telegram:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &bTelegram username&f."
+    usage: "%prefix%Enter your &6Telegram username&f, for example &b@telegram&f."
+    error: "%prefix%&cYour Telegram username must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &bTelegram username&f: %social%"
 deleting-world:
   title: "&cDeleting ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -16518,7 +16542,7 @@ menus:
       gender:
         name: " "
         choices:
-          none: "Not selected"
+          unknown: "Not selected"
           male: "Male"
           female: "Female"
           non-binary: "Non-binary"

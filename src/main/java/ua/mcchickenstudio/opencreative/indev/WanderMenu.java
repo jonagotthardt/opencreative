@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.modules.ModulesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import java.util.ArrayList;
@@ -77,7 +78,6 @@ public class WanderMenu extends AbstractMenu {
         replacePlaceholderInLore(item, "%worlds%", worldsAmount);
         replacePlaceholderInLore(item, "%modules%", modulesAmount);
         int time = wander.getOfflinePlayer().getStatistic(Statistic.PLAY_ONE_MINUTE) / 20 * 1000;
-        System.out.println(time);
         replacePlaceholderInLore(item, "%playtime%", convertTime(time));
         replacePlaceholderInLore(item, "%visits%", wander.getVisits());
         return item;
@@ -114,7 +114,7 @@ public class WanderMenu extends AbstractMenu {
                 String description = wander.getDescription() == null ? getLocaleMessage("profiles.default-description") : wander.getDescription();
                 String[] newLines = description.split("\\\\n");
                 for (String newLine : newLines) {
-                    lore.add(loreLine.replace("%description%", ChatColor.translateAlternateColorCodes('&', newLine)));
+                    lore.add(loreLine.replace("%description%", ChatColor.translateAlternateColorCodes('&', "&f" + newLine)));
                 }
             } else {
                 lore.add(ChatColor.translateAlternateColorCodes('&', parsePAPI(offlinePlayer, loreLine)));
@@ -161,5 +161,7 @@ public class WanderMenu extends AbstractMenu {
     }
 
     @Override
-    public void onOpen(@NotNull InventoryOpenEvent event) {}
+    public void onOpen(@NotNull InventoryOpenEvent event) {
+        Sounds.MENU_OPEN_PROFILE.play(event.getPlayer());
+    }
 }

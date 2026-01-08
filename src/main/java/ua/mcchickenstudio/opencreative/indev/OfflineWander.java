@@ -113,7 +113,9 @@ public class OfflineWander {
     }
 
     public void setLink(@NotNull String type, @NotNull String link) {
-        if (links == null) this.links = new Links();
+        if (links == null) {
+            this.links = new Links();
+        }
         links.setLink(type, link);
         saveData();
     }
@@ -294,6 +296,16 @@ public class OfflineWander {
                 this.lastLocation = new Location(null, x, y, z, yaw, pitch);
             }
 
+            if (json.has("socialLinks") && json.get("socialLinks").isJsonObject()) {
+                links = new Links();
+                JsonObject socialLinks = json.getAsJsonObject("socialLinks");
+                for (Map.Entry<String, JsonElement> entry : socialLinks.entrySet()) {
+                    String type = entry.getKey();
+                    String value = entry.getValue().getAsString();
+                    links.setLink(type, value);
+                }
+            }
+
         } catch (Exception error) {
             sendDebugError("Failed to load info for wander " + uuid, error);
         }
@@ -346,6 +358,13 @@ public class OfflineWander {
             lastLoc.addProperty("yaw", lastLocation.getYaw());
             lastLoc.addProperty("pitch", lastLocation.getPitch());
             json.add("lastLocation", lastLoc);
+        }
+        if (links != null && !links.getLinks().isEmpty()) {
+            JsonObject socialLinks = new JsonObject();
+            for (String type : links.getLinks().keySet()) {
+                socialLinks.addProperty(type, links.getLinks().get(type));
+            }
+            json.add("socialLinks", socialLinks);
         }
         return json;
     }

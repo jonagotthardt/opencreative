@@ -30,6 +30,7 @@ import ua.mcchickenstudio.opencreative.events.planet.PlanetRegisterEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetCreationEvent;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.menus.world.WorldMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -90,22 +91,34 @@ public final class Space implements PlanetsManager {
 
     @Override
     public void createPlanet(@NotNull Player owner, int id, @NotNull WorldTemplate template) {
-        File worldTemplateFolder = new File(OpenCreative.getPlugin().getDataPath()
-                + File.separator + "templates" + File.separator + template.getFolderName());
-        if (!worldTemplateFolder.exists() || !worldTemplateFolder.isDirectory()) {
-            sendPlayerErrorMessage(owner, "Failed to create world by template " + template.getID() + ", because folder doesn't exist.");
-            sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". Folder " + template.getFolderName()
-                    + " doesn't exist, or it's not directory.");
-            return;
-        }
-        File devTemplateFolder = new File(worldTemplateFolder.getPath() + "dev");
-        File planetFolder = new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + File.separator);
-        File planetDevFolder = new File(planetFolder.getPath() + "dev");
-        FileUtils.copyFilesToDirectory(worldTemplateFolder, planetFolder);
-        if (devTemplateFolder.exists() && devTemplateFolder.isDirectory()) {
-            FileUtils.copyFilesToDirectory(devTemplateFolder, planetDevFolder);
-        }
-        createPlanet(owner, id, new FlatGenerator());
+        Wander wander = OpenCreative.getWander(owner);
+        wander.setConnectingToPlanet(true);
+        Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(), () -> {
+            File worldTemplateFolder = new File(OpenCreative.getPlugin().getDataPath()
+                    + File.separator + "templates" + File.separator + template.getFolderName());
+            if (!worldTemplateFolder.exists() || !worldTemplateFolder.isDirectory()) {
+                sendPlayerErrorMessage(owner, "Failed to create world by template " + template.getID() + ", because folder doesn't exist.");
+                sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". Folder " + template.getFolderName()
+                        + " doesn't exist, or it's not directory.");
+                wander.setConnectingToPlanet(false);
+                return;
+            }
+            File devTemplateFolder = new File(worldTemplateFolder.getPath() + "dev");
+            File planetFolder = new File(Bukkit.getWorldContainer().getPath() + File.separator + "planets" + File.separator + "planet" + id + File.separator);
+            File planetDevFolder = new File(planetFolder.getPath() + "dev");
+            FileUtils.copyFilesToDirectory(worldTemplateFolder, planetFolder);
+            if (devTemplateFolder.exists() && devTemplateFolder.isDirectory()) {
+                FileUtils.copyFilesToDirectory(devTemplateFolder, planetDevFolder);
+            }
+            if (!owner.isOnline()) {
+                FileUtils.deleteFolder(planetFolder);
+                return;
+            }
+            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
+                wander.setConnectingToPlanet(false);
+                createPlanet(owner, id, new FlatGenerator());
+            });
+        });
     }
 
     @Override

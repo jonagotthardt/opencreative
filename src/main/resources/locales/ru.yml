@@ -500,6 +500,30 @@ settings:
     usage: "%prefix%Введи новое &6описание&f профиля, например &aСоздаю красивые миры&f.\n&f - Описание не должно нарушать правила сервера."
     error: "%prefix%Описание профиля нарушает одно из требований:\n&f- Описание не должно быть короче %min% символов и длиннее %max%."
     changed: "%prefix%Вы установили своему профилю новое &6описание&f: %description%"
+  profile-social-discord:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &9тэг Discord&f."
+    usage: "%prefix%Введи свой &6тэг Discord&f, например &9@wampus&f."
+    error: "%prefix%&cВаш тэг Discord не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &6тэг Discord&f: %social%"
+  profile-social-twitter:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &3никнейм X&f."
+    usage: "%prefix%Введи свой &6никнейм X&f, например &3@twitter&f."
+    error: "%prefix%&cВаш никнейм X не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &3тэг X&f: %social%"
+  profile-social-youtube:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &cникнейм YouTube&f."
+    usage: "%prefix%Введи свой &6никнейм YouTube&f, например &c@youtube&f."
+    error: "%prefix%&cВаш никнейм YouTube не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &cникнейм YouTube&f: %social%"
+  profile-social-telegram:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &bникнейм Telegram&f."
+    usage: "%prefix%Введи свой &6никнейм Telegram&f, например &b@telegram&f."
+    error: "%prefix%&cВаш никнейм Telegram не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &bникнейм Telegram&f: %social%"
 deleting-world:
   title: "&cУдаление ◌"
   subtitle: "&fПодождите несколько секунд..."
@@ -14152,7 +14176,7 @@ menus:
       gender:
         name: " "
         choices:
-          none: "Не выбран"
+          unknown: "Не выбран"
           male: "Мужской"
           female: "Женский"
           non-binary: "Небинарный"

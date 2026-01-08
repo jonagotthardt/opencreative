@@ -394,8 +394,10 @@ public final class InteractListener implements Listener {
             devPlanet.setCodeChanged(true);
             if (torchBlock.getType() == Material.REDSTONE_WALL_TORCH) {
                 torchBlock.setType(Material.AIR);
+                Sounds.DEV_UNSET_DEBUG_TORCH.play(player);
             } else {
                 placeDebugTorch(torchBlock.getLocation());
+                Sounds.DEV_SET_DEBUG_TORCH.play(player);
             }
         } else if (player.isSneaking() && actionBlockCategory != null) {
             if (actionBlockCategory == ActionCategory.SELECTION_ACTION) {

@@ -28,8 +28,7 @@ import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.fixItem;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 
@@ -91,6 +90,7 @@ public class ParameterButton {
             meta.setLore(notFoundLore);
             item.setItemMeta(meta);
         }
+        setPersistentData(item, getItemTypeKey(), name);
         this.originalLore = item.getItemMeta().getLore();
         updateLore();
     }

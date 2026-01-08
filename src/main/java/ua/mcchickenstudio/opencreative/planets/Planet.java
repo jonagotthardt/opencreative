@@ -671,6 +671,9 @@ public class Planet {
      * @param hidePlayer hide player's join message, and make him in spectator mode or not.
      */
     public void connectPlayer(@NotNull Player player, boolean hidePlayer) {
+        if (!player.isOnline()) {
+            return;
+        }
         // If stability is not good, not connecting
         if (OpenCreative.getStability().getState() != StabilityState.FINE && !isLoaded()) {
             player.sendMessage(getLocaleMessage("creative.stability.cannot"));

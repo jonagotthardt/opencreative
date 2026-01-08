@@ -42,10 +42,9 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.ChatEvent;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
-import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.events.player.WorldChatEvent;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsBrowserMenu;
-import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -459,6 +458,7 @@ public final class ChatListener implements Listener {
                 player.sendMessage(getLocaleMessage("settings.world-name.changed").replace("%name%", newName));
                 planet.getInformation().updateIconAsync();
                 OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + " renamed world to: " + input);
+                Sounds.WORLD_SETTINGS_NAME_CHANGE.play(player);
             }
             case WORLD_CUSTOM_ID_CHANGE -> {
                 if (planet == null || !planet.isOwner(player)) return;
@@ -481,6 +481,7 @@ public final class ChatListener implements Listener {
                 player.sendMessage(getLocaleMessage("settings.world-id.changed").replace("%id%", input));
                 planet.getInformation().updateIconAsync();
                 OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + " changed world's ID to: " + input);
+                Sounds.WORLD_SETTINGS_CUSTOM_ID_SET.play(player);
             }
             case WORLD_DESCRIPTION_CHANGE -> {
                 if (planet == null || !planet.isOwner(player)) return;
@@ -498,6 +499,7 @@ public final class ChatListener implements Listener {
                 player.sendMessage(getLocaleMessage("settings.world-description.changed").replace("%description%", newDescription));
                 planet.getInformation().updateIconAsync();
                 OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + " changed world's description to: " + input);
+                Sounds.WORLD_SETTINGS_DESCRIPTION_SET.play(player);
             }
             case FIND_PLANETS_BY_NAME -> {
                 OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + WorldUtils.getPlanetIdFromName(player.getWorld()) + "] " + player.getName() + " tries to find worlds by name: " + input);
@@ -613,6 +615,7 @@ public final class ChatListener implements Listener {
                 OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + WorldUtils.getPlanetIdFromName(player.getWorld()) + "] " + player.getName() + " renamed module " + module.getId() + " to: " + input);
                 module.getInformation().setDisplayName(newName);
                 player.sendMessage(getLocaleMessage("settings.module-name.changed").replace("%name%", newName));
+                Sounds.MODULE_SETTINGS_NAME_SET.play(player);
             }
             case MODULE_DESCRIPTION_CHANGE -> {
                 Module module = OpenCreative.getModuleManager().getModuleById((String) data);
@@ -630,6 +633,85 @@ public final class ChatListener implements Listener {
                 OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + WorldUtils.getPlanetIdFromName(player.getWorld()) + "] " + player.getName() + " changed module's (" + module.getId() + ") description to: " + input);
                 module.getInformation().setDescription(newDescription);
                 player.sendMessage(getLocaleMessage("settings.module-description.changed").replace("%description%", newDescription));
+                Sounds.MODULE_SETTINGS_DESCRIPTION_SET.play(player);
+            }
+            case PROFILE_DESCRIPTION -> {
+                Wander wander = OpenCreative.getWander(player);
+                String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&', input);
+                String uncoloredDescription = ChatColor.stripColor(newDescription);
+                if (uncoloredDescription.length() > OpenCreative.getSettings().getRequirements().getModuleDescriptionMaxLength() ||
+                        uncoloredDescription.length() < OpenCreative.getSettings().getRequirements().getModuleDescriptionMinLength()) {
+                    player.sendMessage(getLocaleMessage("settings.profile-description.error")
+                            .replace("%min%", String.valueOf(OpenCreative.getSettings().getRequirements().getModuleDescriptionMinLength()))
+                            .replace("%max%", String.valueOf(OpenCreative.getSettings().getRequirements().getModuleDescriptionMaxLength())));
+                    return;
+                }
+                newDescription = String.join("\\n", splitDescription(newDescription, 20));
+                OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + WorldUtils.getPlanetIdFromName(player.getWorld()) + "] " + player.getName() + " changed profile's description to: " + input);
+                wander.setDescription(newDescription);
+                player.sendMessage(getLocaleMessage("settings.profile-description.changed").replace("%description%", newDescription));
+                Sounds.PROFILE_SETTINGS_DESCRIPTION_SET.play(player);
+            }
+            case PROFILE_SOCIAL_CHANGE -> {
+                Wander wander = OpenCreative.getWander(player);
+                String social = (String) data;
+                input = input.replace("https://www.", "");
+                input = input.replace("https://", "");
+                switch (social) {
+                    case "discord" -> {
+                        input = input.replace("@", "");
+                        if (input.length() < 2 || input.length() > 32) {
+                            player.sendMessage(getLocaleMessage("settings.profile-social-discord.error")
+                                    .replace("%min%", String.valueOf(2))
+                                    .replace("%max%", String.valueOf(32)));
+                            Sounds.PLAYER_FAIL.play(player);
+                            return;
+                        }
+                    }
+                    case "twitter" -> {
+                        input = input.replace("twitter.com/", "");
+                        input = input.replace("x.com/", "");
+                        input = input.replace("@", "");
+                        if (input.length() < 4 || input.length() > 15) {
+                            player.sendMessage(getLocaleMessage("settings.profile-social-twitter.error")
+                                    .replace("%min%", String.valueOf(4))
+                                    .replace("%max%", String.valueOf(15)));
+                            Sounds.PLAYER_FAIL.play(player);
+                            return;
+                        }
+                    }
+                    case "youtube" -> {
+                        input = input.replace("youtube.com/c/", "");
+                        input = input.replace("youtube.com/channel/", "");
+                        input = input.replace("youtube.com/@", "");
+                        input = input.replace("@", "");
+                        if (input.length() < 3 || input.length() > 24) {
+                            player.sendMessage(getLocaleMessage("settings.profile-social-youtube.error")
+                                    .replace("%min%", String.valueOf(3))
+                                    .replace("%max%", String.valueOf(24)));
+                            Sounds.PLAYER_FAIL.play(player);
+                            return;
+                        }
+                    }
+                    case "telegram" -> {
+                        input = input.replace("t.me/", "");
+                        input = input.replace("@", "");
+                        if (input.length() < 5 || input.length() > 32) {
+                            player.sendMessage(getLocaleMessage("settings.profile-social-telegram.error")
+                                    .replace("%min%", String.valueOf(5))
+                                    .replace("%max%", String.valueOf(32)));
+                            Sounds.PLAYER_FAIL.play(player);
+                            return;
+                        }
+                    }
+                    default -> {
+                        return;
+                    }
+                }
+                player.sendMessage(getLocaleMessage("settings.profile-social-" + social + ".changed")
+                        .replace("%social%", input));
+                wander.setLink(social, input);
+                Sounds.PROFILE_SETTINGS_SOCIAL_SET.play(player);
             }
         }
     }
