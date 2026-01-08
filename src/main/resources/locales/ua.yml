@@ -3262,6 +3262,32 @@ items:
           - "&6 Текст &7- Нікнейм для скіна"
           - " "
           - "&eНатисни, щоб встановити дію."
+      entity-disguise-as-entity:
+        name: "&cМаскувати під сутність"
+        lore:
+          - "&7Це замаскує моба"
+          - "&7під іншу сутність."
+          - " "
+          - "&fУ скрині:"
+          - "&c Предмет &7- Яйце призову моба"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      entity-disguise-as-block:
+        name: "&2Маскувати під блок"
+        lore:
+          - "&7Це замаскує моба"
+          - "&7під певний блок."
+          - " "
+          - "&fУ скрині:"
+          - "&c Предмет &7- Блок"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      entity-clear-disguise:
+        name: "&2Прибрати маскування"
+        lore:
+          - "&7Це прибере маскування з моба."
+          - " "
+          - "&eНатисни, щоб встановити дію."
       entity-set-armor-stand-pose:
         name: "&6Поставити позу тіла стійки"
         lore:
@@ -17940,6 +17966,9 @@ blocks:
   entity_set_team: "Вст. команду"
   entity_unset_team: "Забр. команду"
   entity_disguise_as_player: "Маска гравця"
+  entity_disguise_as_mob: "Маска моба"
+  entity_disguise_as_block: "Маска блока"
+  entity_clear_disguise: "Прибр. маскув."
   entity_set_scale: "Вст. розмір"
   entity_set_step_height: "Висота підйому"
   entity_set_target: "Вст. ціль"

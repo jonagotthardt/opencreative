@@ -29,6 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -591,7 +592,7 @@ public class Arguments {
             material = location.getBlock().getType();
         }
         if (material != null && material.isBlock()) {
-            sendCodingDebugVariable(planet, path, arg.getValue(action));
+            sendCodingDebugVariable(planet, path, material.name().toLowerCase());
             return material;
         }
         sendCodingDebugNotFoundVariable(planet, path);
@@ -775,6 +776,43 @@ public class Arguments {
         }
         sendCodingDebugVariable(planet, path, arg.getValue(action));
         return arg.getValue(action).toString();
+    }
+
+    /**
+     * Returns entity type stored in arguments.
+     *
+     * @param path         key of argument, that stores entity type value.
+     * @param defaultValue default value.
+     * @param action       action, that asks for value.
+     * @return argument value, or default value - if argument is empty or not found.
+     */
+    public @NotNull EntityType getEntityType(@NotNull String path, @NotNull EntityType defaultValue, @NotNull Action action) {
+        Argument arg = getArg(path);
+        if (arg == null) {
+            sendCodingDebugNotFoundVariable(planet, path);
+            return defaultValue;
+        }
+        String typeString = "";
+        if (arg.getValue(action) instanceof ItemStack item) {
+            String itemName = item.getType().name();
+            if (itemName.endsWith("_SPAWN_EGG")) {
+                typeString = itemName.replace("_SPAWN_EGG", "");
+            }
+        } else if (arg.getValue(action) instanceof String text) {
+            typeString = text;
+        }
+        if (typeString.isEmpty()) {
+            sendCodingDebugNotFoundVariable(planet, path);
+            return defaultValue;
+        }
+        try {
+            EntityType type = EntityType.valueOf(typeString.toUpperCase());
+            sendCodingDebugVariable(planet, path, type.name().toLowerCase());
+            return type;
+        } catch (Exception ignored) {
+            sendCodingDebugNotFoundVariable(planet, path);
+            return defaultValue;
+        }
     }
 
     /**

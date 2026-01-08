@@ -3295,6 +3295,33 @@ items:
           - "&6 Text &7- Nickname for skin"
           - " "
           - "&eClick to set action."
+      entity-disguise-as-entity:
+        name: "&cDisguise as Entity"
+        lore:
+          - "&7This will disguise"
+          - "&7mob as another entity."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Mob spawn egg"
+          - " "
+          - "&eClick to set the action."
+      entity-disguise-as-block:
+        name: "&2Disguise as Block"
+        lore:
+          - "&7This will disguise"
+          - "&7the mob as a block."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Block"
+          - " "
+          - "&eClick to set the action."
+      entity-clear-disguise:
+        name: "&2Clear Disguise"
+        lore:
+          - "&7This will remove the "
+          - "&7disguise from the mob."
+          - " "
+          - "&eClick to set the action."
       entity-set-armor-stand-pose:
         name: "&6Set armor stand body pose"
         lore:
@@ -17884,6 +17911,9 @@ blocks:
   entity_set_team: "Set team"
   entity_unset_team: "Unset team"
   entity_disguise_as_player: "Player disguise"
+  entity_disguise_as_mob: "Mob disguise"
+  entity_disguise_as_block: "Block disguise"
+  entity_clear_disguise: "Clear disguise"
   entity_set_step_height: "Step height"
   entity_set_scale: "Set scale"
   entity_set_target: "Set target"

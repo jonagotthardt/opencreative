@@ -192,6 +192,19 @@ public class PlanetTerritory {
      * Saves planet's data and unloads planet's build and dev world.
      */
     public synchronized void unload() {
+        if (OpenCreative.getPlugin().isEnabled()) {
+            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                handleUnloadProcess(true);
+            }, 5);
+        } else {
+            handleUnloadProcess(false);
+        }
+    }
+
+    /**
+     * Saves planet's data and unloads planet's build and dev world.
+     */
+    private void handleUnloadProcess(boolean asyncSaveData) {
         long startTime = System.currentTimeMillis();
         if (!planet.isLoaded()) {
             if (planet.getDevPlanet().isLoaded()) {
@@ -213,13 +226,14 @@ public class PlanetTerritory {
         for (Player player : planet.getPlayers()) {
             new QuitEvent(player).callEvent();
         }
-        planet.setLastActivityTime(System.currentTimeMillis());
-        FileUtils.setPlanetConfigParameter(planet, "environment", planet.getTerritory().getEnvironment().name());
-        planet.getVariables().save();
+        if (asyncSaveData) {
+            Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(), this::saveData);
+        } else {
+            this.saveData();
+        }
         for (Player player : planet.getPlayers()) {
             teleportToLobby(player);
         }
-        clearData();
         Bukkit.unloadWorld(planet.getWorldName(), autoSave);
         if (planet.getDevPlanet().isLoaded()) {
             planet.getDevPlanet().unload();
@@ -228,6 +242,13 @@ public class PlanetTerritory {
 
         long endTime = System.currentTimeMillis();
         OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");
+    }
+
+    private void saveData() {
+        planet.setLastActivityTime(System.currentTimeMillis());
+        FileUtils.setPlanetConfigParameter(planet, "environment", planet.getTerritory().getEnvironment().name());
+        planet.getVariables().save();
+        clearData();
     }
 
     /**

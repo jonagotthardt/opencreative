@@ -46,6 +46,7 @@ import ua.mcchickenstudio.opencreative.listeners.entity.*;
 import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.*;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
+import ua.mcchickenstudio.opencreative.managers.disguises.DisguiseManager;
 import ua.mcchickenstudio.opencreative.managers.economy.*;
 import ua.mcchickenstudio.opencreative.managers.hints.*;
 import ua.mcchickenstudio.opencreative.managers.modules.*;
@@ -88,6 +89,7 @@ public final class OpenCreative extends JavaPlugin {
     private PlanetsManager space;
     private ModuleManager moduler;
     private StabilityManager watchdog;
+    private DisguiseManager disguiser;
     private BlocksManager blocks;
     private HintManager hints;
     private DevPlatformer devPlatformer;
@@ -160,6 +162,8 @@ public final class OpenCreative extends JavaPlugin {
         packet.init();
         blocks = HookUtils.getBlocks();
         blocks.init();
+        disguiser = HookUtils.getDisguises();
+        disguiser.init();
         hints = new Hints();
         hints.init();
 
@@ -401,6 +405,26 @@ public final class OpenCreative extends JavaPlugin {
     public static void setBlocksManager(@NotNull ModuleManager moduleManager) {
         getPlugin().getLogger().info("Now using module manager: " + moduleManager.getName());
         getPlugin().moduler = moduleManager;
+    }
+
+    /**
+     * Gets disguise manager, that disguises
+     * entities as players, other entities, blocks.
+     * @return disguise manager.
+     */
+    @SuppressWarnings("unused")
+    public static DisguiseManager getDisguiseManager() {
+        return getPlugin().disguiser;
+    }
+
+    /**
+     * Sets custom disguise manager.
+     * @param disguiseManager disguise manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setDisguiseManager(@NotNull DisguiseManager disguiseManager) {
+        getPlugin().getLogger().info("Now using disguise manager: " + disguiseManager.getName());
+        getPlugin().disguiser = disguiseManager;
     }
 
     /**

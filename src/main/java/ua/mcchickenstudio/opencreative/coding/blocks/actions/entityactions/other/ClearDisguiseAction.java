@@ -29,25 +29,22 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
-public final class DisguiseAsPlayerAction extends EntityAction {
-    public DisguiseAsPlayerAction(Executor executor, Target target, int x, Arguments args) {
+public final class ClearDisguiseAction extends EntityAction {
+    public ClearDisguiseAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String name = getArguments().getText("name", "", this);
-        String skin = getArguments().getText("skin", "mhf_steve", this);
-        if (name.isEmpty()) return;
         if (!OpenCreative.getDisguiseManager().isEnabled()) {
             sendCodingDebugLog(getPlanet(), "Disguise Manager is not available.");
             return;
         }
-        OpenCreative.getDisguiseManager().disguiseAsPlayer(entity, skin, name);
+        OpenCreative.getDisguiseManager().clearDisguises(entity);
     }
 
     @Override
     public @NotNull ActionType getActionType() {
-        return ActionType.ENTITY_DISGUISE_AS_PLAYER;
+        return ActionType.ENTITY_CLEAR_DISGUISE;
     }
 }

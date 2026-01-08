@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
@@ -29,25 +30,23 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
-public final class DisguiseAsPlayerAction extends EntityAction {
-    public DisguiseAsPlayerAction(Executor executor, Target target, int x, Arguments args) {
+public final class DisguiseAsEntityAction extends EntityAction {
+    public DisguiseAsEntityAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        String name = getArguments().getText("name", "", this);
-        String skin = getArguments().getText("skin", "mhf_steve", this);
-        if (name.isEmpty()) return;
+        EntityType type = getArguments().getEntityType("name", EntityType.CHICKEN, this);
         if (!OpenCreative.getDisguiseManager().isEnabled()) {
             sendCodingDebugLog(getPlanet(), "Disguise Manager is not available.");
             return;
         }
-        OpenCreative.getDisguiseManager().disguiseAsPlayer(entity, skin, name);
+        OpenCreative.getDisguiseManager().disguiseAsEntity(entity, type);
     }
 
     @Override
     public @NotNull ActionType getActionType() {
-        return ActionType.ENTITY_DISGUISE_AS_PLAYER;
+        return ActionType.ENTITY_DISGUISE_AS_ENTITY;
     }
 }
