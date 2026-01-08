@@ -48,7 +48,7 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator) {
+    public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.FLAT);
         creator.generator(this);
     }

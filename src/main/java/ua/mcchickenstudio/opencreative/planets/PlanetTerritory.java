@@ -70,6 +70,7 @@ public class PlanetTerritory {
     private String generator = "";
     private int worldSize = 25;
     private World.Environment environment;
+    private String biome;
     private boolean autoSave = true;
 
     public PlanetTerritory(@NotNull Planet planet) {
@@ -126,6 +127,7 @@ public class PlanetTerritory {
         }
         worldSize = config.getInt("size", OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize());
         autoSave = config.getBoolean("autosave", true);
+        biome = config.getString("biome", "");
         this.generator = config.getString("generator", "");
         this.environment = environment;
     }
@@ -155,7 +157,7 @@ public class PlanetTerritory {
                 .environment(planet.getTerritory().getEnvironment())
                 .keepSpawnLoaded(TriState.FALSE);
         if (worldGenerator != null) {
-            worldGenerator.modifyWorldCreator(creator);
+            worldGenerator.modifyWorldCreator(creator, biome);
         }
         World world = creator.createWorld();
         if (world == null) return;
@@ -354,7 +356,8 @@ public class PlanetTerritory {
         return script;
     }
 
-    public @Nullable World generateWorld(WorldGenerator generator, World.Environment environment, long seed, boolean generateStructures) {
+    public @Nullable World generateWorld(WorldGenerator generator, World.Environment environment,
+                                         long seed, boolean generateStructures, String biome) {
 
         WorldCreator worldCreator = new WorldCreator(planet.getWorldName());
         if (generator instanceof StructuresCapable) {
@@ -366,7 +369,7 @@ public class PlanetTerritory {
         }
         worldCreator.seed(seed);
 
-        generator.modifyWorldCreator(worldCreator);
+        generator.modifyWorldCreator(worldCreator, biome);
 
         worldCreator.keepSpawnLoaded(TriState.FALSE);
         World world = Bukkit.createWorld(worldCreator);

@@ -17461,7 +17461,7 @@ menus:
         choices:
           true: "Generate structures"
           false: "No structures, please"
-        name: "&eGenerate Structures?"
+        name: "&eGenerate Structures"
         lore:
           - " "
           - "&7Structures include villages,"
@@ -17473,6 +17473,32 @@ menus:
           - "&fOptions:"
           - "%1%"
           - "%2%"
+      biome:
+        choices:
+          all: "Various"
+          snowy: "Snowy"
+          jungle: "Jungle"
+          desert: "Desert"
+          soul: "Soul Sand Valley"
+          warped: "Warped Forest"
+          crimson: "Crimson Forest"
+          basalt: "Basalt Deltas"
+          city: "End City"
+          islands: "Islands"
+        name: "&aBiome"
+        lore:
+          - " "
+          - "&7Let the world have various"
+          - "&7biomes, or just one."
+          - ""
+          - "&eClick to change."
+          - ""
+          - "&fOptions:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - "%5%"
       create:
         name: " "
         lore:

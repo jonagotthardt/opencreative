@@ -37,7 +37,6 @@ public class LibsDisguises implements DisguiseManager {
             disguise.setEntity(entity);
             disguise.startDisguise();
         } catch (Exception ignored) {}
-
     }
 
     @Override

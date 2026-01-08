@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
 import ua.mcchickenstudio.opencreative.menus.buttons.ParameterButton;
@@ -32,8 +33,7 @@ import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.itemEquals;
@@ -45,6 +45,7 @@ public final class WorldGenerationMenu extends AbstractMenu {
     private final ParameterButton generatorButton;
     private final ParameterButton environmentButton;
     private final ParameterButton generateStructures;
+    private ParameterButton biomePicker;
     private final ItemStack createButton = createItem(Material.PUFFERFISH_BUCKET, 1, "menus.world-creation.items.create");
 
     public WorldGenerationMenu(Player player, String generator, String environment, boolean generateStructures) {
@@ -67,6 +68,8 @@ public final class WorldGenerationMenu extends AbstractMenu {
         setItem(10, generatorButton.getItem());
         setItem(11, environmentButton.getItem());
         setItem(12, generateStructures.getItem());
+        WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
+        updateBiomePicker(generator);
         setItem(7, createItem(Material.LIME_STAINED_GLASS_PANE, 1));
         setItem(16, createButton);
         setItem(25, createItem(Material.LIME_STAINED_GLASS_PANE, 1));
@@ -88,21 +91,34 @@ public final class WorldGenerationMenu extends AbstractMenu {
                 setItem(event.getRawSlot(), generatorButton.getItem());
                 WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
                 if (generator != null) {
-                    setItem(11, generator instanceof EnvironmentCapable ? environmentButton.getItem() : DECORATION_ITEM);
-                    setItem(12, generator instanceof StructuresCapable ? generateStructures.getItem() : DECORATION_ITEM);
+                    setItem(11, generator instanceof EnvironmentCapable ? environmentButton.getItem() : AIR_ITEM);
+                    setItem(12, generator instanceof StructuresCapable ? generateStructures.getItem() : AIR_ITEM);
+                    updateBiomePicker(generator);
                 }
-
                 Sounds.MENU_GENERATION_CHANGE.play(player);
             }
             case 11 -> {
+                if (event.getCurrentItem() == null) return;
                 environmentButton.next();
                 setItem(event.getRawSlot(), environmentButton.getItem());
                 Sounds.MENU_ENVIRONMENT_CHANGE.play(player);
+                WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
+                if (generator != null) {
+                    updateBiomePicker(generator);
+                }
             }
             case 12 -> {
+                if (event.getCurrentItem() == null) return;
                 generateStructures.next();
                 setItem(event.getRawSlot(), generateStructures.getItem());
                 Sounds.MENU_GENERATE_STRUCTURES_CHANGE.play(player);
+            }
+            case 13 -> {
+                if (event.getCurrentItem() == null) return;
+                if (biomePicker == null) return;
+                biomePicker.next();
+                setItem(event.getRawSlot(), biomePicker.getItem());
+                Sounds.MENU_BIOME_CHANGE.play(player);
             }
             case 16 -> {
                 player.closeInventory();
@@ -124,11 +140,30 @@ public final class WorldGenerationMenu extends AbstractMenu {
                         World.Environment environment = World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase());
                         int seed = new Random().nextInt();
                         boolean generateStructure = Boolean.parseBoolean(generateStructures.getCurrentValue().toString());
+                        String biome = "";
+                        if (biomePicker != null) biome = biomePicker.getCurrentValue().toString();
                         OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(),
-                                generator, environment, seed, generateStructure);
+                                generator, environment, seed, generateStructure, biome);
                     }
                 }
             }
+        }
+    }
+
+    private void updateBiomePicker(@Nullable WorldGenerator generator) {
+        if (generator instanceof BiomeChangeable changeable) {
+            World.Environment environment = World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase());
+            Map<String, Material> biomes = changeable.getBiomes(environment);
+            if (biomes.isEmpty()) {
+                setItem(13, AIR_ITEM);
+                return;
+            }
+            biomePicker = new ParameterButton("all", new LinkedList<>(biomes.keySet()),
+                    "biome", "menus.world-creation",
+                    "menus.world-creation.items.biome", new LinkedList<>(biomes.values()));
+            setItem(13, biomePicker.getItem());
+        } else {
+            setItem(13, AIR_ITEM);
         }
     }
 

@@ -89,6 +89,7 @@ public final class PlayerUtils {
         resetAttributes(player);
         player.resetPlayerTime();
         player.resetPlayerWeather();
+        player.resetCooldown();
         resetResourcePack(player);
         removePassengers(player);
         if (OpenCreative.getSettings().getLobbySettings().shouldResetViewDistance()) {

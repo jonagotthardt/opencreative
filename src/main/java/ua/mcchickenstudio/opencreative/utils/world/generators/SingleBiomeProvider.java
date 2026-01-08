@@ -18,41 +18,28 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public final class LargeBiomesGenerator extends WorldGenerator {
+public class SingleBiomeProvider extends BiomeProvider {
 
-    public LargeBiomesGenerator() {
-        super("large_biomes", new ItemStack(Material.MYCELIUM));
+    private final Biome biome;
+
+    public SingleBiomeProvider(@NotNull Biome biome) {
+        this.biome = biome;
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
-        creator.type(WorldType.LARGE_BIOMES);
+    public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+        return biome;
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {
-        int y = world.getHighestBlockYAt(0, 0) + 3;
-        Location spawn = new Location(world, 0, y + 1, 0, -90, -6);
-        world.setSpawnLocation(spawn);
-    }
-
-    @Override
-    public @NotNull String getExtensionId() {
-        return "default";
-    }
-
-    @Override
-    public @NotNull String getDescription() {
-        return "Creates large biomes world";
+    public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
+        return List.of(biome);
     }
 }

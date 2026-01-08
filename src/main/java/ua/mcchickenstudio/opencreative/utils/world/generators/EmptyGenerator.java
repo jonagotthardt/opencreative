@@ -32,7 +32,7 @@ public final class EmptyGenerator extends WorldGenerator implements EnvironmentC
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator) {
+    public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.FLAT);
         creator.generator(this);
     }

@@ -85,7 +85,7 @@ public final class Space implements PlanetsManager {
 
     @Override
     public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator) {
-        createPlanet(owner, id, generator, World.Environment.NORMAL, new Random().nextInt(), false);
+        createPlanet(owner, id, generator, World.Environment.NORMAL, new Random().nextInt(), false, "");
     }
 
     @Override
@@ -109,7 +109,9 @@ public final class Space implements PlanetsManager {
     }
 
     @Override
-    public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator, World.@NotNull Environment environment, long seed, boolean generateStructures) {
+    public void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator,
+                             World.@NotNull Environment environment, long seed, boolean generateStructures,
+                             @NotNull String biome) {
         long startTime = System.currentTimeMillis();
 
         owner.showTitle(Title.title(
@@ -121,7 +123,7 @@ public final class Space implements PlanetsManager {
         createWorldSettings(id, owner, environment, generator.getID());
         Planet planet = new Planet(id);
 
-        if (planet.getTerritory().generateWorld(generator, environment, seed, generateStructures) != null) {
+        if (planet.getTerritory().generateWorld(generator, environment, seed, generateStructures, biome) != null) {
             long endTime = System.currentTimeMillis();
             OpenCreative.getPlugin().getLogger().info("World for planet " + id + " successfully generated in " + (endTime - startTime) + " ms");
             new PlanetCreationEvent(planet, owner, generator, environment, seed, generateStructures).callEvent();

@@ -70,7 +70,7 @@ public final class WorldTemplate extends WorldGenerator {
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator) {
+    public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
     }
 
     @Override

@@ -556,28 +556,17 @@ public final class ItemUtils {
             switch (meta) {
                 case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof InventoryHolder holder -> {
                     // If item is Chest or Shulker
-                    int insideContainers = 0;
+                    int insideBadItems = 0;
                     ItemStack[] items = holder.getInventory().getContents();
-                    int itemsLimit = 30;
-                    if (meta.getEnchants().size() > itemsLimit) {
-                        sendDebug("[ITEMS] Destroyed container item with too many items.");
-                        item.setType(Material.AIR);
-                        item.setItemMeta(null);
-                        return item;
-                    }
                     for (ItemStack insideItem : items) {
                         if (insideItem == null) continue;
-                        if (insideItem instanceof BlockStateMeta insideMeta && insideMeta.getBlockState() instanceof InventoryHolder insideHolder && !insideHolder.getInventory().isEmpty()) {
-                            insideContainers++;
-                        } else if (insideItem.getItemMeta() instanceof BookMeta) {
-                            insideContainers++;
+                        insideBadItems += getInsideBadItemsAmount(insideItem, containerBigItemsLimit);
+                        if (insideBadItems >= containerBigItemsLimit) {
+                            item.setType(Material.AIR);
+                            item.setItemMeta(null);
+                            sendDebug("[ITEMS] Destroyed container with a lot of items");
+                            break;
                         }
-                        if (insideContainers > containerBigItemsLimit) break;
-                    }
-                    if (insideContainers > containerBigItemsLimit) {
-                        item.setType(Material.AIR);
-                        item.setItemMeta(null);
-                        sendDebug("[ITEMS] Destroyed container with a lot of items");
                     }
                 }
                 case BlockStateMeta blockMeta when blockMeta.getBlockState() instanceof CommandBlock block -> {
@@ -636,6 +625,31 @@ public final class ItemUtils {
             sendDebugError("[ITEMS] Can't fix item: " + item, exception);
         }
         return item;
+    }
+
+    private static int getInsideBadItemsAmount(@NotNull ItemStack item, int limit) {
+        if (item.getItemMeta() instanceof BookMeta) {
+            return 1;
+        }
+        if (!(item.getItemMeta() instanceof BlockStateMeta blockMeta))  {
+            return 0;
+        }
+        if (!(blockMeta.getBlockState() instanceof InventoryHolder holder)) {
+            return 0;
+        }
+        int insideContainers = 1;
+        ItemStack[] items = holder.getInventory().getContents();
+        for (ItemStack insideItem : items) {
+            if (insideItem == null) continue;
+            insideContainers += getInsideBadItemsAmount(insideItem, 1);
+            if (insideContainers >= limit) break;
+        }
+        if (insideContainers >= 1) {
+            item.setType(Material.AIR);
+            item.setItemMeta(null);
+            sendDebug("[ITEMS] Destroyed container with a lot of items");
+        }
+        return insideContainers;
     }
 
     public static int getPersistentDataAmount(@NotNull ItemStack item) {

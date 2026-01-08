@@ -41,6 +41,7 @@ import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -49,7 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isLobbyWorl
 
 public final class DeathListener implements Listener {
 
-    public static final Map<Player, Location> deathLocations = new HashMap<>();
+    public static final Map<UUID, Location> deathLocations = new HashMap<>();
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDeath(PlayerDeathEvent event) {
@@ -57,7 +58,7 @@ public final class DeathListener implements Listener {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
             event.deathMessage(null);
-            deathLocations.put(player, planet.getTerritory().getSpawnLocation());
+            deathLocations.put(player.getUniqueId(), planet.getTerritory().getSpawnLocation());
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.DEATH_MESSAGES) == 1) {
                 for (Player p : planet.getPlayers()) {
                     p.sendMessage("§7 " + player.getName() + "§f " + translateDeathMessage(player));

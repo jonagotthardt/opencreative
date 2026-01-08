@@ -63,6 +63,8 @@ public enum Sounds {
     MENU_WORLDS_BROWSER_CATEGORY("block.trial_spawner.detect_player", 1.2f),
     MENU_WORLD_SEARCH("block.respawn_anchor.ambient"),
     MENU_GENERATE_STRUCTURES_CHANGE("block.respawn_anchor.charge", 2),
+    MENU_BIOME_CHANGE("block.scaffolding.break", 1),
+
     MENU_CLEAR_DATA("item.brush.brushing.generic", 0.1f),
 
     WORLD_GENERATION("block.respawn_anchor.set_spawn", 0.1f),
