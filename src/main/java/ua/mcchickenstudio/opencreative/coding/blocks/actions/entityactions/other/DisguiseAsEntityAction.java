@@ -37,7 +37,7 @@ public final class DisguiseAsEntityAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        EntityType type = getArguments().getEntityType("name", EntityType.CHICKEN, this);
+        EntityType type = getArguments().getEntityType("type", EntityType.CHICKEN, this);
         if (!OpenCreative.getDisguiseManager().isEnabled()) {
             sendCodingDebugLog(getPlanet(), "Disguise Manager is not available.");
             return;

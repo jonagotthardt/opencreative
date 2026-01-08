@@ -38,7 +38,7 @@ public final class DisguiseAsBlockAction extends EntityAction {
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        Material type = getArguments().getBlockMaterial("name", Material.GRASS_BLOCK, this);
+        Material type = getArguments().getBlockMaterial("block", Material.GRASS_BLOCK, this);
         if (!OpenCreative.getDisguiseManager().isEnabled()) {
             sendCodingDebugLog(getPlanet(), "Disguise Manager is not available.");
             return;
