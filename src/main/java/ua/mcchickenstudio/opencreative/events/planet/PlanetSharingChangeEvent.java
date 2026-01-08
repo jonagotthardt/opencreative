@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.events.planet;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
@@ -39,7 +40,7 @@ public class PlanetSharingChangeEvent extends PlanetEvent implements Cancellable
     private final Cause cause;
     private boolean cancel;
 
-    public PlanetSharingChangeEvent(Planet planet, Planet.Sharing oldSharing, Planet.Sharing newSharing) {
+    public PlanetSharingChangeEvent(@NotNull Planet planet, Planet.Sharing oldSharing, Planet.Sharing newSharing) {
         super(planet);
         this.oldSharing = oldSharing;
         this.newSharing = newSharing;
@@ -47,7 +48,7 @@ public class PlanetSharingChangeEvent extends PlanetEvent implements Cancellable
         this.cause = Cause.WORLD;
     }
 
-    public PlanetSharingChangeEvent(Planet planet, Planet.Sharing oldSharing, Planet.Sharing newSharing, Player player) {
+    public PlanetSharingChangeEvent(@NotNull Planet planet, Planet.Sharing oldSharing, Planet.Sharing newSharing, Player player) {
         super(planet);
         this.oldSharing = oldSharing;
         this.newSharing = newSharing;

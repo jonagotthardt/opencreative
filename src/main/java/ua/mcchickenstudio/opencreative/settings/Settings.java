@@ -79,6 +79,7 @@ public final class Settings {
     private boolean consoleNotFoundMessage = false;
     private boolean consoleWarnings = true;
     private boolean notifyNoPlayersAround = true;
+    private boolean cancelChatOnConfirmation = false;
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -114,6 +115,7 @@ public final class Settings {
         consoleCriticalErrors = config.getBoolean("messages.critical-errors", true);
         consoleNotFoundMessage = config.getBoolean("messages.not-found", false);
         consoleWarnings = config.getBoolean("messages.warnings", true);
+        cancelChatOnConfirmation = config.getBoolean("messages.cancel-chat-on-confirmation", false);
 
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
         notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
@@ -665,6 +667,16 @@ public final class Settings {
      */
     public boolean shouldLogNotFoundMessages() {
         return consoleNotFoundMessage;
+    }
+
+    /**
+     * Checks whether player's messages should be hidden from chat,
+     * when they're changing world's or module's name or description.
+     *
+     * @return true - will be hidden, false - shown.
+     */
+    public boolean shouldCancelChatOnConfirmation() {
+        return cancelChatOnConfirmation;
     }
 
     /**

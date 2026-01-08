@@ -16,35 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state;
+package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
+import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.exceptions.UnsupportedEntityException;
 
-public final class EntitySetMinecartBlockAction extends EntityAction {
-    public EntitySetMinecartBlockAction(Executor executor, Target target, int x, Arguments args) {
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
+public final class DisguiseAsBlockAction extends EntityAction {
+    public DisguiseAsBlockAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
     }
 
     @Override
     public void executeEntity(@NotNull Entity entity) {
-        if (!(entity instanceof Minecart minecart)) {
-            throw new UnsupportedEntityException(Minecart.class, entity);
+        Material type = getArguments().getBlockMaterial("block", Material.GRASS_BLOCK, this);
+        if (!OpenCreative.getDisguiseManager().isEnabled()) {
+            sendCodingDebugLog(getPlanet(), "Disguise Manager is not available.");
+            return;
         }
-        Material material = getArguments().getBlockMaterial("block", Material.AIR, this);
-        minecart.setDisplayBlockData(material.createBlockData());
+        OpenCreative.getDisguiseManager().disguiseAsBlock(entity, type);
     }
 
     @Override
     public @NotNull ActionType getActionType() {
-        return ActionType.ENTITY_SET_MINECART_BLOCK;
+        return ActionType.ENTITY_DISGUISE_AS_BLOCK;
     }
 }

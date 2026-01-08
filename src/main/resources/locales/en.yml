@@ -498,6 +498,30 @@ settings:
     usage: "%prefix%Enter a new &6profile description&f, for example &aCreating beautiful worlds&f.\n&f - The description must not violate the server rules."
     error: "%prefix%The profile description violates one of the requirements:\n&f- The description must not be shorter than %min% characters or longer than %max%."
     changed: "%prefix%You have set a new &6profile description&f: %description%"
+  profile-social-discord:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &9Discord tag&f."
+    usage: "%prefix%Enter your &6Discord tag&f, for example &9@wampus&f."
+    error: "%prefix%&cYour Discord tag must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &6Discord tag&f: %social%"
+  profile-social-twitter:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &3X username&f."
+    usage: "%prefix%Enter your &6X username&f, for example &3@twitter&f."
+    error: "%prefix%&cYour X username must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &3X tag&f: %social%"
+  profile-social-youtube:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &cYouTube username&f."
+    usage: "%prefix%Enter your &6YouTube username&f, for example &c@youtube&f."
+    error: "%prefix%&cYour YouTube username must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &cYouTube username&f: %social%"
+  profile-social-telegram:
+    title: "&fEnter in chat"
+    subtitle: "&fyour &bTelegram username&f."
+    usage: "%prefix%Enter your &6Telegram username&f, for example &b@telegram&f."
+    error: "%prefix%&cYour Telegram username must not be shorter than %min% characters and longer than %max%! O_o"
+    changed: "%prefix%You have set a new &bTelegram username&f: %social%"
 deleting-world:
   title: "&cDeleting ◌"
   subtitle: "&fPlease wait a few seconds..."
@@ -3295,6 +3319,33 @@ items:
           - "&6 Text &7- Nickname for skin"
           - " "
           - "&eClick to set action."
+      entity-disguise-as-entity:
+        name: "&cDisguise as Entity"
+        lore:
+          - "&7This will disguise"
+          - "&7mob as another entity."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Mob spawn egg"
+          - " "
+          - "&eClick to set the action."
+      entity-disguise-as-block:
+        name: "&2Disguise as Block"
+        lore:
+          - "&7This will disguise"
+          - "&7the mob as a block."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Block"
+          - " "
+          - "&eClick to set the action."
+      entity-clear-disguise:
+        name: "&2Clear Disguise"
+        lore:
+          - "&7This will remove the "
+          - "&7disguise from the mob."
+          - " "
+          - "&eClick to set the action."
       entity-set-armor-stand-pose:
         name: "&6Set armor stand body pose"
         lore:
@@ -16491,7 +16542,7 @@ menus:
       gender:
         name: " "
         choices:
-          none: "Not selected"
+          unknown: "Not selected"
           male: "Male"
           female: "Female"
           non-binary: "Non-binary"
@@ -17434,7 +17485,7 @@ menus:
         choices:
           true: "Generate structures"
           false: "No structures, please"
-        name: "&eGenerate Structures?"
+        name: "&eGenerate Structures"
         lore:
           - " "
           - "&7Structures include villages,"
@@ -17446,6 +17497,32 @@ menus:
           - "&fOptions:"
           - "%1%"
           - "%2%"
+      biome:
+        choices:
+          all: "Various"
+          snowy: "Snowy"
+          jungle: "Jungle"
+          desert: "Desert"
+          soul: "Soul Sand Valley"
+          warped: "Warped Forest"
+          crimson: "Crimson Forest"
+          basalt: "Basalt Deltas"
+          city: "End City"
+          islands: "Islands"
+        name: "&aBiome"
+        lore:
+          - " "
+          - "&7Let the world have various"
+          - "&7biomes, or just one."
+          - ""
+          - "&eClick to change."
+          - ""
+          - "&fOptions:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - "%5%"
       create:
         name: " "
         lore:
@@ -17884,6 +17961,9 @@ blocks:
   entity_set_team: "Set team"
   entity_unset_team: "Unset team"
   entity_disguise_as_player: "Player disguise"
+  entity_disguise_as_mob: "Mob disguise"
+  entity_disguise_as_block: "Block disguise"
+  entity_clear_disguise: "Clear disguise"
   entity_set_step_height: "Step height"
   entity_set_scale: "Set scale"
   entity_set_target: "Set target"

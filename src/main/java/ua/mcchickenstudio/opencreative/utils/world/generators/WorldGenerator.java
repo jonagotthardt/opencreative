@@ -62,8 +62,9 @@ public abstract class WorldGenerator extends ChunkGenerator implements Extension
      * {@link ChunkGenerator#generateSurface(WorldInfo, Random, int, int, ChunkData) generateSurface} method.
      *
      * @param creator creator to change.
+     * @param biome selected biome.
      */
-    public abstract void modifyWorldCreator(@NotNull WorldCreator creator);
+    public abstract void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome);
 
     /**
      * Executes world operations, when it's created or loaded.

@@ -21,15 +21,12 @@ package ua.mcchickenstudio.opencreative.indev;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Links {
 
-    private Map<String, String> links;
-
-    public Map<String, String> getLinks() {
-        return links;
-    }
+    private final Map<String, String> links = new HashMap<>();
 
     public @Nullable String getLink(@NotNull String type) {
         return links.get(type);
@@ -41,5 +38,9 @@ public class Links {
             return;
         }
         links.put(type, link);
+    }
+
+    public Map<String, String> getLinks() {
+        return links;
     }
 }

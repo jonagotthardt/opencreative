@@ -72,6 +72,7 @@ public final class QuitListener implements Listener {
 
         PlayerConfirmation.clearConfirmations(player);
         ChatCommand.creativeChatOff.remove(player);
+        DeathListener.deathLocations.remove(player.getUniqueId());
         removeFromPermissionsMap(player);
         CooldownUtils.clearPlayerCooldowns(player);
         disableSpying(player);

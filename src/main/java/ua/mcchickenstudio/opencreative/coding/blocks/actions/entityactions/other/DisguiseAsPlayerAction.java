@@ -20,13 +20,14 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.othe
 
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.EntityAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.utils.hooks.DisguiseUtils;
-import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 
 public final class DisguiseAsPlayerAction extends EntityAction {
     public DisguiseAsPlayerAction(Executor executor, Target target, int x, Arguments args) {
@@ -38,8 +39,11 @@ public final class DisguiseAsPlayerAction extends EntityAction {
         String name = getArguments().getText("name", "", this);
         String skin = getArguments().getText("skin", "mhf_steve", this);
         if (name.isEmpty()) return;
-        if (!HookUtils.isLibsDisguisesEnabled) return;
-        DisguiseUtils.disguiseAsPlayer(entity, name, skin);
+        if (!OpenCreative.getDisguiseManager().isEnabled()) {
+            sendCodingDebugLog(getPlanet(), "Disguise Manager is not available.");
+            return;
+        }
+        OpenCreative.getDisguiseManager().disguiseAsPlayer(entity, skin, name);
     }
 
     @Override

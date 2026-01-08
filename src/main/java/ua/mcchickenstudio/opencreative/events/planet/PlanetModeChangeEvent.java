@@ -42,7 +42,7 @@ public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
     private final Cause cause;
     private boolean cancel;
 
-    public PlanetModeChangeEvent(Planet planet, Planet.Mode oldMode, Planet.Mode newMode) {
+    public PlanetModeChangeEvent(@NotNull Planet planet, Planet.Mode oldMode, Planet.Mode newMode) {
         super(planet);
         this.oldMode = oldMode;
         this.newMode = newMode;
@@ -50,7 +50,7 @@ public class PlanetModeChangeEvent extends PlanetEvent implements Cancellable {
         this.cause = Cause.CODE;
     }
 
-    public PlanetModeChangeEvent(Planet planet, Planet.Mode oldMode, Planet.Mode newMode, Player player) {
+    public PlanetModeChangeEvent(@NotNull Planet planet, Planet.Mode oldMode, Planet.Mode newMode, Player player) {
         super(planet);
         this.oldMode = oldMode;
         this.newMode = newMode;

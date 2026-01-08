@@ -16,27 +16,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.planet;
+package ua.mcchickenstudio.opencreative.managers.disguises;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
-/**
- * Called when player disconnects from planet.
- * <p>
- * Usually it happens, when player teleports to another world (not related to this planet) or quits the server.
- */
-public class PlanetDisconnectPlayerEvent extends PlanetEvent {
+public class DisabledDisguises implements DisguiseManager {
 
-    private final Player player;
+    @Override
+    public void disguiseAsPlayer(@NotNull Entity entity, @NotNull String skin, @NotNull String nickname) {}
 
-    public PlanetDisconnectPlayerEvent(@NotNull Planet planet, Player player) {
-        super(planet);
-        this.player = player;
+    @Override
+    public void disguiseAsEntity(@NotNull Entity entity, @NotNull EntityType type) {}
+
+    @Override
+    public void disguiseAsBlock(@NotNull Entity entity, @NotNull Material material) {}
+
+    @Override
+    public void clearDisguises(@NotNull Entity entity) {}
+
+    @Override
+    public void init() {}
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 
-    public Player getPlayer() {
-        return player;
+    @Override
+    public String getName() {
+        return "Disabled Disguises";
     }
 }

@@ -18,50 +18,128 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
+import com.sk89q.worldedit.world.biome.Biomes;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.block.Biome;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
-public final class FlatGenerator extends WorldGenerator implements EnvironmentCapable, StructuresCapable {
+public final class FlatGenerator extends WorldGenerator implements EnvironmentCapable, StructuresCapable, BiomeChangeable {
 
     public FlatGenerator() {
         super("flat", new ItemStack(Material.MOSS_BLOCK));
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator) {
+    public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.FLAT);
+        if (creator.environment() == World.Environment.NETHER ||  creator.environment() == World.Environment.THE_END) {
+            creator.generator(this);
+        } else if (biome.equalsIgnoreCase("snowy") || biome.equalsIgnoreCase("desert")) {
+            creator.generator(this);
+        }
+        if (biome.isEmpty() || biome.equals("all")) return;
+        Biome biomeType = getBiome(biome, creator.environment());
+        if (biomeType == null) return;
+        creator.biomeProvider(new SingleBiomeProvider(biomeType));
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {
-    }
+    public void afterCreation(@NotNull World world) {}
 
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
         Material customFlatTerrainBlock = null;
-        if (worldInfo.getEnvironment() == World.Environment.NETHER) customFlatTerrainBlock = Material.NETHERRACK;
-        if (worldInfo.getEnvironment() == World.Environment.THE_END) customFlatTerrainBlock = Material.END_STONE;
+        Material customFlatSurfaceBlock = null;
+        switch (chunkData.getBiome(0, 0, 0)) {
+            case DESERT -> {
+                customFlatTerrainBlock = Material.SANDSTONE;
+                customFlatSurfaceBlock = Material.SAND;
+            }
+            case SNOWY_TAIGA -> customFlatTerrainBlock = Material.SNOW_BLOCK;
+            case BASALT_DELTAS -> customFlatTerrainBlock = Material.BASALT;
+            case WARPED_FOREST -> {
+                customFlatTerrainBlock = Material.NETHERRACK;
+                customFlatSurfaceBlock = Material.WARPED_NYLIUM;
+            }
+            case SOUL_SAND_VALLEY -> {
+                customFlatTerrainBlock = Material.SOUL_SOIL;
+                customFlatSurfaceBlock = Material.SOUL_SAND;
+            }
+            case CRIMSON_FOREST -> {
+                customFlatTerrainBlock = Material.NETHERRACK;
+                customFlatSurfaceBlock = Material.CRIMSON_NYLIUM;
+            }
+        }
+        if (customFlatSurfaceBlock == null) customFlatSurfaceBlock = customFlatTerrainBlock;
+        int minHeight = -64;
+        if (worldInfo.getEnvironment() == World.Environment.NETHER) {
+            minHeight = 0;
+            customFlatTerrainBlock = Material.NETHERRACK;
+        } else if (worldInfo.getEnvironment() == World.Environment.THE_END) {
+            minHeight = 0;
+            customFlatTerrainBlock = Material.END_STONE;
+        }
         if (customFlatTerrainBlock == null) {
             super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
             return;
         }
-        if (worldInfo.getEnvironment() == World.Environment.NETHER) {
-            for (int i = 0; i < 16; i++) {
-                for (int j = 0; j < 16; j++) {
-                    chunkData.setBlock(i, -64, j, Material.BEDROCK);
-                    chunkData.setBlock(i, -63, j, customFlatTerrainBlock);
-                    chunkData.setBlock(i, -62, j, customFlatTerrainBlock);
-                    chunkData.setBlock(i, -61, j, customFlatTerrainBlock);
-                }
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                chunkData.setBlock(i, minHeight, j, Material.BEDROCK);
+                chunkData.setBlock(i, minHeight+1, j, customFlatTerrainBlock);
+                chunkData.setBlock(i, minHeight+2, j, customFlatTerrainBlock);
+                chunkData.setBlock(i, minHeight+3, j, customFlatSurfaceBlock);
             }
         }
+    }
+
+    @Override
+    public @NotNull Map<@NotNull String, @NotNull Material> getBiomes(World.@NotNull Environment environment) {
+        Map<String, Material> map = new LinkedHashMap<>();
+        switch (environment) {
+            case NORMAL -> {
+                map.put("all", Material.ENDER_EYE);
+                map.put("snowy", Material.SNOW_BLOCK);
+                map.put("desert", Material.SAND);
+            }
+            case NETHER -> {
+                map.put("all", Material.ENDER_EYE);
+                map.put("soul", Material.SOUL_SAND);
+                map.put("warped", Material.WARPED_NYLIUM);
+                map.put("crimson", Material.CRIMSON_NYLIUM);
+                map.put("basalt", Material.BASALT);
+            }
+        }
+        return map;
+    }
+
+    private @Nullable Biome getBiome(@NotNull String name, @NotNull World.Environment environment) {
+        if (environment == World.Environment.NORMAL) {
+            return switch (name) {
+                case "snowy" -> Biome.SNOWY_TAIGA;
+                case  "desert" -> Biome.DESERT;
+                default -> null;
+            };
+        } else if (environment == World.Environment.NETHER) {
+            return switch (name) {
+                case "soul" -> Biome.SOUL_SAND_VALLEY;
+                case "warped" -> Biome.WARPED_FOREST;
+                case "crimson" -> Biome.CRIMSON_FOREST;
+                case "basalt" -> Biome.BASALT_DELTAS;
+                default -> null;
+            };
+        }
+        return null;
     }
 
     @Override

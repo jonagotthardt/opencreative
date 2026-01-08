@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.module;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 
@@ -28,11 +29,11 @@ public class ModuleEvent extends CreativeEvent {
 
     private final Module module;
 
-    public ModuleEvent(Module module) {
+    public ModuleEvent(@NotNull Module module) {
         this.module = module;
     }
 
-    public Module getModule() {
+    public @NotNull Module getModule() {
         return module;
     }
 }

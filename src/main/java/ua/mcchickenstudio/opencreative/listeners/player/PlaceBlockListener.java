@@ -290,6 +290,7 @@ public final class PlaceBlockListener implements Listener {
                         powerable.setPowered(true);
                         block.setBlockData(powerable);
                     }
+                    Sounds.DEV_SET_DEBUG_TORCH.play(player);
                 }
             } else {
                 if (block.getType() != Material.COMPARATOR) {

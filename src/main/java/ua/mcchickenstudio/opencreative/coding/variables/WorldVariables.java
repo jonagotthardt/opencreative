@@ -80,21 +80,15 @@ public final class WorldVariables {
         WorldVariable variable = (action != null) ? getVariable(link, action) : getVariable(link.getName(), link.getVariableType(), null);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
 
+        if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
+            sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
+            new LimitReachedVariablesEvent(planet).callEvent();
+            return false;
+        }
         if (variable != null) {
-            if (variable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                new LimitReachedVariablesEvent(planet).callEvent();
-                return false;
-            }
             variable.setType(type);
             variable.setValue(value);
         } else {
-            if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
-                new LimitReachedVariablesEvent(planet).callEvent();
-                return false;
-            }
-
             WorldVariable newVariable = (action != null)
                     ? new WorldVariable(parseEntity(link.getName(), action.getHandler(), action), link.getVariableType(), type, value, handler)
                     : new WorldVariable(link.getName(), link.getVariableType(), type, value, null);

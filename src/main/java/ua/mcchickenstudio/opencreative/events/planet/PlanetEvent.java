@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.events.planet;
 
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
@@ -28,11 +29,11 @@ public class PlanetEvent extends CreativeEvent {
 
     private final Planet planet;
 
-    public PlanetEvent(Planet planet) {
+    public PlanetEvent(@NotNull Planet planet) {
         this.planet = planet;
     }
 
-    public Planet getPlanet() {
+    public @NotNull Planet getPlanet() {
         return planet;
     }
 }

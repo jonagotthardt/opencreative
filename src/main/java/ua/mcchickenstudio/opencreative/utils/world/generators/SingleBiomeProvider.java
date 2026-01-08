@@ -16,27 +16,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.planet;
+package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.entity.Player;
+import org.bukkit.block.Biome;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
-/**
- * Called when player disconnects from planet.
- * <p>
- * Usually it happens, when player teleports to another world (not related to this planet) or quits the server.
- */
-public class PlanetDisconnectPlayerEvent extends PlanetEvent {
+import java.util.List;
 
-    private final Player player;
+public class SingleBiomeProvider extends BiomeProvider {
 
-    public PlanetDisconnectPlayerEvent(@NotNull Planet planet, Player player) {
-        super(planet);
-        this.player = player;
+    private final Biome biome;
+
+    public SingleBiomeProvider(@NotNull Biome biome) {
+        this.biome = biome;
     }
 
-    public Player getPlayer() {
-        return player;
+    @Override
+    public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+        return biome;
+    }
+
+    @Override
+    public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
+        return List.of(biome);
     }
 }

@@ -34,21 +34,22 @@ public final class RespawnListener implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        if (!DeathListener.deathLocations.containsKey(event.getPlayer())) return;
-        Location deathLocation = DeathListener.deathLocations.get(event.getPlayer());
+        Player player = event.getPlayer();
+        if (!DeathListener.deathLocations.containsKey(event.getPlayer().getUniqueId())) return;
+        Location deathLocation = DeathListener.deathLocations.get(player.getUniqueId());
         event.setRespawnLocation(deathLocation);
-        DeathListener.deathLocations.remove(event.getPlayer());
-        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
+        DeathListener.deathLocations.remove(player.getUniqueId());
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet != null) {
-            Sounds.PLAYER_RESPAWN.play(event.getPlayer());
-            if (planet.isOwner(event.getPlayer())) {
+            Sounds.PLAYER_RESPAWN.play(player);
+            if (planet.isOwner(player)) {
                 if (planet.getMode() == Planet.Mode.BUILD) {
-                    ItemsGroup.BUILD_OWNER.setItemsIfAbsent(event.getPlayer());
+                    ItemsGroup.BUILD_OWNER.setItemsIfAbsent(player);
                 } else {
-                    ItemsGroup.PLAY_OWNER.setItemsIfAbsent(event.getPlayer());
+                    ItemsGroup.PLAY_OWNER.setItemsIfAbsent(player);
                 }
             }
-            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent(event.getPlayer()).callEvent();
+            new ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerRespawnEvent(player).callEvent();
         }
     }
 

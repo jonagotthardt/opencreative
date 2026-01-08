@@ -19,8 +19,14 @@
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
 import org.bukkit.*;
+import org.bukkit.block.Biome;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public final class LargeBiomesGenerator extends WorldGenerator {
 
@@ -29,7 +35,7 @@ public final class LargeBiomesGenerator extends WorldGenerator {
     }
 
     @Override
-    public void modifyWorldCreator(@NotNull WorldCreator creator) {
+    public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.LARGE_BIOMES);
     }
 

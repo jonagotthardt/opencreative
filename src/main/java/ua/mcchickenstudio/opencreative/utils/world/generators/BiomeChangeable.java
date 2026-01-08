@@ -16,27 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.events.planet;
+package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.planets.Planet;
+
+import java.util.Map;
 
 /**
- * Called when player disconnects from planet.
- * <p>
- * Usually it happens, when player teleports to another world (not related to this planet) or quits the server.
+ * <h1>BiomeChangeable</h1>
+ * This interface is used in {@link WorldGenerator}, that supports choice
+ * of Minecraft biomes in {@link ua.mcchickenstudio.opencreative.menus.world.WorldGenerationMenu}.
  */
-public class PlanetDisconnectPlayerEvent extends PlanetEvent {
+public interface BiomeChangeable {
 
-    private final Player player;
+    /**
+     * Returns map of available lower cased biomes
+     * names and their icons.
+     * @param environment selected environment.
+     * @return map of biomes names and icons.
+     */
+    @NotNull Map<@NotNull String, @NotNull Material> getBiomes(@NotNull World.Environment environment);
 
-    public PlanetDisconnectPlayerEvent(@NotNull Planet planet, Player player) {
-        super(planet);
-        this.player = player;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
 }

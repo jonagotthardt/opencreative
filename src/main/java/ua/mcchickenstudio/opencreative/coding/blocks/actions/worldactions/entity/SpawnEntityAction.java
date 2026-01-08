@@ -47,7 +47,7 @@ public final class SpawnEntityAction extends WorldAction {
             return;
         }
 
-        String typeString;
+        EntityType type = getArguments().getEntityType("type", EntityType.CHICKEN, this);
         String customName = getArguments().getText("name", "", this);
 
         boolean ai = getArguments().getBoolean("ai", true, this);
@@ -58,19 +58,6 @@ public final class SpawnEntityAction extends WorldAction {
         boolean customNameVisible = getArguments().getBoolean("show-name", true, this);
         boolean visibleByDefault = getArguments().getBoolean("visible-for-all", true, this);
 
-        ItemStack spawnEgg = getArguments().getItem("type", new ItemStack(Material.AIR), this);
-        if (spawnEgg.getType() != Material.AIR && spawnEgg.getType().name().endsWith("_SPAWN_EGG")) {
-            typeString = spawnEgg.getType().name().replace("_SPAWN_EGG", "");
-        } else {
-            typeString = getArguments().getText("type", "chicken", this);
-        }
-
-        EntityType type;
-        try {
-            type = EntityType.valueOf(typeString);
-        } catch (IllegalArgumentException e) {
-            type = EntityType.CHICKEN;
-        }
         if (isBannedEntity(type)) {
             throw new IllegalArgumentException("Cannot spawn " + type.name() + ", because it's disallowed entity type.");
         }

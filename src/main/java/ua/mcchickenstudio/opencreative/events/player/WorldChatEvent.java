@@ -42,7 +42,8 @@ public class WorldChatEvent extends CreativeEvent implements Cancellable {
     private Component formattedMessage;
     private boolean cancelled;
 
-    public WorldChatEvent(Player player, String message, Component formattedMessage, World world, Planet planet) {
+    public WorldChatEvent(@NotNull Player player, @NotNull String message, @NotNull Component formattedMessage,
+                          @NotNull World world, @Nullable Planet planet) {
         this.player = player;
         this.message = message;
         this.formattedMessage = formattedMessage;

@@ -42,7 +42,9 @@ public enum Sounds {
     MENU_OPEN_ENVIRONMENT("block.amethyst_block.chime", 0.1f),
     MENU_OPEN_WORLD_SETTINGS("block.amethyst_block.resonate", 0.1f),
     MENU_OPEN_MODULE_SETTINGS("block.amethyst_block.resonate", 0.1f),
+    MENU_OPEN_PROFILE_SETTINGS("block.note_block.chime", 1f),
     MENU_OPEN_RECOMMENDATIONS("block.ender_chest.open", 0.1f),
+    MENU_OPEN_PROFILE("entity.cat.purreow", 1f),
     MENU_OPEN_OWN_WORLDS_BROWSER("block.enchantment_table.use", 1.4f),
     MENU_OPEN_OWN_MODULES_BROWSER("block.enchantment_table.use", 1.4f),
     MENU_OPEN_WORLDS_BROWSER("block.vault.activate"),
@@ -63,6 +65,8 @@ public enum Sounds {
     MENU_WORLDS_BROWSER_CATEGORY("block.trial_spawner.detect_player", 1.2f),
     MENU_WORLD_SEARCH("block.respawn_anchor.ambient"),
     MENU_GENERATE_STRUCTURES_CHANGE("block.respawn_anchor.charge", 2),
+    MENU_BIOME_CHANGE("block.scaffolding.break", 1),
+
     MENU_CLEAR_DATA("item.brush.brushing.generic", 0.1f),
 
     WORLD_GENERATION("block.respawn_anchor.set_spawn", 0.1f),
@@ -96,6 +100,7 @@ public enum Sounds {
     WORLD_CODE_ERROR("block.beacon.deactivate", 1.7f),
     WORLD_CODE_COMPILE_ERROR("block.beacon.deactivate", 1.7f),
     WORLD_CODE_CRITICAL_ERROR("block.respawn_anchor.deplete", 0.5f),
+    WORLD_PURCHASE("entity.player.levelup", 1.2f),
 
     WORLD_SETTINGS_FLAG_CHANGE("ui.loom.select_pattern"),
     WORLD_SETTINGS_CATEGORY_SET("entity.player.levelup", 1.6f),
@@ -107,7 +112,16 @@ public enum Sounds {
     WORLD_SETTINGS_SPAWN_TELEPORT("entity.illusioner.mirror_move", 0.8f),
     WORLD_SETTINGS_SPAWN_SET("entity.illusioner.cast_spell", 0.8f),
     WORLD_SETTINGS_OWNER_SET("ui.toast.challenge_complete", 1.5f),
-    WORLD_PURCHASE("entity.player.levelup", 1.2f),
+    WORLD_SETTINGS_NAME_CHANGE("entity.villager.work_cartographer", 1f),
+    WORLD_SETTINGS_DESCRIPTION_SET("entity.villager.work_cartographer", 1f),
+    WORLD_SETTINGS_CUSTOM_ID_SET("entity.villager.work_cartographer", 1f),
+
+    PROFILE_SETTINGS_GENDER_CHANGE("entity.armadillo.scute_drop", 0.1f),
+    PROFILE_SETTINGS_SOCIAL_SET("entity.villager.yes", 1f),
+    PROFILE_SETTINGS_DESCRIPTION_SET("entity.villager.work_cartographer", 1f),
+
+    MODULE_SETTINGS_NAME_SET("entity.villager.work_cartographer", 1f),
+    MODULE_SETTINGS_DESCRIPTION_SET("entity.villager.work_cartographer", 1f),
 
     WORLD_REMOVE_ENTITY("entity.illusioner.prepare_blindness", 1.6f),
     WORLD_TELEPORT_TO_ENTITY("entity.illusioner.mirror_move", 0.8f),
@@ -132,6 +146,8 @@ public enum Sounds {
     DEV_SETTINGS_SAVE_LOCATION("entity.illusioner.prepare_mirror", 0.7f),
     DEV_SETTINGS_DROP_ITEMS("entity.illusioner.prepare_mirror", 0.7f),
     DEV_PLATFORM_CLAIM("ui.toast.challenge_complete", 1.7f),
+    DEV_SET_DEBUG_TORCH("entity.villager.work_mason", 1.7f),
+    DEV_UNSET_DEBUG_TORCH("entity.villager.work_mason", 1.2f),
     DEV_MODULE_INSTALLED("entity.allay.item_given", 0.1f),
     DEV_MODULE_CREATED("ui.toast.challenge_complete", 1.4f),
 

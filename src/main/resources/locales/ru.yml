@@ -500,6 +500,30 @@ settings:
     usage: "%prefix%Введи новое &6описание&f профиля, например &aСоздаю красивые миры&f.\n&f - Описание не должно нарушать правила сервера."
     error: "%prefix%Описание профиля нарушает одно из требований:\n&f- Описание не должно быть короче %min% символов и длиннее %max%."
     changed: "%prefix%Вы установили своему профилю новое &6описание&f: %description%"
+  profile-social-discord:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &9тэг Discord&f."
+    usage: "%prefix%Введи свой &6тэг Discord&f, например &9@wampus&f."
+    error: "%prefix%&cВаш тэг Discord не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &6тэг Discord&f: %social%"
+  profile-social-twitter:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &3никнейм X&f."
+    usage: "%prefix%Введи свой &6никнейм X&f, например &3@twitter&f."
+    error: "%prefix%&cВаш никнейм X не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &3тэг X&f: %social%"
+  profile-social-youtube:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &cникнейм YouTube&f."
+    usage: "%prefix%Введи свой &6никнейм YouTube&f, например &c@youtube&f."
+    error: "%prefix%&cВаш никнейм YouTube не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &cникнейм YouTube&f: %social%"
+  profile-social-telegram:
+    title: "&fВведи в чат"
+    subtitle: "&fсвой &bникнейм Telegram&f."
+    usage: "%prefix%Введи свой &6никнейм Telegram&f, например &b@telegram&f."
+    error: "%prefix%&cВаш никнейм Telegram не должен быть короче %min% символов и длиннее %max%! О_о"
+    changed: "%prefix%Вы установили новый &bникнейм Telegram&f: %social%"
 deleting-world:
   title: "&cУдаление ◌"
   subtitle: "&fПодождите несколько секунд..."
@@ -3273,6 +3297,36 @@ items:
           - "&fВ сундуке:"
           - "&6 Текст &7- Имя игрока"
           - "&6 Текст &7- Никнейм для скина"
+          - " "
+          - "&eНажми, чтобы установить действие."
+      entity-disguise-as-entity:
+        name: "&cМаскировать под моба"
+        lore:
+          - "&7Это замаскирует моба под "
+          - "&7другую сущность."
+          - " "
+          - "&fВ сундуке:"
+          - "&c Предмет &7- Яйцо призыва моба"
+          - " "
+          - "&eНажми, чтобы установить действие."
+      entity-disguise-as-block:
+        name: "&2Маскировать под блок"
+        lore:
+          - "&7Это замаскирует моба под "
+          - "&7какой-то блок."
+          - " "
+          - "&fВ сундуке:"
+          - "&c Предмет &7- Блок"
+          - " "
+          - "&eНажми, чтобы установить действие."
+      entity-clear-disguise:
+        name: "&2Маскировать под блок"
+        lore:
+          - "&7Это замаскирует моба под "
+          - "&7какой-то блок."
+          - " "
+          - "&fВ сундуке:"
+          - "&c Предмет &7- Блок"
           - " "
           - "&eНажми, чтобы установить действие."
       entity-set-armor-stand-pose:
@@ -14122,7 +14176,7 @@ menus:
       gender:
         name: " "
         choices:
-          none: "Не выбран"
+          unknown: "Не выбран"
           male: "Мужской"
           female: "Женский"
           non-binary: "Небинарный"
@@ -17644,13 +17698,13 @@ menus:
         choices:
           normal: "Обычный земной мир"
           nether: "Адское окружение"
-          the_end: "Край энда"
+          the_end: "Край Энда"
         name: "&bОкружение"
         lore:
           - " "
           - "&7В обычном окружении и обычное"
           - "&7небо, в адском всё красное и нет"
-          - "&7воды, а в крае Енда всё загадочное!"
+          - "&7воды, а в крае Энда всё загадочное!"
           - ""
           - "&eНажми, чтобы изменить."
           - ""
@@ -17658,6 +17712,32 @@ menus:
           - "%1%"
           - "%2%"
           - "%3%"
+      biome:
+        choices:
+          all: "Разные"
+          snowy: "Снежный"
+          jungle: "Джунгли"
+          desert: "Пустыня"
+          soul: "Долина песка душ"
+          warped: "Искажённый лес"
+          crimson: "Багровый лес"
+          basalt: "Базальтовые дельты"
+          city: "Город Края"
+          islands: "Острова"
+        name: "&aБиом"
+        lore:
+          - " "
+          - "&7Пускай мир будет с разными"
+          - "&7биомами, или же с одним."
+          - ""
+          - "&eНажми, чтобы изменить."
+          - ""
+          - "&fВарианты:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - "%5%"
       generate-structures:
         choices:
           true: "Пускай будут структуры"
@@ -18144,6 +18224,9 @@ blocks:
   entity_set_collidable: "Коллизия моба"
   entity_unset_team: "Убр. команду"
   entity_disguise_as_player: "Маска игрока"
+  entity_disguise_as_mob: "Маска моба"
+  entity_disguise_as_block: "Маска блока"
+  entity_clear_disguise: "Убр. маску"
   entity_set_scale: "Уст. размер"
   entity_set_step_height: "Высота подъёма"
   entity_set_target: "Уст. цель"

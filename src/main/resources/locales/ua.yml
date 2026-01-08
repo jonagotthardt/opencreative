@@ -497,7 +497,31 @@ settings:
     subtitle: "&fновий &6опис&f профілю."
     usage: "%prefix%Введи новий &6опис профілю&f, наприклад &aСтворюю красиві світи&f.\n&f - Опис не повинен порушувати правила сервера."
     error: "%prefix%Опис профілю порушує одну з вимог:\n&f- Опис не може бути коротшим за %min% символів або довшим за %max%."
-    changed: "%prefix%Ти встановив(ла) новий &6опис профілю&f: %description%"
+    changed: "%prefix%Ви встановили новий &6опис профілю&f: %description%"
+  profile-social-discord:
+    title: "&fВведи в чат"
+    subtitle: "&fсвій &9тег Discord&f."
+    usage: "%prefix%Введи свій &6тег Discord&f, наприклад &9@wampus&f."
+    error: "%prefix%&cВаш тег Discord не повинен бути коротшим за %min% символів і довшим за %max%! О_о"
+    changed: "%prefix%Ви встановили новий &6тег Discord&f: %social%"
+  profile-social-twitter:
+    title: "&fВведи в чат"
+    subtitle: "&fсвій &3нікнейм X&f."
+    usage: "%prefix%Введи свій &6нікнейм X&f, наприклад &3@twitter&f."
+    error: "%prefix%&cВаш нікнейм X не повинен бути коротшим за %min% символів і довшим за %max%! О_о"
+    changed: "%prefix%Ви встановили новий &3тег X&f: %social%"
+  profile-social-youtube:
+    title: "&fВведи в чат"
+    subtitle: "&fсвій &cнікнейм YouTube&f."
+    usage: "%prefix%Введи свій &6нікнейм YouTube&f, наприклад &c@youtube&f."
+    error: "%prefix%&cВаш нікнейм YouTube не повинен бути коротшим за %min% символів і довшим за %max%! О_о"
+    changed: "%prefix%Ви встановили новий &cнікнейм YouTube&f: %social%"
+  profile-social-telegram:
+    title: "&fВведи в чат"
+    subtitle: "&fсвій &bнікнейм Telegram&f."
+    usage: "%prefix%Введи свій &6нікнейм Telegram&f, наприклад &b@telegram&f."
+    error: "%prefix%&cВаш нікнейм Telegram не повинен бути коротшим за %min% символів і довшим за %max%! О_о"
+    changed: "%prefix%Ви встановили новий &bнікнейм Telegram&f: %social%"
 deleting-world:
   title: "&cВидалення ◌"
   subtitle: "&fЗачекайте кілька секунд..."
@@ -3260,6 +3284,32 @@ items:
           - "&fВ скрині:"
           - "&6 Текст &7- Ім'я гравця"
           - "&6 Текст &7- Нікнейм для скіна"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      entity-disguise-as-entity:
+        name: "&cМаскувати під сутність"
+        lore:
+          - "&7Це замаскує моба"
+          - "&7під іншу сутність."
+          - " "
+          - "&fУ скрині:"
+          - "&c Предмет &7- Яйце призову моба"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      entity-disguise-as-block:
+        name: "&2Маскувати під блок"
+        lore:
+          - "&7Це замаскує моба"
+          - "&7під певний блок."
+          - " "
+          - "&fУ скрині:"
+          - "&c Предмет &7- Блок"
+          - " "
+          - "&eНатисни, щоб встановити дію."
+      entity-clear-disguise:
+        name: "&2Прибрати маскування"
+        lore:
+          - "&7Це прибере маскування з моба."
           - " "
           - "&eНатисни, щоб встановити дію."
       entity-set-armor-stand-pose:
@@ -13859,7 +13909,7 @@ menus:
       gender:
         name: " "
         choices:
-          none: "Не обрано"
+          unknown: "Не обрано"
           male: "Чоловіча"
           female: "Жіноча"
           non-binary: "Небінарна"
@@ -17491,6 +17541,32 @@ menus:
           - "%1%"
           - "%2%"
           - "%3%"
+      biome:
+        choices:
+          all: "Різні"
+          snowy: "Сніжний"
+          jungle: "Джунглі"
+          desert: "Пустеля"
+          soul: "Долина піску душ"
+          warped: "Спотворений ліс"
+          crimson: "Багряний ліс"
+          basalt: "Базальтові дельти"
+          city: "Місто Краю"
+          islands: "Острови"
+        name: "&aБіом"
+        lore:
+          - " "
+          - "&7Нехай світ буде з різними"
+          - "&7біомами, або ж з одним."
+          - ""
+          - "&eНатисни, щоб змінити."
+          - ""
+          - "&fВаріанти:"
+          - "%1%"
+          - "%2%"
+          - "%3%"
+          - "%4%"
+          - "%5%"
       generate-structures:
         choices:
           true: "Нехай будуть структури"
@@ -17940,6 +18016,9 @@ blocks:
   entity_set_team: "Вст. команду"
   entity_unset_team: "Забр. команду"
   entity_disguise_as_player: "Маска гравця"
+  entity_disguise_as_mob: "Маска моба"
+  entity_disguise_as_block: "Маска блока"
+  entity_clear_disguise: "Прибр. маскув."
   entity_set_scale: "Вст. розмір"
   entity_set_step_height: "Висота підйому"
   entity_set_target: "Вст. ціль"

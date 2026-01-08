@@ -37,8 +37,9 @@ import ua.mcchickenstudio.opencreative.events.player.CreativeChatEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
@@ -52,7 +53,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
  */
 public class ChatCommand extends CommandHandler {
 
-    public static final List<Player> creativeChatOff = new ArrayList<>();
+    public static final Set<Player> creativeChatOff = new HashSet<>();
 
     private static @NotNull Component parseAdvertisementInMessage(@NotNull Component component) {
         Component result = parseAdvertisementCommand(component, "join");

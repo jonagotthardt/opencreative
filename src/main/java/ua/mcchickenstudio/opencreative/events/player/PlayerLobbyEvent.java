@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.events.player;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.events.CreativeEvent;
 
 /**
@@ -28,11 +29,11 @@ public class PlayerLobbyEvent extends CreativeEvent {
 
     private final Player player;
 
-    public PlayerLobbyEvent(Player player) {
+    public PlayerLobbyEvent(@NotNull Player player) {
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public @NotNull Player getPlayer() {
         return player;
     }
 }

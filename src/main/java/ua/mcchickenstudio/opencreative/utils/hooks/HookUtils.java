@@ -20,15 +20,21 @@ package ua.mcchickenstudio.opencreative.utils.hooks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.blocks.DisabledBlocksManager;
 import ua.mcchickenstudio.opencreative.managers.blocks.WorldEditManager;
+import ua.mcchickenstudio.opencreative.managers.disguises.DisabledDisguises;
+import ua.mcchickenstudio.opencreative.managers.disguises.DisguiseManager;
+import ua.mcchickenstudio.opencreative.managers.disguises.LibsDisguises;
 import ua.mcchickenstudio.opencreative.managers.packets.DisabledPacketManager;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
 import ua.mcchickenstudio.opencreative.managers.packets.ProtocolLibManager;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
 public final class HookUtils {
 
@@ -62,11 +68,25 @@ public final class HookUtils {
     }
 
     public static void clearEntitiesHook(World world) {
-        if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguises(world);
+        try {
+            if (OpenCreative.getDisguiseManager().isEnabled()) {
+                for (Entity entity : world.getEntities()) {
+                    OpenCreative.getDisguiseManager().clearDisguises(entity);
+                }
+            }
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to clear disguises in world " + world.getName(), error);
+        }
     }
 
     public static void clearPlayerHook(Player player) {
-        if (isLibsDisguisesEnabled) DisguiseUtils.clearDisguise(player);
+        try {
+            if (OpenCreative.getDisguiseManager().isEnabled()) {
+                OpenCreative.getDisguiseManager().clearDisguises(player);
+            }
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to clear disguise for player " + player.getName(), error);
+        }
     }
 
     public static PacketManager getPacketManager() {
@@ -82,6 +102,14 @@ public final class HookUtils {
             return new WorldEditManager();
         } else {
             return new DisabledBlocksManager();
+        }
+    }
+
+    public static DisguiseManager getDisguises() {
+        if (isLibsDisguisesEnabled) {
+            return new LibsDisguises();
+        } else {
+            return new DisabledDisguises();
         }
     }
 }

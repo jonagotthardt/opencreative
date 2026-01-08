@@ -190,7 +190,7 @@ public class PlanetLimits {
      * @return limit of scoreboards.
      */
     public int getVariableElementsChangesLimit() {
-        return planet.getGroup().getLimit(LimitType.SCOREBOARDS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.LIST_ELEMENTS_CHANGES).calculateLimit(planet.getPlayers().size());
     }
 
     /**

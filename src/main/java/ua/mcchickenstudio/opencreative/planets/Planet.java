@@ -671,6 +671,9 @@ public class Planet {
      * @param hidePlayer hide player's join message, and make him in spectator mode or not.
      */
     public void connectPlayer(@NotNull Player player, boolean hidePlayer) {
+        if (!player.isOnline()) {
+            return;
+        }
         // If stability is not good, not connecting
         if (OpenCreative.getStability().getState() != StabilityState.FINE && !isLoaded()) {
             player.sendMessage(getLocaleMessage("creative.stability.cannot"));
@@ -713,7 +716,7 @@ public class Planet {
         if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
             removePassengers(player);
             player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-                getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                handleConnectionProcess(player, wasLoaded, hidePlayer, success);
             }).exceptionally(error -> {
                 sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
                         (error.getMessage() == null ? "." : ": " + error.getMessage()));
@@ -728,7 +731,7 @@ public class Planet {
                 removePassengers(player);
                 player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
                 player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                    handleConnectionProcess(player, wasLoaded, hidePlayer, success);
                 }).exceptionally(error -> {
                     sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
                             (error.getMessage() == null ? "." : ": " + error.getMessage()));
@@ -739,7 +742,7 @@ public class Planet {
             case PERCENTS -> {
                 removePassengers(player);
                 player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-                    getConnectionProcess(player, wasLoaded, hidePlayer, success);
+                    handleConnectionProcess(player, wasLoaded, hidePlayer, success);
                 }).exceptionally(error -> {
                     sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
                             (error.getMessage() == null ? "." : ": " + error.getMessage()));
@@ -766,14 +769,14 @@ public class Planet {
     }
 
     /**
-     * Returns process of player connection to planet.
+     * Handles process of player connection to planet.
      *
      * @param player     player to connect.
      * @param wasLoaded  whether world was loaded before.
      * @param hidePlayer whether player join message should be hidden.
      * @param success    chunks are loaded successfully to teleport or not.
      */
-    private void getConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
+    private void handleConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
         clearPlayer(player);
         if (success) {
             OpenCreative.getWander(player).setConnectingToPlanet(false);

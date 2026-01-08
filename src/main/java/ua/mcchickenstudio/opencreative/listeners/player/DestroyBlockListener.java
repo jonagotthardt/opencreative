@@ -81,6 +81,7 @@ public final class DestroyBlockListener implements Listener {
 
             if (block.getType() == Material.REDSTONE_WALL_TORCH) {
                 devPlanet.setCodeChanged(true);
+                Sounds.DEV_UNSET_DEBUG_TORCH.play(player);
                 return;
             }
 

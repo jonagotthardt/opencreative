@@ -209,8 +209,11 @@ public interface PlanetsManager extends Manager {
      * @param environment        Environment of world.
      * @param seed               Seed for generation.
      * @param generateStructures Generate or not generate structures.
+     * @param biome              Biome for generation.
      */
-    void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator, @NotNull World.Environment environment, long seed, boolean generateStructures);
+    void createPlanet(@NotNull Player owner, int id, @NotNull WorldGenerator generator,
+                      @NotNull World.Environment environment, long seed,
+                      boolean generateStructures, @NotNull String biome);
 
     /**
      * Unregisters planet, teleports planet players to lobby,
