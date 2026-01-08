@@ -622,9 +622,9 @@ public enum ActionType {
     ENTITY_SET_VISUAL_FIRE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, EntitySetVisualFireAction.class, Material.CAMPFIRE, new ParameterSlot("boolean")),
     ENTITY_SET_GLOWING(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, EntitySetGlowingAction.class, Material.DRAGON_BREATH, new ParameterSlot("glowing", Arrays.asList(false, true), Material.WHITE_STAINED_GLASS, Material.GLASS)),
     ENTITY_DISGUISE_AS_PLAYER(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, DisguiseAsPlayerAction.class, Material.PLAYER_HEAD, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("skin", ValueType.TEXT)),
-    ENTITY_DISGUISE_AS_BLOCK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, DisguiseAsBlockAction.class, Material.GRASS_BLOCK, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("skin", ValueType.TEXT)),
-    ENTITY_DISGUISE_AS_ENTITY(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, DisguiseAsEntityAction.class, Material.PIGLIN_HEAD, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("skin", ValueType.TEXT)),
-    ENTITY_CLEAR_DISGUISE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, ClearDisguiseAction.class, Material.MILK_BUCKET, new ArgumentSlot("name", ValueType.TEXT), new ArgumentSlot("skin", ValueType.TEXT)),
+    ENTITY_DISGUISE_AS_BLOCK(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, DisguiseAsBlockAction.class, Material.GRASS_BLOCK, new ArgumentSlot("block", ValueType.ITEM)),
+    ENTITY_DISGUISE_AS_ENTITY(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, DisguiseAsEntityAction.class, Material.PIGLIN_HEAD, new ArgumentSlot("type", ValueType.ITEM)),
+    ENTITY_CLEAR_DISGUISE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, ClearDisguiseAction.class, Material.MILK_BUCKET),
 
     ENTITY_SET_ARMOR_STAND_POSE(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, SetArmorStandPoseAction.class, Material.ARMOR_STAND, new ArgumentSlot("x", ValueType.NUMBER), new ArgumentSlot("y", ValueType.NUMBER), new ArgumentSlot("z", ValueType.NUMBER)),
     ENTITY_SET_CAT_LYING_DOWN(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_APPEARANCE, EntitySetCatLyingDownAction.class, Material.CAT_SPAWN_EGG, new ParameterSlot("boolean")),
