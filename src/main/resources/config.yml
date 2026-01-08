@@ -210,7 +210,8 @@ messages:
   world-chat-spy: "&8 (%world%) &7%player% &8» &f%message%" # To see messages from other worlds, use /oc spy enable.
 
   notify-no-players-around: true # Will send notification to player, when he texts in local chat in world without other players
-
+  cancel-chat-on-confirmation: false # If true, will hide player's message, when he searches world by input; changes
+                                     #  world's or module's name, description; enters nickname or id for transferring ownership.
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: false # Will send not found message in console
