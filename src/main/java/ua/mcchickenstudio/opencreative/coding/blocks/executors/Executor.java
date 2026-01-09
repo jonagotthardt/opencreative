@@ -50,6 +50,7 @@ public abstract class Executor {
     private WorldEvent event;
     private ActionsHandler handler;
     private boolean debug;
+    private int calls;
 
     /**
      * Creates an Executor @NotNullwith specified planet and block's location in developers planet.
@@ -160,5 +161,17 @@ public abstract class Executor {
     public final void setActions(List<Action> actions) {
         this.actions.clear();
         actions.forEach(this::addAction);
+    }
+
+    public void increaseCall() {
+        calls++;
+    }
+
+    public void decreaseCall() {
+        calls--;
+    }
+
+    public int getLastCalls() {
+        return calls;
     }
 }

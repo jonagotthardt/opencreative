@@ -24,6 +24,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,6 +47,7 @@ import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCompileErrorMessage;
@@ -239,25 +241,37 @@ public class CodingBlockParser {
      *
      * @param devPlanet developer planet to parse code.
      */
-    public void parseCode(DevPlanet devPlanet) {
+    public CompletableFuture<Boolean> parseCode(@NotNull DevPlanet devPlanet) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
         if (!devPlanet.isCodeChanged()) {
             sendCodingDebugLog(devPlanet.getPlanet(), "Not parsing code, nothing was changed.");
-            return;
+            future.complete(true);
+            return future;
         }
         devPlanet.setCodeChanged(false);
+        devPlanet.setCurrentlySavingCode(true);
         long time = System.currentTimeMillis();
-        sendCodingDebugLog(devPlanet.getPlanet(), "Shutting down executors and clearing...");
-        devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
+        OpenCreative.getPlugin().getLogger().info("Parsing code in planet " + devPlanet.getPlanet().getId() + "...");
+        sendCodingDebugLog(devPlanet.getPlanet(), getLocaleMessage("coding-debug.parsing-code", false));
         CodeScript script = devPlanet.getPlanet().getTerritory().getScript();
         script.clear();
-        OpenCreative.getPlugin().getLogger().info("Parsing code in planet " + devPlanet.getPlanet().getId() + "...");
-        sendCodingDebugLog(devPlanet.getPlanet(), "Parsing every block, please wait...");
         parseAllExecutors(devPlanet, script.getConfig());
-        sendCodingDebugLog(devPlanet.getPlanet(), "Parsed code in " + (System.currentTimeMillis() - time) + " ms.");
         OpenCreative.getPlugin().getLogger().info("Parsed code in planet " + devPlanet.getPlanet().getId() + " in " + (System.currentTimeMillis() - time) + " ms.");
-        if (script.saveCode()) {
-            devPlanet.getPlanet().getTerritory().getScript().loadCode();
-        }
+        sendCodingDebugLog(devPlanet.getPlanet(), getLocaleMessage("coding-debug.parsed-code", false)
+                .replace("%time%", String.valueOf(Math.floor((System.currentTimeMillis() - time) / 10.0) / 100.0)));
+        Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(), () -> {
+            if (script.saveCode()) {
+                sendCodingDebugLog(devPlanet.getPlanet(), "Shutting down executors...");
+                devPlanet.getPlanet().getTerritory().stopBukkitRunnables();
+                devPlanet.setCurrentlySavingCode(false);
+                if (!devPlanet.getPlanet().isLoaded()) return;
+                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
+                    devPlanet.getPlanet().getTerritory().getScript().loadCode();
+                    future.complete(true);
+                });
+            }
+        });
+        return future;
     }
 
     /**

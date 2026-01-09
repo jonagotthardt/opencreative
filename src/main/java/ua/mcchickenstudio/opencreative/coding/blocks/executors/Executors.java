@@ -53,8 +53,6 @@ public class Executors {
     protected final Planet planet;
     private final List<Executor> executorsList = new ArrayList<>();
 
-    private final Map<Executor, Integer> lastExecutorsCallsAmount = new HashMap<>();
-
     public Executors(Planet planet) {
         this.planet = planet;
     }
@@ -93,19 +91,17 @@ public class Executors {
     }
 
     public static boolean canRunExecutor(@NotNull Planet planet, @NotNull Executor executor) {
-        Executors executors = planet.getTerritory().getScript().getExecutors();
-        if (executors.getLastExecutorCallsAmount(executor) >= planet.getLimits().getCodeOperationsLimit()) {
+        if (executor.getLastCalls() >= planet.getLimits().getCodeOperationsLimit()) {
             planet.getTerritory().getScript().getExecutors().stopCode("operations limit");
             sendPlanetCodeCriticalErrorMessage(planet, executor, getLocaleMessage("coding-error.operations-limit", false)
                     .replace("%limit%", String.valueOf(planet.getLimits().getCodeOperationsLimit())));
-            executors.clearExecutionsAmount(executor);
             return false;
         } else {
-            executors.increaseCallsAmount(executor);
+            executor.increaseCall();
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    executors.decreaseCallsAmount(executor);
+                    executor.decreaseCall();
                 }
             }.runTaskLater(OpenCreative.getPlugin(), 35L);
             return true;
@@ -117,7 +113,6 @@ public class Executors {
      */
     public void clear() {
         executorsList.clear();
-        lastExecutorsCallsAmount.clear();
     }
 
     /**
@@ -145,11 +140,13 @@ public class Executors {
             }
             clear();
             executorsList.addAll(executors);
-            sendCodingDebugLog(planet, "Started code in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
+            sendCodingDebugLog(planet, getLocaleMessage("coding-debug.loaded-code", false)
+                    .replace("%time%", String.valueOf(Math.floor((System.currentTimeMillis() - time) / 10.0) / 100.0)));
             OpenCreative.getPlugin().getLogger().info("Loaded code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
         } else {
+            sendCodingDebugLog(planet, getLocaleMessage("coding-debug.loaded-code", false)
+                    .replace("%time%", "0"));
             OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " has no code to load.");
-            sendCodingDebugLog(planet, "No code found to load.");
         }
     }
 
@@ -422,23 +419,6 @@ public class Executors {
         if (planet.getMode() == Planet.Mode.BUILD) return;
         OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getId() + " because of " + reason + ".");
         planet.setMode(Planet.Mode.BUILD, true);
-    }
-
-    private void increaseCallsAmount(Executor executor) {
-        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor) + 1);
-    }
-
-    private void decreaseCallsAmount(Executor executor) {
-        lastExecutorsCallsAmount.put(executor, getLastExecutorCallsAmount(executor) - 1);
-    }
-
-    private int getLastExecutorCallsAmount(Executor executor) {
-        if (!lastExecutorsCallsAmount.containsKey(executor)) return 0;
-        return lastExecutorsCallsAmount.get(executor);
-    }
-
-    private void clearExecutionsAmount(Executor executor) {
-        lastExecutorsCallsAmount.remove(executor);
     }
 
 }

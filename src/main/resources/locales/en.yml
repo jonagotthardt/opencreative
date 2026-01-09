@@ -404,8 +404,12 @@ coding-debug:
   executor-message: "&7 &7%type%&7 &8(%x% %y% %z%)"
   action-message: "&7 | %type%&7 &8(%x% %y% %z%)"
   action-hover: "&7Type %type% &7Argument &6%name%&7 Value: &6%value%"
-  condition-message-true: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &aYES&7: Executing actions..."
-  condition-message-false: "&7 Condition &8| &7%type%&7 (%x% %y% %z%) returned &cNO&7: Executing otherwise..."
+  parsing-code: "&fChecking code blocks, please wait..."
+  parsed-code: "&fAll code blocks were checked in &6%time% seconds&f."
+  saving-code: "&f&nSaving the code&f..."
+  saved-code: "&fThe code was saved in &6%time% seconds&f :)"
+  loading-code: "&fLoading the code, please wait..."
+  loaded-code: "&fThe code was &nloaded&f in &6%time% seconds&f :)"
 coding-warning:
   message: "&f\n &8 [&6⚠&8] &f%warning% \n&f"
   variables-limit:
@@ -576,6 +580,7 @@ world:
     cant-dev-when-offline: "%prefix%&cYou cannot change the code while the world owner is offline."
     changed-fly-speed: "%prefix%&fYour flight speed is now set to &f%speed%"
     disabled: "%prefix%&cCoding is disabled, the only available mode is Build! :("
+    already-saving-code: "%prefix%&cThe code is already being processed..."
   cant-block-interact: "%prefix%&cBlock interaction is disabled for visitors in this world."
   cant-mob-interact: "%prefix%&cEntity interaction is disabled for visitors in this world."
   delete-mobs:

@@ -32,6 +32,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
@@ -54,6 +55,7 @@ import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -424,7 +426,7 @@ public class Planet {
     public List<Player> getPlayers() {
         List<Player> playerList = new ArrayList<>();
         if (!isLoaded()) return playerList;
-        playerList.addAll(territory.getWorld().getPlayers());
+        playerList.addAll(getWorld().getPlayers());
         if (getDevPlanet().isLoaded()) {
             playerList.addAll(getDevPlanet().getWorld().getPlayers());
         }
@@ -437,12 +439,12 @@ public class Planet {
      *
      * @return audience of world.
      */
-    public Audience getAudience() {
+    public @NotNull Audience getAudience() {
         Audience audience = Audience.empty();
         if (isLoaded()) {
-            audience = Audience.audience(territory.getWorld());
+            audience = Audience.audience(getWorld());
             if (devPlanet.isLoaded()) {
-                audience = Audience.audience(territory.getWorld(), devPlanet.getWorld());
+                audience = Audience.audience(getWorld(), devPlanet.getWorld());
             }
         }
         return audience;
@@ -552,18 +554,22 @@ public class Planet {
                         player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
                     }
                 }
-                if (devPlanet.isLoaded()) {
-                    new CodingBlockParser(devPlanet).parseCode(devPlanet);
+                if (devPlanet.isLoaded() && devPlanet.isCodeChanged()) {
+                    CompletableFuture<Boolean> parseFuture = new CodingBlockParser(devPlanet).parseCode(devPlanet);
+                    parseFuture.thenAccept(success -> {
+                        if (success) {
+                            if (!ignoreEvents) {
+                                new GamePlayEvent(this).callEvent();
+                                for (Player player : getPlayers()) {
+                                    if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
+                                        new JoinEvent(player).callEvent();
+                                    }
+                                }
+                            }
+                        }
+                    });
                 } else {
                     territory.getScript().loadCode();
-                }
-                if (!ignoreEvents) {
-                    new GamePlayEvent(this).callEvent();
-                    for (Player player : getPlayers()) {
-                        if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
-                            new JoinEvent(player).callEvent();
-                        }
-                    }
                 }
             }
         } catch (Exception error) {
@@ -697,6 +703,7 @@ public class Planet {
             player.sendMessage(getLocaleMessage("world.connecting.busy"));
             return;
         }
+        new QuitEvent(player).callEvent();
         wander.setConnectingToPlanet(true);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.connecting.title")), toComponent(getLocaleMessage("world.connecting.subtitle")),
