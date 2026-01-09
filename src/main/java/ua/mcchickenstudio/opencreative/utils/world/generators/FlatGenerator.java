@@ -80,7 +80,6 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
                 customFlatSurfaceBlock = Material.CRIMSON_NYLIUM;
             }
         }
-        if (customFlatSurfaceBlock == null) customFlatSurfaceBlock = customFlatTerrainBlock;
         int minHeight = -64;
         if (worldInfo.getEnvironment() == World.Environment.NETHER) {
             minHeight = 0;
@@ -93,6 +92,7 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
             super.generateSurface(worldInfo, random, chunkX, chunkZ, chunkData);
             return;
         }
+        if (customFlatSurfaceBlock == null) customFlatSurfaceBlock = customFlatTerrainBlock;
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 chunkData.setBlock(i, minHeight, j, Material.BEDROCK);
