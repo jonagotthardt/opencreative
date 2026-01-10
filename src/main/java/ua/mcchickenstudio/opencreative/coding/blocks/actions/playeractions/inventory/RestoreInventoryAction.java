@@ -26,6 +26,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+
 public final class RestoreInventoryAction extends PlayerAction {
     public RestoreInventoryAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -33,6 +35,10 @@ public final class RestoreInventoryAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
+        if (getPlanet().getLimits().cantLoadOrSaveInventory(player)) {
+            sendCodingDebugLog(getPlanet(), "Too many restore inventory actions called at once " + player.getName());
+            return;
+        }
         player.getInventory().setContents(getPlanet().getWorldPlayers().getPlanetPlayer(player).getSavedInventory());
     }
 

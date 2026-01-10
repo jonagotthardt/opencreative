@@ -33,6 +33,8 @@ public final class StopCodeLineAction extends ControlAction {
 
     @Override
     protected void execute(Entity entity) {
+        getHandler().removeAllActions();
+        getHandler().setStopped(true);
         getHandler().stopAllParentHandlers();
     }
 

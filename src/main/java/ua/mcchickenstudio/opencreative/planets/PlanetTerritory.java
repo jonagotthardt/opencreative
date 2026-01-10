@@ -40,10 +40,7 @@ import ua.mcchickenstudio.opencreative.utils.world.generators.StructuresCapable;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerators;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetConfig;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.clearOnceMessages;
@@ -63,7 +60,7 @@ public class PlanetTerritory {
     private final PlanetScoreboards scoreboards;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
-    private final List<BukkitRunnable> runningBukkitRunnables = new ArrayList<>();
+    private final Set<BukkitRunnable> runningBukkitRunnables = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private final CodeScript script;
     private Location spawnLocation = null;
