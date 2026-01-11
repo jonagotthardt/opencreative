@@ -41,6 +41,9 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -113,6 +116,19 @@ public final class EntitySpawnListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityPlace(EntityPlaceEvent event) {
         World world = event.getBlock().getWorld();
+        if (event.getEntity() instanceof Minecart minecart) {
+            List<Entity> nearEntities = minecart.getNearbyEntities(1.5, 1.5, 1.5);
+            int minecarts = 0;
+            for (Entity entity : nearEntities) {
+                if (entity instanceof Minecart) {
+                    minecarts++;
+                }
+                if (minecarts >= 2) {
+                    event.setCancelled(true);
+                    break;
+                }
+            }
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
             int limit = planet.getLimits().getEntitiesLimit();

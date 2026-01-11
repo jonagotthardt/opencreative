@@ -27,6 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.PlayerAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyOpenedMenusException;
 import ua.mcchickenstudio.opencreative.utils.Advancement;
 
 public final class ShowAdvancementAction extends PlayerAction {
@@ -36,6 +37,14 @@ public final class ShowAdvancementAction extends PlayerAction {
 
     @Override
     public void executePlayer(@NotNull Player player) {
+        if (getPlanet().getLimits().cantOpenMenu(player)) {
+            /*
+             * This check prevents player from closing
+             * too many menus, that can prevent from
+             * quiting the game.
+             */
+            throw new TooManyOpenedMenusException(player.getName());
+        }
         ItemStack itemStack = getArguments().getItem("icon", new ItemStack(Material.DIAMOND), this);
         Advancement.AdvancementStyle style = Advancement.AdvancementStyle.GOAL;
         String styleString = getArguments().getText("style", "goal", this);

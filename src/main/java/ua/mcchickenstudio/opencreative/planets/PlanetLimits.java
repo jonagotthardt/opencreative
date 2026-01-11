@@ -336,7 +336,7 @@ public class PlanetLimits {
      * Checks if the amount of inventory operations in last 5 seconds
      * is greater than 5.
      *
-     * @return true - if it's allowed to open menu, false - it's disallowed.
+     * @return true - if it's allowed to load or save inventory, false - it's disallowed.
      */
     public boolean cantLoadOrSaveInventory(Player player) {
 
