@@ -70,7 +70,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.substring;
 public class CodingBlockPlacer {
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
-    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
+    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
     private final Material wallSign;
     private final Material container;
     private final int blocksPerColumnLimit;
@@ -459,123 +459,128 @@ public class CodingBlockPlacer {
                 data.put(key, section.get(key));
             }
         }
-        switch (type) {
-            case LOCATION -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                double x, y, z;
-                float yaw, pitch;
-                x = (double) data.getOrDefault("x", 0);
-                y = (double) data.getOrDefault("y", 0);
-                z = (double) data.getOrDefault("z", 0);
-                yaw = ((Double) data.getOrDefault("yaw", 0)).floatValue();
-                pitch = ((Double) data.getOrDefault("pitch", 0)).floatValue();
-                Location location = new Location(null, x, y, z, yaw, pitch);
-                setDisplayName(item, InteractListener.formatLocation(location));
-                setPersistentData(item, getCodingValueKey(), "LOCATION");
-                return item;
-            }
-            case VECTOR -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                double x, y, z;
-                x = (double) data.getOrDefault("x", 0);
-                y = (double) data.getOrDefault("y", 0);
-                z = (double) data.getOrDefault("z", 0);
-                setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
-                        "&b" + x + " " + y + " " + z));
-                setPersistentData(item, getCodingValueKey(), "VECTOR");
-                return item;
-            }
-            case COLOR -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                int r, g, b;
-                r = (int) data.getOrDefault("red", 0);
-                g = (int) data.getOrDefault("blue", 0);
-                b = (int) data.getOrDefault("green", 0);
-                if (meta != null) {
-                    meta.displayName(Component.text(r + " " + g + " " + b).color(TextColor.color(r, g, b)));
-                    item.setItemMeta(meta);
+        try {
+            switch (type) {
+                case LOCATION -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    double x, y, z;
+                    float yaw, pitch;
+                    x = (double) data.getOrDefault("x", 0);
+                    y = (double) data.getOrDefault("y", 0);
+                    z = (double) data.getOrDefault("z", 0);
+                    yaw = ((Double) data.getOrDefault("yaw", 0)).floatValue();
+                    pitch = ((Double) data.getOrDefault("pitch", 0)).floatValue();
+                    Location location = new Location(null, x, y, z, yaw, pitch);
+                    setDisplayName(item, InteractListener.formatLocation(location));
+                    setPersistentData(item, getCodingValueKey(), "LOCATION");
+                    return item;
                 }
-                setPersistentData(item, getCodingValueKey(), "COLOR");
-                return item;
-            }
-            case VARIABLE -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                String varName = (String) data.getOrDefault("name", "");
-                String typeString = (String) data.getOrDefault("type", "GLOBAL");
-                VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
-                if (varType == null) {
-                    varType = VariableLink.VariableType.GLOBAL;
-                }
-                setDisplayName(item, varType.getColor() + varName);
-                setPersistentData(item, getCodingValueKey(), "VARIABLE");
-                setPersistentData(item, getCodingVariableTypeKey(), varType.name());
-                return item;
-            }
-            case EVENT_VALUE -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                String valueType = (String) data.getOrDefault("name", "");
-                String targetType = (String) data.getOrDefault("target", "selected");
-                if (valueType == null) return new ItemStack(Material.AIR);
-                if (valueType.isEmpty()) return new ItemStack(Material.AIR);
-                Target target = Target.getByText(targetType);
-                if (valueType.startsWith("PLOT")) {
-                    valueType = valueType.replace("PLOT", "PLANET");
-                }
-                EventValue eventValue = EventValues.getInstance().getById(valueType.toLowerCase());
-                if (eventValue != null) {
-                    setDisplayName(item, eventValue.getLocaleName());
-                } else {
-                    setDisplayName(item, valueType);
-                }
-                addLoreAtBegin(item, getLocaleMessage("menus.developer.event-values.target")
-                        .replace("%target%", target.getLocaleName()));
-                setPersistentData(item, getCodingValueKey(), "EVENT_VALUE");
-                setPersistentData(item, getCodingVariableTypeKey(), valueType);
-                setPersistentData(item, getCodingTargetTypeKey(), target.name());
-                return item;
-            }
-            case NUMBER -> {
-                if (INT_PATTERN.matcher(stringValue).matches()) {
+                case VECTOR -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    double x, y, z;
+                    x = (double) data.getOrDefault("x", 0);
+                    y = (double) data.getOrDefault("y", 0);
+                    z = (double) data.getOrDefault("z", 0);
                     setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
-                            "&a" + Integer.parseInt(stringValue)));
-                } else if (FLOAT_PATTERN.matcher(stringValue).matches()) {
+                            "&b" + x + " " + y + " " + z));
+                    setPersistentData(item, getCodingValueKey(), "VECTOR");
+                    return item;
+                }
+                case COLOR -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    int r, g, b;
+                    r = (int) data.getOrDefault("red", 0);
+                    g = (int) data.getOrDefault("blue", 0);
+                    b = (int) data.getOrDefault("green", 0);
+                    if (meta != null) {
+                        meta.displayName(Component.text(r + " " + g + " " + b).color(TextColor.color(r, g, b)));
+                        item.setItemMeta(meta);
+                    }
+                    setPersistentData(item, getCodingValueKey(), "COLOR");
+                    return item;
+                }
+                case VARIABLE -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    String varName = (String) data.getOrDefault("name", "");
+                    String typeString = (String) data.getOrDefault("type", "GLOBAL");
+                    VariableLink.VariableType varType = VariableLink.VariableType.getEnum(typeString);
+                    if (varType == null) {
+                        varType = VariableLink.VariableType.GLOBAL;
+                    }
+                    setDisplayName(item, varType.getColor() + varName);
+                    setPersistentData(item, getCodingValueKey(), "VARIABLE");
+                    setPersistentData(item, getCodingVariableTypeKey(), varType.name());
+                    return item;
+                }
+                case EVENT_VALUE -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    String valueType = (String) data.getOrDefault("name", "");
+                    String targetType = (String) data.getOrDefault("target", "selected");
+                    if (valueType == null) return new ItemStack(Material.AIR);
+                    if (valueType.isEmpty()) return new ItemStack(Material.AIR);
+                    Target target = Target.getByText(targetType);
+                    if (valueType.startsWith("PLOT")) {
+                        valueType = valueType.replace("PLOT", "PLANET");
+                    }
+                    EventValue eventValue = EventValues.getInstance().getById(valueType.toLowerCase());
+                    if (eventValue != null) {
+                        setDisplayName(item, eventValue.getLocaleName());
+                    } else {
+                        setDisplayName(item, valueType);
+                    }
+                    addLoreAtBegin(item, getLocaleMessage("menus.developer.event-values.target")
+                            .replace("%target%", target.getLocaleName()));
+                    setPersistentData(item, getCodingValueKey(), "EVENT_VALUE");
+                    setPersistentData(item, getCodingVariableTypeKey(), valueType);
+                    setPersistentData(item, getCodingTargetTypeKey(), target.name());
+                    return item;
+                }
+                case NUMBER -> {
+                    if (INT_PATTERN.matcher(stringValue).matches()) {
+                        setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
+                                "&a" + Integer.parseInt(stringValue)));
+                    } else if (FLOAT_PATTERN.matcher(stringValue).matches()) {
+                        setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
+                                "&a" + Float.parseFloat(stringValue)));
+                    }
+                    setPersistentData(item, getCodingValueKey(), "NUMBER");
+                    return item;
+                }
+                case TEXT -> {
+                    setDisplayName(item, stringValue);
+                    setPersistentData(item, getCodingValueKey(), "TEXT");
+                    return item;
+                }
+                case BOOLEAN -> {
+                    boolean value = Boolean.parseBoolean(stringValue);
                     setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
-                            "&a" + Float.parseFloat(stringValue)));
+                            (value ? "&a" : "&c") + value));
+                    setPersistentData(item, getCodingValueKey(), "BOOLEAN");
+                    return item;
                 }
-                setPersistentData(item, getCodingValueKey(), "NUMBER");
-                return item;
-            }
-            case TEXT -> {
-                setDisplayName(item, stringValue);
-                setPersistentData(item, getCodingValueKey(), "TEXT");
-                return item;
-            }
-            case BOOLEAN -> {
-                boolean value = Boolean.parseBoolean(stringValue);
-                setDisplayName(item, ChatColor.translateAlternateColorCodes('&',
-                        (value ? "&a" : "&c") + value));
-                setPersistentData(item, getCodingValueKey(), "BOOLEAN");
-                return item;
-            }
-            case PARTICLE -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                String particle = (String) data.getOrDefault("type", "");
-                setPersistentData(item, getCodingValueKey(), "PARTICLE");
-                setPersistentData(item, getCodingParticleTypeKey(), particle);
-                return item;
-            }
-            case ITEM, ANY, POTION -> {
-                if (data == null) return new ItemStack(Material.AIR);
-                try {
-                    item = fixItem(ItemStack.deserialize(data));
-                } catch (Exception error) {
-                    item = createItem(Material.BARRIER, 1, "items.developer.broken");
+                case PARTICLE -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    String particle = (String) data.getOrDefault("type", "");
+                    setPersistentData(item, getCodingValueKey(), "PARTICLE");
+                    setPersistentData(item, getCodingParticleTypeKey(), particle);
+                    return item;
                 }
-                return item;
+                case ITEM, ANY, POTION -> {
+                    if (data == null) return new ItemStack(Material.AIR);
+                    try {
+                        item = fixItem(ItemStack.deserialize(data));
+                    } catch (Exception error) {
+                        item = createItem(Material.BARRIER, 1, "items.developer.broken");
+                    }
+                    return item;
+                }
+                default -> {
+                    return new ItemStack(Material.AIR);
+                }
             }
-            default -> {
-                return new ItemStack(Material.AIR);
-            }
+        } catch (Exception error) {
+            sendDebugError("Failed to get type of value " + stringValue, error);
+            return new ItemStack(Material.AIR);
         }
     }
 

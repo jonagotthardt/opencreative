@@ -29,12 +29,13 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class ParseNumberAction extends VariableAction {
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
-    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
+    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
 
     public ParseNumberAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -49,10 +50,15 @@ public final class ParseNumberAction extends VariableAction {
             throw new TooLongTextException(1024);
         }
         text = text.replaceAll("[^-0-9.]", "");
-        if (INT_PATTERN.matcher(text).matches()) {
-            setVarValue(link, Long.parseLong(text));
-        } else if (FLOAT_PATTERN.matcher(text).matches()) {
-            setVarValue(link, Double.parseDouble(text));
+
+        Matcher floatMatcher = FLOAT_PATTERN.matcher(text);
+        if (floatMatcher.find()) {
+            setVarValue(link, Double.parseDouble(floatMatcher.group()));
+            return;
+        }
+        Matcher intMatcher = INT_PATTERN.matcher(text);
+        if (intMatcher.find()) {
+            setVarValue(link, Long.parseLong(intMatcher.group()));
         }
     }
 

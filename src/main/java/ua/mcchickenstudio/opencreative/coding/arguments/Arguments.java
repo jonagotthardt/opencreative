@@ -60,7 +60,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 public class Arguments {
 
     private final static Pattern INT_PATTERN = Pattern.compile("^-?[0-9]*$");
-    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+$");
+    private final static Pattern FLOAT_PATTERN = Pattern.compile("^-?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
     private final @NotNull Planet planet;
     private final @NotNull List<Argument> argumentList = new ArrayList<>();
 

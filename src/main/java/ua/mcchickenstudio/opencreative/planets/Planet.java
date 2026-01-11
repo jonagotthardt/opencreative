@@ -570,6 +570,14 @@ public class Planet {
                     });
                 } else {
                     territory.getScript().loadCode();
+                    if (!ignoreEvents) {
+                        new GamePlayEvent(this).callEvent();
+                        for (Player player : getPlayers()) {
+                            if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
+                                new JoinEvent(player).callEvent();
+                            }
+                        }
+                    }
                 }
             }
         } catch (Exception error) {

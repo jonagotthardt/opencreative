@@ -256,7 +256,7 @@ public final class ChatListener implements Listener {
                     numberString = "3.1415926";
                 }
                 Double number = parseTicks(numberString);
-                if (number == null || number > 9999999) {
+                if (number == null) {
                     player.showTitle(Title.title(
                             Component.empty(), toComponent(getLocaleMessage("world.dev-mode.set-variable-number-error")),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))

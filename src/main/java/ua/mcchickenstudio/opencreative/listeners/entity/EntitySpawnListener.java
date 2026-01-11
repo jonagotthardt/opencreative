@@ -117,13 +117,13 @@ public final class EntitySpawnListener implements Listener {
     public void onEntityPlace(EntityPlaceEvent event) {
         World world = event.getBlock().getWorld();
         if (event.getEntity() instanceof Minecart minecart) {
-            List<Entity> nearEntities = minecart.getNearbyEntities(1.5, 1.5, 1.5);
+            List<Entity> nearEntities = minecart.getNearbyEntities(1, 1, 1);
             int minecarts = 0;
             for (Entity entity : nearEntities) {
                 if (entity instanceof Minecart) {
                     minecarts++;
                 }
-                if (minecarts >= 2) {
+                if (minecarts >= 1) {
                     event.setCancelled(true);
                     break;
                 }
