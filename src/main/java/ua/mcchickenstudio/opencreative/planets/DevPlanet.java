@@ -72,6 +72,7 @@ public class DevPlanet {
     private boolean saveLocation = true;
     private boolean nightVision = true;
     private boolean isCodeChanged = false;
+    private boolean currentlySavingCode = false;
 
     /**
      * Constructor of developer planet, that
@@ -594,6 +595,26 @@ public class DevPlanet {
      */
     public boolean isCodeChanged() {
         return isCodeChanged;
+    }
+
+    /**
+     * Checks whether code is currently
+     * being saved to file or not.
+     *
+     * @return true - is busy, false - not.
+     */
+    public boolean isCurrentlySavingCode() {
+        return currentlySavingCode;
+    }
+
+    /**
+     * Sets the state of saving code.
+     * If true, it will disallow to save a code.
+     *
+     * @param currentlySavingCode true - set busy state, false - allow to save code.
+     */
+    public void setCurrentlySavingCode(boolean currentlySavingCode) {
+        this.currentlySavingCode = currentlySavingCode;
     }
 
     /**

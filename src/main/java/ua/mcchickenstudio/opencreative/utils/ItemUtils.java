@@ -627,7 +627,7 @@ public final class ItemUtils {
         return item;
     }
 
-    private static int getInsideBadItemsAmount(@NotNull ItemStack item, int limit) {
+    public static int getInsideBadItemsAmount(@NotNull ItemStack item, int limit) {
         if (item.getItemMeta() instanceof BookMeta) {
             return 1;
         }

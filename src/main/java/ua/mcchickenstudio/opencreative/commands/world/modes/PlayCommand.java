@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.commands.world.modes;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,7 @@ import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld.removePlayerWithLocation;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
@@ -89,6 +91,7 @@ public class PlayCommand extends CommandHandler {
 
         removePlayerWithLocation(player);
         if (planet.getMode() != Planet.Mode.PLAYING) {
+            // Build mode
             if (planet.getWorldPlayers().canDevelop(player)) {
                 PlanetModeChangeEvent event = new PlanetModeChangeEvent(planet, planet.getMode(), Planet.Mode.PLAYING, player);
                 event.callEvent();
@@ -102,48 +105,61 @@ public class PlayCommand extends CommandHandler {
                 }
                 planet.setMode(Planet.Mode.PLAYING);
                 if (isEntityInDevPlanet(player)) {
-                    clearPlayer(player);
-                    player.teleport(planet.getTerritory().getSpawnLocation());
-                    planet.getTerritory().showBorders(player);
-                    if (planet.isOwner(sender.getName())) {
-                        ItemsGroup.PLAY_OWNER.setItems(player);
-                    }
-                    givePlayPermissions(player);
-                    new JoinEvent(player).callEvent();
+                    afterCompilation(player, playerDevPlanet);
                 }
             } else {
                 sender.sendMessage(getPlayerLocaleMessage("not-owner", player));
             }
-        } else {
-            if (new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player)) {
-                if (planet.getWorldPlayers().canDevelop(player)) {
-                    if (!OpenCreative.getStability().isFine()) {
-                        player.sendMessage(getLocaleMessage("creative.stability.cannot"));
-                        Sounds.PLAYER_FAIL.play(player);
-                    } else {
-                        player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
-                        if (!Arrays.asList(args).contains("--no-compile")) {
-                            if (planet.getDevPlanet().isLoaded()) {
-                                new CodingBlockParser(planet.getDevPlanet()).parseCode(planet.getDevPlanet());
-                            } else {
-                                planet.getTerritory().getScript().loadCode();
-                            }
+            return;
+        }
+        // Play mode
+        if (!(new PlayEvent(player).callEvent() || planet.getWorldPlayers().canDevelop(player))) {
+            return;
+        }
+        if (planet.getWorldPlayers().canDevelop(player)) {
+            if (!OpenCreative.getStability().isFine()) {
+                player.sendMessage(getLocaleMessage("creative.stability.cannot"));
+                Sounds.PLAYER_FAIL.play(player);
+            } else {
+                player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                if (!Arrays.asList(args).contains("--no-compile")) {
+                    if (planet.getDevPlanet().isLoaded()) {
+                        if (planet.getDevPlanet().isCodeChanged() && planet.getDevPlanet().isCurrentlySavingCode()) {
+                            player.sendMessage(getLocaleMessage("world.dev-mode.already-saving-code"));
+                        } else {
+                            CompletableFuture<Boolean> parserResult = new CodingBlockParser(planet.getDevPlanet()).parseCode(planet.getDevPlanet());
+                            parserResult.thenAccept(success -> {
+                                if (success) {
+                                    afterCompilation(player, playerDevPlanet);
+                                }
+                            });
+                            return;
                         }
+                    } else {
+                        planet.getTerritory().getScript().loadCode();
                     }
-                } else {
-                    player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                 }
-                planet.getTerritory().getSpawnLocation().getChunk().load(true);
-                DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-                if (devPlanet != null) {
-                    clearPlayer(player);
-                } else {
-                    new QuitEvent(player).callEvent();
-                }
-                clearPlayer(player);
-                player.teleport(planet.getTerritory().getSpawnLocation());
+            }
+        } else {
+            player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
+        }
+        afterCompilation(player, playerDevPlanet);
+    }
+
+    private void afterCompilation(@NotNull Player player, @Nullable DevPlanet devPlanet) {
+        if (!player.isOnline()) return;
+        Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
+        if (planet == null) return;
+        DevPlanet current = OpenCreative.getPlanetsManager().getDevPlanet(player);
+        if (devPlanet != null && !devPlanet.equals(current)) return;
+        if (devPlanet == null) {
+            new QuitEvent(player).callEvent();
+        }
+        clearPlayer(player);
+        player.teleportAsync(planet.getTerritory().getSpawnLocation()).thenAccept(success -> {
+            if (success) {
                 planet.getTerritory().showBorders(player);
-                if (planet.isOwner(sender.getName())) {
+                if (planet.isOwner(player)) {
                     ItemsGroup.PLAY_OWNER.setItems(player);
                 }
                 if (planet.getWorldPlayers().canDevelop(player)) {
@@ -151,7 +167,7 @@ public class PlayCommand extends CommandHandler {
                 }
                 new JoinEvent(player).callEvent();
             }
-        }
+        });
     }
 
     @Override

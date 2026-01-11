@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.managers.hints;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -82,6 +83,7 @@ public final class Hints implements HintManager {
             return;
         }
         // Holding item
+        if (player.getGameMode() == GameMode.SPECTATOR) return;
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.isEmpty()) return;
         String hint = switch (item.getType()) {

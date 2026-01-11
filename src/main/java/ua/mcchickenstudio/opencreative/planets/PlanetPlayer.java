@@ -91,8 +91,13 @@ public class PlanetPlayer {
     public void saveInventory(ItemStack[] items) {
         Arrays.fill(savedInventory, new ItemStack(Material.AIR));
         int slot = 0;
+        int badItems = 0;
         for (ItemStack item : items) {
             if (savedInventory.length == slot) break;
+            if (item != null) {
+                badItems += ItemUtils.getInsideBadItemsAmount(item, 2);
+                if (badItems >= 3) item = new ItemStack(Material.AIR);
+            }
             savedInventory[slot] = item;
             slot++;
         }

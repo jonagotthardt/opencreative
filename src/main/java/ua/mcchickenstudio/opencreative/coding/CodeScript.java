@@ -22,12 +22,15 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetScriptFile;
@@ -55,8 +58,8 @@ public class CodeScript {
     /**
      * Loads code from codeScript.yml file.
      */
-    public void loadCode() {
-        sendCodingDebugLog(planet, "Starting code, please wait...");
+    public boolean loadCode() {
+        sendCodingDebugLog(planet, getLocaleMessage("coding-debug.loading-code", false));
         File scriptFile = getPlanetScriptFile(planet);
         long totalSize = ua.mcchickenstudio.opencreative.utils.FileUtils.getFileSize(scriptFile);
         long limit = planet.getGroup().getScriptSizeLimit() * 1024L * 1024L;
@@ -65,7 +68,7 @@ public class CodeScript {
                     .replace("%amount%", FileUtils.byteCountToDisplaySize(totalSize))
                     .replace("%limit%", String.valueOf(planet.getGroup().getScriptSizeLimit())));
             sendCodingDebugLog(planet, "Script File is too large to load :(");
-            return;
+            return false;
         }
         scriptConfig = CodeConfiguration.loadConfiguration(scriptFile);
         new BukkitRunnable() {
@@ -74,6 +77,7 @@ public class CodeScript {
                 executors.load(getPlanetScriptFile(planet));
             }
         }.run();
+        return true;
     }
 
     /**
@@ -83,13 +87,16 @@ public class CodeScript {
      */
     public boolean saveCode() {
         long time = System.currentTimeMillis();
-        sendCodingDebugLog(planet, "Saving code...");
+        OpenCreative.getPlugin().getLogger().info("Saving code in planet " + planet.getId() + "...");
+        sendCodingDebugLog(planet, getLocaleMessage("coding-debug.saving-code", false));
         try {
             scriptConfig.save(getPlanetScriptFile(planet));
-            sendCodingDebugLog(planet, "Saved code in " + (System.currentTimeMillis() - time) + " ms.");
+            OpenCreative.getPlugin().getLogger().info("Saved code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms.");
+            sendCodingDebugLog(planet, getLocaleMessage("coding-debug.saved-code", false)
+                    .replace("%time%", String.valueOf(Math.floor((System.currentTimeMillis() - time) / 10.0) / 100.0)));
             return true;
-        } catch (IOException error) {
-            sendCriticalErrorMessage("An IO Exception has occurred while saving code.", error);
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to save code in planet " + planet.getId() + ".", error);
             return false;
         }
     }

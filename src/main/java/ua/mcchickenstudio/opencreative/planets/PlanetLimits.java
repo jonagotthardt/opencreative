@@ -37,6 +37,8 @@ public class PlanetLimits {
     private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
     private final LinkedList<Long> lastCodingErrors = new LinkedList<>();
     private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
+    private final Map<UUID, Deque<Long>> lastPlayerInventoryLoads = new HashMap<>();
+
     private int lastModifiedBlocksAmount;
     private int lastRedstoneOperationsAmount;
     private int lastModifiedTargetsAmount;
@@ -330,6 +332,40 @@ public class PlanetLimits {
     }
 
     /**
+     * Checks if world can load or save player's inventory.
+     * Checks if the amount of inventory operations in last 5 seconds
+     * is greater than 5.
+     *
+     * @return true - if it's allowed to load or save inventory, false - it's disallowed.
+     */
+    public boolean cantLoadOrSaveInventory(Player player) {
+
+        for (UUID uuid : lastPlayerInventoryLoads.keySet()) {
+            // Removes offline players
+            if (Bukkit.getPlayer(uuid) == null) {
+                lastPlayerInventoryLoads.remove(uuid);
+            }
+        }
+
+        UUID uuid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+        lastPlayerInventoryLoads.putIfAbsent(uuid, new LinkedList<>());
+        Deque<Long> timestamps = lastPlayerInventoryLoads.get(uuid);
+
+        // Removes time from list, if it's more than 5 seconds.
+        while (!timestamps.isEmpty() && (now - timestamps.peekFirst()) > 5000) {
+            timestamps.pollFirst();
+        }
+
+        if (timestamps.size() >= 6) {
+            return true;
+        }
+
+        timestamps.addLast(now);
+        return false;
+    }
+
+    /**
      * Checks if bee for beehive can spawn in world to prevent
      * "too many bees at once" crash. Checks if the amount
      * of spawned bees in last 5 seconds is not greater than 5.
@@ -458,6 +494,7 @@ public class PlanetLimits {
         lastPlayerMenuOpens.clear();
         lastWebRequests.clear();
         lastCodingErrors.clear();
+        lastPlayerInventoryLoads.clear();
     }
 
 }

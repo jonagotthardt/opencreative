@@ -601,7 +601,7 @@ public final class ChatListener implements Listener {
                 }
             }
             case MODULE_NAME_CHANGE -> {
-                Module module = OpenCreative.getModuleManager().getModuleById((String) data);
+                Module module = OpenCreative.getModuleManager().getModuleById(String.valueOf(data));
                 if (module == null || !module.isOwner(player)) return;
                 String newName = "§f" + ChatColor.translateAlternateColorCodes('&', input);
                 String uncoloredName = ChatColor.stripColor(newName);
@@ -618,7 +618,7 @@ public final class ChatListener implements Listener {
                 Sounds.MODULE_SETTINGS_NAME_SET.play(player);
             }
             case MODULE_DESCRIPTION_CHANGE -> {
-                Module module = OpenCreative.getModuleManager().getModuleById((String) data);
+                Module module = OpenCreative.getModuleManager().getModuleById(String.valueOf(data));
                 if (module == null || !module.isOwner(player)) return;
                 String newDescription = "§f" + ChatColor.translateAlternateColorCodes('&', input);
                 String uncoloredDescription = ChatColor.stripColor(newDescription);

@@ -426,8 +426,12 @@ coding-debug:
   executor-message: "&7 &7%type%&7 &8(%x% %y% %z%)"
   action-message: "&7 | %type%&7 &8(%x% %y% %z%)"
   action-hover: "&7Тип %type% &7Аргумент &6%name%&7 Значение: &6%value%"
-  condition-message-true: "&7 Условие &8| &7%type%&7 (%x% %y% %z%) вернуло &aДА&7: Выполняем действия..."
-  condition-message-false: "&7 Условие &8| &7%type%&7 (%x% %y% %z%) вернуло &cНЕТ&7: Выполняем иначе..."
+  parsing-code: "&fПроверяем блоки кода, пожалуйста подождите..."
+  parsed-code: "&fВсе блоки кода проверены за &6%time% секунд&f."
+  saving-code: "&fИдёт &nсохранение кода&f..."
+  saved-code: "&fКод сохранён за &6%time% секунд&f :)"
+  loading-code: "&fЗагрузка кода, пожалуйста подождите..."
+  loaded-code: "&fКод &nзагружен&f за &6%time% секунд&f :)"
 lobby:
   title: "%branding%"
   subtitle: "&fДавайте &aтворить&f в своих мирах!"
@@ -578,6 +582,7 @@ world:
     cant-dev-when-offline: "%prefix%&cВы не можете менять код, пока нет владельца мира."
     changed-fly-speed: "%prefix%&fТеперь ваша скорость полёта равна &7%speed%"
     disabled: "%prefix%&cСейчас режим разработчика отключён и остаётся лишь режим строительства.. :("
+    already-saving-code: "%prefix%&cСейчас код обрабатывается..."
   cant-block-interact: "%prefix%&cВ этом мире отключено взаимодействие с блоками для посетителей."
   cant-mob-interact: "%prefix%&cВ этом мире отключено взаимодействие с сущностями для посетителей."
   info: "%prefix%&fИнформация о мире: &6%name%\n &f Описание: &6%description%&r\n &f Владелец: &6%owner%\n &f ID: &6%id%\n &f Создан: &6%creation-time%\n &f Последний запуск: &6%activity-time%\n &f Строители: &6%builders%\n &f Разработчики: &6%coders%\n &f Доступ к миру: &6%sharing%\n &f Режим мира: &6%mode%\n &f Онлайн: &6%online%"
@@ -15422,7 +15427,7 @@ menus:
             - ""
             - "&eНажми, чтобы установить."
         target-entity:
-          name: "&3Целевая жидкость"
+          name: "&3Целевой моб"
           lore:
             - "&7Тип: &6Текст"
             - ""
