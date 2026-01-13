@@ -685,9 +685,6 @@ public class Planet {
      * @param hidePlayer hide player's join message, and make him in spectator mode or not.
      */
     public void connectPlayer(@NotNull Player player, boolean hidePlayer) {
-        if (!player.isOnline()) {
-            return;
-        }
         // If stability is not good, not connecting
         if (OpenCreative.getStability().getState() != StabilityState.FINE && !isLoaded()) {
             player.sendMessage(getLocaleMessage("creative.stability.cannot"));
@@ -870,6 +867,10 @@ public class Planet {
             new PlanetConnectPlayerEvent(this, player).callEvent();
             info.updateIconAsync();
         } else {
+            if (!player.isOnline() && isLoaded()) {
+                territory.unload();
+                return;
+            }
             sendPlayerErrorMessage(player, "Can't join planet. World is unloaded.");
             OpenCreative.getWander(player).setConnectingToPlanet(false);
         }
