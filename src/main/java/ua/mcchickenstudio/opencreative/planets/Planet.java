@@ -867,7 +867,7 @@ public class Planet {
             new PlanetConnectPlayerEvent(this, player).callEvent();
             info.updateIconAsync();
         } else {
-            if (!player.isOnline() && isLoaded()) {
+            if (!player.isOnline() && isLoaded() && getPlayers().isEmpty()) {
                 territory.unload();
                 return;
             }
