@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Random;
 
 public final class LargeBiomesGenerator extends WorldGenerator {
 
@@ -37,14 +38,51 @@ public final class LargeBiomesGenerator extends WorldGenerator {
     @Override
     public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.LARGE_BIOMES);
+        creator.generator(this);
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {
-        int y = world.getHighestBlockYAt(0, 0) + 3;
-        Location spawn = new Location(world, 0, y + 1, 0, -90, -6);
-        world.setSpawnLocation(spawn);
+    public @NotNull Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        return new Location(world, 0, 70, 0);
     }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateSurface() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateStructures() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateMobs() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateDecorations() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateNoise() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateCaves() {
+        return true;
+    }
+
+    @Override
+    public void afterCreation(@NotNull World world) {}
 
     @Override
     public @NotNull String getExtensionId() {

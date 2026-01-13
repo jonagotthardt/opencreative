@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.settings;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -160,7 +161,7 @@ public final class Settings {
         if (config.getBoolean("generators.empty", true)) instance.registerWorldGenerator(new EmptyGenerator());
         if (config.getBoolean("generators.water", true)) instance.registerWorldGenerator(new OceanGenerator());
         if (config.getBoolean("generators.survival", true)) instance.registerWorldGenerator(new SurvivalGenerator());
-        if (config.getBoolean("generators.large-biomes", true))
+        if (config.getBoolean("generators.large-biomes", false))
             instance.registerWorldGenerator(new LargeBiomesGenerator());
         ConfigurationSection customFlatsSection = config.getConfigurationSection("generators.custom-flats");
         if (customFlatsSection != null) {
@@ -190,7 +191,14 @@ public final class Settings {
                 String iconMaterial = templatesSection.getString(templateId + ".icon", "GRASS_BLOCK");
                 Material material = Material.getMaterial(iconMaterial.toUpperCase());
                 if (material == null || !material.isItem()) material = Material.GRASS_BLOCK;
-                instance.registerWorldGenerator(new WorldTemplate(templateId, new ItemStack(material), folderName));
+                WorldTemplate generator = new WorldTemplate(templateId, new ItemStack(material), folderName);
+                if (templatesSection.isConfigurationSection(templateId + ".spawn")) {
+                    double x = templatesSection.getDouble(templateId + ".spawn.x", 0);
+                    double y = templatesSection.getDouble(templateId + ".spawn.y", 70);
+                    double z = templatesSection.getDouble(templateId + ".spawn.z", 0);
+                    generator.changeLocation(new Location(null, x, y, z));
+                }
+                instance.registerWorldGenerator(generator);
             }
         }
         int registeredGenerators = instance.getWorldGenerators().size();

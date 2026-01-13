@@ -18,13 +18,11 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -38,6 +36,16 @@ public final class OceanGenerator extends WorldGenerator {
     public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.FLAT);
         creator.generator(this);
+    }
+
+    @Override
+    public @NotNull Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        return new Location(world, 0, 7, 0);
+    }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
     }
 
     @Override
