@@ -913,14 +913,14 @@ public final class InteractListener implements Listener {
                 }
                 // Disallow changing doors and chests.
                 case 4 -> {
-                    if (event.getClickedBlock().getType() == Material.CHEST || event.getClickedBlock().getType().toString().contains("DOOR")) {
+                    if (event.getClickedBlock().getType() == Material.CHEST || event.getClickedBlock().getType().name().contains("DOOR")) {
                         player.sendActionBar(getLocaleMessage("world.cant-block-interact"));
                         event.setCancelled(true);
                     }
                 }
-                // Disallow interacting with buttons, plates, levers
+                // Allow interacting only with buttons, plates, levers
                 case 5 -> {
-                    if (event.getClickedBlock().getType().toString().contains("BUTTON") || event.getClickedBlock().getType().toString().contains("PRESSURE_PLATE") || event.getClickedBlock().getType() == Material.LEVER) {
+                    if (!(event.getClickedBlock().getType().name().contains("BUTTON") || event.getClickedBlock().getType().name().contains("PRESSURE_PLATE") || event.getClickedBlock().getType() == Material.LEVER)) {
                         player.sendActionBar(getLocaleMessage("world.cant-block-interact"));
                         event.setCancelled(true);
                     }
@@ -941,7 +941,7 @@ public final class InteractListener implements Listener {
             }
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 3 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow changing item frames and armor stands.
-                if (event.getRightClicked().getType() == EntityType.ITEM_FRAME || event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
+                if (event.getRightClicked().getType().name().contains("FRAME") || event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
                     event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                     event.setCancelled(true);
                 }
@@ -964,7 +964,7 @@ public final class InteractListener implements Listener {
             }
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 3 && !planet.getWorldPlayers().canBuild(player)) {
                 // Disallow changing item frames and armor stands.
-                if (event.getRightClicked().getType() == EntityType.ITEM_FRAME || event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
+                if (event.getRightClicked().getType().name().contains("FRAME") || event.getRightClicked().getType() == EntityType.ARMOR_STAND) {
                     event.getPlayer().sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                     event.setCancelled(true);
                 }
@@ -989,7 +989,7 @@ public final class InteractListener implements Listener {
                 event.setCancelled(true);
             }
             if (planet.getFlagValue(PlanetFlags.PlanetFlag.MOB_INTERACT) == 3 && !planet.getWorldPlayers().canBuild(player)) {
-                if (event.getEntity().getType() == EntityType.ITEM_FRAME) {
+                if (event.getEntity().getType().name().contains("FRAME")) {
                     player.sendActionBar(getLocaleMessage("world.cant-mob-interact"));
                     event.setCancelled(true);
                 }
