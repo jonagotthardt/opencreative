@@ -37,7 +37,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
-import ua.mcchickenstudio.opencreative.utils.world.generators.FlatGenerator;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldGenerator;
 import ua.mcchickenstudio.opencreative.utils.world.generators.WorldTemplate;
 
@@ -93,6 +92,12 @@ public final class Space implements PlanetsManager {
     public void createPlanet(@NotNull Player owner, int id, @NotNull WorldTemplate template) {
         Wander wander = OpenCreative.getWander(owner);
         wander.setConnectingToPlanet(true);
+        owner.showTitle(Title.title(
+                toComponent(getLocaleMessage("creating-world.title")), toComponent(getLocaleMessage("creating-world.subtitle")),
+                Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(30), Duration.ofSeconds(2))
+        ));
+        long startTime = System.currentTimeMillis();
+        OpenCreative.getPlugin().getLogger().info("Copying template folder (" + template.getID() + ") for new planet " + id + " by " + owner.getName() + "...");
         Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(), () -> {
             File worldTemplateFolder = new File(OpenCreative.getPlugin().getDataPath()
                     + File.separator + "templates" + File.separator + template.getFolderName());
@@ -116,7 +121,24 @@ public final class Space implements PlanetsManager {
             }
             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
                 wander.setConnectingToPlanet(false);
-                createPlanet(owner, id, new FlatGenerator());
+                owner.showTitle(Title.title(
+                        toComponent(getLocaleMessage("creating-world.title")), toComponent(getLocaleMessage("creating-world.subtitle")),
+                        Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(30), Duration.ofSeconds(2))
+                ));
+                OpenCreative.getPlugin().getLogger().info("Creating new planet " + id + " by " + owner.getName() + "...");
+
+                createWorldSettings(id, owner, World.Environment.NORMAL, template.getID());
+                Planet planet = new Planet(id);
+
+                if (planet.getTerritory().generateWorld(template, World.Environment.NORMAL, 0, false, "") != null) {
+                    long endTime = System.currentTimeMillis();
+                    OpenCreative.getPlugin().getLogger().info("World for planet " + id + " successfully generated in " + (endTime - startTime) + " ms");
+                    new PlanetCreationEvent(planet, owner, template, World.Environment.NORMAL, 0, false).callEvent();
+                    planet.connectPlayer(owner);
+                } else {
+                    ErrorUtils.sendCriticalErrorMessage("Failed to create world for planet " + id + " by " + owner.getName() + ". World is null.");
+                    sendPlayerErrorMessage(owner, "Failed to create world, world is null.");
+                }
             });
         });
     }

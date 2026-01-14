@@ -134,8 +134,7 @@ public final class WorldGenerationMenu extends AbstractMenu {
                     WorldGenerator generator = WorldGenerators.getInstance().getById(generatorButton.getCurrentValue().toString());
                     if (generator == null) return;
                     if (generator instanceof WorldTemplate template) {
-                        OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(),
-                                template);
+                        OpenCreative.getPlanetsManager().createPlanet(player, WorldUtils.generateWorldID(), template);
                     } else {
                         World.Environment environment = World.Environment.valueOf(environmentButton.getCurrentValue().toString().toUpperCase());
                         int seed = new Random().nextInt();

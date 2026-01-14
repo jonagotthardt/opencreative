@@ -54,8 +54,28 @@ public abstract class AbstractFlatGenerator extends WorldGenerator {
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {
+    public @Nullable Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        return getHighestBlock(world);
     }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
+    }
+
+    private @NotNull Location getHighestBlock(@NotNull World world) {
+        int highestY = world.getMinHeight();
+        for (Map.Entry<Integer, Material> entry : blocks.entrySet()) {
+            if (entry.getValue().isSolid()) {
+                highestY = Math.max(highestY, entry.getKey());
+            }
+        }
+        return new Location(world, 0, highestY + 1, 0);
+    }
+
+
+    @Override
+    public void afterCreation(@NotNull World world) {}
 
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {

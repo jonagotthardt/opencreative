@@ -18,10 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 /**
  * <h1>WorldTemplate</h1>
@@ -34,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public final class WorldTemplate extends WorldGenerator {
 
     private final String folderName;
+    private Location spawnLocation;
 
     /**
      * Constructor of world template.
@@ -48,6 +52,39 @@ public final class WorldTemplate extends WorldGenerator {
     public WorldTemplate(@NotNull String id, @NotNull ItemStack displayIcon, @NotNull String folderName) {
         super(id, displayIcon);
         this.folderName = folderName;
+    }
+
+    @Override
+    public @NotNull Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        if (spawnLocation == null) {
+            return new Location(world, 0, 70, 0);
+        }
+        return new Location(world, spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ());
+    }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
+    }
+
+    /**
+     * Changes prepared spawn location.
+     *
+     * @param newLocation location to set.
+     */
+    public void changeLocation(@Nullable Location newLocation) {
+        if (newLocation == null) {
+            spawnLocation = null;
+            return;
+        }
+        if (spawnLocation == null) {
+            spawnLocation = new Location(null, 0, 70, 0);
+        }
+        spawnLocation.setX(newLocation.getX());
+        spawnLocation.setY(newLocation.getY());
+        spawnLocation.setZ(newLocation.getZ());
+        spawnLocation.setYaw(newLocation.getYaw());
+        spawnLocation.setPitch(newLocation.getPitch());
     }
 
     @Override
@@ -70,10 +107,31 @@ public final class WorldTemplate extends WorldGenerator {
     }
 
     @Override
+    public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        int minHeight = -64;
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                chunkData.setBlock(i, minHeight, j, Material.BEDROCK);
+                chunkData.setBlock(i, minHeight+1, j, Material.DIRT);
+                chunkData.setBlock(i, minHeight+2, j, Material.DIRT);
+                chunkData.setBlock(i, minHeight+3, j, Material.GRASS_BLOCK);
+            }
+        }
+    }
+
+    @Override
     public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
+        creator.type(WorldType.FLAT);
+        if (spawnLocation != null) {
+            creator.generator(this);
+        }
     }
 
     @Override
     public void afterCreation(@NotNull World world) {
+        if (spawnLocation != null) {
+            world.setSpawnLocation(new Location(world, spawnLocation.getX(),
+                    spawnLocation.getY(), spawnLocation.getZ()));
+        }
     }
 }

@@ -18,11 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils.world.generators;
 
-import com.sk89q.worldedit.world.biome.Biomes;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
-public final class FlatGenerator extends WorldGenerator implements EnvironmentCapable, StructuresCapable, BiomeChangeable {
+public final class FlatGenerator extends WorldGenerator implements EnvironmentCapable, BiomeChangeable {
 
     public FlatGenerator() {
         super("flat", new ItemStack(Material.MOSS_BLOCK));
@@ -42,11 +38,7 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
     @Override
     public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.FLAT);
-        if (creator.environment() == World.Environment.NETHER ||  creator.environment() == World.Environment.THE_END) {
-            creator.generator(this);
-        } else if (biome.equalsIgnoreCase("snowy") || biome.equalsIgnoreCase("desert")) {
-            creator.generator(this);
-        }
+        creator.generator(this);
         if (biome.isEmpty() || biome.equals("all")) return;
         Biome biomeType = getBiome(biome, creator.environment());
         if (biomeType == null) return;
@@ -60,6 +52,10 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
         Material customFlatTerrainBlock = null;
         Material customFlatSurfaceBlock = null;
+        if (worldInfo.getEnvironment() == World.Environment.NORMAL) {
+            customFlatTerrainBlock = Material.DIRT;
+            customFlatSurfaceBlock = Material.GRASS_BLOCK;
+        }
         switch (chunkData.getBiome(0, 0, 0)) {
             case DESERT -> {
                 customFlatTerrainBlock = Material.SANDSTONE;
@@ -101,6 +97,23 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
                 chunkData.setBlock(i, minHeight+3, j, customFlatSurfaceBlock);
             }
         }
+    }
+
+    @Override
+    public @NotNull Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        return new Location(world, 0, getMinHeight(world.getEnvironment()) + 4, 0);
+    }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
+    }
+
+    private int getMinHeight(@NotNull World.Environment environment) {
+        return switch (environment) {
+            case NORMAL -> -64;
+            case NETHER, CUSTOM, THE_END -> 0;
+        };
     }
 
     @Override

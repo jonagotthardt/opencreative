@@ -561,7 +561,7 @@ generators:
   water: true
   empty: true
   survival: true
-  large-biomes: true
+  large-biomes: false
   custom-flats: {}
     #desert:
     #  generation: "bedrock,3*sandstone,sand;plains"
@@ -572,6 +572,10 @@ generators:
     #  enabled: true
     #  icon: "DIAMOND_SWORD"
     #  folder: pvp
+    #  spawn:
+    #    x: 0
+    #    y: 70
+    #    z: 0
 
 items:
   #

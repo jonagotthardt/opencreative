@@ -340,7 +340,7 @@ public class PlanetLimits {
      */
     public boolean cantLoadOrSaveInventory(Player player) {
 
-        for (UUID uuid : lastPlayerInventoryLoads.keySet()) {
+        for (UUID uuid : new HashSet<>(lastPlayerInventoryLoads.keySet())) {
             // Removes offline players
             if (Bukkit.getPlayer(uuid) == null) {
                 lastPlayerInventoryLoads.remove(uuid);
@@ -448,7 +448,7 @@ public class PlanetLimits {
      */
     public boolean cantOpenMenu(Player player) {
 
-        for (UUID uuid : lastPlayerMenuOpens.keySet()) {
+        for (UUID uuid : new HashSet<>(lastPlayerMenuOpens.keySet())) {
             // Removes offline players
             if (Bukkit.getPlayer(uuid) == null) {
                 lastPlayerMenuOpens.remove(uuid);

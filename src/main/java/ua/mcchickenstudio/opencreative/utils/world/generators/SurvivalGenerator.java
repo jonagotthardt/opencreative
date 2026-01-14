@@ -20,16 +20,11 @@ package ua.mcchickenstudio.opencreative.utils.world.generators;
 
 import org.bukkit.*;
 import org.bukkit.block.Biome;
-import org.bukkit.generator.BiomeProvider;
-import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class SurvivalGenerator extends WorldGenerator implements EnvironmentCapable, StructuresCapable, BiomeChangeable {
 
@@ -38,8 +33,49 @@ public final class SurvivalGenerator extends WorldGenerator implements Environme
     }
 
     @Override
+    public @NotNull Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        return new Location(world, 0, 70, 0);
+    }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateSurface() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateStructures() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateMobs() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateDecorations() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateNoise() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldGenerateCaves() {
+        return true;
+    }
+
+    @Override
     public void modifyWorldCreator(@NotNull WorldCreator creator, @NotNull String biome) {
         creator.type(WorldType.NORMAL);
+        creator.generator(this);
         if (biome.isEmpty() || biome.equals("all")) return;
         Biome biomeType = getBiome(biome, creator.environment());
         if (biomeType == null) return;
@@ -47,11 +83,7 @@ public final class SurvivalGenerator extends WorldGenerator implements Environme
     }
 
     @Override
-    public void afterCreation(@NotNull World world) {
-        int y = world.getHighestBlockYAt(0, 0) + 3;
-        Location spawn = new Location(world, 0, y + 1, 0, -90, -6);
-        world.setSpawnLocation(spawn);
-    }
+    public void afterCreation(@NotNull World world) {}
 
     @Override
     public @NotNull Map<@NotNull String, @NotNull Material> getBiomes(@NotNull World.Environment environment) {
