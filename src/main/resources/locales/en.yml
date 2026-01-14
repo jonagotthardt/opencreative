@@ -10612,8 +10612,39 @@ items:
           - "&3 Option &7- Type of calculation"
           - " "
           - "&eClick to set action."
+        placeholders:
+          hitVec:
+            name: "&eTo store"
+          vector:
+            name: "&bRay direction"
+          from:
+            name: "&fRay origin"
+          to:
+            name: "&fHitbox location"
+          range:
+            name: "&aRay travel distance"
+          xSize:
+            name: "&aHitbox size on X"
+          ySize:
+            name: "&aHitbox size on Y"
+          zSize:
+            name: "&aHitbox size on Z"
+        arguments:
+          calculation:
+            name: "&eRay tracing method"
+            lore:
+              - "&7Choose how to trace the ray."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              vanilla-java: "Minecraft"
+              optifine-fastmath: "Optifine"
       var-do-ray-trace-multi:
-        name: "&9Do Ray Trace (Multi)"
+        name: "&9Do Multiple Ray Trace"
         lore:
           - "&7Checks whether ray hits hitboxes"
           - "&7and saves locations of intersection"
@@ -10631,8 +10662,39 @@ items:
           - "&3 Option &7- Type of calculation"
           - " "
           - "&eClick to set action."
+        placeholders:
+          hitVec:
+            name: "&eTo store"
+          vector:
+            name: "&bRay directions"
+          from:
+            name: "&fRay origin"
+          to:
+            name: "&eList of hitbox locations"
+          range:
+            name: "&aRay travel distance"
+          xSize:
+            name: "&aHitbox size on X"
+          ySize:
+            name: "&aHitbox size on Y"
+          zSize:
+            name: "&aHitbox size on Z"
+        arguments:
+          calculation:
+            name: "&eRay tracing method"
+            lore:
+              - "&7Choose how to trace the ray."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              vanilla-java: "Minecraft"
+              optifine-fastmath: "Optifine"
       var-do-ray-trace-multi-entities:
-        name: "&9Do Ray Trace (Entities)"
+        name: "&9Do Ray Trace with entities"
         lore:
           - "&7Checks whether ray hits mobs hitboxes"
           - "&7and saves locations of intersection"
@@ -10647,6 +10709,46 @@ items:
           - "&3 Option &7- Calculation type"
           - " "
           - "&eClick to set action."
+        placeholders:
+          hitVec:
+            name: "&eTo store"
+          vector:
+            name: "&bRay direction"
+          from:
+            name: "&fRay origin"
+          range:
+            name: "&aRay travel distance"
+        arguments:
+          filter:
+            name: "&cEntity filter"
+            lore:
+              - "&7Choose mobs whose locations"
+              - "&7will be added to the list"
+              - "&7when hit by the ray."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              no-filter: "Include all"
+              only-players: "Players only"
+              only-entities: "Entities only"
+          calculation:
+            name: "&eRay tracing method"
+            lore:
+              - "&7Choose how to trace the ray."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              vanilla-java: "Minecraft"
+              optifine-fastmath: "Optifine"
       var-normalize-vector:
         name: "&3Normalize vector"
         lore:

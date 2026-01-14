@@ -589,7 +589,7 @@ public enum ActionType {
             new ArgumentSlot("hitVec", ValueType.VARIABLE),
             new ArgumentSlot("vector", ValueType.VECTOR),
             new ArgumentSlot("from", ValueType.LOCATION),
-            new ArgumentSlot("to", ValueType.LIST),
+            new ArgumentSlot("to", ValueType.VARIABLE),
             new ArgumentSlot("range", ValueType.NUMBER),
             new ArgumentSlot("xSize", ValueType.NUMBER),
             new ArgumentSlot("ySize", ValueType.NUMBER),
