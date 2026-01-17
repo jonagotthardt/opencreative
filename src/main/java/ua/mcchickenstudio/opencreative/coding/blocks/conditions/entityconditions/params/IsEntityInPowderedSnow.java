@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class IsEntityInPowderedSnow extends EntityCondition {
+public final class IsEntityInPowderedSnow extends EntityCondition {
     public IsEntityInPowderedSnow(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }

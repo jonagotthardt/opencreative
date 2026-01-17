@@ -615,7 +615,7 @@ public class Arguments {
         }
         if (arg.getValue(action) instanceof ItemStack) {
             sendCodingDebugVariable(planet, path, arg.getValue(action));
-            return (ItemStack) arg.getValue(action);
+            return ((ItemStack) arg.getValue(action)).clone();
         }
         sendCodingDebugNotFoundVariable(planet, path);
         return defaultValue;

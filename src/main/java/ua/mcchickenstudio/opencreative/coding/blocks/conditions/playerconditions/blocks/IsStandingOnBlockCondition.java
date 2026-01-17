@@ -33,7 +33,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class IsStandingOnBlockCondition extends PlayerCondition {
+public final class IsStandingOnBlockCondition extends PlayerCondition {
 
     public IsStandingOnBlockCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);

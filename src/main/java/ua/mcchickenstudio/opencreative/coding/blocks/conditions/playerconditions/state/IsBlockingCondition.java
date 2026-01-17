@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class IsBlockingCondition extends PlayerCondition {
+public final class IsBlockingCondition extends PlayerCondition {
     /**
      * Creates an Condition with linked executor and specified arguments.
      *

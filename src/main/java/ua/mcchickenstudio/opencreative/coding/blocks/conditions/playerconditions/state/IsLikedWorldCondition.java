@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.utils.FileUtils;
 
 import java.util.List;
 
-public class IsLikedWorldCondition extends PlayerCondition {
+public final class IsLikedWorldCondition extends PlayerCondition {
 
     public IsLikedWorldCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
