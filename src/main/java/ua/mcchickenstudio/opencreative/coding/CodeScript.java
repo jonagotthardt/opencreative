@@ -47,7 +47,7 @@ public class CodeScript {
 
     private final Planet planet;
     private final Executors executors;
-    private CodeConfiguration scriptConfig;
+    private CodeStorage scriptConfig;
 
     public CodeScript(@NotNull Planet planet) {
         this.planet = planet;
@@ -70,7 +70,8 @@ public class CodeScript {
             sendCodingDebugLog(planet, "Script File is too large to load :(");
             return false;
         }
-        scriptConfig = CodeConfiguration.loadConfiguration(scriptFile);
+        scriptConfig = new CodeConfiguration();
+        scriptConfig.loadCode(scriptFile);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -90,7 +91,7 @@ public class CodeScript {
         OpenCreative.getPlugin().getLogger().info("Saving code in planet " + planet.getId() + "...");
         sendCodingDebugLog(planet, getLocaleMessage("coding-debug.saving-code", false));
         try {
-            scriptConfig.save(getPlanetScriptFile(planet));
+            scriptConfig.saveToFile(getPlanetScriptFile(planet));
             OpenCreative.getPlugin().getLogger().info("Saved code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms.");
             sendCodingDebugLog(planet, getLocaleMessage("coding-debug.saved-code", false)
                     .replace("%time%", String.valueOf(Math.floor((System.currentTimeMillis() - time) / 10.0) / 100.0)));
@@ -106,7 +107,7 @@ public class CodeScript {
      */
     public void clear() {
         executors.clear();
-        ConfigurationSection section = scriptConfig.getConfigurationSection("code.blocks");
+        ConfigurationSection section = scriptConfig.getSection("code.blocks");
         if (section == null) return;
         scriptConfig.set("old-code.blocks", null);
         Map<String, Object> newCode = section.getValues(false);
@@ -114,7 +115,7 @@ public class CodeScript {
         scriptConfig.set("code.blocks", null);
         scriptConfig.set("last-activity-time", System.currentTimeMillis());
         try {
-            scriptConfig.save(getPlanetScriptFile(planet));
+            scriptConfig.saveToFile(getPlanetScriptFile(planet));
         } catch (IOException exception) {
             sendCriticalErrorMessage("An error has occurred while clearing and saving code script " + this.getPlanet().getWorldName(), exception);
         }
@@ -133,7 +134,7 @@ public class CodeScript {
      *
      * @return code script config.
      */
-    public @NotNull CodeConfiguration getConfig() {
+    public @NotNull CodeStorage getConfig() {
         return scriptConfig;
     }
 

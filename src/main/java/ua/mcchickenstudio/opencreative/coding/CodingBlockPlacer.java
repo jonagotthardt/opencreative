@@ -580,7 +580,7 @@ public class CodingBlockPlacer {
             }
         } catch (Exception error) {
             sendDebugError("Failed to get type of value " + stringValue, error);
-            return new ItemStack(Material.AIR);
+            return createItem(Material.BARRIER, 1, "items.developer.broken");
         }
     }
 

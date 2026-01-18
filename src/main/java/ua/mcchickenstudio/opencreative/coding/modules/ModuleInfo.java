@@ -32,6 +32,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodeStorage;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
@@ -154,7 +156,7 @@ public class ModuleInfo {
     }
 
     private void loadInformation() {
-        FileConfiguration config = getModuleConfig(module);
+        CodeConfiguration config = getModuleConfig(module);
         displayName = config.getString("name", "Unknown name");
         description = config.getString("description", "Unknown description");
         isPublic = config.getBoolean("public", true);

@@ -13,6 +13,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.Var
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
+import java.util.List;
+
 public class RemoveCustomDataFromItemAction extends VariableAction {
     public RemoveCustomDataFromItemAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -26,17 +28,18 @@ public class RemoveCustomDataFromItemAction extends VariableAction {
         if (meta == null) {
             return;
         }
-        String key = getArguments().getText("key", "opencreative", this);
-
-        meta.getPersistentDataContainer().remove(
-                new NamespacedKey(OpenCreative.getPlugin(), "custom_" + key)
-        );
+        List<String> keys = getArguments().getTextList("keys", this);
+        for (String key : keys) {
+            meta.getPersistentDataContainer().remove(
+                    new NamespacedKey(OpenCreative.getPlugin(), "custom_" + key)
+            );
+        }
         item.setItemMeta(meta);
         setVarValue(result, item);
     }
 
     @Override
     public @NotNull ActionType getActionType() {
-        return ActionType.VAR_REMOVE_CUSTOM_DATA_TO_ITEM;
+        return ActionType.VAR_REMOVE_CUSTOM_DATA_FROM_ITEM;
     }
 }

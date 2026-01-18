@@ -281,7 +281,7 @@ public class CodingBlockParser {
      * @param devPlanet developer planet to parse code.
      * @param config    config to add executors.
      */
-    public void parseAllExecutors(DevPlanet devPlanet, CodeConfiguration config) {
+    public void parseAllExecutors(DevPlanet devPlanet, CodeStorage config) {
 
         List<Location> locations = new ArrayList<>();
         List<DevPlatform> platforms = devPlanet.getPlatforms();
@@ -311,7 +311,7 @@ public class CodingBlockParser {
      * @param config    config to add executors.
      * @return true - code is fine, false - troubles while parsing.
      */
-    public boolean parseExecutors(DevPlanet devPlanet, CodeConfiguration config, List<Location> executorsLocations) {
+    public boolean parseExecutors(DevPlanet devPlanet, CodeStorage config, List<Location> executorsLocations) {
 
         boolean isCodeFine = true;
         World world = devPlanet.getWorld();
@@ -358,7 +358,7 @@ public class CodingBlockParser {
                 Block containerBlock = actionBlock.getRelative(BlockFace.UP);
 
                 if (actionCategory != null && actionCategory != ActionCategory.ELSE_CONDITION && actionCategory.isMultiAction()) {
-                    multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + config.getBlockNumber(actionBlock));
+                    multiActions.add((actionCategory.isCondition() ? "condition_block_" : "multi_action_") + getBlockNumber(actionBlock));
                     if (actionType == null) {
                         continue;
                     }
@@ -484,6 +484,10 @@ public class CodingBlockParser {
         sendPlanetCompileErrorMessage(devPlanet.getPlanet(), block, getLocaleMessage("world.script-size-limit")
                 .replace("%amount%", FileUtils.byteCountToDisplaySize(argsSize))
                 .replace("%limit%", String.valueOf(maxScriptSize / 1024 / 1024)));
+    }
+
+    public int getBlockNumber(Block block) {
+        return (block.getX() - 2) / 2;
     }
 
 }

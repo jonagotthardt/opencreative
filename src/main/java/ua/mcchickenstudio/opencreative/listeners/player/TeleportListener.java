@@ -31,6 +31,7 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.TeleportEvent;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 public final class TeleportListener implements Listener {
@@ -45,10 +46,12 @@ public final class TeleportListener implements Listener {
                 event.setCancelled(true);
             }
         }
+        if (isOutOfBorders(event.getTo())) {
+            event.setCancelled(true);
+        }
         if (!event.getFrom().getWorld().equals(event.getTo().getWorld())) {
             switch (event.getCause()) {
-                case UNKNOWN, PLUGIN, COMMAND -> {
-                }
+                case UNKNOWN, PLUGIN, COMMAND -> {}
                 default -> {
                     event.setCancelled(true);
                     return;

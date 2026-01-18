@@ -20,9 +20,11 @@ package ua.mcchickenstudio.opencreative.coding;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
@@ -44,42 +46,21 @@ import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
  * This class represents a code configuration, that
  * has methods to save executor and action blocks.
  */
-public class CodeConfiguration extends YamlConfiguration {
+public class CodeConfiguration extends YamlConfiguration implements CodeStorage {
 
-    /**
-     * Creates a new {@link CodeConfiguration}, loading from the given file.
-     * <p>
-     * Any errors loading the Configuration will be logged and then ignored.
-     * If the specified input is not a valid config, a blank config will be
-     * returned.
-     * <p>
-     * The encoding used may follow the system dependent default.
-     *
-     * @param file Input file
-     * @return Resulting configuration
-     */
-    @NotNull
-    public static CodeConfiguration loadConfiguration(@NotNull File file) {
-        CodeConfiguration config = new CodeConfiguration();
+    @Override
+    public void loadCode(@NotNull File file) {
         try {
-            config.load(file);
+            load(file);
         } catch (FileNotFoundException ignored) {
         } catch (IOException | InvalidConfigurationException ex) {
             OpenCreative.getPlugin().getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
         }
-        return config;
     }
 
-    /**
-     * Saves executor block data in configuration file.
-     *
-     * @param block    executor coding block.
-     * @param category category of executor.
-     * @param type     type of executor.
-     * @param debug    should print debug logs or not.
-     */
-    public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category,
-                                  ExecutorType type, boolean debug) {
+    @Override
+    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category,
+                                  @NotNull ExecutorType type, boolean debug) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -88,7 +69,10 @@ public class CodeConfiguration extends YamlConfiguration {
                 (notDependsOnHeight ? z : y) + "_" + x;
         set(path + ".category", category.name());
         set(path + ".type", type.name());
-        if (debug) set(path + ".debug", debug);
+
+        if (debug) {
+            set(path + ".debug", true);
+        }
 
         String firstSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(), (byte) 1);
         String thirdSignLine = getSignLine(block.getRelative(BlockFace.SOUTH).getLocation(), (byte) 3);
@@ -111,27 +95,13 @@ public class CodeConfiguration extends YamlConfiguration {
         set(path + ".location.z", z);
     }
 
-    /**
-     * Saves executor block data in configuration file.
-     *
-     * @param block    executor coding block.
-     * @param category category of executor.
-     * @param type     type of executor.
-     */
-    public void saveExecutorBlock(Block block, boolean notDependsOnHeight, ExecutorCategory category, ExecutorType type) {
+    @Override
+    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category, @NotNull ExecutorType type) {
         saveExecutorBlock(block, notDependsOnHeight, category, type, false);
     }
 
-    /**
-     * Saves action block data in configuration file.
-     *
-     * @param multiActions list of multi actions.
-     * @param actionBlock  action coding block.
-     * @param category     category of action.
-     * @param type         type of action.
-     * @param target       target for action.
-     */
-    public void saveActionBlock(Block executorBlock, boolean notDependsOnHeight, List<String> multiActions, Block actionBlock, ActionCategory category, ActionType type, Target target) {
+    @Override
+    public void saveActionBlock(@NotNull Block executorBlock, boolean notDependsOnHeight, @NotNull List<String> multiActions, @NotNull Block actionBlock, @NotNull ActionCategory category, @NotNull ActionType type, @NotNull Target target) {
         String path = getActionBlockPath(executorBlock, notDependsOnHeight, actionBlock, multiActions);
 
         set(path + ".category", category.name());
@@ -182,28 +152,25 @@ public class CodeConfiguration extends YamlConfiguration {
         createSection(path + ".arguments");
     }
 
-    /**
-     * Saves arguments for action block in configuration file.
-     *
-     * @param multiActions list of multi actions.
-     * @param actionBlock  action block to set arguments.
-     * @param argument     argument to set.
-     * @param value        value of argument.
-     * @param type         value type.
-     */
-    public void saveArguments(Block executorBlock, boolean notDependsOnHeight, List<String> multiActions, Block actionBlock, String argument, Object value, ValueType type) {
+    @Override
+    public void saveArguments(@NotNull Block executorBlock, boolean notDependsOnHeight,
+                              @NotNull List<String> multiActions, @NotNull Block actionBlock,
+                              @NotNull String argument, @Nullable Object value, @NotNull ValueType type) {
         String path = getActionBlockPath(executorBlock, notDependsOnHeight, actionBlock, multiActions);
         set(path + ".arguments." + argument + ".type", type.name());
         set(path + ".arguments." + argument + ".value", value);
     }
 
-    /**
-     * Returns path of action block for setting parameters and arguments.
-     *
-     * @param actionBlock  coding action or condition block for getting path.
-     * @param multiActions list of multi actions that have brackets and inside actions.
-     * @return Configuration path of action block.
-     */
+    @Override
+    public void saveToFile(@NotNull File file) throws IOException {
+        save(file);
+    }
+
+    @Override
+    public @Nullable ConfigurationSection getSection(@NotNull String path) {
+        return getConfigurationSection(path);
+    }
+
     private String getActionBlockPath(Block executorBlock, boolean notDependsOnHeight, Block actionBlock, List<String> multiActions) {
         int z = notDependsOnHeight ? actionBlock.getZ() : actionBlock.getY();
         StringBuilder conditionsPath = new StringBuilder();

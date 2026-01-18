@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodeScript;
+import ua.mcchickenstudio.opencreative.coding.CodeStorage;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.indev.OfflineWander;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -677,11 +679,11 @@ public final class FileUtils {
      * @param parameterValue value.
      */
     public static void setModuleConfigParameter(Module module, String parameterPath, Object parameterValue) {
-        FileConfiguration moduleConfig = getModuleConfig(module);
+        CodeStorage moduleConfig = getModuleConfig(module);
         File moduleConfigFile = getModuleConfigFile(module.getId());
         moduleConfig.set(parameterPath, parameterValue);
         try {
-            moduleConfig.save(moduleConfigFile);
+            moduleConfig.saveToFile(moduleConfigFile);
         } catch (IOException error) {
             sendCriticalErrorMessage("Can't save module's settings configuration to file.", error);
         }
@@ -795,7 +797,9 @@ public final class FileUtils {
      * Returns module's configuration.
      **/
     public static CodeConfiguration getModuleConfig(Module module) {
-        return CodeConfiguration.loadConfiguration(getModuleConfigFile(module.getId()));
+        CodeConfiguration script = new CodeConfiguration();
+        script.loadCode(getModuleConfigFile(module.getId()));
+        return script;
     }
 
     /**

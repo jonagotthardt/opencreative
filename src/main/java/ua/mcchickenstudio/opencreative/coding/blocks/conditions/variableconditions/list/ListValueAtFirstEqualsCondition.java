@@ -19,9 +19,16 @@ public final class ListValueAtFirstEqualsCondition extends VariableCondition {
     @Override
     public boolean check() {
         List<Object> list = getArguments().getList("list", this);
-        Object target = getArguments().getValue("value", this);
+        List<Object> values = getArguments().getList("values", this);
 
-        return !list.isEmpty() && Objects.equals(list.getFirst(),target);
+        Object element = list.getFirst();
+        for (Object value : values) {
+            if (value.equals(element)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodeStorage;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
@@ -93,7 +94,7 @@ public final class Moduler implements ModuleManager {
     }
 
     public void createModule(@NotNull Player owner, @NotNull DevPlanet devPlanet, @NotNull Set<Location> locations) {
-        CodeConfiguration configuration = new CodeConfiguration();
+        CodeStorage configuration = new CodeConfiguration();
         if (!new CodingBlockParser(devPlanet, true).parseExecutors(devPlanet, configuration, new LinkedList<>(locations))) {
             owner.sendMessage(getLocaleMessage("modules.error"));
             return;
@@ -105,7 +106,7 @@ public final class Moduler implements ModuleManager {
         configuration.set("creation-time", System.currentTimeMillis());
         try {
             int id = generateModuleId();
-            configuration.save(new File(getModuleConfigFile(id).getPath()));
+            configuration.saveToFile(new File(getModuleConfigFile(id).getPath()));
             Module module = new Module(id);
             ModuleCreationEvent event = new ModuleCreationEvent(module, owner);
             event.callEvent();

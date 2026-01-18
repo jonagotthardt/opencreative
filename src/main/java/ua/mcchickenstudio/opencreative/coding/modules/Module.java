@@ -27,6 +27,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodeStorage;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.events.module.ModuleInstallationEvent;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
@@ -111,8 +112,8 @@ public class Module {
             return true;
         }
 
-        CodeConfiguration config = getModuleConfig(this);
-        ConfigurationSection section = config.getConfigurationSection("code.blocks");
+        CodeStorage config = getModuleConfig(this);
+        ConfigurationSection section = config.getSection("code.blocks");
         if (section == null) {
             return true;
         }
