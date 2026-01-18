@@ -21,6 +21,9 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,8 +53,10 @@ public final class EntityStateListener implements Listener {
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         Entity entity = event.getEntity();
-        if (!isBadEntityMovementState(entity)) return;
         if (!isBadEntityForMovement(entity)) return;
+        if (!isBadEntityMovementState(entity)) {
+            return;
+        }
         float size = entity instanceof Projectile ? 30f : 1f;
         List<Entity> nearbyEntities = entity.getNearbyEntities(size, size, size);
         int badEntities = 0;
@@ -64,6 +69,11 @@ public final class EntityStateListener implements Listener {
                 break;
             }
         }
+    }
+
+    private boolean isOnSlimeBlock(@NotNull Entity entity) {
+        Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        return block.getType() == Material.SLIME_BLOCK;
     }
 
     private boolean isBadEntityForMovement(@NotNull Entity entity) {
