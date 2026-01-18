@@ -244,7 +244,7 @@ public final class WorldVariables {
     private Object serializeObject(Object value) {
         try {
             if (value instanceof ItemStack item) {
-                value = ItemUtils.saveItemAsByteArray(item);
+                return ItemUtils.saveItemAsByteArray(item);
             } else if (value instanceof Location location) {
                 Map<String, Number> locationMap = new HashMap<>();
                 locationMap.put("x", location.getX());
@@ -314,9 +314,9 @@ public final class WorldVariables {
                 return variableMap;
             }
         } catch (Exception e) {
-            return String.valueOf(value);
+            return "";
         }
-        return String.valueOf(value);
+        return "";
     }
 
     @SuppressWarnings("unchecked")

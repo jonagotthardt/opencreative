@@ -8306,13 +8306,7 @@ items:
       player-clear-potion-effects:
         name: "&fClear potion effects"
         lore:
-          - "&7If nothing is in the chest,"
-          - "&7the player will lose all effects."
-          - "&7If there are effects listed,"
-          - "&7the player will lose only those."
-          - " "
-          - "&fIn the chest:"
-          - "&d Potions &7- Potion effects"
+          - "&7Player will lose all effects."
           - " "
           - "&eClick to set action."
       player-give-potion-effects:
@@ -11163,8 +11157,9 @@ items:
       if-world-is-thundering:
         name: "&bThunderstorm Weather"
         lore:
-          - "&7Checks if the current"
-          - "&7weather in the world is a thunderstorm with lightning."
+          - "&7Checks if the current weather"
+          - "&7in the world is a thunderstorm"
+          - "&7with lightning."
           - " "
           - "&eClick to set the condition."
       if-world-is-day-time:

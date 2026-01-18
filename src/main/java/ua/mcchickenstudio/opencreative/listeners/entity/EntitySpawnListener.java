@@ -113,7 +113,9 @@ public final class EntitySpawnListener implements Listener {
                         "/world deletemobs", 3);
                 new LimitReachedEntitiesEvent(planet).callEvent();
             } else {
-                new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent(event).callEvent();
+                if (!event.isCancelled()) {
+                    new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent(event).callEvent();
+                }
             }
         }
     }

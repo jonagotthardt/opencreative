@@ -24,8 +24,12 @@ import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import io.papermc.paper.event.block.TargetHitEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
@@ -47,6 +51,9 @@ import ua.mcchickenstudio.opencreative.planets.DevPlatform;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
+
+import java.util.Collection;
+import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
@@ -210,6 +217,23 @@ public final class BlockChangeListener implements Listener {
     @EventHandler
     public void onBlockDispense(BlockDispenseEvent event) {
         event.setItem(ItemUtils.fixItem(event.getItem()));
+        if (event.getBlock().getBlockData() instanceof Directional directional) {
+            Block block = event.getBlock().getRelative(directional.getFacing());
+            String itemType = event.getItem().getType().name();
+            if (itemType.contains("MINECART") || itemType.contains("SPAWN_EGG")) {
+                Collection<Entity> nearEntities = block.getWorld().getNearbyEntities(block.getLocation(), 1, 1, 1);
+                int minecarts = 0;
+                for (Entity entity : nearEntities) {
+                    if (entity instanceof Minecart) {
+                        minecarts++;
+                    }
+                    if (minecarts >= 1) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            }
+        }
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(event.getBlock().getWorld());
         if (planet != null) new BlockDispensedEvent(planet, event).callEvent();
     }

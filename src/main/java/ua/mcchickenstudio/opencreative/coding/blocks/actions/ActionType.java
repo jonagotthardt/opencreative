@@ -178,7 +178,7 @@ public enum ActionType {
     PLAYER_SET_EXP_LEVEL(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetExpLevelAction.class, Material.SUGAR_CANE, new ArgumentSlot("level", ValueType.NUMBER), new ParameterSlot("add")),
     PLAYER_SET_TOTAL_EXPERIENCE(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetTotalExpAction.class, Material.EXPERIENCE_BOTTLE, new ArgumentSlot("exp", ValueType.NUMBER), new ParameterSlot("add")),
     PLAYER_GIVE_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, GivePotionEffectsAction.class, Material.POTION, new ArgumentSlot("potions", ValueType.POTION, (byte) 18), new ParameterSlot("replace")),
-    PLAYER_CLEAR_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, ClearPotionEffectsAction.class, Material.MILK_BUCKET, new ArgumentSlot("potions", ValueType.POTION)),
+    PLAYER_CLEAR_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, ClearPotionEffectsAction.class, Material.MILK_BUCKET),
     PLAYER_REMOVE_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, RemovePotionEffectsAction.class, Material.GLASS_BOTTLE, new ArgumentSlot("potions", ValueType.POTION, (byte) 27)),
     PLAYER_SET_REMAINING_AIR(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, PlayerSetRemainingAirAction.class, Material.SPONGE, new ArgumentSlot("ticks", ValueType.NUMBER), new ParameterSlot("add")),
     PLAYER_SET_FLYING_FALL_DAMAGE(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetFlyingFallDamageAction.class, Material.RABBIT_HIDE, new ParameterSlot("boolean")),

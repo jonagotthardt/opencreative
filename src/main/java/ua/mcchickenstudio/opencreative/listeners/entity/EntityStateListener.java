@@ -21,9 +21,7 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
@@ -32,7 +30,6 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.LazyMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -46,7 +43,41 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.Play
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
+import java.util.List;
+
 public final class EntityStateListener implements Listener {
+
+    @EventHandler
+    public void onEntityMove(EntityMoveEvent event) {
+        Entity entity = event.getEntity();
+        if (!isBadEntityMovementState(entity)) return;
+        if (!isBadEntityForMovement(entity)) return;
+        float size = entity instanceof Projectile ? 30f : 1f;
+        List<Entity> nearbyEntities = entity.getNearbyEntities(size, size, size);
+        int badEntities = 0;
+        for (Entity same : nearbyEntities) {
+            if (isBadEntityForMovement(same) && isBadEntityMovementState(same)) {
+                badEntities++;
+            }
+            if (badEntities > 1) {
+                entity.remove();
+                break;
+            }
+        }
+    }
+
+    private boolean isBadEntityForMovement(@NotNull Entity entity) {
+        if (entity instanceof Projectile) return true;
+        if (entity instanceof ArmorStand) return true;
+        if (entity instanceof Minecart || entity instanceof Boat) {
+            return entity.getPassengers().isEmpty();
+        }
+        return false;
+    }
+
+    private boolean isBadEntityMovementState(@NotNull Entity entity) {
+        return !entity.isOnGround() || entity.isInWaterOrBubbleColumn();
+    }
 
     @EventHandler
     public void onCollision(VehicleEntityCollisionEvent event) {
