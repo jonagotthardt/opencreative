@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.values.events.ClickedSlotValue;
 
 import java.util.List;
 
-public class EqualsClickedSlotCondition extends PlayerCondition {
+public final class EqualsClickedSlotCondition extends PlayerCondition {
 
     public EqualsClickedSlotCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);

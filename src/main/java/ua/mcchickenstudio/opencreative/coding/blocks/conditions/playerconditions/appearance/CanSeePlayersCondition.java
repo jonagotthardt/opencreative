@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class CanSeePlayersCondition extends PlayerCondition {
+public final class CanSeePlayersCondition extends PlayerCondition {
     /**
      * Creates an Condition with linked executor and specified arguments.
      *

@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 
 import java.util.List;
 
-public class IsWorldCycleEnabledCondition extends WorldCondition {
+public final class IsWorldCycleEnabledCondition extends WorldCondition {
 
     public IsWorldCycleEnabledCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);

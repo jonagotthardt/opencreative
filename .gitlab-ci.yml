@@ -1,3 +1,16 @@
+#
+# OpenCreative+ Gitlab Deploy CI Job
+# McChicken Studio 2017-2025
+#
+
+#
+# This file is responsible for deploying .jar artifact
+# on Gitlab package registry, so it makes possible (our catchphrase!)
+# to download OpenCreative+ builds without waiting of
+# publication by contributors.
+# https://gitlab.com/eagles-creative/opencreative/-/packages
+#
+
 image: maven:latest
 
 stages:
@@ -8,4 +21,10 @@ deploy_job:
   script:
     - mvn deploy -s settings.xml
   only:
-    - main
+    refs:
+      - main
+    changes:
+      # It deploys only in Main branch, when source files or pom.xml are changed.
+      - src/**/*
+      - pom.xml
+      - .gitlab-ci.yml

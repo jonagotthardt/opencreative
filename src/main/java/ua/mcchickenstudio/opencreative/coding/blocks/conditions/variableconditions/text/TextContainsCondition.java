@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class TextContainsCondition extends VariableCondition {
+public final class TextContainsCondition extends VariableCondition {
     public TextContainsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }

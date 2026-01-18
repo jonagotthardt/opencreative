@@ -28,47 +28,66 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.UncancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.CatchErrorAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.MeasureTimeAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.entityactions.state.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlleractions.other.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchFunctionAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.other.LaunchMethodAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.appearance.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.communication.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.inventory.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.movement.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.state.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.repeatactions.other.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAddTargetAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionRemoveTargetAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionSetTargetAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.item.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.list.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.map.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.number.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.DeleteVariableAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.GetVariableTypeAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.SetVariableRandomValueAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.other.SetVariableValueAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.text.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.vector.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.appearance.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.entity.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.AddPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.MotionParamPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.SettingsParamPhysObjectAction;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.world.phys.VisualParamPhysObjectAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.other.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.entityconditions.params.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.appearance.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.inventory.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params.HasPotionEffectsCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params.MessageEqualsCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.params.PlayerNameEqualsCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.playerconditions.state.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.VarItemHasCustomData;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.VarItemHasCustomKey;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.item.VarItemHasEnchantments;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.list.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.location.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.location.LocationInAreaCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number.NumberGreaterCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number.NumberInRangeCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.number.NumberLessCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.other.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text.TextContainsCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text.TextEndsWithCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text.TextEqualsCondition;
+import ua.mcchickenstudio.opencreative.coding.blocks.conditions.variableconditions.text.TextStartsWithCondition;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.blocks.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.conditions.worldconditions.world.*;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
@@ -487,7 +506,27 @@ public enum ActionType {
     VAR_CREATE_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, CreateListAction.class, Material.BOOKSHELF, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_ADD_TO_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, AddToListAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_SET_IN_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, SetInListAction.class, Material.CAULDRON, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER), new ArgumentSlot("value", ValueType.ANY)),
-    VAR_GET_BY_ID_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetByIdFromListAction.class, Material.WATER_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)),
+    VAR_GET_BY_ID_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetByIdFromListAction.class, Material.WATER_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)
+    ),
+
+    VAR_GET_LAST_FROM_LIST(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.LIST_OPERATIONS,
+            GetLastValueFromListAction.class,
+            Material.HOPPER,
+            new ArgumentSlot("variable", ValueType.VARIABLE),
+            new ArgumentSlot("list", ValueType.VARIABLE)
+    ),
+
+    VAR_GET_FIRST_FROM_LIST(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.LIST_OPERATIONS,
+            GetFirstValueFromListAction.class,
+            Material.HOPPER_MINECART,
+            new ArgumentSlot("variable", ValueType.VARIABLE),
+            new ArgumentSlot("list", ValueType.VARIABLE)
+    ),
+
     VAR_GET_RANDOM_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetRandomFromListAction.class, Material.ENDER_EYE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
     VAR_SUBLIST_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, SublistAction.class, Material.SHEARS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("from", ValueType.NUMBER), new ArgumentSlot("to", ValueType.NUMBER)),
     VAR_CLONE_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, CloneListAction.class, Material.COMPOSTER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
@@ -517,6 +556,15 @@ public enum ActionType {
     VAR_REMOVE_BY_VALUE_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, RemoveByValueFromListAction.class, Material.POWDER_SNOW_BUCKET, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("deletion", List.of("all", "first", "last"), Material.RED_DYE, Material.ENDER_EYE, Material.ENDER_PEARL)),
 
     VAR_CREATE_MAP(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, CreateMapAction.class, Material.CHEST_MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("keys", ValueType.VARIABLE), new ArgumentSlot("values", ValueType.VARIABLE)),
+    VAR_CREATE_MAP_BY_KEYS(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.MAP_OPERATIONS,
+            CreateMapByKeysAction.class,
+            Material.BARREL,
+            new ArgumentSlot("keys", ValueType.ANY, (byte) 9),
+            new ArgumentSlot("values", ValueType.ANY, (byte) 9),
+            new ArgumentSlot("variable", ValueType.VARIABLE)
+    ),
     VAR_PUT_INTO_MAP(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, PutIntoMapAction.class, Material.CHEST, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY), new ArgumentSlot("value", ValueType.ANY)),
     VAR_GET_FROM_MAP_BY_KEY(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
     VAR_GET_KEYS_SET(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetKeysSetAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
@@ -533,7 +581,43 @@ public enum ActionType {
     VAR_SET_ITEM_PAGES(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, SetItemPagesAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("list", ValueType.VARIABLE)),
     VAR_SET_ITEM_SKULL_TEXTURES(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, SetSkullTexturesAction.class, Material.PLAYER_HEAD, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("textures", ValueType.TEXT)),
     VAR_SET_ITEM_SKULL_OWNER(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, SetSkullOwnerAction.class, Material.ZOMBIE_HEAD, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("owner", ValueType.TEXT)),
-
+    VAR_SET_CUSTOM_DATA_TO_ITEM(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.ITEM_OPERATIONS,
+            SetCustomDataToItemActon.class,
+            Material.BUNDLE,
+            new ArgumentSlot("result", ValueType.VARIABLE),
+            new ArgumentSlot("item", ValueType.ITEM),
+            new ArgumentSlot("key", ValueType.TEXT),
+            new ArgumentSlot("value", ValueType.TEXT)
+    ),
+    VAR_REMOVE_CUSTOM_DATA_TO_ITEM(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.ITEM_OPERATIONS,
+            RemoveCustomDataFromItemAction.class,
+            Material.DISC_FRAGMENT_5,
+            new ArgumentSlot("result", ValueType.VARIABLE),
+            new ArgumentSlot("item", ValueType.ITEM),
+            new ArgumentSlot("key", ValueType.TEXT)
+    ),
+    VAR_GET_CUSTOM_DATA_FROM_ITEM(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.ITEM_OPERATIONS,
+            GetCustomDataFromItemAction.class,
+            Material.HOPPER,
+            new ArgumentSlot("variable", ValueType.VARIABLE),
+            new ArgumentSlot("item", ValueType.ITEM),
+            new ArgumentSlot("key", ValueType.TEXT),
+            new ArgumentSlot("default", ValueType.ANY)
+    ),
+    VAR_CREATE_ITEM_BY_ID(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.ITEM_OPERATIONS,
+            GetItemById.class,
+            Material.HOPPER_MINECART,
+            new ArgumentSlot("variable", ValueType.VARIABLE),
+            new ArgumentSlot("id", ValueType.TEXT)
+    ),
     //VAR_SET_ITEM_PAGE( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, null, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("index", ValueType.NUMBER), new ArgumentSlot("page", ValueType.TEXT)),
     VAR_ADD_ITEM_PAGE(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, AddItemPageAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("page", ValueType.TEXT)),
     VAR_SET_ITEM_DAMAGE(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, SetItemDamageAction.class, Material.STICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("damage", ValueType.NUMBER), new ParameterSlot("add")),
@@ -797,6 +881,23 @@ public enum ActionType {
     IF_VAR_ITEM_EQUALS(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, VarItemEqualsCondition.class, Material.CRAFTING_TABLE, new ArgumentSlot("items", ValueType.ITEM, (byte) 18), new ParameterSlot("ignore-amount", Material.BEETROOT_SEEDS, Material.OAK_BUTTON), new ParameterSlot("ignore-name", Material.NAME_TAG, Material.STRING), new ParameterSlot("ignore-lore", Material.WRITABLE_BOOK, Material.COBWEB), new ArgumentSlot("item", ValueType.ITEM), new ParameterSlot("ignore-enchantments", Material.ENCHANTED_BOOK, Material.BOOK), new ParameterSlot("ignore-flags", Material.BLUE_BANNER, Material.WHITE_BANNER), new ParameterSlot("ignore-material", Material.CRAFTING_TABLE, Material.WHITE_STAINED_GLASS), new ParameterSlot("ignore-damage", Material.DEAD_BUSH, Material.GOLDEN_HOE)),
     IF_VAR_LOCATION_IN_AREA(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, LocationInAreaCondition.class, Material.HONEY_BLOCK, new ArgumentSlot("first", ValueType.LOCATION), new ArgumentSlot("location", ValueType.LOCATION), new ArgumentSlot("second", ValueType.LOCATION)),
     IF_VAR_ITEM_HAS_ENCHANTMENTS(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, VarItemHasEnchantments.class, Material.ENCHANTED_BOOK, new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("enchantment", ValueType.ITEM), new ParameterSlot("all"), new ParameterSlot("level-check", Arrays.asList("exact", "min-level", "max-level", "ignore"), Material.LECTERN, Material.GLOW_ITEM_FRAME, Material.ITEM_FRAME, Material.PAINTING)),
+    IF_VAR_ITEM_HAS_CUSTOM_KEY(
+            ActionCategory.VARIABLE_CONDITION,
+            MenusCategory.OTHER,
+            VarItemHasCustomKey.class,
+            Material.DECORATED_POT,
+            new ArgumentSlot("item", ValueType.ITEM),
+            new ArgumentSlot("key", ValueType.TEXT)
+    ),
+    IF_VAR_ITEM_HAS_CUSTOM_DATA(
+            ActionCategory.VARIABLE_CONDITION,
+            MenusCategory.OTHER,
+            VarItemHasCustomData.class,
+            Material.BARREL,
+            new ArgumentSlot("item", ValueType.ITEM),
+            new ArgumentSlot("key", ValueType.TEXT),
+            new ArgumentSlot("value", ValueType.TEXT)
+    ),
     IF_VAR_BOOLEAN_IS_TRUE(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, BooleanIsTrueCondition.class, Material.CLOCK, new ArgumentSlot("booleans", ValueType.BOOLEAN, (byte) 18), new ParameterSlot("all")),
 
     IF_VAR_TEXT_EQUALS(ActionCategory.VARIABLE_CONDITION, MenusCategory.TEXT_OPERATIONS, TextEqualsCondition.class, Material.BOOK, new ArgumentSlot("content", ValueType.TEXT, (byte) 18), new ArgumentSlot("text", ValueType.TEXT), new ParameterSlot("ignore-caps"), new ParameterSlot("ignore-colors")),
@@ -811,6 +912,31 @@ public enum ActionType {
     IF_VAR_LIST_IS_EMPTY(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListIsEmptyCondition.class, Material.STRUCTURE_VOID, new ArgumentSlot("list", ValueType.VARIABLE)),
     IF_VAR_LIST_CONTAINS(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListContainsCondition.class, Material.CHEST_MINECART, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("list", ValueType.VARIABLE), new ParameterSlot("all")),
 
+    IF_VAR_LIST_VALUE_AT_INDEX_EQUALS(
+            ActionCategory.VARIABLE_CONDITION,
+            MenusCategory.LIST_OPERATIONS,
+            ListValueAtIndexEqualsCondition.class,
+            Material.RAIL,
+            new ArgumentSlot("list", ValueType.LIST),
+            new ArgumentSlot("index", ValueType.NUMBER),
+            new ArgumentSlot("value", ValueType.ANY)
+    ),
+    IF_VAR_LIST_VALUE_AT_LAST_EQUALS(
+            ActionCategory.VARIABLE_CONDITION,
+            MenusCategory.LIST_OPERATIONS,
+            ListValueAtLastEqualsCondition.class,
+            Material.REPEATER,
+            new ArgumentSlot("list", ValueType.LIST),
+            new ArgumentSlot("value", ValueType.ANY)
+    ),
+    IF_VAR_LIST_VALUE_AT_FIRST_EQUALS(
+            ActionCategory.VARIABLE_CONDITION,
+            MenusCategory.LIST_OPERATIONS,
+            ListValueAtFirstEqualsCondition.class,
+            Material.COMPARATOR,
+            new ArgumentSlot("list", ValueType.LIST),
+            new ArgumentSlot("value", ValueType.ANY)
+    ),
     /**
      * <h1>World Conditions.</h1>
      */

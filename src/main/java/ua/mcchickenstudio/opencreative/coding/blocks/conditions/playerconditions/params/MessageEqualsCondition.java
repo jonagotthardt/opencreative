@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.values.events.ChatMessageValue;
 
 import java.util.List;
 
-public class MessageEqualsCondition extends PlayerCondition {
+public final class MessageEqualsCondition extends PlayerCondition {
     public MessageEqualsCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }
