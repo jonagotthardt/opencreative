@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -28,13 +29,15 @@ public final class VarItemHasCustomKey extends VariableCondition {
         if (meta == null) {
             return false;
         }
-        String key = getArguments().getText("key", "opencreative", this);
-
-        String data = meta.getPersistentDataContainer().get(
-                new NamespacedKey(OpenCreative.getPlugin(), "custom_" + key),
-                PersistentDataType.STRING
-        );
-        return data != null;
+        List<String> keys = getArguments().getTextList("keys", this);
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        for (String key : keys) {
+            if (container.has(new NamespacedKey(OpenCreative.getPlugin(),
+                    "custom_" + key))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

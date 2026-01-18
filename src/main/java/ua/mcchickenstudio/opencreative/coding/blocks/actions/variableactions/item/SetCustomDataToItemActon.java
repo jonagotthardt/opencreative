@@ -28,7 +28,7 @@ public class SetCustomDataToItemActon extends VariableAction {
         if (meta == null) {
             return;
         }
-        String key = getArguments().getText("key", "opencreative", this);
+        String key = getArguments().getText("key", "key", this);
         String value = getArguments().getText("value", "default value", this);
         meta.getPersistentDataContainer().set(
                 new NamespacedKey(OpenCreative.getPlugin(), "custom_" + key),

@@ -19,10 +19,17 @@ public final class ListValueAtIndexEqualsCondition extends VariableCondition {
     @Override
     public boolean check() {
         List<Object> list = getArguments().getList("list", this);
-        int index = getArguments().getInt("index", 0, this);
-        Object target = getArguments().getValue("value", this);
+        int index = getArguments().getInt("index", 1, this);
+        List<Object> values = getArguments().getList("values", this);
 
-        return !list.isEmpty() && Objects.equals(list.get(index),target);
+        Object element = list.get(index-1);
+        for (Object value : values) {
+            if (value.equals(element)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

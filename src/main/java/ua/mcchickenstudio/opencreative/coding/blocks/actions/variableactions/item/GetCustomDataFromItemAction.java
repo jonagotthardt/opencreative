@@ -32,14 +32,15 @@ public class GetCustomDataFromItemAction extends VariableAction {
         if (meta == null) {
             return;
         }
-        String base = getArguments().getText("default", "default", this);
-        String key = getArguments().getText("key", "opencreative", this);
+        String key = getArguments().getText("key", "key", this);
 
         String value = meta.getPersistentDataContainer().get(
                 new NamespacedKey(OpenCreative.getPlugin(), "custom_" + key),
                 PersistentDataType.STRING
         );
-        if (value == null) value = base;
+        if (value == null) {
+            return;
+        }
         setVarValue(var, value);
     }
 

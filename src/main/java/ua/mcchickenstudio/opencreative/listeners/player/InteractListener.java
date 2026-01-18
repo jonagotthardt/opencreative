@@ -51,6 +51,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeConfiguration;
+import ua.mcchickenstudio.opencreative.coding.CodeStorage;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockPlacer;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
@@ -646,10 +647,10 @@ public final class InteractListener implements Listener {
             }
             setCooldown(player, OpenCreative.getSettings().getGroups().getGroup(player)
                     .getBlocksDuplicationCooldown(), CooldownUtils.CooldownType.BLOCKS_DUPLICATION);
-            CodeConfiguration temporary = new CodeConfiguration();
+            CodeStorage temporary = new CodeConfiguration();
             new CodingBlockParser(devPlanet, true).parseExecutors(devPlanet, temporary, new LinkedList<>(markedExecutors));
             devPlanet.clearMarkedExecutors(player);
-            ConfigurationSection section = temporary.getConfigurationSection("code.blocks");
+            ConfigurationSection section = temporary.getSection("code.blocks");
             if (section == null) return;
             CodingBlockPlacer.CodePlacementResult result = new CodingBlockPlacer(devPlanet).placeCodingLines(devPlanet, section, clickedBlock.getLocation());
             if (result == CodingBlockPlacer.CodePlacementResult.NOT_ENOUGH_CODING_LINES) {

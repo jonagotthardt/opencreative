@@ -19,9 +19,7 @@ public class GetItemById extends VariableAction {
     protected void execute() {
         VariableLink variable = getArguments().getVariableLink("variable", this);
         String id = getArguments().getText("id", "air", this);
-
         ItemStack item = new ItemStack(Material.valueOf(id.toUpperCase()));
-
         setVarValue(variable, item);
     }
 

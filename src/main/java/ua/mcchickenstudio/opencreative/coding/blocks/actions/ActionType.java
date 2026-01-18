@@ -506,26 +506,9 @@ public enum ActionType {
     VAR_CREATE_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, CreateListAction.class, Material.BOOKSHELF, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_ADD_TO_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, AddToListAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_SET_IN_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, SetInListAction.class, Material.CAULDRON, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER), new ArgumentSlot("value", ValueType.ANY)),
-    VAR_GET_BY_ID_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetByIdFromListAction.class, Material.WATER_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)
-    ),
-
-    VAR_GET_LAST_FROM_LIST(
-            ActionCategory.VARIABLE_ACTION,
-            MenusCategory.LIST_OPERATIONS,
-            GetLastValueFromListAction.class,
-            Material.HOPPER,
-            new ArgumentSlot("variable", ValueType.VARIABLE),
-            new ArgumentSlot("list", ValueType.VARIABLE)
-    ),
-
-    VAR_GET_FIRST_FROM_LIST(
-            ActionCategory.VARIABLE_ACTION,
-            MenusCategory.LIST_OPERATIONS,
-            GetFirstValueFromListAction.class,
-            Material.HOPPER_MINECART,
-            new ArgumentSlot("variable", ValueType.VARIABLE),
-            new ArgumentSlot("list", ValueType.VARIABLE)
-    ),
+    VAR_GET_FIRST_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetFirstValueFromListAction.class, Material.HOPPER_MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
+    VAR_GET_BY_ID_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetByIdFromListAction.class, Material.WATER_BUCKET, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER)),
+    VAR_GET_LAST_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetLastValueFromListAction.class, Material.HOPPER, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
 
     VAR_GET_RANDOM_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, GetRandomFromListAction.class, Material.ENDER_EYE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE)),
     VAR_SUBLIST_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, SublistAction.class, Material.SHEARS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("list", ValueType.VARIABLE), new ArgumentSlot("from", ValueType.NUMBER), new ArgumentSlot("to", ValueType.NUMBER)),
@@ -556,15 +539,7 @@ public enum ActionType {
     VAR_REMOVE_BY_VALUE_FROM_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, RemoveByValueFromListAction.class, Material.POWDER_SNOW_BUCKET, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE), new ParameterSlot("deletion", List.of("all", "first", "last"), Material.RED_DYE, Material.ENDER_EYE, Material.ENDER_PEARL)),
 
     VAR_CREATE_MAP(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, CreateMapAction.class, Material.CHEST_MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("keys", ValueType.VARIABLE), new ArgumentSlot("values", ValueType.VARIABLE)),
-    VAR_CREATE_MAP_BY_KEYS(
-            ActionCategory.VARIABLE_ACTION,
-            MenusCategory.MAP_OPERATIONS,
-            CreateMapByKeysAction.class,
-            Material.BARREL,
-            new ArgumentSlot("keys", ValueType.ANY, (byte) 9),
-            new ArgumentSlot("values", ValueType.ANY, (byte) 9),
-            new ArgumentSlot("variable", ValueType.VARIABLE)
-    ),
+    VAR_CREATE_MAP_BY_KEYS(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, CreateMapByKeysAction.class, Material.BARREL, new ArgumentSlot("keys", ValueType.ANY, (byte) 9), new ArgumentSlot("values", ValueType.ANY, (byte) 9), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_PUT_INTO_MAP(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, PutIntoMapAction.class, Material.CHEST, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY), new ArgumentSlot("value", ValueType.ANY)),
     VAR_GET_FROM_MAP_BY_KEY(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetFromMapByKeyAction.class, Material.MINECART, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE), new ArgumentSlot("key", ValueType.ANY)),
     VAR_GET_KEYS_SET(ActionCategory.VARIABLE_ACTION, MenusCategory.MAP_OPERATIONS, GetKeysSetAction.class, Material.NAME_TAG, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("map", ValueType.VARIABLE)),
@@ -591,14 +566,14 @@ public enum ActionType {
             new ArgumentSlot("key", ValueType.TEXT),
             new ArgumentSlot("value", ValueType.TEXT)
     ),
-    VAR_REMOVE_CUSTOM_DATA_TO_ITEM(
+    VAR_REMOVE_CUSTOM_DATA_FROM_ITEM(
             ActionCategory.VARIABLE_ACTION,
             MenusCategory.ITEM_OPERATIONS,
             RemoveCustomDataFromItemAction.class,
             Material.DISC_FRAGMENT_5,
+            new ArgumentSlot("keys", ValueType.TEXT, (byte) 18),
             new ArgumentSlot("result", ValueType.VARIABLE),
-            new ArgumentSlot("item", ValueType.ITEM),
-            new ArgumentSlot("key", ValueType.TEXT)
+            new ArgumentSlot("item", ValueType.ITEM)
     ),
     VAR_GET_CUSTOM_DATA_FROM_ITEM(
             ActionCategory.VARIABLE_ACTION,
@@ -607,17 +582,9 @@ public enum ActionType {
             Material.HOPPER,
             new ArgumentSlot("variable", ValueType.VARIABLE),
             new ArgumentSlot("item", ValueType.ITEM),
-            new ArgumentSlot("key", ValueType.TEXT),
-            new ArgumentSlot("default", ValueType.ANY)
+            new ArgumentSlot("key", ValueType.TEXT)
     ),
-    VAR_CREATE_ITEM_BY_ID(
-            ActionCategory.VARIABLE_ACTION,
-            MenusCategory.ITEM_OPERATIONS,
-            GetItemById.class,
-            Material.HOPPER_MINECART,
-            new ArgumentSlot("variable", ValueType.VARIABLE),
-            new ArgumentSlot("id", ValueType.TEXT)
-    ),
+    VAR_CREATE_ITEM_BY_ID(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, GetItemById.class, Material.APPLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("id", ValueType.TEXT)),
     //VAR_SET_ITEM_PAGE( ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, null, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("index", ValueType.NUMBER), new ArgumentSlot("page", ValueType.TEXT)),
     VAR_ADD_ITEM_PAGE(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, AddItemPageAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("page", ValueType.TEXT)),
     VAR_SET_ITEM_DAMAGE(ActionCategory.VARIABLE_ACTION, MenusCategory.ITEM_OPERATIONS, SetItemDamageAction.class, Material.STICK, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("damage", ValueType.NUMBER), new ParameterSlot("add")),
@@ -885,18 +852,18 @@ public enum ActionType {
             ActionCategory.VARIABLE_CONDITION,
             MenusCategory.OTHER,
             VarItemHasCustomKey.class,
-            Material.DECORATED_POT,
-            new ArgumentSlot("item", ValueType.ITEM),
-            new ArgumentSlot("key", ValueType.TEXT)
+            Material.NAME_TAG,
+            new ArgumentSlot("keys", ValueType.TEXT, (byte) 18),
+            new ArgumentSlot("item", ValueType.ITEM)
     ),
     IF_VAR_ITEM_HAS_CUSTOM_DATA(
             ActionCategory.VARIABLE_CONDITION,
             MenusCategory.OTHER,
             VarItemHasCustomData.class,
-            Material.BARREL,
+            Material.FLOWER_POT,
+            new ArgumentSlot("values", ValueType.TEXT, (byte) 18),
             new ArgumentSlot("item", ValueType.ITEM),
-            new ArgumentSlot("key", ValueType.TEXT),
-            new ArgumentSlot("value", ValueType.TEXT)
+            new ArgumentSlot("key", ValueType.TEXT)
     ),
     IF_VAR_BOOLEAN_IS_TRUE(ActionCategory.VARIABLE_CONDITION, MenusCategory.OTHER, BooleanIsTrueCondition.class, Material.CLOCK, new ArgumentSlot("booleans", ValueType.BOOLEAN, (byte) 18), new ParameterSlot("all")),
 
@@ -912,30 +879,30 @@ public enum ActionType {
     IF_VAR_LIST_IS_EMPTY(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListIsEmptyCondition.class, Material.STRUCTURE_VOID, new ArgumentSlot("list", ValueType.VARIABLE)),
     IF_VAR_LIST_CONTAINS(ActionCategory.VARIABLE_CONDITION, MenusCategory.LIST_OPERATIONS, ListContainsCondition.class, Material.CHEST_MINECART, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("list", ValueType.VARIABLE), new ParameterSlot("all")),
 
+    IF_VAR_LIST_VALUE_AT_FIRST_EQUALS(
+            ActionCategory.VARIABLE_CONDITION,
+            MenusCategory.LIST_OPERATIONS,
+            ListValueAtFirstEqualsCondition.class,
+            Material.COMPARATOR,
+            new ArgumentSlot("values", ValueType.ANY, (byte) 18),
+            new ArgumentSlot("list", ValueType.VARIABLE)
+    ),
     IF_VAR_LIST_VALUE_AT_INDEX_EQUALS(
             ActionCategory.VARIABLE_CONDITION,
             MenusCategory.LIST_OPERATIONS,
             ListValueAtIndexEqualsCondition.class,
             Material.RAIL,
-            new ArgumentSlot("list", ValueType.LIST),
-            new ArgumentSlot("index", ValueType.NUMBER),
-            new ArgumentSlot("value", ValueType.ANY)
+            new ArgumentSlot("values", ValueType.ANY, (byte) 18),
+            new ArgumentSlot("list", ValueType.VARIABLE),
+            new ArgumentSlot("index", ValueType.NUMBER)
     ),
     IF_VAR_LIST_VALUE_AT_LAST_EQUALS(
             ActionCategory.VARIABLE_CONDITION,
             MenusCategory.LIST_OPERATIONS,
             ListValueAtLastEqualsCondition.class,
             Material.REPEATER,
-            new ArgumentSlot("list", ValueType.LIST),
-            new ArgumentSlot("value", ValueType.ANY)
-    ),
-    IF_VAR_LIST_VALUE_AT_FIRST_EQUALS(
-            ActionCategory.VARIABLE_CONDITION,
-            MenusCategory.LIST_OPERATIONS,
-            ListValueAtFirstEqualsCondition.class,
-            Material.COMPARATOR,
-            new ArgumentSlot("list", ValueType.LIST),
-            new ArgumentSlot("value", ValueType.ANY)
+            new ArgumentSlot("values", ValueType.ANY, (byte) 18),
+            new ArgumentSlot("list", ValueType.VARIABLE)
     ),
     /**
      * <h1>World Conditions.</h1>

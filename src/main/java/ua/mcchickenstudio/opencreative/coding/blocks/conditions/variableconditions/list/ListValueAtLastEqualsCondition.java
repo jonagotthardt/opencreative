@@ -19,9 +19,16 @@ public final class ListValueAtLastEqualsCondition extends VariableCondition {
     @Override
     public boolean check() {
         List<Object> list = getArguments().getList("list", this);
-        Object target = getArguments().getValue("value", this);
+        List<Object> values = getArguments().getList("values", this);
 
-        return !list.isEmpty() && Objects.equals(list.getLast(),target);
+        Object element = list.getLast();
+        for (Object value : values) {
+            if (value.equals(element)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

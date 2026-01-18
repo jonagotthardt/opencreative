@@ -29,14 +29,20 @@ public final class VarItemHasCustomData extends VariableCondition {
         if (meta == null) {
             return false;
         }
-        String key = getArguments().getText("key", "opencreative", this);
-        String value = getArguments().getText("value", "default value", this);
-
-        String result = meta.getPersistentDataContainer().get(
+        String key = getArguments().getText("key", "key", this);
+        List<String> values = getArguments().getTextList("values", this);
+        String data = meta.getPersistentDataContainer().get(
                 new NamespacedKey(OpenCreative.getPlugin(), "custom_" + key),
-                PersistentDataType.STRING
-        );
-        return Objects.equals(result, value);
+                PersistentDataType.STRING);
+        if (data == null) {
+            return false;
+        }
+        for (String text : values) {
+            if (data.equals(text)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

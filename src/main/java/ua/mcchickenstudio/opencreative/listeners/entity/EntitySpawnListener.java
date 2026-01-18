@@ -44,6 +44,7 @@ import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.sendMessageOnce;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInDevPlanet;
@@ -90,6 +91,10 @@ public final class EntitySpawnListener implements Listener {
         World world = event.getLocation().getWorld();
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
         if (planet != null) {
+            if (isOutOfBorders(event.getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
             int limit = planet.getLimits().getEntitiesLimit();
             int count = planet.getTerritory().getWorld().getEntityCount();
             if (world.getName().contains("dev")) {
