@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 
 import java.util.List;
 
-public class HasSavedPurchaseCondition extends PlayerCondition {
+public final class HasSavedPurchaseCondition extends PlayerCondition {
 
     public HasSavedPurchaseCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);

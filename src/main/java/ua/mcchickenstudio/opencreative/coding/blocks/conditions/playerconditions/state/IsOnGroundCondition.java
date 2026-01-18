@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class IsOnGroundCondition extends PlayerCondition {
+public final class IsOnGroundCondition extends PlayerCondition {
 
     // Made by pawsashatoy :)
     public IsOnGroundCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {

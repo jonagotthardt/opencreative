@@ -33,7 +33,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import java.util.List;
 import java.util.Map;
 
-public class VarItemHasEnchantments extends VariableCondition {
+public final class VarItemHasEnchantments extends VariableCondition {
 
     public VarItemHasEnchantments(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);

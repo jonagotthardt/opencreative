@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.List;
 
-public class VariableIsNullCondition extends VariableCondition {
+public final class VariableIsNullCondition extends VariableCondition {
     public VariableIsNullCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
     }

@@ -822,7 +822,7 @@ items:
         - "&e Click on an event sign:"
         - "&7  Set or unset debug"
     variable:
-      saved:  "&aSaved"
+      saved: "&aSaved"
       global: "&eGlobal"
       local: "&cLocal"
     broken:
@@ -904,6 +904,11 @@ items:
         lore:
           - "&7Place any item or"
           - "&7value here."
+      list:
+        name: "&eList"
+        lore:
+          - "&7Place a variable here"
+          - "&7that contains a list"
     fly-speed-changer:
       name: "&7Change Flight Speed &a[Right-click]"
       lore:
@@ -9630,6 +9635,35 @@ items:
           - " &7[&6Watermelon&7, &6Pear&7], &a1.0&7 &7= &6Watermelon"
           - " "
           - "&eClick to set action."
+
+      var-get-first-from-list:
+        name: "&9Get first element from list"
+        lore:
+          - "&7This action return fist"
+          - "&7element from list"
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Result"
+          - "&e Variable &7- List"
+          - " "
+          - "&Examples:"
+          - " &7[&6Watermelon&7, &6Pear&7] &7= &6Watermelon"
+          - " "
+          - "&eClick to set action."
+      var-get-last-from-list:
+        name: "&9Get last element from list"
+        lore:
+          - "&7This action return last"
+          - "&7element from list"
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- Result"
+          - "&e Variable &7- List"
+          - " "
+          - "&Examples:"
+          - " &7[&6Watermelon&7, &6Pear&7] &7= &6Pear"
+          - " "
+          - "&eClick to set action."
       var-remove-by-value-from-list:
         name: "&cRemove values from list"
         lore:
@@ -9724,6 +9758,73 @@ items:
           - "&e Variable &7- To save"
           - "&e List &7- Keys"
           - "&e List &7- Values"
+          - " "
+          - "&eClick to set action."
+      var-get-custom-data-from-item:
+        name: "&fGet custom data from item"
+        lore:
+          - "&7Allows you to retrieve custom data"
+          - "&7from an item."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To save"
+          - "&c Item &7- Item to read from"
+          - "&6 String &7- Key"
+          - "&6 String &7- Default value"
+          - " "
+          - "&eClick to set the action."
+      var-create-item-by-id:
+        name: "&fCreate item by ID"
+        lore:
+          - "&7Allows you to create an item by ID"
+          - " "
+          - "&fIn the chest:"
+          - "&c Variable &7- Result"
+          - "&6 String &7- ID"
+          - " "
+          - "&eClick to set the action."
+      var-remove-custom-data-to-item:
+        name: "&fRemove custom data"
+        lore:
+          - "&7Allows you to remove custom data"
+          - "&7from an item."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To save"
+          - "&c Item &7- Target item"
+          - "&6 String &7- Key"
+          - " "
+          - "&eClick to set the action."
+
+      var-set-custom-data-to-item:
+        name: "&fSet custom data to item"
+        lore:
+          - "&7Allows you to set custom data"
+          - "&7to an item."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To save"
+          - "&c Item &7- Target item"
+          - "&6 String &7- Key"
+          - "&6 String &7- Value"
+          - " "
+          - "&eClick to set the action."
+      var-create-map-by-keys:
+        name: "&aCreate a map from keys"
+        lore:
+          - "&7This will create a map from keys"
+          - "&7and assign it to a variable."
+          - " "
+          - "&7Unlike lists, each value"
+          - "&7has its own key here. This is"
+          - "&7better than indexing. Get,"
+          - "&7set, and remove values"
+          - "&7by their key."
+          - " "
+          - "&fIn the chest:"
+          - "&e Variable &7- To store"
+          - "&9 Any &7- Keys"
+          - "&9 Any &7- Values"
           - " "
           - "&eClick to set action."
       var-put-into-map:
@@ -10885,6 +10986,18 @@ items:
           - "&6 Texts &7- Identifier"
           - " "
           - "&eClick to set the condition."
+      if-var-item-has-custom-data:
+        name: "&fIf item has custom data"
+        lore:
+          - "&7Checks whether the item"
+          - "&7has custom data."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Item to check"
+          - "&6 String &7- Key"
+          - "&6 String &7- Value"
+          - " "
+          - "&eClick to set the action."
       if-var-boolean-is-true:
         name: "&aBoolean value is true"
         lore:
@@ -11490,6 +11603,52 @@ items:
           - "&6 Text &7- Team"
           - " "
           - "&eClick to set the condition."
+      if-var-item-has-custom-key:
+        name: "&fIf item has custom tag"
+        lore:
+          - "&7Chek item if has"
+          - "&7custom tag in item."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Item to chek"
+          - "&6 String &7- Key"
+          - " "
+          - "&eClick to set condition."
+      if-var-list-value-at-index-equals:
+        name: "&fIf value at index equals"
+        lore:
+          - "&7Checks whether the value"
+          - "&7at the specified index equals"
+          - " "
+          - "&fIn the chest:"
+          - "&e List &7- List"
+          - "&a Number &7- Index"
+          - "&9 Any value &7- Value"
+          - " "
+          - "&eClick to set the action."
+      if-var-list-value-at-last-equals:
+        name: "&fIf last value equals"
+        lore:
+          - "&7Checks whether the value"
+          - "&7of the last list element equals"
+          - " "
+          - "&fIn the chest:"
+          - "&e List &7- List"
+          - "&9 Any value &7- Value"
+          - " "
+          - "&eClick to set the action."
+
+      if-var-list-value-at-first-equals:
+        name: "&fIf first value equals"
+        lore:
+          - "&7Checks whether the value"
+          - "&7of the first list element equals"
+          - " "
+          - "&fIn the chest:"
+          - "&e List &7- List"
+          - "&9 Any value &7- Value"
+          - " "
+          - "&eClick to set the action."
       if-var-equals:
         name: "&5Variable equals value"
         lore:
@@ -18378,6 +18537,18 @@ blocks:
   selection_set: "&dSet target"
   selection_add: "&dAdd target"
   selection_remove: "&dRemove target"
+  var_get_last_from_list: "Last element"
+  var_get_first_from_list: "First element"
+  var_create_map_by_keys: "Map by keys"
+  var_get_custom_data_from_item: "&fGet custom data"
+  var_set_custom_data_to_item: "&fSet custom data"
+  if_var_item_has_custom_key: "Has custom key"
+  if_var_item_has_custom_data: "Has custom data"
+  var_create_item_by_id: "Create item"
+  var_remove_custom_data_to_item: "Remove data"
+  if_var_list_value_at_first_equals: "First equals"
+  if_var_list_value_at_last_equals: "Last equals"
+  if_var_list_value_at_index_equals: "At index equals"
 time:
   ago: "ago"
   days: "d"

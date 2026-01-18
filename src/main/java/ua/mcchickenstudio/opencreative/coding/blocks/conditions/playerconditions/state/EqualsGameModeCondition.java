@@ -30,7 +30,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
 
-public class EqualsGameModeCondition extends PlayerCondition {
+public final class EqualsGameModeCondition extends PlayerCondition {
     /**
      * Creates an Condition with linked executor and specified arguments.
      *

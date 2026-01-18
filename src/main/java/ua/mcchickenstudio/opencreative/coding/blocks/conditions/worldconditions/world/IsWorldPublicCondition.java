@@ -29,7 +29,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.List;
 
-public class IsWorldPublicCondition extends WorldCondition {
+public final class IsWorldPublicCondition extends WorldCondition {
 
     public IsWorldPublicCondition(Executor executor, Target target, int x, Arguments args, List<Action> actions, List<Action> reactions, boolean isOpposed) {
         super(executor, target, x, args, actions, reactions, isOpposed);
