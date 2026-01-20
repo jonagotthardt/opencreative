@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Argument;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
+import ua.mcchickenstudio.opencreative.coding.blocks.CodingBlock;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.selectionactions.SelectionAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.KillerVictimEvent;
@@ -46,10 +47,10 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLo
  * This class represents Action that will be executed in executor.
  *
  * @author McChicken Studio
- * @version 5.6
+ * @version 6.0
  * @since 5.0
  */
-public abstract class Action {
+public abstract class Action implements CodingBlock {
 
     protected final Arguments arguments;
     private final Executor executor;
@@ -139,15 +140,6 @@ public abstract class Action {
      */
     public final Executor getExecutor() {
         return executor;
-    }
-
-    /**
-     * Returns X coordinate of action coding block in developer's world.
-     *
-     * @return X coordinate of coding block location.
-     */
-    public final int getX() {
-        return x;
     }
 
     /**
@@ -377,4 +369,20 @@ public abstract class Action {
     public List<Argument> getArgumentsList() {
         return getArguments().getArgumentList();
     }
+
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return executor.getY();
+    }
+
+    @Override
+    public int getZ() {
+        return executor.getZ();
+    }
+
 }

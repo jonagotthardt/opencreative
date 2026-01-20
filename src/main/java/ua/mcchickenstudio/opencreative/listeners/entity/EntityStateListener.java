@@ -21,9 +21,11 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
@@ -31,8 +33,8 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.LazyMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -46,7 +48,48 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.movement.Play
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
+import java.util.List;
+
 public final class EntityStateListener implements Listener {
+
+    @EventHandler
+    public void onEntityMove(EntityMoveEvent event) {
+        Entity entity = event.getEntity();
+        if (!isBadEntityForMovement(entity)) return;
+        if (!isBadEntityMovementState(entity)) {
+            return;
+        }
+        float size = entity instanceof Projectile ? 30f : 1f;
+        List<Entity> nearbyEntities = entity.getNearbyEntities(size, size, size);
+        int badEntities = 0;
+        for (Entity same : nearbyEntities) {
+            if (isBadEntityForMovement(same) && isBadEntityMovementState(same)) {
+                badEntities++;
+            }
+            if (badEntities > 1) {
+                entity.remove();
+                break;
+            }
+        }
+    }
+
+    private boolean isOnSlimeBlock(@NotNull Entity entity) {
+        Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        return block.getType() == Material.SLIME_BLOCK;
+    }
+
+    private boolean isBadEntityForMovement(@NotNull Entity entity) {
+        if (entity instanceof Projectile) return true;
+        if (entity instanceof ArmorStand) return true;
+        if (entity instanceof Minecart || entity instanceof Boat) {
+            return entity.getPassengers().isEmpty();
+        }
+        return false;
+    }
+
+    private boolean isBadEntityMovementState(@NotNull Entity entity) {
+        return !entity.isOnGround() || entity.isInWaterOrBubbleColumn();
+    }
 
     @EventHandler
     public void onCollision(VehicleEntityCollisionEvent event) {
@@ -55,12 +98,17 @@ public final class EntityStateListener implements Listener {
             long secondLastCollision = getMetadata(second, "oc_vehicle_last_collision");
             long firstCollisions = getMetadata(first, "oc_vehicle_collisions");
             long secondCollisions = getMetadata(second, "oc_vehicle_collisions");
-
             long collisionsAmount = Math.max(firstCollisions, secondCollisions);
             long lastCollision = Math.max(firstLastCollision, secondLastCollision);
-            if (System.currentTimeMillis() - lastCollision < 1000) {
-                if (collisionsAmount > 10) {
+            if (System.currentTimeMillis() - lastCollision < 500) {
+                if (collisionsAmount > 50) {
                     event.setCancelled(true);
+                    first.remove();
+                    for (Entity entity : first.getNearbyEntities(20, 20, 20)) {
+                        if (entity instanceof Player player) {
+                            player.spawnParticle(Particle.EXPLOSION, first.getLocation(), 1);
+                        }
+                    }
                 } else {
                     first.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
                             firstCollisions+1));

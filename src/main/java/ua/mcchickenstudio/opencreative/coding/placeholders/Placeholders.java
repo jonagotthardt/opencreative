@@ -46,17 +46,24 @@ public final class Placeholders {
     public synchronized static @NotNull Placeholders getInstance() {
         if (instance == null) {
             instance = new Placeholders();
-            instance.registerPlaceholder(new SymbolPlaceholder());
-            instance.registerPlaceholder(new PlayerPlaceholder());
-            instance.registerPlaceholder(new TargetPlaceholder());
-            instance.registerPlaceholder(new EntityPlaceholder());
-            instance.registerPlaceholder(new RandomPlaceholder());
-            instance.registerPlaceholder(new EventPlaceholder());
-            instance.registerPlaceholder(new PlanetPlaceholder());
-            instance.registerPlaceholder(new VarPlaceholder());
-            instance.registerPlaceholder(new ListPlaceholder());
+            instance.registerDefaults();
         }
         return instance;
+    }
+
+    /**
+     * Registers default placeholders.
+     */
+    private void registerDefaults() {
+        registerPlaceholder(new SymbolPlaceholder());
+        registerPlaceholder(new PlayerPlaceholder());
+        registerPlaceholder(new TargetPlaceholder());
+        registerPlaceholder(new EntityPlaceholder());
+        registerPlaceholder(new RandomPlaceholder());
+        registerPlaceholder(new EventPlaceholder());
+        registerPlaceholder(new PlanetPlaceholder());
+        registerPlaceholder(new VarPlaceholder());
+        registerPlaceholder(new ListPlaceholder());
     }
 
     /**

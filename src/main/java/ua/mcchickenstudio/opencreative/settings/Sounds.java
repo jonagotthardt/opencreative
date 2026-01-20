@@ -98,6 +98,7 @@ public enum Sounds {
     PLAYER_RESPAWN("entity.player.breath", 2f),
 
     WORLD_CODE_ERROR("block.beacon.deactivate", 1.7f),
+    WORLD_CODE_WARNING("block.amethyst_block.break"),
     WORLD_CODE_COMPILE_ERROR("block.beacon.deactivate", 1.7f),
     WORLD_CODE_CRITICAL_ERROR("block.respawn_anchor.deplete", 0.5f),
     WORLD_PURCHASE("entity.player.levelup", 1.2f),

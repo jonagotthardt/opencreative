@@ -41,7 +41,6 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -110,10 +109,12 @@ public final class EntitySpawnListener implements Listener {
                 if (planet.getOnline() < 1) return;
                 sendMessageOnce(planet, "world.entity-limit",
                         new PlaceholderReplacer("count", limit),
-                        "/world deletemobs", 3);
+                        "/world deletemobs", null, 3);
                 new LimitReachedEntitiesEvent(planet).callEvent();
             } else {
-                new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent(event).callEvent();
+                if (!event.isCancelled()) {
+                    new ua.mcchickenstudio.opencreative.coding.blocks.events.entity.entities.EntitySpawnEvent(event).callEvent();
+                }
             }
         }
     }
@@ -142,7 +143,7 @@ public final class EntitySpawnListener implements Listener {
                 if (planet.getOnline() < 1) return;
                 sendMessageOnce(planet, "world.entity-limit",
                         new PlaceholderReplacer("count", limit),
-                        "/world deletemobs", 3);
+                        "/world deletemobs", null, 3);
                 new LimitReachedEntitiesEvent(planet).callEvent();
             }
         } else if (isDevPlanet(world)) {

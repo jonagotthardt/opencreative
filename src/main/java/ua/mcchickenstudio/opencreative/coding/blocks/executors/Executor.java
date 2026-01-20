@@ -19,6 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.CodingBlock;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
@@ -40,7 +41,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
  * @version 6.0
  * @since 5.0
  */
-public abstract class Executor {
+public abstract class Executor implements CodingBlock {
 
     private final Planet planet;
     private final int x;
@@ -53,7 +54,7 @@ public abstract class Executor {
     private int calls;
 
     /**
-     * Creates an Executor @NotNullwith specified planet and block's location in developers planet.
+     * Creates an Executor with specified planet and block's location in developers planet.
      *
      * @param planet Planet where executor will work.
      * @param x      X from Executor's block location in developers planet.
@@ -72,7 +73,7 @@ public abstract class Executor {
      *
      * @param event Event that occurred in planet.
      */
-    public void run(WorldEvent event) {
+    public void run(@NotNull WorldEvent event) {
         if (getExecutorType().isDisabled()) {
             return;
         }
@@ -93,25 +94,24 @@ public abstract class Executor {
         actions.add(action);
     }
 
+    /**
+     * Returns type of executor.
+     *
+     * @return type of executor.
+     */
     public abstract @NotNull ExecutorType getExecutorType();
 
+    /**
+     * Returns category of executor.
+     *
+     * @return category of executor.
+     */
+    @SuppressWarnings("unused")
     public abstract @NotNull ExecutorCategory getExecutorCategory();
 
     @Override
     public String toString() {
         return "Executor | Planet: " + getPlanet().getWorldName() + " Coords: " + x + " " + y + " " + z;
-    }
-
-    public final int getX() {
-        return x;
-    }
-
-    public final int getY() {
-        return y;
-    }
-
-    public final int getZ() {
-        return z;
     }
 
     public final Planet getPlanet() {
@@ -124,21 +124,6 @@ public abstract class Executor {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
-    }
-
-    @Override
-    public int hashCode() {
-        return (getExecutorType().name().toLowerCase() + x + " " + y + " " + z).hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (!(obj instanceof Executor executor)) return false;
-        if (executor.x != this.x) return false;
-        if (executor.y != this.y) return false;
-        if (executor.z != this.z) return false;
-        return Objects.equals(executor.getExecutorType(), this.getExecutorType());
     }
 
     public WorldEvent getEvent() {
@@ -174,4 +159,32 @@ public abstract class Executor {
     public int getLastCalls() {
         return calls;
     }
+
+    public final int getX() {
+        return x;
+    }
+
+    public final int getY() {
+        return y;
+    }
+
+    public final int getZ() {
+        return z;
+    }
+
+    @Override
+    public int hashCode() {
+        return (getExecutorType().name().toLowerCase() + x + " " + y + " " + z).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Executor executor)) return false;
+        if (executor.x != this.x) return false;
+        if (executor.y != this.y) return false;
+        if (executor.z != this.z) return false;
+        return Objects.equals(executor.getExecutorType(), this.getExecutorType());
+    }
+
 }

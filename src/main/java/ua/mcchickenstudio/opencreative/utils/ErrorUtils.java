@@ -36,6 +36,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -217,6 +218,70 @@ public final class ErrorUtils {
     }
 
     /**
+     * Notifies planet players about reaching limit,
+     * so some operations will be cancelled.
+     *
+     * @param action   action, that produced warning.
+     * @param limitID limit name.
+     * @param count count of operations.
+     * @param limit maximum amount of operations.
+     */
+    public static void sendPlanetLimitWarningMessage(@NotNull Action action,
+                                                     @NotNull String limitID,
+                                                     int count, int limit) {
+        Planet planet = action.getExecutor().getPlanet();
+        if (planet == null) return;
+        if (cantSendOnceMessage(planet, 5)) return;
+        for (Player player : planet.getPlayers()) {
+            Component text = getPlayerLocaleComponent("coding-warning.message", player);
+            text = new PlaceholderReplacer("warning",
+                    getPlayerLocaleComponent("coding-warning." + limitID + "-limit.text", player))
+                    .apply(text);
+            text = new PlaceholderReplacer(
+                    "count", count, "limit",  limit
+            ).apply(text);
+            text = text.hoverEvent(HoverEvent.showText(getPlayerLocaleComponent("coding-warning." + limitID + "-limit.hover", player)));
+            text = text.clickEvent(ClickEvent.runCommand(
+                    "/dev " + action.getX() + " " + action.getY() + " " + action.getZ()
+            ));
+            player.sendMessage(text);
+            Sounds.WORLD_CODE_WARNING.play(player);
+        }
+    }
+
+    /**
+     * Notifies planet players about reaching limit,
+     * so some operations will be canceled.
+     *
+     * @param planet planet, where limit was reached.
+     * @param limitID limit name.
+     * @param command command to execute on click.
+     * @param count count of operations.
+     * @param limit maximum amount of operations.
+     */
+    public static void sendPlanetLimitWarningMessage(@NotNull Planet planet,
+                                                     @NotNull String limitID,
+                                                     @Nullable String command,
+                                                     int count, int limit) {
+        if (cantSendOnceMessage(planet, 5)) return;
+        for (Player player : planet.getPlayers()) {
+            Component text = getPlayerLocaleComponent("coding-warning.message", player);
+            text = new PlaceholderReplacer("warning",
+                    getPlayerLocaleComponent("coding-warning." + limitID + "-limit.text", player))
+                    .apply(text);
+            text = new PlaceholderReplacer(
+                    "count", count, "limit",  limit
+            ).apply(text);
+            text = text.hoverEvent(HoverEvent.showText(getPlayerLocaleComponent("coding-warning." + limitID + "-limit.hover", player)));
+            if (command != null) {
+                text = text.clickEvent(ClickEvent.runCommand(command));
+            }
+            player.sendMessage(text);
+            Sounds.WORLD_CODE_WARNING.play(player);
+        }
+    }
+
+    /**
      * Notifies planet players about coding warning, that has
      * happened while executing action in executor.
      * <p>
@@ -225,25 +290,18 @@ public final class ErrorUtils {
      *
      * @param executor executor, that executed action.
      * @param action   action, that produced warning.
-     * @param warning  description of warning.
+     * @param warningID path of warning message.
+     * @param placeholder placeholders to replace.
      */
     public static void sendPlanetCodeWarningMessage(@NotNull Executor executor, @NotNull Action action,
-                                                    @NotNull String warning) {
+                                                    @NotNull String warningID, @NotNull PlaceholderReplacer placeholder) {
         Planet planet = executor.getPlanet();
         if (planet == null) return;
+        String command = "/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ();
+        sendMessageOnce(planet, "coding-warning." + warningID + ".text", placeholder,
+                command, "coding-warning." + warningID + "hover", 5);
         for (Player player : planet.getPlayers()) {
-            Component message = Component
-                    .text(getLocaleMessage("planet-code-warning.message")
-                            .replace("%event%", executor.getExecutorType().getLocaleName())
-                            .replace("%action%", action.getActionType().getLocaleName())
-                            .replace("%warning%", warning)
-                            .replace("%x%", String.valueOf(action.getX()))
-                            .replace("%y%", String.valueOf(executor.getY()))
-                            .replace("%z%", String.valueOf(executor.getZ())))
-                    .hoverEvent(HoverEvent.showText(toComponent(getLocaleMessage("coding-error.hover-message"))))
-                    .clickEvent(ClickEvent.runCommand("/dev " + action.getX() + " " + executor.getY() + " " + executor.getZ()));
-            player.sendMessage(message);
-            Sounds.WORLD_CODE_ERROR.play(player);
+            Sounds.WORLD_CODE_WARNING.play(player);
         }
     }
 

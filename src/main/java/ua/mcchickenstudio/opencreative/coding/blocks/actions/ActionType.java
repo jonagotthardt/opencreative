@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.CodingBlockType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.CancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.events.UncancelEventAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.controlactions.lines.*;
@@ -104,7 +105,7 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.messageExists;
 
 
-public enum ActionType {
+public enum ActionType implements CodingBlockType {
 
     /**
      * <h1>Player Actions.</h1>
@@ -178,7 +179,7 @@ public enum ActionType {
     PLAYER_SET_EXP_LEVEL(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetExpLevelAction.class, Material.SUGAR_CANE, new ArgumentSlot("level", ValueType.NUMBER), new ParameterSlot("add")),
     PLAYER_SET_TOTAL_EXPERIENCE(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetTotalExpAction.class, Material.EXPERIENCE_BOTTLE, new ArgumentSlot("exp", ValueType.NUMBER), new ParameterSlot("add")),
     PLAYER_GIVE_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, GivePotionEffectsAction.class, Material.POTION, new ArgumentSlot("potions", ValueType.POTION, (byte) 18), new ParameterSlot("replace")),
-    PLAYER_CLEAR_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, ClearPotionEffectsAction.class, Material.MILK_BUCKET, new ArgumentSlot("potions", ValueType.POTION)),
+    PLAYER_CLEAR_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, ClearPotionEffectsAction.class, Material.MILK_BUCKET),
     PLAYER_REMOVE_POTION_EFFECTS(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, RemovePotionEffectsAction.class, Material.GLASS_BOTTLE, new ArgumentSlot("potions", ValueType.POTION, (byte) 27)),
     PLAYER_SET_REMAINING_AIR(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, PlayerSetRemainingAirAction.class, Material.SPONGE, new ArgumentSlot("ticks", ValueType.NUMBER), new ParameterSlot("add")),
     PLAYER_SET_FLYING_FALL_DAMAGE(ActionCategory.PLAYER_ACTION, MenusCategory.PARAMS, SetFlyingFallDamageAction.class, Material.RABBIT_HIDE, new ParameterSlot("boolean")),
@@ -560,7 +561,7 @@ public enum ActionType {
             ActionCategory.VARIABLE_ACTION,
             MenusCategory.ITEM_OPERATIONS,
             SetCustomDataToItemActon.class,
-            Material.BUNDLE,
+            Material.EGG,
             new ArgumentSlot("result", ValueType.VARIABLE),
             new ArgumentSlot("item", ValueType.ITEM),
             new ArgumentSlot("key", ValueType.TEXT),
@@ -706,7 +707,7 @@ public enum ActionType {
     ENTITY_SET_FREEZE_TICKS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetFreezeTicksAction.class, Material.ICE, new ArgumentSlot("ticks", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_SET_NO_DAMAGE_TICKS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntitySetNoDamageTicksAction.class, Material.TOTEM_OF_UNDYING, new ArgumentSlot("ticks", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_GIVE_POTION_EFFECTS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntityGivePotionEffectsAction.class, Material.POTION, new ArgumentSlot("potions", ValueType.POTION, (byte) 18), new ParameterSlot("replace")),
-    ENTITY_CLEAR_POTION_EFFECTS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntityClearPotionEffectsAction.class, Material.MILK_BUCKET, new ArgumentSlot("potions", ValueType.POTION)),
+    ENTITY_CLEAR_POTION_EFFECTS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntityClearPotionEffectsAction.class, Material.MILK_BUCKET),
     ENTITY_REMOVE_POTION_EFFECTS(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, EntityRemovePotionEffectsAction.class, Material.GLASS_BOTTLE, new ArgumentSlot("potions", ValueType.POTION, (byte) 27)),
     ENTITY_SET_STEP_HEIGHT(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, SetStepHeightAction.class, Material.RABBIT_FOOT, new ArgumentSlot("height", ValueType.NUMBER), new ParameterSlot("add")),
     ENTITY_SET_TARGET(ActionCategory.ENTITY_ACTION, MenusCategory.ENTITY_PARAMS, SetEntityTargetAction.class, Material.NETHER_STAR, new ArgumentSlot("entity", ValueType.TEXT)),
@@ -1075,7 +1076,7 @@ public enum ActionType {
         return layout != null && layout.length > 0;
     }
 
-    public final String getLocaleName() {
+    public @NotNull String getLocaleName() {
         String path = "items.developer." + (isCondition() ? "conditions" : "actions") + "." + this.name().toLowerCase().replace("_", "-") + ".name";
         if (messageExists(path)) {
             return getLocaleMessage(path);
@@ -1099,6 +1100,7 @@ public enum ActionType {
         return category.isCondition();
     }
 
+    @Override
     public boolean isDisabled() {
         if (this == PLAYER_SET_RESOURCE_PACK || this == IF_PLAYER_HAS_RESOURCE_PACK) {
             if (HookUtils.isPluginEnabled("ItemsAdder")) {
@@ -1121,7 +1123,8 @@ public enum ActionType {
                 || OpenCreative.getSettings().getCodingSettings().isDisabledAction(this);
     }
 
-    public final ItemStack getIcon() {
+    @Override
+    public final @NotNull ItemStack getIcon() {
         ItemStack icon = createItem(this.material, 1, "items.developer." + (this.isCondition() ? "conditions" : "actions") + "." + this.name().toLowerCase().replace("_", "-"));
         if (isDisabled()) {
             icon.setType(Material.RED_STAINED_GLASS);
@@ -1131,7 +1134,9 @@ public enum ActionType {
         return icon;
     }
 
-    public ActionCategory getCategory() {
+    @Override
+    public @NotNull ActionCategory getCategory() {
         return category;
     }
+
 }

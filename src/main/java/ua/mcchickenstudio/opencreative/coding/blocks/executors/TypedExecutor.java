@@ -16,33 +16,33 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
- * <h1>Method</h1>
- * This class represents a method, that executes actions
- * in separated actions handler, unlike functions.
+ * <h1>TypedExecutor</h1>
+ * This class represents an executor, that has
+ * executor type with category.
  */
-public final class Method extends NameableExecutor {
+public final class TypedExecutor extends Executor {
 
-    public Method(Planet planet, int x, int y, int z, @NotNull String name) {
-        super(planet, x, y, z, name);
+    private final ExecutorType type;
+
+    public TypedExecutor(Planet planet, int x, int y, int z, @NotNull ExecutorType type) {
+        super(planet, x, y, z);
+        this.type = type;
     }
 
     @Override
     public @NotNull ExecutorType getExecutorType() {
-        return ExecutorType.METHOD;
+        return type;
     }
 
     @Override
     public @NotNull ExecutorCategory getExecutorCategory() {
-        return ExecutorCategory.METHOD;
+        return type.getCategory();
     }
 
 }

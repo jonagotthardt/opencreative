@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.variables;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -44,8 +45,7 @@ import java.util.*;
 
 import static org.apache.commons.io.FileUtils.byteCountToDisplaySize;
 import static ua.mcchickenstudio.opencreative.coding.arguments.Argument.parseEntity;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getFileSize;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
@@ -80,8 +80,13 @@ public final class WorldVariables {
         WorldVariable variable = (action != null) ? getVariable(link, action) : getVariable(link.getName(), link.getVariableType(), null);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
 
-        if (getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-            sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
+        int total = getTotalVariablesAmount();
+        if (total > planet.getLimits().getVariablesAmountLimit()) {
+            if (action == null) {
+                sendPlanetLimitWarningMessage(planet, "variables", "/env var list", total, planet.getLimits().getVariablesAmountLimit());
+            } else {
+                sendPlanetLimitWarningMessage(action, "variables", total, planet.getLimits().getVariablesAmountLimit());
+            }
             new LimitReachedVariablesEvent(planet).callEvent();
             return false;
         }
@@ -94,7 +99,11 @@ public final class WorldVariables {
                     : new WorldVariable(link.getName(), link.getVariableType(), type, value, null);
 
             if (newVariable.getSize() + getTotalVariablesAmount() > planet.getLimits().getVariablesAmountLimit()) {
-                sendCodingDebugLog(getPlanet(), "Reached limit of " + planet.getLimits().getVariablesAmountLimit() + " variables.");
+                if (action == null) {
+                    sendPlanetLimitWarningMessage(planet, "variables", "/env var list", total, planet.getLimits().getVariablesAmountLimit());
+                } else {
+                    sendPlanetLimitWarningMessage(action, "variables", total, planet.getLimits().getVariablesAmountLimit());
+                }
                 new LimitReachedVariablesEvent(planet).callEvent();
                 return false;
             }
@@ -323,7 +332,12 @@ public final class WorldVariables {
     private Object deserializeObject(Object value, ValueType type) {
         try {
             if (type == ValueType.ITEM) {
-                value = ItemUtils.loadItemFromByteArray((String) value);
+                String itemString = (String) value;
+                if (itemString.contains("{")) {
+                    value = new ItemStack(Material.AIR);
+                } else {
+                    value = ItemUtils.loadItemFromByteArray(itemString);
+                }
             } else if (type == ValueType.LOCATION) {
                 double x, y, z;
                 float yaw, pitch;

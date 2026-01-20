@@ -27,9 +27,9 @@ import java.util.List;
 
 public class WrappedExecutor extends WrappedCodingBlock<ExecutorBlock> {
 
-    private final List<WrappedActionBlock> actions;
+    private final List<WrappedActionBlock<?>> actions;
 
-    public WrappedExecutor(ExecutorBlock executor, List<WrappedActionBlock> actions, int x, int y, int z) {
+    public WrappedExecutor(ExecutorBlock executor, List<WrappedActionBlock<?>> actions, int x, int y, int z) {
         super(executor, x, y, z);
         this.actions = actions;
     }

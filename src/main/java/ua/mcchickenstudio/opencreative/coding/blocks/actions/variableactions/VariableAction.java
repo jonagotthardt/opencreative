@@ -39,12 +39,10 @@ public abstract class VariableAction extends Action {
         execute();
     }
 
+    /**
+     * Executes variable action: sets variable value.
+     */
     protected abstract void execute();
-
-    @Override
-    public @NotNull ActionCategory getActionCategory() {
-        return ActionCategory.VARIABLE_ACTION;
-    }
 
     public boolean cannotChangeListElements(int size) {
         return size + getPlanet().getLimits().getLastVariableElementsChangesAmount() > getPlanet().getLimits().getVariableElementsChangesLimit();
@@ -67,4 +65,10 @@ public abstract class VariableAction extends Action {
         }
         return getPlanet().getTerritory().getSpawnLocation();
     }
+
+    @Override
+    public @NotNull ActionCategory getActionCategory() {
+        return ActionCategory.VARIABLE_ACTION;
+    }
+
 }

@@ -25,32 +25,45 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.executors.ExecutorBlock;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
 /**
  * <h1>Executors</h1>
+ *
  * @version 6 Future
  */
 public class ExecutorsNew implements EventExecutor, Listener {
 
-    private final Set<ExecutorBlock> executors = new LinkedHashSet<>();
+    private final static Set<ExecutorBlock> executors = new LinkedHashSet<>();
 
     public void registerExecutor(ExecutorBlock executor) {
         try {
             Bukkit.getPluginManager().registerEvent(
                     executor.getEventClass(),
-                    this, EventPriority.NORMAL,this,
+                    this, EventPriority.NORMAL, this,
                     OpenCreative.getPlugin());
             executors.add(executor);
+            OpenCreative.getPlugin().getLogger().info("[EXECUTORS] Registered " + executor);
         } catch (Exception error) {
             sendCriticalErrorMessage("Cannot register executor: " + executor.toString(), error);
         }
+    }
+
+    public static @Nullable ExecutorBlock getExecutorById(@NotNull String id) {
+        for (ExecutorBlock executor : executors) {
+            if (executor.getId().equalsIgnoreCase(id)) {
+                return executor;
+            }
+        }
+        return null;
     }
 
     public void unregisterExecutor(ExecutorBlock executor) {
@@ -63,7 +76,7 @@ public class ExecutorsNew implements EventExecutor, Listener {
                 //event.getPlanet().getTerritory().getScript().execute(event, executorBlock);
                 /*List<WrappedExecutor> registeredExecutors = new ArrayList<>();
 
-                *//*
+                 *//*
                 @ApiStatus.Experimental
                 public void execute(WorldEvent event, ExecutorBlock executorBlock) {
                     if (!planet.isLoaded()) return;

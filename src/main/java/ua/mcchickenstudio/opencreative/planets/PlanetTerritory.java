@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.indev.blocks.CodingScript;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;

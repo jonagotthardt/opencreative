@@ -24,17 +24,15 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
-public class Function extends Executor {
+/**
+ * <h1>Function</h1>
+ * This class represents a function, that executes actions
+ * in same actions handler.
+ */
+public final class Function extends NameableExecutor {
 
-    private final String name;
-
-    public Function(Planet planet, int x, int y, int z, String name) {
-        super(planet, x, y, z);
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    public Function(Planet planet, int x, int y, int z, @NotNull String name) {
+        super(planet, x, y, z, name);
     }
 
     @Override
@@ -46,4 +44,5 @@ public class Function extends Executor {
     public @NotNull ExecutorCategory getExecutorCategory() {
         return ExecutorCategory.FUNCTION;
     }
+
 }

@@ -20,14 +20,11 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
@@ -47,26 +44,13 @@ public final class SetBlockBiomeAction extends WorldAction {
         } catch (IllegalArgumentException e) {
             biome = Biome.PLAINS;
         }
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
-        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
-            if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-                getPlanet().getTerritory().removeBukkitRunnable(runnable);
-                new LimitReachedBlocksEvent(getPlanet()).callEvent();
+            if (getPlanet().getLimits().cantModifyBlock(this)) {
                 return;
             }
             location.getBlock().setBiome(biome);
-            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-        getPlanet().getTerritory().removeBukkitRunnable(runnable);
-
+        getPlanet().getLimits().clearModifiedBlocks();
     }
 
     @Override

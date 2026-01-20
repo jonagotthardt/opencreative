@@ -20,15 +20,12 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -56,14 +53,6 @@ public final class CopyBlocksAction extends WorldAction {
         int maxY = Math.max(first.getBlockY(), second.getBlockY());
         int maxZ = Math.max(first.getBlockZ(), second.getBlockZ());
 
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
-        getPlanet().getTerritory().addBukkitRunnable(runnable);
-
         /*
          * Example
          * FIRST: 2,7,19
@@ -84,13 +73,9 @@ public final class CopyBlocksAction extends WorldAction {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-                        getPlanet().getTerritory().removeBukkitRunnable(runnable);
-                        new LimitReachedBlocksEvent(getPlanet()).callEvent();
+                    if (getPlanet().getLimits().cantModifyBlock(this)) {
                         return;
                     }
-                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
                     Location oldLocation = new Location(getWorld(), x, y, z);
                     Location newLocation = oldLocation.clone().add(whereFromSubtraction);
                     if (isOutOfBorders(oldLocation) || isOutOfBorders(newLocation)) {
@@ -102,8 +87,7 @@ public final class CopyBlocksAction extends WorldAction {
                 }
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-        getPlanet().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getLimits().clearModifiedBlocks();
     }
 
     @Override

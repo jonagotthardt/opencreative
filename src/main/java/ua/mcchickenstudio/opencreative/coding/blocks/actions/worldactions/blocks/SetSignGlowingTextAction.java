@@ -21,14 +21,11 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
@@ -44,28 +41,16 @@ public final class SetSignGlowingTextAction extends WorldAction {
         boolean glowing = getArguments().getBoolean("glowing", true, this);
         String sideString = getArguments().getText("side", "front", this);
         Side side = (sideString.equals("back") ? Side.BACK : Side.FRONT);
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
-        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
-            if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-                getPlanet().getTerritory().removeBukkitRunnable(runnable);
-                new LimitReachedBlocksEvent(getPlanet()).callEvent();
+            if (getPlanet().getLimits().cantModifyBlock(this)) {
                 return;
             }
             if (location.getBlock().getState() instanceof Sign sign) {
                 sign.getSide(side).setGlowingText(glowing);
                 sign.update();
-                getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-        getPlanet().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getLimits().clearModifiedBlocks();
 
     }
 

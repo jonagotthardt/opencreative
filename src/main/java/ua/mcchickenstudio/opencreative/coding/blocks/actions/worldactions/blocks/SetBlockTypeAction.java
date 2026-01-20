@@ -25,9 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
 import java.util.List;
 
@@ -40,23 +38,13 @@ public final class SetBlockTypeAction extends WorldAction {
     protected void execute() {
         List<Location> locations = getArguments().getLocationList("locations", this);
         Material material = getArguments().getBlockMaterial("type", Material.AIR, this);
-        PlanetRunnable planetRunnable = new PlanetRunnable(getPlanet()) {
-            @Override
-            public void execute() {
-                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
         for (Location location : locations) {
-            if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                getPlanet().getTerritory().scheduleAsyncRunnable(planetRunnable, 20L);
-                new LimitReachedBlocksEvent(getPlanet()).callEvent();
+            if (getPlanet().getLimits().cantModifyBlock(this)) {
                 return;
             }
             location.getBlock().setType(material);
-            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
         }
-        getPlanet().getTerritory().scheduleAsyncRunnable(planetRunnable, 20L);
-
+        getPlanet().getLimits().clearModifiedBlocks();
     }
 
     @Override

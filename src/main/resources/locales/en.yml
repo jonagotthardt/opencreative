@@ -861,9 +861,8 @@ items:
       location:
         name: "&fLocation"
         lore:
-          - "&7Place an item here"
-          - "&7with paper containing a location."
-          - "&eDefault player location"
+          - "&7Place an item here with"
+          - "&7paper containing a location."
       var-parameter:
         lore:
           - "&7This variable should store"
@@ -3703,13 +3702,8 @@ items:
       entity-clear-potion-effects:
         name: "&fClear Potion Effects"
         lore:
-          - "&7If the chest is empty, all effects"
-          - "&7will be removed from the entity."
-          - "&7Otherwise, only the selected effects"
-          - "&7will be removed."
-          - " "
-          - "&fIn the chest:"
-          - "&d Potions &7- Effects to remove"
+          - "&7All effects will be removed"
+          - "&7from the entity."
           - " "
           - "&eClick to set the action."
       entity-give-potion-effects:
@@ -8306,13 +8300,7 @@ items:
       player-clear-potion-effects:
         name: "&fClear potion effects"
         lore:
-          - "&7If nothing is in the chest,"
-          - "&7the player will lose all effects."
-          - "&7If there are effects listed,"
-          - "&7the player will lose only those."
-          - " "
-          - "&fIn the chest:"
-          - "&d Potions &7- Potion effects"
+          - "&7Player will lose all effects."
           - " "
           - "&eClick to set action."
       player-give-potion-effects:
@@ -11163,8 +11151,9 @@ items:
       if-world-is-thundering:
         name: "&bThunderstorm Weather"
         lore:
-          - "&7Checks if the current"
-          - "&7weather in the world is a thunderstorm with lightning."
+          - "&7Checks if the current weather"
+          - "&7in the world is a thunderstorm"
+          - "&7with lightning."
           - " "
           - "&eClick to set the condition."
       if-world-is-day-time:

@@ -21,14 +21,11 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import java.util.List;
@@ -44,25 +41,13 @@ public final class DestroyBlockAction extends WorldAction {
         ItemStack item = getArguments().getItem("item", new ItemStack(Material.NETHERITE_PICKAXE), this);
         boolean triggerEffect = getArguments().getBoolean("show-particle", true, this);
         boolean dropExperience = getArguments().getBoolean("drop-experience", true, this);
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
-        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (Location location : locations) {
-            if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-                getPlanet().getTerritory().removeBukkitRunnable(runnable);
-                new LimitReachedBlocksEvent(getPlanet()).callEvent();
+            if (getPlanet().getLimits().cantModifyBlock(this)) {
                 return;
             }
             location.getBlock().breakNaturally(item, triggerEffect, dropExperience);
-            getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-        getPlanet().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getLimits().clearModifiedBlocks();
 
     }
 

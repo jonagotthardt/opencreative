@@ -33,17 +33,22 @@ public abstract class WorldAction extends Action {
     }
 
     @Override
-    protected void execute(Entity entity) {
+    protected final void execute(Entity entity) {
         execute();
     }
 
+    /**
+     * Executes world action: modifies a world.
+     */
     protected abstract void execute();
 
     protected void setLastSpawnedEntity(@NotNull Entity entity) {
         getHandler().getMainActionHandler().setLastSpawnedEntity(entity);
     }
 
+    @Override
     public @NotNull ActionCategory getActionCategory() {
         return ActionCategory.WORLD_ACTION;
     }
+
 }

@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -600,30 +601,38 @@ public final class MessageUtils {
      * @param path          path of message.
      * @param placeholder   placeholder for message.
      * @param clickCommand  command for click.
+     * @param hoverPath     path of hover message.
      * @param onceInSeconds cooldown of messages.
      */
     public static void sendMessageOnce(@NotNull Planet planet, @NotNull String path,
-                                       @NotNull PlaceholderReplacer placeholder, @Nullable String clickCommand,
+                                       @NotNull PlaceholderReplacer placeholder,
+                                       @Nullable String clickCommand,
+                                       @Nullable String hoverPath,
                                        int onceInSeconds) {
-
-        long currentTime = System.currentTimeMillis();
-
-        if (recentPlanetMessages.get(planet.getId()) != null) {
-            long timeInMap = recentPlanetMessages.get(planet.getId());
-            long elapsedTime = currentTime - timeInMap;
-            long elapsedSeconds = elapsedTime / 1000;
-            if (elapsedSeconds < onceInSeconds) return;
-        }
-
+        if (cantSendOnceMessage(planet, onceInSeconds)) return;
         for (Player player : planet.getPlayers()) {
             Component text = getPlayerLocaleComponent(path, player).replaceText(placeholder.get());
             if (clickCommand != null) {
                 text = text.clickEvent(ClickEvent.runCommand(clickCommand));
             }
+            if (hoverPath != null) {
+                text = text.hoverEvent(HoverEvent.showText(getPlayerLocaleComponent(hoverPath, player)));
+            }
             player.sendMessage(text);
         }
-        recentPlanetMessages.put(planet.getId(), currentTime);
 
+    }
+
+    public static boolean cantSendOnceMessage(@NotNull Planet planet, int onceInSeconds) {
+        long currentTime = System.currentTimeMillis();
+        if (recentPlanetMessages.get(planet.getId()) != null) {
+            long timeInMap = recentPlanetMessages.get(planet.getId());
+            long elapsedTime = currentTime - timeInMap;
+            long elapsedSeconds = elapsedTime / 1000;
+            if (elapsedSeconds < onceInSeconds) return true;
+        }
+        recentPlanetMessages.put(planet.getId(), currentTime);
+        return false;
     }
 
     public static void clearOnceMessages(Planet planet) {

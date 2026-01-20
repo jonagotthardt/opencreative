@@ -29,21 +29,24 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugExecutor;
 
-public class Cycle extends Executor {
+/**
+ * <h1>Cycle</h1>
+ * This class represents cycle, that executes actions
+ * after passing a time, like timer.
+ */
+public final class Cycle extends NameableExecutor {
 
-    private final String name;
     private final int repeatTime;
     private boolean enabled = false;
     private BukkitRunnable runnable = null;
 
-    public Cycle(Planet planet, int x, int y, int z, String name, int repeatTime) {
-        super(planet, x, y, z);
-        this.name = name;
+    public Cycle(Planet planet, int x, int y, int z, @NotNull String name, int repeatTime) {
+        super(planet, x, y, z, name);
         this.repeatTime = repeatTime;
     }
 
     @Override
-    public void run(WorldEvent event) {
+    public void run(@NotNull WorldEvent event) {
         if (!enabled) {
             enabled = true;
             Executor executor = this;
@@ -69,10 +72,6 @@ public class Cycle extends Executor {
 
     public boolean isEnabled() {
         return enabled;
-    }
-
-    public String getName() {
-        return name;
     }
 
     @Override

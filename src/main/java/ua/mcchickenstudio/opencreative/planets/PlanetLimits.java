@@ -20,9 +20,14 @@ package ua.mcchickenstudio.opencreative.planets;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.settings.groups.LimitType;
 
 import java.util.*;
+
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetLimitWarningMessage;
 
 /**
  * <h1>PlanetLimits</h1>
@@ -436,6 +441,44 @@ public class PlanetLimits {
             return false;
         }
 
+    }
+
+    /**
+     * Checks whether block cannot be placed, destroyed or modified,
+     * because of reaching the limit.
+     *
+     * @param action action, that changes block.
+     * @return true - cannot modify block, action should stop; false - can.
+     */
+    public boolean cantModifyBlock(@NotNull Action action) {
+        if (lastModifiedBlocksAmount >= getModifyingBlocksLimit()) {
+            PlanetRunnable planetRunnable = new PlanetRunnable(planet) {
+                @Override
+                public void execute() {
+                    setLastModifiedBlocksAmount(0);
+                }
+            };
+            planet.getTerritory().scheduleAsyncRunnable(planetRunnable, 20L);
+            new LimitReachedBlocksEvent(planet).callEvent();
+            sendPlanetLimitWarningMessage(action, "changing-blocks",
+                    lastModifiedBlocksAmount, planet.getLimits().getModifyingBlocksLimit());
+            return true;
+        }
+        setLastModifiedBlocksAmount(lastModifiedBlocksAmount + 1);
+        return false;
+    }
+
+    /**
+     * Clears modified blocks amount.
+     */
+    public void clearModifiedBlocks() {
+        PlanetRunnable planetRunnable = new PlanetRunnable(planet) {
+            @Override
+            public void execute() {
+                setLastModifiedBlocksAmount(0);
+            }
+        };
+        planet.getTerritory().scheduleAsyncRunnable(planetRunnable, 20L);
     }
 
     /**

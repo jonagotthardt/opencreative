@@ -251,7 +251,7 @@ public class ActionsHandler {
                     localizedMessage = localizedMessage.replace("%name%", exception.getName());
             case UnsupportedEntityException exception -> {
                 String localizedRequired = toKebabCase(exception.getRequired().getSimpleName());
-                String localizedCurrent = toKebabCase(exception.getCurrent().getSimpleName()).replace("craft_", "");
+                String localizedCurrent = toKebabCase(exception.getCurrent().getSimpleName()).replace("craft-", "");
 
                 if (messageExists("entities." + localizedRequired)) {
                     localizedRequired = getLocaleMessage("entities." + localizedRequired);

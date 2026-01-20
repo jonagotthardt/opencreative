@@ -290,8 +290,8 @@ public class Executors {
                             .newInstance(planet, coords[0], coords[1], coords[2], name);
                 }
             } else {
-                executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class)
-                        .newInstance(planet, coords[0], coords[1], coords[2]);
+                executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class, ExecutorType.class)
+                        .newInstance(planet, coords[0], coords[1], coords[2], type);
             }
             if (executor == null) return null;
             List<Action> allActionsList = createActionList(executor, path + ".actions", config);
