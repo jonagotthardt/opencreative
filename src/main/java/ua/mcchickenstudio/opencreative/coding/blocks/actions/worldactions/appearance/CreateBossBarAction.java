@@ -27,7 +27,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetLimitWarningMessage;
 
 public final class CreateBossBarAction extends WorldAction {
     public CreateBossBarAction(Executor executor, Target target, int x, Arguments args) {
@@ -56,9 +56,10 @@ public final class CreateBossBarAction extends WorldAction {
         } catch (IllegalArgumentException ignored) {
         }
 
-        if (getPlanet().getTerritory().getBossBars().size() >= getPlanet().getLimits().getBossBarsLimit()) {
-            // FIXME: Replace with hard-coded message, sendMessageOnce()
-            sendCodingDebugLog(getPlanet(), "Limit of " + getPlanet().getLimits().getBossBarsLimit() + " boss bars reached.");
+        int amount = getPlanet().getTerritory().getBossBars().size();
+        if (amount >= getPlanet().getLimits().getBossBarsLimit()) {
+            sendPlanetLimitWarningMessage(this, "bossbars",
+                    amount, getPlanet().getLimits().getBossBarsLimit());
             return;
         }
         BossBar bossBar = getPlanet().getTerritory().getBossBars().get(name.toLowerCase());

@@ -48,7 +48,7 @@ public final class RedstoneListener implements Listener {
             if (planet.getLimits().getLastRedstoneOperationsAmount() > planet.getLimits().getRedstoneOperationsLimit()) {
                 sendMessageOnce(planet, "world.redstone-limit",
                         new PlaceholderReplacer("count", planet.getLimits().getRedstoneOperationsLimit()),
-                        null, 5);
+                        null, null, 5);
                 if (location.getBlock().getType() == Material.OBSERVER) {
                     new BukkitRunnable() {
                         @Override

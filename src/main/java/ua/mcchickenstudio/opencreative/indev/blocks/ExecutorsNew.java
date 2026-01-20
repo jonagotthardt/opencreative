@@ -30,12 +30,14 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.executors.ExecutorBlock;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
 /**
  * <h1>Executors</h1>
+ *
  * @version 6 Future
  */
 public class ExecutorsNew implements EventExecutor, Listener {
@@ -46,7 +48,7 @@ public class ExecutorsNew implements EventExecutor, Listener {
         try {
             Bukkit.getPluginManager().registerEvent(
                     executor.getEventClass(),
-                    this, EventPriority.NORMAL,this,
+                    this, EventPriority.NORMAL, this,
                     OpenCreative.getPlugin());
             executors.add(executor);
             OpenCreative.getPlugin().getLogger().info("[EXECUTORS] Registered " + executor);
@@ -71,11 +73,10 @@ public class ExecutorsNew implements EventExecutor, Listener {
     public void handleEvent(WorldEvent event) {
         for (ExecutorBlock executorBlock : executors) {
             if (event.getClass().equals(executorBlock.getEventClass())) {
-                event.getPlanet().getTerritory().__getExperimentalScript().execute(event, executorBlock);
                 //event.getPlanet().getTerritory().getScript().execute(event, executorBlock);
                 /*List<WrappedExecutor> registeredExecutors = new ArrayList<>();
 
-                *//*
+                 *//*
                 @ApiStatus.Experimental
                 public void execute(WorldEvent event, ExecutorBlock executorBlock) {
                     if (!planet.isLoaded()) return;

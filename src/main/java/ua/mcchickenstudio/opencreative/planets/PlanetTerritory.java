@@ -71,8 +71,6 @@ public class PlanetTerritory {
     private String biome;
     private boolean autoSave = true;
 
-    private CodingScript experimentalScript = null;
-
     public PlanetTerritory(@NotNull Planet planet) {
         this.planet = planet;
         flags = new PlanetFlags(planet);
@@ -268,7 +266,6 @@ public class PlanetTerritory {
         planet.getLimits().clear();
         script.unload();
         spawnLocation = null;
-        experimentalScript = null;
         clearOnceMessages(planet);
     }
 
@@ -524,13 +521,5 @@ public class PlanetTerritory {
             getWorld().setAutoSave(autoSave);
         }
         FileUtils.setPlanetConfigParameter(planet, "autosave", !autoSave ? false : null);
-    }
-
-    /**
-     * EXPERIMENTAL: Not for usage.
-     * @return instance of coding script.
-     */
-    public CodingScript __getExperimentalScript() {
-        return experimentalScript;
     }
 }

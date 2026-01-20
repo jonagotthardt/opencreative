@@ -31,7 +31,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetLimitWarningMessage;
 
 public final class CreateScoreboardAction extends WorldAction {
     public CreateScoreboardAction(Executor executor, Target target, int x, Arguments args) {
@@ -46,9 +46,10 @@ public final class CreateScoreboardAction extends WorldAction {
         String name = getArguments().getText("name", "board", this);
         Component displayName = getArguments().getComponent("display-name", Component.text("Scoreboard"), this);
         try {
-            if (getPlanet().getTerritory().getScoreboards().getAmount() >= getPlanet().getLimits().getScoreboardsLimit()) {
-                // FIXME: Replace with hard-coded message, sendMessageOnce()
-                sendCodingDebugLog(getPlanet(), "Limit of " + getPlanet().getLimits().getScoreboardsLimit() + " scoreboards reached.");
+            int amount = getPlanet().getTerritory().getScoreboards().getAmount();
+            if (amount >= getPlanet().getLimits().getScoreboardsLimit()) {
+                sendPlanetLimitWarningMessage(this, "scoreboards",
+                        amount, getPlanet().getLimits().getScoreboardsLimit());
                 return;
             }
             Scoreboard scoreboard = getPlanet().getTerritory().getScoreboards().getScoreboard(name.toLowerCase());

@@ -21,14 +21,11 @@ package ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.block
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.worldactions.WorldAction;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.LimitReachedBlocksEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
@@ -52,23 +49,12 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
         int maxX = Math.max(firstLocation.getBlockX(), secondLocation.getBlockX());
         int maxY = Math.max(firstLocation.getBlockY(), secondLocation.getBlockY());
         int maxZ = Math.max(firstLocation.getBlockZ(), secondLocation.getBlockZ());
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                getPlanet().getLimits().setLastModifiedBlocksAmount(0);
-            }
-        };
-        getPlanet().getTerritory().addBukkitRunnable(runnable);
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    if (getPlanet().getLimits().getLastModifiedBlocksAmount() > getPlanet().getLimits().getModifyingBlocksLimit()) {
-                        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-                        getPlanet().getTerritory().removeBukkitRunnable(runnable);
-                        new LimitReachedBlocksEvent(getPlanet()).callEvent();
+                    if (getPlanet().getLimits().cantModifyBlock(this)) {
                         return;
                     }
-                    getPlanet().getLimits().setLastModifiedBlocksAmount(getPlanet().getLimits().getLastModifiedBlocksAmount() + 1);
                     Block block = getWorld().getBlockAt(x, y, z);
                     if (type.isBlock() && !isOutOfBorders(block.getLocation())) {
                         block.setType(type, false);
@@ -76,8 +62,7 @@ public final class SetBlocksAreaTypeAction extends WorldAction {
                 }
             }
         }
-        runnable.runTaskLater(OpenCreative.getPlugin(), 20L);
-        getPlanet().getTerritory().removeBukkitRunnable(runnable);
+        getPlanet().getLimits().clearModifiedBlocks();
     }
 
     @Override
