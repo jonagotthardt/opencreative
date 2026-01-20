@@ -19,7 +19,6 @@
 package ua.mcchickenstudio.opencreative.planets;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -32,7 +31,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.JoinEvent;
@@ -40,7 +38,6 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEve
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
 import ua.mcchickenstudio.opencreative.coding.variables.WorldVariables;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
-import ua.mcchickenstudio.opencreative.commands.experiments.NewWorldScreenExperiment;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetConnectPlayerEvent;
 import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.listeners.player.ChangedWorld;
@@ -56,7 +53,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.isOutOfBorders;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -724,60 +720,15 @@ public class Planet {
         } else {
             OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
         }
-
-        if (!Experiments.isEnabled("new_world_screen") || NewWorldScreenExperiment.getType() == NewWorldScreenExperiment.ScreenType.NORMAL) {
-            removePassengers(player);
-            player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-                handleConnectionProcess(player, wasLoaded, hidePlayer, success);
-            }).exceptionally(error -> {
-                sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
-                        (error.getMessage() == null ? "." : ": " + error.getMessage()));
-                wander.setConnectingToPlanet(false);
-                return null;
-            });
-            return;
-        }
-
-        switch (NewWorldScreenExperiment.getType()) {
-            case DARKNESS -> {
-                removePassengers(player);
-                player.sendPotionEffectChange(player, new PotionEffect(PotionEffectType.DARKNESS, 100, 1));
-                player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-                    handleConnectionProcess(player, wasLoaded, hidePlayer, success);
-                }).exceptionally(error -> {
-                    sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
-                            (error.getMessage() == null ? "." : ": " + error.getMessage()));
-                    wander.setConnectingToPlanet(false);
-                    return null;
-                });
-            }
-            case PERCENTS -> {
-                removePassengers(player);
-                player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-                    handleConnectionProcess(player, wasLoaded, hidePlayer, success);
-                }).exceptionally(error -> {
-                    sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
-                            (error.getMessage() == null ? "." : ": " + error.getMessage()));
-                    wander.setConnectingToPlanet(false);
-                    return null;
-                });
-
-                int radius = 8;
-                AtomicInteger total = new AtomicInteger((radius * 2 + 1) * (radius * 2 + 1));
-                AtomicInteger done = new AtomicInteger(0);
-
-                for (int x = -radius; x <= radius; x++) {
-                    for (int z = -radius; z <= radius; z++) {
-                        if (!player.isOnline()) return;
-                        if (getWorld() == null) continue;
-                        getWorld().getChunkAtAsync(x, z, true, chunk -> {
-                            int progress = (int) ((done.incrementAndGet() * 100.0) / total.get());
-                            player.sendActionBar(Component.text("§7Loading world: " + progress + "%"));
-                        });
-                    }
-                }
-            }
-        }
+        removePassengers(player);
+        player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
+            handleConnectionProcess(player, wasLoaded, hidePlayer, success);
+        }).exceptionally(error -> {
+            sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
+                    (error.getMessage() == null ? "." : ": " + error.getMessage()));
+            wander.setConnectingToPlanet(false);
+            return null;
+        });
     }
 
     /**

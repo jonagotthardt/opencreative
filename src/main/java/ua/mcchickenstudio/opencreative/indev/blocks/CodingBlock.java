@@ -22,7 +22,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
+
+import java.util.Map;
 
 public abstract class CodingBlock implements ExtensionContent {
 
@@ -37,6 +40,8 @@ public abstract class CodingBlock implements ExtensionContent {
         this.mainBlock = mainBlock;
         this.offBlock = offBlock;
     }
+
+    public abstract @Nullable WrappedCodingBlock<?> createWrapped(@NotNull Map<String, Object> data);
 
     public abstract void onSignClick(PlayerInteractEvent event);
 

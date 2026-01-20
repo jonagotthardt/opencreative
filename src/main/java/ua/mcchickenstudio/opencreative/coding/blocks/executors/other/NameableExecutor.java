@@ -20,29 +20,29 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
- * <h1>Method</h1>
- * This class represents a method, that executes actions
- * in separated actions handler, unlike functions.
+ * <h1>NameableExecutor</h1>
+ * This class represents an executor, that has name (custom id)
+ * to call it with other actions.
  */
-public final class Method extends NameableExecutor {
+public abstract class NameableExecutor extends Executor  {
 
-    public Method(Planet planet, int x, int y, int z, @NotNull String name) {
-        super(planet, x, y, z, name);
+    private final String name;
+
+    public NameableExecutor(Planet planet, int x, int y, int z, @NotNull String name) {
+        super(planet, x, y, z);
+        this.name = name;
     }
 
-    @Override
-    public @NotNull ExecutorType getExecutorType() {
-        return ExecutorType.METHOD;
-    }
-
-    @Override
-    public @NotNull ExecutorCategory getExecutorCategory() {
-        return ExecutorCategory.METHOD;
+    /**
+     * Returns name of executor for calling it.
+     *
+     * @return custom id of executor.
+     */
+    public final @NotNull String getName() {
+        return name;
     }
 
 }

@@ -21,11 +21,14 @@ package ua.mcchickenstudio.opencreative.indev.blocks.executors;
 import org.bukkit.Material;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.WrappedActionBlock;
 import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ExecutorBlock extends CodingBlock {
 
@@ -34,12 +37,18 @@ public abstract class ExecutorBlock extends CodingBlock {
     }
 
     @SuppressWarnings("EmptyMethod")
-    public void execute(@NotNull WorldEvent event, @NotNull List<WrappedActionBlock> actions) {
+    public void execute(@NotNull WorldEvent event, @NotNull List<WrappedActionBlock<?>> actions) {}
+
+    @Override
+    public @Nullable WrappedExecutor createWrapped(@NotNull Map<String, Object> data) {
+        int x = (int) data.get("location.x");
+        int y = (int) data.get("location.y");
+        int z = (int) data.get("location.z");
+        return new WrappedExecutor(this, new ArrayList<>(), x, y, z);
     }
 
     @Override
-    public void onSignClick(PlayerInteractEvent event) {
-    }
+    public void onSignClick(PlayerInteractEvent event) {}
 
     public abstract Class<? extends WorldEvent> getEventClass();
 

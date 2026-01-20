@@ -22,6 +22,7 @@ import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -32,6 +33,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
@@ -96,12 +98,17 @@ public final class EntityStateListener implements Listener {
             long secondLastCollision = getMetadata(second, "oc_vehicle_last_collision");
             long firstCollisions = getMetadata(first, "oc_vehicle_collisions");
             long secondCollisions = getMetadata(second, "oc_vehicle_collisions");
-
             long collisionsAmount = Math.max(firstCollisions, secondCollisions);
             long lastCollision = Math.max(firstLastCollision, secondLastCollision);
-            if (System.currentTimeMillis() - lastCollision < 1000) {
-                if (collisionsAmount > 10) {
+            if (System.currentTimeMillis() - lastCollision < 500) {
+                if (collisionsAmount > 50) {
                     event.setCancelled(true);
+                    first.remove();
+                    for (Entity entity : first.getNearbyEntities(20, 20, 20)) {
+                        if (entity instanceof Player player) {
+                            player.spawnParticle(Particle.EXPLOSION, first.getLocation(), 1);
+                        }
+                    }
                 } else {
                     first.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
                             firstCollisions+1));

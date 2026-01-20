@@ -23,12 +23,13 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.coding.blocks.CodingBlockCategory;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.utils.MessageUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 
-public enum ActionCategory {
+public enum ActionCategory implements CodingBlockCategory {
 
     PLAYER_ACTION(Material.COBBLESTONE, Material.STONE, NamedTextColor.GRAY, Material.GRAY_STAINED_GLASS_PANE, MenusCategory.COMMUNICATION),
     ENTITY_ACTION(Material.MOSSY_COBBLESTONE, Material.STONE, NamedTextColor.GREEN, Material.GREEN_STAINED_GLASS_PANE, MenusCategory.ENTITY_PARAMS),
@@ -38,6 +39,7 @@ public enum ActionCategory {
     LAUNCH_FUNCTION_ACTION(Material.LAPIS_ORE, Material.STONE, NamedTextColor.AQUA, Material.BLUE_STAINED_GLASS_PANE),
     LAUNCH_METHOD_ACTION(Material.EMERALD_ORE, Material.STONE, NamedTextColor.GREEN, Material.LIME_STAINED_GLASS_PANE),
     CONTROL_ACTION(Material.COAL_BLOCK, Material.COAL_ORE, NamedTextColor.DARK_GRAY, Material.GRAY_STAINED_GLASS_PANE, MenusCategory.LINES),
+
     CONTROLLER_ACTION(Material.DARK_PRISMARINE, Material.PISTON, NamedTextColor.GREEN, Material.BLUE_STAINED_GLASS_PANE, MenusCategory.CONTROLLER),
     REPEAT_ACTION(Material.PRISMARINE, Material.PISTON, NamedTextColor.AQUA, Material.LIGHT_BLUE_STAINED_GLASS_PANE, MenusCategory.REPEATS),
 
@@ -65,13 +67,25 @@ public enum ActionCategory {
         this.defaultCategory = defaultCategory;
     }
 
-    public static ActionCategory getByMaterial(Material material) {
+    /**
+     * Returns action category by first block material.
+     *
+     * @param material first block material.
+     * @return category, or null - if not found.
+     */
+    public static @Nullable ActionCategory getByMaterial(@NotNull Material material) {
         for (ActionCategory category : values()) {
             if (category.block == material) return category;
         }
         return null;
     }
 
+    /**
+     * Returns action category by id of category.
+     *
+     * @param text id of category.
+     * @return category, or null - if not found.
+     */
     public static @Nullable ActionCategory getCategory(@NotNull String text) {
         for (ActionCategory category : values()) {
             if (category.name().equalsIgnoreCase(text)) {
@@ -79,10 +93,6 @@ public enum ActionCategory {
             }
         }
         return null;
-    }
-
-    public MenusCategory getDefaultCategory() {
-        return defaultCategory;
     }
 
     public boolean isMultiAction() {
@@ -94,27 +104,39 @@ public enum ActionCategory {
         return this == PLAYER_CONDITION || this == VARIABLE_CONDITION || this == WORLD_CONDITION || this == ENTITY_CONDITION || this == ELSE_CONDITION;
     }
 
-    public NamedTextColor getColor() {
+    @Override
+    public @NotNull MenusCategory getDefaultCategory() {
+        return defaultCategory;
+    }
+
+    @Override
+    public @NotNull NamedTextColor getColor() {
         return color;
     }
 
-    public final String getLocaleName() {
+    @Override
+    public @NotNull String getLocaleName() {
         return MessageUtils.getLocaleMessage("blocks." + this.name().toLowerCase(), false);
     }
 
-    public Material getStainedPane() {
+    @Override
+    public @NotNull Material getStainedPane() {
         return stainedPane;
     }
 
-    public Material getAdditionalBlock() {
+    @Override
+    public @NotNull Material getAdditionalBlock() {
         return additionalBlock;
     }
 
-    public Material getBlock() {
+    @Override
+    public @NotNull Material getBlock() {
         return block;
     }
 
-    public ItemStack getItem() {
+    @Override
+    public @NotNull ItemStack getItem() {
         return createItem(block, 1, "items.developer." + name().toLowerCase().replace("_", "-"), name().toLowerCase());
     }
+
 }

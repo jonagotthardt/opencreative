@@ -68,6 +68,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.parseException;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
@@ -75,6 +76,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
  * This class represents OpenCreative+ java plugin for PaperMC.
  * Only for loading, enabling and disabling plugin. Contains
  * general information about plugin's version and codename.
+ *
  * @author McChicken Studio
  */
 public final class OpenCreative extends JavaPlugin {
@@ -100,23 +102,25 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Plugin load operations.
+     *
      * @see #onEnable
      */
     @Override
     public void onLoad() {
         getLogger().info(String.join("\n",
-            "", "",
-            "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
-            "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
-            "",
-            "Let us have fun, like players who create their worlds...",
-            "McChicken Studio 2017–2026",
-            ""
+                "", "",
+                "This software was made by Ukrainians, suffering from never-ending air alerts, explosions, and deaths.",
+                "We're AGAINST THE WAR. This software IS NOT DESIGNED for those who support killing and robbing another country.",
+                "",
+                "Let us have fun, like players who create their worlds...",
+                "McChicken Studio 2017–2026",
+                ""
         ));
     }
 
     /**
      * Plugin startup operations. It registers commands, events; loads config, worlds, localization file.
+     *
      * @see #onDisable
      **/
     @Override
@@ -125,11 +129,11 @@ public final class OpenCreative extends JavaPlugin {
         long startTime = System.currentTimeMillis();
         getLogger().info("Starting OpenCreative+ " + version + ": " + codename + ", please wait...");
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 1));
             player.showTitle(Title.title(
-                MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version),
-                Component.text("§f" + codename + "..."),
-                Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
+                    MiniMessage.miniMessage().deserialize("<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version),
+                    Component.text("§f" + codename + "..."),
+                    Title.Times.times(Duration.ofSeconds(0), Duration.ofSeconds(5), Duration.ofSeconds(0))
             ));
         }
         saveDefaultConfig();
@@ -167,27 +171,27 @@ public final class OpenCreative extends JavaPlugin {
         hints = new Hints();
         hints.init();
 
-        long loadedTime = System.currentTimeMillis()-startTime;
+        long loadedTime = System.currentTimeMillis() - startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
             teleportToLobby(player);
             getServer().sendActionBar(
-                MiniMessage.miniMessage().deserialize(
-                    "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
-                )
+                    MiniMessage.miniMessage().deserialize(
+                            "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
+                    )
             );
         }
         getLogger().info(String.join("\n",
-            "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
-            "",
-            " Welcome to OpenCreative+ " + version + "!",
-            "",
-            "  Running on " + Bukkit.getMinecraftVersion() + " server",
-            "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
-                    isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
-                    isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
-            "  " + codename,
-            "  Made by McChicken Studio 2017–2026",
-            ""
+                "OpenCreative+ " + version + ": " + codename + " is loaded for " + loadedTime + " ms.",
+                "",
+                " Welcome to OpenCreative+ " + version + "!",
+                "",
+                "  Running on " + Bukkit.getMinecraftVersion() + " server",
+                "  Current time " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()),
+                isChristmas() ? "  Ho-ho-ho! Merry Christmas, server owners! :-) ❆" :
+                        isHalloween() ? "  Spo-o-o-oky Halloween, server owners! O_o 🎃" : "",
+                "  " + codename,
+                "  Made by McChicken Studio 2017–2026",
+                ""
         ));
         new Metrics(this, 22001);
     }
@@ -195,32 +199,38 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Plugin shutdown operations. It unloads worlds when plugin is being disabled.
+     *
      * @see #onEnable
      */
     @Override
     public void onDisable() {
         getLogger().info("Shutting down OpenCreative+, please wait...");
-        for (Player player: Bukkit.getOnlinePlayers()) {
-            player.sendMessage(
-                MiniMessage.miniMessage().deserialize(
-                        " \n<white> Shutting down Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white>, please wait...\n "
-                ));
-            teleportToLobby(player);
+        try {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(
+                        MiniMessage.miniMessage().deserialize(
+                                " \n<white> Shutting down Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white>, please wait...\n "
+                        ));
+                teleportToLobby(player);
+            }
+            FileUtils.unloadPlanets();
+        } catch (Exception error) {
+            OpenCreative.getPlugin().getLogger().severe("Failed to unload OpenCreative+ :(" + parseException(error, false));
         }
-        FileUtils.unloadPlanets();
         getLogger().info(String.join("\n",
-            "",
-            "Goodbye from OpenCreative+",
-            "",
-            " " + codename,
-            "  Made by McChicken Studio 2017–2026",
-            ""
+                "",
+                "Goodbye from OpenCreative+",
+                "",
+                " " + codename,
+                "  Made by McChicken Studio 2017–2026",
+                ""
         ));
     }
 
 
     /**
      * Get a plugin instance for operations with it. For example: for accessing config.yml.
+     *
      * @return plugin instance.
      **/
     public static OpenCreative getPlugin() {
@@ -235,32 +245,32 @@ public final class OpenCreative extends JavaPlugin {
     private void registerCommands() {
         this.getLogger().info("Registering OpenCreative+ commands...");
         int registeredCommands = 0;
-        Map<String,Class<? extends CommandExecutor>> commands = new HashMap<>();
-        commands.put("creative",    CreativeCommand.class);
-        commands.put("spawn",       SpawnCommand.class);
-        commands.put("menu",        MenuCommand.class);
-        commands.put("world",       WorldCommand.class);
-        commands.put("chat",        ChatCommand.class);
-        commands.put("join",        JoinCommand.class);
-        commands.put("ad",          AdvertisementCommand.class);
-        commands.put("play",        PlayCommand.class);
-        commands.put("build",       BuildCommand.class);
-        commands.put("dev",         DevCommand.class);
+        Map<String, Class<? extends CommandExecutor>> commands = new HashMap<>();
+        commands.put("creative", CreativeCommand.class);
+        commands.put("spawn", SpawnCommand.class);
+        commands.put("menu", MenuCommand.class);
+        commands.put("world", WorldCommand.class);
+        commands.put("chat", ChatCommand.class);
+        commands.put("join", JoinCommand.class);
+        commands.put("ad", AdvertisementCommand.class);
+        commands.put("play", PlayCommand.class);
+        commands.put("build", BuildCommand.class);
+        commands.put("dev", DevCommand.class);
         commands.put("environment", EnvironmentCommand.class);
-        commands.put("like",        LikeCommand.class);
-        commands.put("dislike",     DislikeCommand.class);
-        commands.put("locate",      LocateCommand.class);
-        commands.put("gamemode",    GamemodeCommand.class);
-        commands.put("give",        GiveCommand.class);
-        commands.put("teleport",    TeleportCommand.class);
-        commands.put("edit",        EditCommand.class);
-        commands.put("playsound",   PlaySoundCommand.class);
-        commands.put("stopsound",   StopSoundCommand.class);
-        commands.put("time",        TimeCommand.class);
-        commands.put("weather",     WeatherCommand.class);
-        commands.put("value",       ValueCommand.class);
-        commands.put("module",      ModuleCommand.class);
-        commands.put("jointo",      JoinToCommand.class);
+        commands.put("like", LikeCommand.class);
+        commands.put("dislike", DislikeCommand.class);
+        commands.put("locate", LocateCommand.class);
+        commands.put("gamemode", GamemodeCommand.class);
+        commands.put("give", GiveCommand.class);
+        commands.put("teleport", TeleportCommand.class);
+        commands.put("edit", EditCommand.class);
+        commands.put("playsound", PlaySoundCommand.class);
+        commands.put("stopsound", StopSoundCommand.class);
+        commands.put("time", TimeCommand.class);
+        commands.put("weather", WeatherCommand.class);
+        commands.put("value", ValueCommand.class);
+        commands.put("module", ModuleCommand.class);
+        commands.put("jointo", JoinToCommand.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
@@ -268,13 +278,13 @@ public final class OpenCreative extends JavaPlugin {
                     command.setExecutor(commands.get(commandName).getDeclaredConstructor().newInstance());
                     registeredCommands++;
                 } catch (Exception error) {
-                    sendCriticalErrorMessage("Couldn't register command " + commandName,error);
+                    sendCriticalErrorMessage("Couldn't register command " + commandName, error);
                 }
             } else {
                 sendCriticalErrorMessage("Couldn't get command with name " + commandName + ", it is null. Maybe it doesn't exist in plugins.yml?");
             }
         }
-        getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size()) +  " commands.");
+        getLogger().info("OpenCreative+ registered " + (registeredCommands == commands.size() ? "all" : registeredCommands + "/" + commands.size()) + " commands.");
     }
 
     /**
@@ -284,20 +294,20 @@ public final class OpenCreative extends JavaPlugin {
     private void registerEvents() {
         getLogger().info("Registering OpenCreative+ event listeners...");
         int registeredListeners = 0;
-        Class<?>[] listeners = new Class[] {
-            ChangedWorld.class,       EntitySpawnListener.class,  EntityDamageListener.class,
-            JoinListener.class,       QuitListener.class,         RespawnListener.class,
-            DeathListener.class,      TeleportListener.class,     MoveListener.class,
-            ChatListener.class,       InteractListener.class,     DropItemListener.class,
-            PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
-            ClickListener.class,      RedstoneListener.class,     BlockChangeListener.class,
-            Menus.class,              GameModeListener.class,     EntityStateListener.class,
-            CreativeListener.class,   PotionListener.class,       PlanetListener.class
+        Class<?>[] listeners = new Class[]{
+                ChangedWorld.class, EntitySpawnListener.class, EntityDamageListener.class,
+                JoinListener.class, QuitListener.class, RespawnListener.class,
+                DeathListener.class, TeleportListener.class, MoveListener.class,
+                ChatListener.class, InteractListener.class, DropItemListener.class,
+                PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
+                ClickListener.class, RedstoneListener.class, BlockChangeListener.class,
+                Menus.class, GameModeListener.class, EntityStateListener.class,
+                CreativeListener.class, PotionListener.class, PlanetListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {
                 getServer().getPluginManager().registerEvents(
-                    (Listener) listenerClass.getDeclaredConstructor().newInstance(), this
+                        (Listener) listenerClass.getDeclaredConstructor().newInstance(), this
                 );
                 registeredListeners++;
             } catch (Exception exception) {
@@ -314,6 +324,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Returns OpenCreative+ settings.
+     *
      * @return settings of plugin.
      */
     public static @NotNull Settings getSettings() {
@@ -322,6 +333,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom economy manager.
+     *
      * @param economy economy manager.
      */
     @SuppressWarnings("unused")
@@ -334,6 +346,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Gets economy manager, that has money operations for players.
+     *
      * @return economy manager.
      */
     public static Economy getEconomy() {
@@ -342,6 +355,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom packet manager.
+     *
      * @param packetManager packet manager.
      */
     @SuppressWarnings("unused")
@@ -352,6 +366,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Gets packet manager, that has packets modifiers methods.
+     *
      * @return packet manager.
      */
     public static PacketManager getPacketManager() {
@@ -360,6 +375,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom hint manager.
+     *
      * @param hintManager hint manager.
      */
     @SuppressWarnings("unused")
@@ -370,6 +386,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Gets hint manager, that sends suggestions to players in action bar.
+     *
      * @return hint manager.
      */
     @SuppressWarnings("unused")
@@ -379,6 +396,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom blocks manager.
+     *
      * @param blocksManager blocks manager.
      */
     @SuppressWarnings("unused")
@@ -390,6 +408,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets blocks manager, that changes a lot
      * of blocks in world.
+     *
      * @return blocks manager.
      */
     @SuppressWarnings("unused")
@@ -399,6 +418,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom module manager.
+     *
      * @param moduleManager module manager.
      */
     @SuppressWarnings("unused")
@@ -410,6 +430,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets disguise manager, that disguises
      * entities as players, other entities, blocks.
+     *
      * @return disguise manager.
      */
     @SuppressWarnings("unused")
@@ -419,6 +440,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom disguise manager.
+     *
      * @param disguiseManager disguise manager.
      */
     @SuppressWarnings("unused")
@@ -430,6 +452,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets module manager, that creates
      * or deletes modules.
+     *
      * @return modules manager.
      */
     public static ModuleManager getModuleManager() {
@@ -438,6 +461,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom coding platforms manager.
+     *
      * @param platformsManager developer platforms manager.
      */
     @SuppressWarnings("unused")
@@ -452,6 +476,7 @@ public final class OpenCreative extends JavaPlugin {
      * Gets coding platforms manager, that
      * creates and manipulates with dev platforms
      * in developer worlds.
+     *
      * @return coding platforms manager.
      */
     @SuppressWarnings("unused")
@@ -461,6 +486,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom coding prompt manager.
+     *
      * @param codingPrompter coding prompter.
      */
     @SuppressWarnings("unused")
@@ -476,6 +502,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets coding prompt manager, that
      * generates code by players prompts.
+     *
      * @return coding prompter.
      */
     @SuppressWarnings("unused")
@@ -485,6 +512,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom planets manager.
+     *
      * @param planetsManager planets manager.
      */
     @SuppressWarnings("unused")
@@ -496,6 +524,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets planets manager, that stores planets in base
      * and has methods to create, find and delete them.
+     *
      * @return planets manager.
      */
     public static PlanetsManager getPlanetsManager() {
@@ -504,6 +533,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Sets custom stability manager.
+     *
      * @param stabilityManager stability manager.
      */
     @SuppressWarnings("unused")
@@ -517,6 +547,7 @@ public final class OpenCreative extends JavaPlugin {
     /**
      * Gets stability manager, that checks server's
      * performance and makes sure everything is fine.
+     *
      * @return stability manager.
      */
     public static StabilityManager getStability() {
@@ -525,6 +556,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Gets version of OpenCreative+.
+     *
      * @return version of plugin.
      */
     public static @NotNull String getVersion() {
@@ -541,6 +573,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Gets codename of current OpenCreative+ version.
+     *
      * @return codename of version.
      */
     public static @NotNull String getCodename() {
@@ -549,6 +582,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Checks if it's Christmas on plugin launch.
+     *
      * @return true - it's Christmas, false - not.
      */
     private static boolean isChristmas() {
@@ -563,6 +597,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Checks if it's Halloween on plugin launch.
+     *
      * @return true - it's Halloween, false - not.
      */
     private static boolean isHalloween() {
@@ -587,6 +622,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Returns online wander, that plays on server.
+     *
      * @return wander - if online, otherwise - null
      */
     public static @Nullable Wander getWander(@NotNull UUID uuid) {
@@ -600,6 +636,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Returns online wander casted by player.
+     *
      * @return wander of player.
      */
     public static @NotNull Wander getWander(@NotNull Player player) {
@@ -613,6 +650,7 @@ public final class OpenCreative extends JavaPlugin {
 
     /**
      * Returns offline wander, that can be online or offline.
+     *
      * @return offline wander.
      */
     public static @NotNull OfflineWander getOfflineWander(@NotNull UUID uuid) {

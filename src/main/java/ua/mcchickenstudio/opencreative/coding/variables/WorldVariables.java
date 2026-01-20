@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.variables;
 
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -323,7 +324,12 @@ public final class WorldVariables {
     private Object deserializeObject(Object value, ValueType type) {
         try {
             if (type == ValueType.ITEM) {
-                value = ItemUtils.loadItemFromByteArray((String) value);
+                String itemString = (String) value;
+                if (itemString.contains("{")) {
+                    value = new ItemStack(Material.AIR);
+                } else {
+                    value = ItemUtils.loadItemFromByteArray(itemString);
+                }
             } else if (type == ValueType.LOCATION) {
                 double x, y, z;
                 float yaw, pitch;

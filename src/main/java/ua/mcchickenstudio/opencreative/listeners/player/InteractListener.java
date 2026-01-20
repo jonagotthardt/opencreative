@@ -73,6 +73,7 @@ import ua.mcchickenstudio.opencreative.coding.menus.variables.PotionsMenu;
 import ua.mcchickenstudio.opencreative.coding.menus.variables.VariablesMenu;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.menus.AbstractMenu;
+import ua.mcchickenstudio.opencreative.menus.Menus;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.OwnWorldsBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.browsers.WorldsCompassMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
@@ -316,6 +317,21 @@ public final class InteractListener implements Listener {
             ActionType action = ActionType.valueOf(type.toUpperCase());
             Layout layout = devPlanet.getOpenedMenu(clickedBlock.getLocation());
             event.setCancelled(true);
+            if (!action.isChestRequired()) {
+                Menus.onBlockDestroy(clickedBlock.getLocation());
+                if (devPlanet.isDropItems() && clickedBlock.getState() instanceof InventoryHolder container) {
+                    for (ItemStack item : container.getInventory().getContents()) {
+                        if (item != null) {
+                            if (item.getItemMeta() == null || !item.getItemMeta().getPersistentDataContainer().has(getCodingDoNotDropMeKey())) {
+                                clickedBlock.getWorld().dropItem(clickedBlock.getLocation(), item);
+                            }
+                        }
+                    }
+                }
+                clickedBlock.getWorld().spawnParticle(Particle.EXPLOSION, clickedBlock.getLocation(), 1);
+                clickedBlock.setType(Material.AIR);
+                return true;
+            }
             if (layout == null) {
                 layout = new LayoutMaker(action, clickedBlock);
                 layout.open(player);

@@ -861,9 +861,8 @@ items:
       location:
         name: "&fLocation"
         lore:
-          - "&7Place an item here"
-          - "&7with paper containing a location."
-          - "&eDefault player location"
+          - "&7Place an item here with"
+          - "&7paper containing a location."
       var-parameter:
         lore:
           - "&7This variable should store"
@@ -3703,13 +3702,8 @@ items:
       entity-clear-potion-effects:
         name: "&fClear Potion Effects"
         lore:
-          - "&7If the chest is empty, all effects"
-          - "&7will be removed from the entity."
-          - "&7Otherwise, only the selected effects"
-          - "&7will be removed."
-          - " "
-          - "&fIn the chest:"
-          - "&d Potions &7- Effects to remove"
+          - "&7All effects will be removed"
+          - "&7from the entity."
           - " "
           - "&eClick to set the action."
       entity-give-potion-effects:

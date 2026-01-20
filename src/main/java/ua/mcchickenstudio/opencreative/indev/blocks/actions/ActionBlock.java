@@ -25,12 +25,27 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.indev.blocks.CodingBlock;
+import ua.mcchickenstudio.opencreative.indev.blocks.WrappedActionBlock;
+import ua.mcchickenstudio.opencreative.indev.blocks.WrappedCodingBlock;
+import ua.mcchickenstudio.opencreative.indev.blocks.executors.WrappedExecutor;
+
+import java.util.Map;
 
 public abstract class ActionBlock extends CodingBlock {
 
     public ActionBlock(@NotNull String id, @NotNull Material mainBlock, @NotNull Material offBlock ) {
         super(id, mainBlock, offBlock);
+    }
+
+    @Override
+    public @Nullable WrappedAction createWrapped(@NotNull Map<String, Object> data) {
+        int x = (int) data.get("location.x");
+        int y = (int) data.get("location.y");
+        int z = (int) data.get("location.z");
+        Target target = Target.getByText((String) data.get("target"));
+        return new WrappedAction(this, target, new Arguments(null), x, y, z);
     }
 
     public abstract void execute(@Nullable Entity target, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments);

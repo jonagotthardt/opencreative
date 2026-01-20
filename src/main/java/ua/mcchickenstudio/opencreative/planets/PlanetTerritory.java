@@ -32,6 +32,7 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
+import ua.mcchickenstudio.opencreative.indev.blocks.CodingScript;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -69,6 +70,8 @@ public class PlanetTerritory {
     private World.Environment environment;
     private String biome;
     private boolean autoSave = true;
+
+    private CodingScript experimentalScript = null;
 
     public PlanetTerritory(@NotNull Planet planet) {
         this.planet = planet;
@@ -265,6 +268,7 @@ public class PlanetTerritory {
         planet.getLimits().clear();
         script.unload();
         spawnLocation = null;
+        experimentalScript = null;
         clearOnceMessages(planet);
     }
 
@@ -520,5 +524,13 @@ public class PlanetTerritory {
             getWorld().setAutoSave(autoSave);
         }
         FileUtils.setPlanetConfigParameter(planet, "autosave", !autoSave ? false : null);
+    }
+
+    /**
+     * EXPERIMENTAL: Not for usage.
+     * @return instance of coding script.
+     */
+    public CodingScript __getExperimentalScript() {
+        return experimentalScript;
     }
 }

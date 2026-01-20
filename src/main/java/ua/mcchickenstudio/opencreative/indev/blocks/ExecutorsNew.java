@@ -25,6 +25,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.indev.blocks.executors.ExecutorBlock;
@@ -39,7 +40,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
  */
 public class ExecutorsNew implements EventExecutor, Listener {
 
-    private final Set<ExecutorBlock> executors = new LinkedHashSet<>();
+    private final static Set<ExecutorBlock> executors = new LinkedHashSet<>();
 
     public void registerExecutor(ExecutorBlock executor) {
         try {
@@ -48,9 +49,19 @@ public class ExecutorsNew implements EventExecutor, Listener {
                     this, EventPriority.NORMAL,this,
                     OpenCreative.getPlugin());
             executors.add(executor);
+            OpenCreative.getPlugin().getLogger().info("[EXECUTORS] Registered " + executor);
         } catch (Exception error) {
             sendCriticalErrorMessage("Cannot register executor: " + executor.toString(), error);
         }
+    }
+
+    public static @Nullable ExecutorBlock getExecutorById(@NotNull String id) {
+        for (ExecutorBlock executor : executors) {
+            if (executor.getId().equalsIgnoreCase(id)) {
+                return executor;
+            }
+        }
+        return null;
     }
 
     public void unregisterExecutor(ExecutorBlock executor) {
@@ -60,6 +71,7 @@ public class ExecutorsNew implements EventExecutor, Listener {
     public void handleEvent(WorldEvent event) {
         for (ExecutorBlock executorBlock : executors) {
             if (event.getClass().equals(executorBlock.getEventClass())) {
+                event.getPlanet().getTerritory().__getExperimentalScript().execute(event, executorBlock);
                 //event.getPlanet().getTerritory().getScript().execute(event, executorBlock);
                 /*List<WrappedExecutor> registeredExecutors = new ArrayList<>();
 
