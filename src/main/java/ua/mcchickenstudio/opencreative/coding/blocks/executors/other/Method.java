@@ -19,10 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.planets.Planet;
 
 /**
  * <h1>Method</h1>
@@ -31,18 +28,22 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
  */
 public final class Method extends NameableExecutor {
 
-    public Method(Planet planet, int x, int y, int z, @NotNull String name) {
-        super(planet, x, y, z, name);
+    public Method() {
+        super("method", ExecutorCategory.METHOD);
     }
 
     @Override
-    public @NotNull ExecutorType getExecutorType() {
-        return ExecutorType.METHOD;
+    public @NotNull String getName() {
+        return "Method";
     }
 
     @Override
-    public @NotNull ExecutorCategory getExecutorCategory() {
-        return ExecutorCategory.METHOD;
+    public @NotNull String getExtensionId() {
+        return "default";
     }
 
+    @Override
+    public @NotNull String getDescription() {
+        return "Executes actions in other coding line";
+    }
 }

@@ -29,8 +29,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 
 import java.io.File;
@@ -59,8 +59,9 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
     }
 
     @Override
-    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category,
-                                  @NotNull ExecutorType type, boolean debug) {
+    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight,
+                                  @NotNull ExecutorCategory category,
+                                  @NotNull Executor executor, boolean debug) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -68,7 +69,7 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
         String path = "code.blocks.exec_block_" +
                 (notDependsOnHeight ? z : y) + "_" + x;
         set(path + ".category", category.name());
-        set(path + ".type", type.name());
+        set(path + ".type", executor.getID().toUpperCase());
 
         if (debug) {
             set(path + ".debug", true);
@@ -96,12 +97,15 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
     }
 
     @Override
-    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category, @NotNull ExecutorType type) {
-        saveExecutorBlock(block, notDependsOnHeight, category, type, false);
+    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category, @NotNull Executor executor) {
+        saveExecutorBlock(block, notDependsOnHeight, category, executor, false);
     }
 
     @Override
-    public void saveActionBlock(@NotNull Block executorBlock, boolean notDependsOnHeight, @NotNull List<String> multiActions, @NotNull Block actionBlock, @NotNull ActionCategory category, @NotNull ActionType type, @NotNull Target target) {
+    public void saveActionBlock(@NotNull Block executorBlock, boolean notDependsOnHeight,
+                                @NotNull List<String> multiActions, @NotNull Block actionBlock,
+                                @NotNull ActionCategory category, @NotNull ActionType type,
+                                @NotNull Target target) {
         String path = getActionBlockPath(executorBlock, notDependsOnHeight, actionBlock, multiActions);
 
         set(path + ".category", category.name());

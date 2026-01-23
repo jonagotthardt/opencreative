@@ -44,7 +44,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.LikeEve
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.PlayEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlayEvent;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.PlanetExecutors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
 import ua.mcchickenstudio.opencreative.coding.prompters.PrompterDownException;
@@ -609,7 +609,7 @@ public class EnvironmentCommand extends CommandHandler {
                                             found = true;
                                             sender.sendMessage(getLocaleMessage("environment.execute.function").replace("%function%", argument));
                                         }
-                                        Executors.activate(function, new JoinEvent(player));
+                                        PlanetExecutors.activate(function, new JoinEvent(player));
                                     }
                                 }
                                 if (!found)
@@ -623,7 +623,7 @@ public class EnvironmentCommand extends CommandHandler {
                                             found = true;
                                             sender.sendMessage(getLocaleMessage("environment.execute.method").replace("%method%", argument));
                                         }
-                                        Executors.activate(method, new JoinEvent(player));
+                                        PlanetExecutors.activate(method, new JoinEvent(player));
                                     }
                                 }
                                 if (!found)

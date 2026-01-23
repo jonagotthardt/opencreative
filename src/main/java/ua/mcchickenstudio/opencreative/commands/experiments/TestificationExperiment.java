@@ -26,7 +26,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
@@ -65,12 +66,12 @@ public final class TestificationExperiment extends Experiment {
         }
         if (args[0].equalsIgnoreCase("translation")) {
             List<String> untranslatedBlocks = new ArrayList<>();
-            for (ExecutorType executor : ExecutorType.values()) {
-                String path = "items.developer.events." + executor.name().toLowerCase().replace("_", "-") + ".name";
+            for (Executor executor : Executors.getInstance().getExecutors()) {
+                String path = "items.developer.events." + executor.getID().replace("_", "-") + ".name";
                 if (!MessageUtils.messageExists(path)) {
                     untranslatedBlocks.add(path);
                 }
-                path = "blocks." + executor.name().toLowerCase();
+                path = "blocks." + executor.getID();
                 if (!MessageUtils.messageExists(path)) {
                     untranslatedBlocks.add(path);
                 }

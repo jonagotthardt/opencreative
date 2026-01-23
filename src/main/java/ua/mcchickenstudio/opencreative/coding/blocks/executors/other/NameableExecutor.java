@@ -20,7 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 
 /**
  * <h1>NameableExecutor</h1>
@@ -29,11 +29,20 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
  */
 public abstract class NameableExecutor extends Executor  {
 
-    private final String name;
+    private String callName;
 
-    public NameableExecutor(Planet planet, int x, int y, int z, @NotNull String name) {
-        super(planet, x, y, z);
-        this.name = name;
+    public NameableExecutor(@NotNull String id, @NotNull ExecutorCategory category) {
+        super(id, category);
+        this.callName = "";
+    }
+
+    /**
+     * Sets name of executor for calling it.
+     *
+     * @param name new name to call it.
+     */
+    public void setCallName(@NotNull String name) {
+        this.callName = name;
     }
 
     /**
@@ -41,8 +50,8 @@ public abstract class NameableExecutor extends Executor  {
      *
      * @return custom id of executor.
      */
-    public final @NotNull String getName() {
-        return name;
+    public final @NotNull String getCallName() {
+        return callName;
     }
 
 }

@@ -291,7 +291,7 @@ public class PlanetTerritory {
      * Stops all running bukkit runnables and tasks in world.
      */
     public void stopBukkitRunnables() {
-        for (BukkitRunnable runnable : runningBukkitRunnables) {
+        for (BukkitRunnable runnable : new HashSet<>(runningBukkitRunnables)) {
             try {
                 if (runnable != null && !runnable.isCancelled()) {
                     runnable.cancel();

@@ -16,33 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ua.mcchickenstudio.opencreative.coding.blocks.executors;
+package ua.mcchickenstudio.opencreative.coding.blocks.executors.player;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.coding.blocks.DisplayableIcon;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.EventAwaiter;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 
-/**
- * <h1>TypedExecutor</h1>
- * This class represents an executor, that has
- * executor type with category.
- */
-public final class TypedExecutor extends Executor {
+public abstract class PlayerExecutor extends Executor implements DisplayableIcon, EventAwaiter {
 
-    private final ExecutorType type;
-
-    public TypedExecutor(Planet planet, int x, int y, int z, @NotNull ExecutorType type) {
-        super(planet, x, y, z);
-        this.type = type;
+    public PlayerExecutor(@NotNull String id) {
+        super("player_" + id, ExecutorCategory.EVENT_PLAYER);
     }
 
-    @Override
-    public @NotNull ExecutorType getExecutorType() {
-        return type;
-    }
-
-    @Override
-    public @NotNull ExecutorCategory getExecutorCategory() {
-        return type.getCategory();
+    public PlayerExecutor(@NotNull String id, boolean ignored) {
+        super(id, ExecutorCategory.EVENT_PLAYER);
     }
 
 }

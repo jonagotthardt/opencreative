@@ -27,7 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.PlanetExecutors;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
@@ -87,7 +87,7 @@ public class WorldListener implements EventExecutor, Listener {
     public void execute(@NotNull Listener listener, @NotNull Event event) throws EventException {
         if (event instanceof WorldEvent worldEvent) {
             if (canActivate(worldEvent)) {
-                Executors.activate(worldEvent);
+                PlanetExecutors.activate(worldEvent);
             }
         }
     }

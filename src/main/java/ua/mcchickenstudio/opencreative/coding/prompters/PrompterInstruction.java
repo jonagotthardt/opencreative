@@ -22,7 +22,8 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ParameterSlot;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
@@ -552,9 +553,9 @@ public final class PrompterInstruction {
 
     private @NotNull String getExecutors() {
         StringJoiner joiner = new StringJoiner(", ");
-        for (ExecutorType type : ExecutorType.values()) {
-            if (type.isDisabled()) continue;
-            joiner.add(type.name());
+        for (Executor executor : Executors.getInstance().getExecutors()) {
+            if (executor.isDisabled()) continue;
+            joiner.add(executor.getID().toUpperCase());
         }
         return joiner.toString();
     }

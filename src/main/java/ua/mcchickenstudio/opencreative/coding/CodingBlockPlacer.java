@@ -36,8 +36,11 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.NameableExecutor;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
@@ -177,7 +180,7 @@ public class CodingBlockPlacer {
     public boolean placeExecutor(@NotNull Location location, @NotNull ConfigurationSection data) {
         try {
             if (blocksPerColumnLimit <= 0) return false;
-            ExecutorType type = ExecutorType.getType(data.getString("type", ""));
+            Executor type = Executors.getInstance().getById(data.getString("type", "").toLowerCase());
             if (type != null) buildExecutorBlock(location, type, data);
             ConfigurationSection actions = data.getConfigurationSection("actions");
             if (actions == null) return true;
@@ -203,22 +206,14 @@ public class CodingBlockPlacer {
      * Builds executor block on specified location.
      *
      * @param location location of executor block where it will be placed.
-     * @param type     type of executor.
+     * @param executor executor.
      * @param data     configuration section of executor.
      */
-    private void buildExecutorBlock(@NotNull Location location, @NotNull ExecutorType type,
+    private void buildExecutorBlock(@NotNull Location location, @NotNull Executor executor,
                                     @NotNull ConfigurationSection data) {
         Location signLocation = location.getBlock().getRelative(BlockFace.SOUTH).getLocation();
-        switch (type) {
-            case FUNCTION, METHOD -> {
-                String callName = data.getString("name", "");
-                callName = substring(callName, 14);
-                placeDevBlock(location, type.getCategory().getBlock(),
-                        type.getCategory().getAdditionalBlock(),
-                        wallSign, type.getCategory().name().toLowerCase());
-                setSignLine(signLocation, 3, callName);
-            }
-            case CYCLE -> {
+        switch (executor) {
+            case Cycle ignored -> {
                 String cycleName = data.getString("name", "");
                 cycleName = substring(cycleName, 14);
                 int cycleRepeatingTime = data.getInt("time");
@@ -229,11 +224,19 @@ public class CodingBlockPlacer {
                 setSignLine(signLocation, 1, cycleName);
                 setSignLine(signLocation, 3, String.valueOf(cycleRepeatingTime));
             }
+            case NameableExecutor nameable -> {
+                String callName = data.getString("name", "");
+                callName = substring(callName, 14);
+                placeDevBlock(location, nameable.getBlockCategory().getBlock(),
+                        nameable.getBlockCategory().getAdditionalBlock(),
+                        wallSign, nameable.getBlockCategory().name().toLowerCase());
+                setSignLine(signLocation, 3, callName);
+            }
             default -> {
-                placeDevBlock(location, type.getCategory().getBlock(),
-                        type.getCategory().getAdditionalBlock(),
-                        wallSign, type.getCategory().name().toLowerCase());
-                setSignLine(signLocation, 3, type.name().toLowerCase());
+                placeDevBlock(location, executor.getBlockCategory().getBlock(),
+                        executor.getBlockCategory().getAdditionalBlock(),
+                        wallSign, executor.getBlockCategory().name().toLowerCase());
+                setSignLine(signLocation, 3, executor.getID());
             }
         }
         if (data.getBoolean("debug", false)) {

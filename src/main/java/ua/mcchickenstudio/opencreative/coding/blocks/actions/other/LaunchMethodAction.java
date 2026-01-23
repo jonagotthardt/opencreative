@@ -43,7 +43,7 @@ public final class LaunchMethodAction extends Action {
         if (name.isEmpty()) return;
         List<Method> methods = new ArrayList<>();
         for (Method method : getPlanet().getTerritory().getScript().getExecutors().getMethodsList()) {
-            if (method.getName().equalsIgnoreCase(name)) {
+            if (method.getCallName().equalsIgnoreCase(name)) {
                 methods.add(method);
             }
         }

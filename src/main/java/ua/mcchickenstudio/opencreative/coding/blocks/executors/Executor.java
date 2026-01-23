@@ -19,6 +19,8 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
 import org.jetbrains.annotations.NotNull;
+import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.ExtensionContent;
 import ua.mcchickenstudio.opencreative.coding.blocks.CodingBlock;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugExecutor;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>Executor</h1>
@@ -41,47 +44,87 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
  * @version 6.0
  * @since 5.0
  */
-public abstract class Executor implements CodingBlock {
+public abstract class Executor implements CodingBlock, ExtensionContent {
 
-    private final Planet planet;
-    private final int x;
-    private final int y;
-    private final int z;
-    private final List<Action> actions = new ArrayList<>();
+    private final String id;
+    private final ExecutorCategory category;
+
+    private Planet planet;
+    private int x;
+    private int y;
+    private int z;
+
     private WorldEvent event;
+    private List<Action> actions;
     private ActionsHandler handler;
     private boolean debug;
     private int calls;
 
     /**
-     * Creates an Executor with specified planet and block's location in developers planet.
+     * Constructor of empty Executor without block data.
+     * <p>
+     * Executing actions will be not able without initialization.
+     * <p>
+     * To initialize, use {@link #init(Planet, int, int, int)}
+     * @param id          short id of executor that will be used in signs and translations.
+     *                    <p>
+     *                    It must be lower-snake-cased, for example: "player_join", "cycle".
+     *                    If some of registered executors has same ID as new, it will be not added.
+     * @param category category of executor.
+     */
+    public Executor(@NotNull String id, @NotNull ExecutorCategory category) {
+        this.id = id;
+        this.category = category;
+    }
+
+    /**
+     * Initializes an executor and sets planet and coding block location.
+     * Use this method after creating executor.
      *
      * @param planet Planet where executor will work.
      * @param x      X from Executor's block location in developers planet.
      * @param y      Y from Executor's block location in developers planet.
      * @param z      Z from Executor's block location in developers planet.
+     * @throws IllegalStateException if executor is already initialized.
      */
-    public Executor(Planet planet, int x, int y, int z) {
+    public void init(@NotNull Planet planet, int x, int y, int z) {
+        if (this.planet != null) {
+            throw new IllegalStateException("Executor is already initialized and associated with planet " + this.planet.getId());
+        }
         this.planet = planet;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.actions = new ArrayList<>();
     }
 
     /**
-     * Executes all actions with specified event.
+     * Checks executor, executes actions and sends
+     * information about executor.
      *
      * @param event Event that occurred in planet.
+     * @throws IllegalStateException if executor is not initialized.
      */
     public void run(@NotNull WorldEvent event) {
-        if (getExecutorType().isDisabled()) {
+        if (this.planet == null) {
+            throw new IllegalStateException("Executor is not initialized and not associated with any planet.");
+        }
+        if (isDisabled()) {
             return;
         }
         sendCodingDebugExecutor(this);
         executeActions(event);
     }
 
-    protected void executeActions(WorldEvent event) {
+    /**
+     * Executes all actions with specified event.
+     *
+     * @param event Event that has happened in planet.
+     */
+    protected void executeActions(@NotNull WorldEvent event) {
+        if (this.planet == null) {
+            throw new IllegalStateException("Executor is not initialized and not associated with any planet.");
+        }
         this.event = event;
         handler = new ActionsHandler(this);
         if (event instanceof ChatEvent chatEvent && !actions.isEmpty()) {
@@ -90,51 +133,60 @@ public abstract class Executor implements CodingBlock {
         handler.executeActions(actions);
     }
 
-    private void addAction(Action action) {
-        actions.add(action);
-    }
-
     /**
-     * Returns type of executor.
-     *
-     * @return type of executor.
-     */
-    public abstract @NotNull ExecutorType getExecutorType();
-
-    /**
-     * Returns category of executor.
+     * Returns coding block category of this executor.
      *
      * @return category of executor.
      */
-    @SuppressWarnings("unused")
-    public abstract @NotNull ExecutorCategory getExecutorCategory();
-
-    @Override
-    public String toString() {
-        return "Executor | Planet: " + getPlanet().getWorldName() + " Coords: " + x + " " + y + " " + z;
+    public final @NotNull ExecutorCategory getBlockCategory() {
+        return category;
     }
 
-    public final Planet getPlanet() {
+    /**
+     * Returns planet, that was associated with executor.
+     *
+     * @return planet.
+     */
+    public final @NotNull Planet getPlanet() {
         return planet;
     }
 
-    public boolean isDebug() {
+    /**
+     * Checks whether is executor block marked for debugging.
+     *
+     * @return true - for debug, false - not.
+     */
+    public final boolean isDebug() {
         return debug;
     }
 
-    public void setDebug(boolean debug) {
+    /**
+     * Enables or disables sending debug logs about
+     * executor and actions inside.
+     *
+     * @param debug true - enabled, false - disabled.
+     */
+    public final void setDebug(boolean debug) {
         this.debug = debug;
     }
 
-    public WorldEvent getEvent() {
+    /**
+     * Returns last world event of executor.
+     * <p>
+     * When a new event happens, it will be replaced
+     * with a new one.
+     *
+     * @return last world event.
+     */
+    public final WorldEvent getEvent() {
         return event;
     }
 
-    public ActionsHandler getHandler() {
+    public final ActionsHandler getHandler() {
         return handler;
     }
 
-    public List<Action> getActions() {
+    public final @NotNull List<Action> getActions() {
         return actions;
     }
 
@@ -143,48 +195,97 @@ public abstract class Executor implements CodingBlock {
      *
      * @param actions List of actions.
      */
-    public final void setActions(List<Action> actions) {
+    public final void setActions(@NotNull List<Action> actions) {
         this.actions.clear();
-        actions.forEach(this::addAction);
+        this.actions.addAll(actions);
     }
 
-    public void increaseCall() {
+    /**
+     * Increases calls amount by 1.
+     */
+    public final void increaseCall() {
         calls++;
     }
 
-    public void decreaseCall() {
+    /**
+     * Decreases calls amount by 1.
+     */
+    public final void decreaseCall() {
         calls--;
     }
 
-    public int getLastCalls() {
+    /**
+     * Returns how many times executor was called
+     * to execute actions.
+     *
+     * @return amount of last executions.
+     */
+    public final int getLastCalls() {
         return calls;
     }
 
+    /**
+     * Checks whether executor is disabled
+     * and cannot be called.
+     *
+     * @return true - disabled, false - not.
+     */
+    public final boolean isDisabled() {
+        return OpenCreative.getSettings().getCodingSettings().isDisabledEvent(this);
+    }
+
+    /**
+     * Returns id of executor, that will be used
+     * to find it in registry.
+     *
+     * @return id of executor.
+     */
+    public final @NotNull String getID() {
+        return id;
+    }
+
+    /**
+     * Returns localized name of executor.
+     *
+     * @return localized name.
+     */
+    public final @NotNull String getLocaleName() {
+        return getLocaleMessage("items.developer.events." + id.replace("_", "-") + ".name", false);
+    }
+
+    @Override
     public final int getX() {
         return x;
     }
 
+    @Override
     public final int getY() {
         return y;
     }
 
+    @Override
     public final int getZ() {
         return z;
     }
 
     @Override
-    public int hashCode() {
-        return (getExecutorType().name().toLowerCase() + x + " " + y + " " + z).hashCode();
+    public final int hashCode() {
+        return (id.toLowerCase() + x + " " + y + " " + z).hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public String toString() {
+        return "Executor | Planet: " + getPlanet().getWorldName() + " Coords: " + x + " " + y + " " + z;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
         if (obj == null) return false;
         if (!(obj instanceof Executor executor)) return false;
         if (executor.x != this.x) return false;
         if (executor.y != this.y) return false;
         if (executor.z != this.z) return false;
-        return Objects.equals(executor.getExecutorType(), this.getExecutorType());
+        return Objects.equals(executor.id, this.id);
     }
 
 }

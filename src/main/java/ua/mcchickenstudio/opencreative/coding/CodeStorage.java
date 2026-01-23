@@ -37,27 +37,19 @@
 package ua.mcchickenstudio.opencreative.coding;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-
-import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getSignLine;
 
 public interface CodeStorage {
 
@@ -72,18 +64,18 @@ public interface CodeStorage {
      *
      * @param file Input file
      */
-     void loadCode(@NotNull File file);
+    void loadCode(@NotNull File file);
 
     /**
      * Saves executor block data in configuration file.
      *
      * @param block    executor coding block.
      * @param category category of executor.
-     * @param type     type of executor.
+     * @param executor executor.
      * @param debug    should print debug logs or not.
      */
     void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight,
-                           @NotNull ExecutorCategory category, @NotNull ExecutorType type,
+                           @NotNull ExecutorCategory category, @NotNull Executor executor,
                            boolean debug);
 
     /**
@@ -91,10 +83,10 @@ public interface CodeStorage {
      *
      * @param block    executor coding block.
      * @param category category of executor.
-     * @param type     type of executor.
+     * @param executor executor.
      */
     void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight,
-                                  @NotNull ExecutorCategory category, @NotNull ExecutorType type);
+                           @NotNull ExecutorCategory category, @NotNull Executor executor);
 
     /**
      * Saves action block data in configuration file.
@@ -127,7 +119,7 @@ public interface CodeStorage {
     /**
      * Sets value in path.
      *
-     * @param path path for value.
+     * @param path  path for value.
      * @param value new value.
      */
     void set(@NotNull String path, @Nullable Object value);
