@@ -770,7 +770,7 @@ public class EnvironmentCommand extends CommandHandler {
     public List<String> onTab(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         List<String> tabCompleter = new ArrayList<>();
         if (args.length == 1) {
-            Collections.addAll(tabCompleter, "platform", "variables", "debug", "execute", "barrel", "floor", "action", "theme", "event", "sign", "save-location", "night-vision", "drops", "clearitems", "make");
+            Collections.addAll(tabCompleter, "platform", "variables", "debug", "execute", "barrel", "floor", "action", "theme", "event", "sign", "save-location", "night-vision", "drops", "clearitems");
             if (OpenCreative.getCodingPrompter().isEnabled()) tabCompleter.add("make");
             return tabCompleter;
         }
