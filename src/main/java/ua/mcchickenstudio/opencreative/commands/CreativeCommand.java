@@ -1636,6 +1636,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("unload");
             tabCompleter.add("resetlocale");
             tabCompleter.add("updatelocale");
+            tabCompleter.add("chat");
             tabCompleter.add("creative-chat");
             tabCompleter.add("kick-all");
             tabCompleter.add("list");
@@ -1643,6 +1644,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("corrupted");
             tabCompleter.add("sound");
             tabCompleter.add("sounds");
+            tabCompleter.add("item");
             tabCompleter.add("items");
             tabCompleter.add("register");
             tabCompleter.add("unregister");
@@ -1659,6 +1661,16 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("updateicons");
             tabCompleter.add("fireworks");
             tabCompleter.add("groups");
+            tabCompleter.add("editbook");
+            tabCompleter.add("setmessage");
+            tabCompleter.add("dev");
+            tabCompleter.add("all");
+            tabCompleter.add("created");
+            tabCompleter.add("fireworks");
+            tabCompleter.add("print");
+            tabCompleter.add("uuid");
+            tabCompleter.add("getuuid");
+            tabCompleter.add("template");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
@@ -1668,7 +1680,7 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("ends");
                 tabCompleter.add("contains");
                 tabCompleter.add("ignore");
-            } else if ("creative-chat".equalsIgnoreCase(args[0])) {
+            } else if ("creative-chat".equalsIgnoreCase(args[0]) || "chat".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
                 tabCompleter.add("clear");
@@ -1687,7 +1699,7 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("edit");
                 tabCompleter.add("info");
             } else if (List.of("load", "unload", "moderate", "moderation",
-                            "updateworld", "unregister", "delete", "setowner", "setsize")
+                            "updateworld", "unregister", "delete", "setowner", "setsize", "dev")
                     .contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets()
                         .stream().map(planet -> String.valueOf(planet.getId()))
