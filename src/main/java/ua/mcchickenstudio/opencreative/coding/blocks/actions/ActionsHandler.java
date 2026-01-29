@@ -62,6 +62,8 @@ public class ActionsHandler {
     private final ActionsHandler parentActionsHandler;
     private final Queue<Action> actionsQueue = new LinkedList<>();
     private final boolean doNotUseTryFlag;
+    private final UUID uuid = UUID.randomUUID();
+
     private Entity lastSpawnedEntity;
     private boolean stopped = false;
     private long waitDelay = 0;
@@ -465,6 +467,15 @@ public class ActionsHandler {
 
     @Override
     public String toString() {
-        return "ActionsHandler. Planet: " + executor.getPlanet() + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
+        return "ActionsHandler" + hashCode() +  ". Planet: " + executor.getPlanet().getId()
+                + " WaitDelay: " + waitDelay + " Stopped: " + stopped + " Queue Size: " + actionsQueue.size();
+    }
+
+    /**
+     * Returns an unique ID of actions handler.
+     * @return UUID of handler.
+     */
+    public final UUID getUniqueId() {
+        return uuid;
     }
 }

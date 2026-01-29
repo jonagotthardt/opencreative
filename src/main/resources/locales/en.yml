@@ -18240,7 +18240,7 @@ blocks:
   entity_set_team: "Set team"
   entity_unset_team: "Unset team"
   entity_disguise_as_player: "Player disguise"
-  entity_disguise_as_mob: "Mob disguise"
+  entity_disguise_as_entity: "Mob disguise"
   entity_disguise_as_block: "Block disguise"
   entity_clear_disguise: "Clear disguise"
   entity_set_step_height: "Step height"

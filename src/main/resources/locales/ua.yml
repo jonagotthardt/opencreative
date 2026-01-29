@@ -18296,7 +18296,7 @@ blocks:
   entity_set_team: "Вст. команду"
   entity_unset_team: "Забр. команду"
   entity_disguise_as_player: "Маска гравця"
-  entity_disguise_as_mob: "Маска моба"
+  entity_disguise_as_entity: "Маска моба"
   entity_disguise_as_block: "Маска блока"
   entity_clear_disguise: "Прибр. маскув."
   entity_set_scale: "Вст. розмір"

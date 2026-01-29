@@ -41,11 +41,12 @@ public abstract class ActionBlock extends CodingBlock {
 
     @Override
     public @Nullable WrappedAction createWrapped(@NotNull Map<String, Object> data) {
-        int x = (int) data.get("location.x");
-        int y = (int) data.get("location.y");
-        int z = (int) data.get("location.z");
-        Target target = Target.getByText((String) data.get("target"));
-        return new WrappedAction(this, target, new Arguments(null), x, y, z);
+        //int x = (int) data.get("location.x");
+        //int y = (int) data.get("location.y");
+        //int z = (int) data.get("location.z");
+        //Target target = Target.getByText((String) data.get("target"));
+        return null;
+        //return new WrappedAction(this, target, new Arguments(null), x, y, z);
     }
 
     public abstract void execute(@Nullable Entity target, @NotNull ActionsHandler actionsHandler, @NotNull Arguments arguments);

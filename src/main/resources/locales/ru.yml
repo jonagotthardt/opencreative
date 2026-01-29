@@ -18499,7 +18499,7 @@ blocks:
   entity_set_collidable: "Коллизия моба"
   entity_unset_team: "Убр. команду"
   entity_disguise_as_player: "Маска игрока"
-  entity_disguise_as_mob: "Маска моба"
+  entity_disguise_as_entity: "Маска моба"
   entity_disguise_as_block: "Маска блока"
   entity_clear_disguise: "Убр. маску"
   entity_set_scale: "Уст. размер"
