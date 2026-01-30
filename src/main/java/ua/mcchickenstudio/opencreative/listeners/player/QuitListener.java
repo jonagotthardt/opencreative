@@ -34,6 +34,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerConfirmation;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 
@@ -67,8 +68,10 @@ public final class QuitListener implements Listener {
             }.runTaskLater(OpenCreative.getPlugin(), 20L);
 
         }
-        player.setGameMode(GameMode.ADVENTURE);
-        teleportToLobby(player);
+        if (WorldUtils.isPlanet(player.getWorld())) {
+            player.setGameMode(GameMode.ADVENTURE);
+            teleportToLobby(player);
+        }
 
         PlayerConfirmation.clearConfirmations(player);
         ChatCommand.creativeChatOff.remove(player);
