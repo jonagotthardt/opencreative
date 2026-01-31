@@ -212,6 +212,7 @@ messages:
   notify-no-players-around: true # Will send notification to player, when he texts in local chat in world without other players
   cancel-chat-on-confirmation: false # If true, will hide player's message, when he searches world by input; changes
                                      #  world's or module's name, description; enters nickname or id for transferring ownership.
+  handle-world-chat: true # If true, plugin will handle player messages like chat-managers, you may need turn off if installed one of them.
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: false # Will send not found message in console
