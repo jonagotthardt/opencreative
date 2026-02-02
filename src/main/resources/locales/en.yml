@@ -10657,6 +10657,27 @@ items:
           - "&b Vector &7- For getting"
           - " "
           - "&eClick to set action."
+      var-get-vector-all:
+        name: "&eGet All Axes"
+        lore:
+          - "&7Returns all vector axes"
+          - ""
+          - "&fIn inventory:"
+          - "&b Vector &7- To get"
+          - "&e Variable &7- For X axis"
+          - "&e Variable &7- For Y axis"
+          - "&e Variable &7- For Z axis"
+          - " "
+          - "&eClick to set action."
+      player-set-spectator-target:
+        name: "Set Spectator Target"
+        lore:
+          - "&7Makes spectator watch"
+          - "&7a specific entity"
+          - "&fIn inventory:"
+          - "&6 Test &7- For possession"
+          - " "
+          - "&eClick to set action."
       var-get-vector-y:
         name: "&aGet vector's Y"
         lore:
@@ -18337,6 +18358,8 @@ blocks:
   var_dot_vector: "Dot vectors"
   var_midpoint_vector: "Midpoint vector"
   var_distance_vector: "Distance vectors"
+  var_get_vector_all: "Get. Vect. all"
+  player_set_spectator_target: "Look at enti."
   var_get_vector_x: "X of vector"
   var_get_vector_y: "Y of vector"
   var_get_vector_z: "Z of vector"
