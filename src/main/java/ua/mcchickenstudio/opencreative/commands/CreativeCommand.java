@@ -21,22 +21,23 @@ package ua.mcchickenstudio.opencreative.commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -58,7 +59,6 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
@@ -293,6 +293,24 @@ public class CreativeCommand extends CommandHandler {
                             .replace("%uuid%", newOwner.getUniqueId().toString()));
                 }
             }
+            case "clearplayer" -> {
+                if (!sender.hasPermission("opencreative.clear-player")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String name = args[1];
+                Player foundPlayer = Bukkit.getPlayer(name);
+                if (foundPlayer == null) {
+                    sender.sendMessage(getLocaleMessage("offline-player"));
+                    return;
+                }
+                Wander wander = OpenCreative.getWander(foundPlayer);
+                wander.setConnectingToPlanet(false);
+            }
             case "setsize" -> {
                 if (!sender.hasPermission("opencreative.world.set-size")) {
                     sender.sendMessage(getLocaleMessage("no-perms"));
@@ -375,40 +393,6 @@ public class CreativeCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("world.already-recommended")
                             .replace("%id%", id));
                     Sounds.PLAYER_FAIL.play(sender);
-                }
-            }
-            case "editbook" -> {
-                if (player == null) {
-                    sender.sendMessage(getLocaleMessage("only-players"));
-                    return;
-                }
-                if (!sender.hasPermission("opencreative.locale.editbook")) {
-                    sender.sendMessage(getLocaleMessage("no-perms"));
-                    return;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage(getLocaleMessage("too-few-args"));
-                    return;
-                }
-                String path = switch (args[1].toLowerCase()) {
-                    case "lobby", "changelogs", "updates", "changelog" -> "items.lobby.changelogs";
-                    case "coding-book", "codingbook", "devbook", "dev", "coding" -> "items.developer.coding-book";
-                    default -> "";
-                };
-                if (path.isEmpty()) {
-                    return;
-                }
-                ItemStack currentItem = player.getInventory().getItemInMainHand();
-                if (currentItem.getItemMeta() instanceof BookMeta book) {
-                    MessageUtils.setMessage(path + ".pages", book.getPages());
-                    player.getInventory().setItemInMainHand(null);
-                } else {
-                    currentItem = createItem(Material.WRITABLE_BOOK, 1, path);
-                    if (currentItem.getItemMeta() instanceof BookMeta book) {
-                        book.pages(getBookPages(player, path + ".pages"));
-                        currentItem.setItemMeta(book);
-                    }
-                    player.getInventory().setItemInMainHand(currentItem);
                 }
             }
             case "ignoremessage" -> {
@@ -1140,6 +1124,8 @@ public class CreativeCommand extends CommandHandler {
                 .replace("%codename%", OpenCreative.getCodename()));
     }
 
+    private BukkitRunnable maintenanceRunnable;
+
     public void handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {
         if (!sender.hasPermission("opencreative.maintenance")) {
             sender.sendMessage(getLocaleMessage("no-perms"));
@@ -1163,7 +1149,10 @@ public class CreativeCommand extends CommandHandler {
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-notification").replace("%time%", String.valueOf(seconds)));
             }
             int time = seconds;
-            new BukkitRunnable() {
+            if (maintenanceRunnable != null) {
+                maintenanceRunnable.cancel();
+            }
+            maintenanceRunnable = new BukkitRunnable() {
                 int seconds = time;
 
                 @Override
@@ -1180,12 +1169,18 @@ public class CreativeCommand extends CommandHandler {
                         }
                         seconds--;
                     } else {
+                        maintenanceRunnable = null;
                         OpenCreative.getSettings().setMaintenance(true);
                         cancel();
                     }
                 }
-            }.runTaskTimer(OpenCreative.getPlugin(), 0L, 20L);
+            };
+            maintenanceRunnable.runTaskTimer(OpenCreative.getPlugin(), 0L, 20L);
         } else if ("end".equalsIgnoreCase(args[1])) {
+            if (maintenanceRunnable != null) {
+                maintenanceRunnable.cancel();
+                maintenanceRunnable = null;
+            }
             OpenCreative.getSettings().setMaintenance(false);
         }
     }
@@ -1665,7 +1660,6 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("updateicons");
             tabCompleter.add("fireworks");
             tabCompleter.add("groups");
-            tabCompleter.add("editbook");
             tabCompleter.add("setmessage");
             tabCompleter.add("dev");
             tabCompleter.add("all");
@@ -1692,9 +1686,6 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("get");
                 tabCompleter.add("set");
                 tabCompleter.add("reset");
-            } else if ("editbook".equalsIgnoreCase(args[0])) {
-                tabCompleter.add("changelogs");
-                tabCompleter.add("coding");
             } else if ("debug".equalsIgnoreCase(args[0]) || "spy".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");

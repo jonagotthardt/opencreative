@@ -31,6 +31,7 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.removePassengers;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
@@ -70,6 +71,7 @@ public class SpawnCommand extends CommandHandler {
             return;
         }
         new QuitEvent(player).callEvent();
+        removePassengers(player);
         teleportToLobby(player);
     }
 

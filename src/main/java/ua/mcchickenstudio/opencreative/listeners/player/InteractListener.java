@@ -577,8 +577,7 @@ public final class InteractListener implements Listener {
                         y = Double.parseDouble(coords[1]);
                         z = Double.parseDouble(coords[2]);
                         player.setVelocity(new Vector(x, y, z));
-                    } catch (Exception ignored) {
-                    }
+                    } catch (Exception ignored) {}
                 }
             } else {
                 Component displayName = meta.displayName();
@@ -762,6 +761,7 @@ public final class InteractListener implements Listener {
         setDisplayName(currentItem, displayName);
         (!value ? Sounds.DEV_BOOLEAN_TRUE : Sounds.DEV_BOOLEAN_FALSE).play(player);
         player.swingMainHand();
+        setPersistentData(currentItem, getCodingValueKey(), "BOOLEAN");
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(displayName),
                 Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
@@ -788,6 +788,7 @@ public final class InteractListener implements Listener {
                     toComponent(getLocaleMessage("world.dev-mode.set-variable")), Component.text(locationString),
                     Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(2), Duration.ofMillis(750))
             ));
+            setPersistentData(currentItem, getCodingValueKey(), "LOCATION");
             spawnGlowingBlock(player, location);
             Sounds.DEV_LOCATION_SET.play(player);
         } else if (event.getAction() == Action.LEFT_CLICK_AIR) {

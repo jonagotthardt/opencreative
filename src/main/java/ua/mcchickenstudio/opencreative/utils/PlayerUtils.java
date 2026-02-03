@@ -147,6 +147,7 @@ public final class PlayerUtils {
         player.setCollidable(true);
         player.setAI(true);
         player.setNoPhysics(false);
+        player.setVisualFire(false);
         AttributeInstance movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
         if (movementSpeed != null) movementSpeed.setBaseValue(0.1f);
 
