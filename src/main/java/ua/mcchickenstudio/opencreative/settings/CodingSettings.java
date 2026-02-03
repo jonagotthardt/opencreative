@@ -23,7 +23,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.prompters.*;
 
 import java.util.ArrayList;
@@ -103,14 +104,14 @@ public final class CodingSettings {
             }
         }
         for (String disabled : config.getStringList("disabled-events")) {
-            try {
-                disabled = disabled.toUpperCase().replace("-", "_");
-                ExecutorType type = ExecutorType.valueOf(disabled);
-                disabledEvents.add(type.name());
-                count++;
-            } catch (Exception ignored) {
+            disabled = disabled.toLowerCase().replace("-", "_");
+            Executor executor = Executors.getInstance().getById(disabled);
+            if (executor == null) {
                 unknownBlocks.add(disabled);
+                continue;
             }
+            disabledEvents.add(executor.getID());
+            count++;
         }
         if (count >= 1) {
             OpenCreative.getPlugin().getLogger().info("Disabled " + count + " coding blocks!");
@@ -172,8 +173,8 @@ public final class CodingSettings {
      * @param event executor to check.
      * @return true - disabled, false - not.
      */
-    public boolean isDisabledEvent(@NotNull ExecutorType event) {
-        return disabledEvents.contains(event.name());
+    public boolean isDisabledEvent(@NotNull Executor event) {
+        return disabledEvents.contains(event.getID());
     }
 
     /**

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.PlanetExecutors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.exceptions.UnknownFunctionException;
 
@@ -44,7 +44,7 @@ public final class LaunchFunctionAction extends Action {
         if (name.isEmpty()) return;
         List<Function> functions = new ArrayList<>();
         for (Function function : getPlanet().getTerritory().getScript().getExecutors().getFunctionsList()) {
-            if (function.getName().equalsIgnoreCase(name)) {
+            if (function.getCallName().equalsIgnoreCase(name)) {
                 functions.add(function);
             }
         }
@@ -52,7 +52,7 @@ public final class LaunchFunctionAction extends Action {
             throw new UnknownFunctionException(name);
         }
         for (Function function : functions) {
-            if (!(Executors.canRunExecutor(getPlanet(), function))) return;
+            if (!(PlanetExecutors.canRunExecutor(getPlanet(), function))) return;
             ActionsHandler handler = new ActionsHandler(this);
             if (entity != null) {
                 Set<Entity> targets = new HashSet<>();

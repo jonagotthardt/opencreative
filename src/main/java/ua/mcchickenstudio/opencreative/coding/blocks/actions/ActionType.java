@@ -509,7 +509,16 @@ public enum ActionType implements CodingBlockType {
     VAR_GET_LOCATION_Z(ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationZAction.class, Material.BLUE_STAINED_GLASS, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_LOCATION_YAW(ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.location.GetLocationYawAction.class, Material.YELLOW_STAINED_GLASS_PANE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
     VAR_GET_LOCATION_PITCH(ActionCategory.VARIABLE_ACTION, MenusCategory.LOCATION_OPERATIONS, GetLocationPitchAction.class, Material.ORANGE_STAINED_GLASS_PANE, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("location", ValueType.LOCATION)),
-
+    VAR_MOVE_LOCATION_BY_VECTOR(
+            ActionCategory.VARIABLE_ACTION,
+            MenusCategory.LOCATION_OPERATIONS,
+            MoveLocationByVector.class,
+            Material.PISTON,
+            new ArgumentSlot("variable", ValueType.VARIABLE),
+            new ArgumentSlot("target", ValueType.LOCATION),
+            new ArgumentSlot("vector", ValueType.VECTOR),
+            new ArgumentSlot("distance", ValueType.NUMBER)
+    ),
     VAR_CREATE_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, CreateListAction.class, Material.BOOKSHELF, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_ADD_TO_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, AddToListAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("elements", ValueType.ANY, (byte) 18), new ArgumentSlot("variable", ValueType.VARIABLE)),
     VAR_SET_IN_LIST(ActionCategory.VARIABLE_ACTION, MenusCategory.LIST_OPERATIONS, SetInListAction.class, Material.CAULDRON, new ArgumentSlot("variable", ValueType.VARIABLE), new ArgumentSlot("index", ValueType.NUMBER), new ArgumentSlot("value", ValueType.ANY)),

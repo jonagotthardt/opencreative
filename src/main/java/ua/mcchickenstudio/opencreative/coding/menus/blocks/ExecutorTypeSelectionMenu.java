@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.coding.menus.blocks;
 
 import net.kyori.adventure.title.Title;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -27,8 +28,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.DisplayableIcon;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.*;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
@@ -36,13 +37,12 @@ import java.time.Duration;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.BlockUtils.setSignLine;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getCodingValueKey;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.getPersistentData;
+import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.toComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
 
-public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<ExecutorType> {
+public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu<Executor> {
 
     private final ExecutorCategory executor;
 
@@ -56,8 +56,22 @@ public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu
     }
 
     @Override
-    protected ItemStack getElementIcon(ExecutorType type) {
-        return type.getIcon();
+    protected ItemStack getElementIcon(Executor executor) {
+        ItemStack icon;
+        if (executor instanceof DisplayableIcon executorIcon) {
+            icon = createItem(executorIcon.getDisplayIcon(), "items.developer.events." + executor.getID().replace("_", "-"));
+        } else {
+            icon = createItem(Material.LIGHT_GRAY_STAINED_GLASS, 1, "items.developer.events." + executor.getID().replace("_", "-"));
+        }
+        if (executor instanceof EventAwaiter event) {
+            addLoreAtEnd(icon, (event.isCancellable() ? getLocaleMessage("items.developer.events.cancellable", false) : ""));
+        }
+        if (executor.isDisabled()) {
+            icon.setType(Material.LIGHT_GRAY_STAINED_GLASS);
+            addLoreAtEnd(icon, getLocaleMessage("disabled"));
+        }
+        setPersistentData(icon, getCodingValueKey(), executor.getID());
+        return icon;
     }
 
     @Override
@@ -70,12 +84,8 @@ public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu
         Block codingBlock = signLocation.getBlock().getRelative(BlockFace.NORTH);
         if (signLocation.getWorld().getName().contains("dev") && devPlanet != null) {
             String typeString = getPersistentData(item, getCodingValueKey());
-            ExecutorType executorType = null;
-            try {
-                executorType = ExecutorType.valueOf(typeString);
-            } catch (Exception ignored) {
-            }
-            ExecutorCategory executorCategory = executorType == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
+            Executor executor = Executors.getInstance().getById(typeString);
+            ExecutorCategory executorCategory = executor == null ? null : ExecutorCategory.getByMaterial(codingBlock.getType());
             if (executorCategory != null) {
                 devPlanet.setCodeChanged(true);
                 setSignLine(signLocation, 2, executorCategory.name().toLowerCase());
@@ -95,7 +105,7 @@ public final class ExecutorTypeSelectionMenu extends BlocksWithMenusCategoryMenu
     }
 
     @Override
-    public List<ExecutorType> getElements() {
-        return ExecutorType.getExecutorsByCategories(executor, currentCategory);
+    public List<Executor> getElements() {
+        return Executors.getInstance().getByCategories(executor, currentCategory);
     }
 }

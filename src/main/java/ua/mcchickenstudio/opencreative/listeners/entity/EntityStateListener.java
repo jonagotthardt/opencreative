@@ -54,6 +54,7 @@ public final class EntityStateListener implements Listener {
 
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
+        if (!OpenCreative.getSettings().getWorldFixerSettings().shouldFixBadEntitiesInAir()) return;
         Entity entity = event.getEntity();
         if (!isBadEntityForMovement(entity)) return;
         if (!isBadEntityMovementState(entity)) {
@@ -73,11 +74,6 @@ public final class EntityStateListener implements Listener {
         }
     }
 
-    private boolean isOnSlimeBlock(@NotNull Entity entity) {
-        Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        return block.getType() == Material.SLIME_BLOCK;
-    }
-
     private boolean isBadEntityForMovement(@NotNull Entity entity) {
         if (entity instanceof Projectile) return true;
         if (entity instanceof ArmorStand) return true;
@@ -93,6 +89,7 @@ public final class EntityStateListener implements Listener {
 
     @EventHandler
     public void onCollision(VehicleEntityCollisionEvent event) {
+        if (!OpenCreative.getSettings().getWorldFixerSettings().shouldFixVehicleCollisions()) return;
         if (event.getEntity() instanceof Minecart first && event.getVehicle() instanceof Minecart second) {
             long firstLastCollision = getMetadata(first, "oc_vehicle_last_collision");
             long secondLastCollision = getMetadata(second, "oc_vehicle_last_collision");
@@ -101,7 +98,7 @@ public final class EntityStateListener implements Listener {
             long collisionsAmount = Math.max(firstCollisions, secondCollisions);
             long lastCollision = Math.max(firstLastCollision, secondLastCollision);
             if (System.currentTimeMillis() - lastCollision < 500) {
-                if (collisionsAmount > 50) {
+                if (collisionsAmount > OpenCreative.getSettings().getWorldFixerSettings().getMaxMinecartCollisionsAmount()) {
                     event.setCancelled(true);
                     first.remove();
                     for (Entity entity : first.getNearbyEntities(20, 20, 20)) {

@@ -18,407 +18,301 @@
 
 package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
-import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
-import ua.mcchickenstudio.opencreative.coding.blocks.conditions.Condition;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.DisplayableIcon;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.Action;
+import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.entity.movement.EntityJumpedEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.fighting.PlayerKilledPlayerEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.fighting.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.interaction.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.movement.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.state.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Cycle;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
-import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
-import ua.mcchickenstudio.opencreative.planets.Planet;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.fighting.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.interaction.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.inventory.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.movement.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.player.world.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.blocks.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.inventory.*;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.world.other.*;
+import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.*;
 
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
 
 /**
  * <h1>Executors</h1>
- * This class represents Executors in every planet code script.
- *
- * @author McChicken Studio
- * @version 6.0
- * @since 5.0
+ * This class represents registry of executors,
+ * that can register new executors for coding.
+ * <p>
+ * To get instance use {@link #getInstance()}.
+ * <p>
+ * To add custom executor create a class, that
+ * extends one of prepared: {@link ua.mcchickenstudio.opencreative.coding.blocks.executors.player.PlayerExecutor PlayerExecutor},
+ * {@link ua.mcchickenstudio.opencreative.coding.blocks.executors.world.WorldExecutor WorldExecutor},
+ * {@link ua.mcchickenstudio.opencreative.coding.blocks.executors.entity.EntityExecutor EntityExecutor}, and register it with
+ * {@link #registerExecutor(Executor)} method.
  */
-public class Executors {
+public final class Executors {
 
-    protected final Planet planet;
-    private final List<Executor> executorsList = new ArrayList<>();
+    private static Executors instance;
+    private final List<Executor> executors = new LinkedList<>();
 
-    public Executors(Planet planet) {
-        this.planet = planet;
+    /**
+     * Returns instance of executors controller class.
+     *
+     * @return instance of executors.
+     */
+    public synchronized static @NotNull Executors getInstance() {
+        if (instance == null) {
+            instance = new Executors();
+            instance.registerDefaults();
+        }
+        return instance;
     }
 
     /**
-     * Finds executor for world event and activates it, if found.
+     * Registers executor, that will be replaced in coding.
      *
-     * @param event event to activate executor.
+     * @param executor executor to register.
      */
-    public static void activate(@NotNull WorldEvent event) {
-        Planet planet = event.getPlanet();
-        if (!OpenCreative.getSettings().getCodingSettings().isEnabled()) return;
-        if (planet == null) return;
-        if (planet.getMode() != Planet.Mode.PLAYING) return;
-        Executors executors = planet.getTerritory().getScript().getExecutors();
-        for (Executor executor : executors.executorsList) {
-            if (executor.getExecutorType().getEventClass() == event.getClass()) {
-                activate(executor, event);
-            }
+    public void registerExecutor(@NotNull Executor executor) {
+        Executor existing = getById(executor.getID());
+        if (existing != null) {
+            sendDebug("[EXECUTORS] Can't register executor " + executor.getName() + " (from " + executor.getExtensionId() + "), "
+                    + "because there's already registered executor " + existing.getName() + " (from " + existing.getExtensionId() + ") "
+                    + "with same ID: " + executor.getID());
+            return;
+        }
+        sendDebug("[EXECUTORS] Registered executor: " + executor.getName() + " (from " + executor.getExtensionId() + ")");
+        executors.add(executor);
+    }
+
+    /**
+     * Registers executors, that will be replaced in coding.
+     *
+     * @param executors executors to register.
+     */
+    public void registerExecutor(@NotNull Executor... executors) {
+        for (Executor executor : executors) {
+            registerExecutor(executor);
         }
     }
 
     /**
-     * Calls executor that executes actions.
+     * Unregisters executor if list contains it.
      *
-     * @param executor executor to call.
-     * @param event    event of executor.
+     * @param executor executor to unregister.
      */
-    public static void activate(@NotNull Executor executor, @NotNull WorldEvent event) {
-        Planet planet = executor.getPlanet();
-        if (planet == null) return;
-        if (planet.getMode() != Planet.Mode.PLAYING) return;
-        if (canRunExecutor(planet, executor)) {
-            executor.run(event);
-        }
-    }
-
-    public static boolean canRunExecutor(@NotNull Planet planet, @NotNull Executor executor) {
-        if (executor.getLastCalls() >= planet.getLimits().getCodeOperationsLimit()) {
-            planet.getTerritory().getScript().getExecutors().stopCode("operations limit");
-            sendPlanetCodeCriticalErrorMessage(planet, executor, getLocaleMessage("coding-error.operations-limit", false)
-                    .replace("%limit%", String.valueOf(planet.getLimits().getCodeOperationsLimit())));
-            return false;
-        } else {
-            executor.increaseCall();
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    executor.decreaseCall();
-                }
-            }.runTaskLater(OpenCreative.getPlugin(), 35L);
-            return true;
-        }
+    @SuppressWarnings("unused")
+    public void unregisterExecutor(@NotNull Executor executor) {
+        executors.remove(executor);
     }
 
     /**
-     * Clears temporary data: executors list, last executors calls.
+     * Returns a copy of list that contains all registered executors.
+     *
+     * @return executors list.
      */
-    public void clear() {
-        executorsList.clear();
+    public @NotNull List<Executor> getExecutors() {
+        return new ArrayList<>(executors);
+    }
+
+    private void registerDefaults() {
+        // Player Events
+        registerExecutor(new PlayerJoinExecutor(), new PlayerQuitExecutor(), new PlayerLikedExecutor(),
+                new PlayerAdvertisedExecutor(), new PlayerPlayExecutor(), new PlayerChatExecutor(),
+                new PlayerPurchaseExecutor(), new PlayerChunkLoadExecutor(), new PlayerChunkUnloadExecutor());
+        registerExecutor(new PlayerLeftClickExecutor(), new PlayerRightClickExecutor(), new PlayerInteractExecutor(),
+                new PlayerPlaceBlockExecutor(), new PlayerDestroyBlockExecutor(), new PlayerDestroyingBlockExecutor(),
+                new PlayerBlockInteractExecutor(), new PlayerMobInteractExecutor(), new PlayerBedEnterExecutor(),
+                new PlayerBedLeaveExecutor(), new PlayerFishingExecutor(), new PlayerSpectatingExecutor(),
+                new PlayerStopSpectatingExecutor(), new PlayerChangedSignExecutor(), new PlayerBucketFillExecutor(),
+                new PlayerBucketEmptyExecutor(), new PlayerBucketEntityExecutor());
+        registerExecutor(new PlayerGetDamagedExecutor(), new MobDamagePlayerExecutor(), new PlayerDamageMobExecutor(),
+                new PlayerDamagePlayerExecutor(), new PlayerHungerChangeExecutor(), new PlayerKilledPlayerExecutor(),
+                new PlayerKilledMobExecutor(), new PlayerDeathExecutor(), new PlayerRespawnExecutor(),
+                new PlayerTotemRespawnExecutor());
+        registerExecutor(new PlayerClickInventoryExecutor(), new PlayerDropItemExecutor(), new PlayerPickupItemExecutor(),
+                new PlayerSwapHandExecutor(), new PlayerOpenInventoryExecutor(), new PlayerWriteBookExecutor(),
+                new PlayerChangeSlotExecutor(), new PlayerItemConsumeExecutor(), new PlayerItemCraftExecutor(),
+                new PlayerItemDamageExecutor(), new PlayerItemBreakExecutor(), new PlayerDragItemExecutor(),
+                new PlayerCloseInventoryExecutor());
+        registerExecutor(new PlayerWalkExecutor(), new PlayerJumpExecutor(), new PlayerRunningExecutor(),
+                new PlayerStopRunningExecutor(), new PlayerFlyingExecutor(), new PlayerStopFlyingExecutor(),
+                new PlayerSneakingExecutor(), new PlayerStopSneakingExecutor(), new PlayerTeleportExecutor(),
+                new PlayerEnteredVehicleExecutor(), new PlayerVehicleExitExecutor());
+        // World Events
+        registerExecutor(new WorldPlayModeExecutor(), new WorldVariableTransferExecutor(), new WorldWebResponseExecutor(),
+                new WorldLightningStrikeExecutor(), new WorldReachedRedstoneLimitExecutor(), new WorldReachedBlocksLimitExecutor(),
+                new WorldReachedEntitiesLimitExecutor(), new WorldReachedVariablesLimitExecutor());
+        registerExecutor(new WorldBlockCookedExecutor(), new WorldBlockFurnaceBurnedExecutor(), new WorldBlockDispensedExecutor(),
+                new WorldBrewingFuelExecutor(), new WorldCrafterCraftedExecutor());
+        registerExecutor(new WorldBlockBurnedExecutor(), new WorldBlockExplodedExecutor(), new WorldBlockTntPrimeExecutor(),
+                new WorldBlockExperienceDropExecutor(), new WorldBlockFadedExecutor(), new WorldBlockFormedExecutor(),
+                new WorldBlockGrownExecutor(), new WorldBlockIgnitedExecutor(), new WorldBlockPhysicsExecutor(),
+                new WorldBlockRedstoneExecutor(), new WorldPortalCreatedExecutor(), new WorldBlockPistonExtendedExecutor(),
+                new WorldBlockPistonRetractedExecutor(), new WorldBlockBrewingStartExecutor(), new WorldBlockBrewingEndExecutor(),
+                new WorldBlockCampfireStartExecutor(), new WorldBlockCauldronChangeExecutor(), new WorldBlockFluidChangedExecutor(),
+                new WorldBlockLeavesDecayedExecutor(), new WorldBlockNotePlayedExecutor(), new WorldBlockSculkBloomedExecutor(),
+                new WorldBlockBeaconActivatedExecutor(), new WorldBlockBeaconDeactivatedExecutor(), new WorldBlockAnvilDamagedExecutor(),
+                new WorldBlockTargetHitExecutor(), new WorldSpongeAbsorbedExecutor(), new WorldBlockBellRungExecutor());
+        // Entity Events
+        registerExecutor(new EntityPigZombieAngeredExecutor(), new EntityBatToggledSleepModeExecutor(), new EntitySlimeSplitExecutor(),
+                new EntityShulkerDuplicatedExecutor(), new EntityWitchReadyPotionExecutor(), new EntitySheepRegrownWoolExecutor(),
+                new EntityPufferfishStateChangedExecutor(), new EntityCreeperIgnitedExecutor(), new EntityCreeperPoweredExecutor(),
+                new EntityEnteredLoveModeExecutor(), new EntityTurtleGoesHomeExecutor(), new EntityResurrectedExecutor(),
+                new EntityPotionEffectedExecutor(), new EntityWardenAngerChangedExecutor(), new EntityAirChangedExecutor());
+        registerExecutor(new EntityProjectileHitExecutor(), new EntityEnteredBlockExecutor(), new EntityMountedExecutor(),
+                new EntityDismountedExecutor(), new EntityEnteredVehicleExecutor(), new EntityVehicleExitExecutor(),
+                new EntityJumpedExecutor(), new EntityHorseJumpedExecutor(), new EntityEndermanEscapedExecutor());
+        registerExecutor(new EntitySpawnedExecutor(), new EntityRemovedExecutor(), new EntityBornExecutor(),
+                new EntityDroppedItemExecutor(), new EntityPickedUpItemExecutor(), new EntityItemMergedExecutor(),
+                new EntityItemDespawnedExecutor(), new EntityExplodedExecutor(), new EntityDamagedItemExecutor(),
+                new EntityPiglinBarteredExecutor(), new EntityInteractedBlockExecutor(), new EntityTurtleLaysEggExecutor(),
+                new EntityFireworkExplodedExecutor());
+        registerExecutor(new EntityGetDamagedExecutor(), new EntityDiedExecutor(), new EntityShotBowExecutor(),
+                new EntityWitchThrownPotionExecutor(), new EntityWitchConsumedPotionExecutor(),
+                new EntityLoadedCrossbowExecutor(), new EntityCombustedByEntityExecutor(), new EntityCombustedByBlockExecutor(),
+                new EntityRegainedHealthExecutor(), new EntityHangingBreakExecutor());
+        // Other
+        registerExecutor(new Function(), new Method(), new Cycle());
     }
 
     /**
-     * Loads executors from script file.
+     * Returns list of executors, that have same menu category.
      *
-     * @param file script file.
+     * @param executorCategory executor category.
+     * @param menusCategory menu category.
+     * @return list of executors with specified menu category.
      */
-    public void load(File file) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection section = config.getConfigurationSection("code.blocks");
-        if (section != null) {
-            OpenCreative.getPlugin().getLogger().info("Loading code in planet " + planet.getId() + "...");
-            long time = System.currentTimeMillis();
-            List<Executor> executors = new ArrayList<>();
-            Set<String> keys = section.getKeys(false);
-            String path;
-            for (String key : keys) {
-                path = "code.blocks." + key;
-                if (config.getString(path + ".type") != null) {
-                    Executor executor = createExecutor(config, path);
-                    if (executor != null) {
-                        executors.add(executor);
+    public @NotNull List<Executor> getByCategories(@NotNull ExecutorCategory executorCategory, @NotNull MenusCategory menusCategory) {
+        List<Executor> list = new LinkedList<>();
+        for (Executor executor : executors) {
+            if (executor.getBlockCategory() == executorCategory) {
+                if (executor instanceof DisplayableIcon icon) {
+                    if (icon.getCategory() == menusCategory) {
+                        list.add(executor);
                     }
                 }
             }
-            clear();
-            executorsList.addAll(executors);
-            sendCodingDebugLog(planet, getLocaleMessage("coding-debug.loaded-code", false)
-                    .replace("%time%", String.valueOf(Math.floor((System.currentTimeMillis() - time) / 10.0) / 100.0)));
-            OpenCreative.getPlugin().getLogger().info("Loaded code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms with " + executors.size() + " executors!");
-        } else {
-            sendCodingDebugLog(planet, getLocaleMessage("coding-debug.loaded-code", false)
-                    .replace("%time%", "0"));
-            OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " has no code to load.");
         }
-    }
-
-    public @NotNull List<Executor> getExecutorsList() {
-        return executorsList;
-    }
-
-    public @NotNull List<Action> getActionsList() {
-        List<Action> actions = new ArrayList<>();
-        for (Executor executor : executorsList) {
-            for (Action action : executor.getActions()) {
-                actions.addAll(getInsideActionsList(action));
-            }
-        }
-        return actions;
-    }
-
-    public @NotNull List<Condition> getConditionsList() {
-        List<Condition> conditions = new ArrayList<>();
-        for (Executor executor : executorsList) {
-            for (Action action : getActionsList()) {
-                if (action instanceof Condition condition) {
-                    conditions.add(condition);
-                }
-            }
-        }
-        return conditions;
+        return list;
     }
 
     /**
-     * Returns list of actions inside the condition or multi action.
+     * Returns list of all menu categories of specified executor category..
      *
-     * @param action condition or multi action.
-     * @return list of inside actions.
+     * @param executorCategory executor category.
+     * @return list of menu categories.
      */
-    public @NotNull List<Action> getInsideActionsList(@NotNull Action action) {
-        List<Action> actions = new ArrayList<>();
-        actions.add(action);
-        if (action instanceof Condition condition) {
-            for (Action inside : condition.getActions()) {
-                actions.addAll(getInsideActionsList(inside));
-            }
-            for (Action inside : condition.getElseActions()) {
-                actions.addAll(getInsideActionsList(inside));
-            }
-        } else if (action instanceof MultiAction multiAction) {
-            for (Action inside : multiAction.getActions()) {
-                actions.addAll(getInsideActionsList(inside));
+    public @NotNull List<MenusCategory> getCategories(@NotNull ExecutorCategory executorCategory) {
+        List<MenusCategory> list = new LinkedList<>();
+        for (Executor executor : executors) {
+            if (executor.getBlockCategory() == executorCategory && executor instanceof DisplayableIcon icon) {
+                if (list.contains(icon.getCategory())) continue;
+                list.add(icon.getCategory());
             }
         }
-        return actions;
+        return list;
     }
 
     /**
-     * Returns list of registered cycle executors.
+     * Checks if executor with specified ID exists in registry.
      *
-     * @return list of cycles.
+     * @param id id of executor.
+     * @return true - exists, false - not exists.
      */
-    public @NotNull List<Cycle> getCyclesList() {
-        List<Cycle> functions = new ArrayList<>();
-        for (Executor executor : executorsList) {
-            if (executor instanceof Cycle cycle) {
-                functions.add(cycle);
-            }
-        }
-        return functions;
+    public boolean exists(@NotNull String id) {
+        return getById(id) != null;
     }
 
     /**
-     * Returns list of registered function executors.
+     * Checks if executor with specified class exists in registry.
      *
-     * @return list of functions.
+     * @param clazz class of executor.
+     * @return true - exists, false - not exists.
      */
-    public @NotNull List<Function> getFunctionsList() {
-        List<Function> functions = new ArrayList<>();
-        for (Executor executor : executorsList) {
-            if (executor instanceof Function function) {
-                functions.add(function);
-            }
-        }
-        return functions;
+    public boolean exists(@NotNull Class<? extends Executor> clazz) {
+        return getByClass(clazz) != null;
     }
 
     /**
-     * Returns list of registered method executors.
+     * Returns executor from registry by specified class
+     * if it exists, otherwise will return null.
      *
-     * @return list of methods.
+     * @param clazz class to get executor.
+     * @return executor - if exists, or null - not exists.
      */
-    public @NotNull List<Method> getMethodsList() {
-        List<Method> methods = new ArrayList<>();
-        for (Executor executor : executorsList) {
-            if (executor instanceof Method method) {
-                methods.add(method);
+    public @Nullable Executor getByClass(@NotNull Class<? extends Executor> clazz) {
+        for (Executor eventValue : executors) {
+            if (eventValue.getClass().equals(clazz)) {
+                return eventValue;
             }
         }
-        return methods;
-    }
-
-    private int[] getCoords(YamlConfiguration config, String path) {
-        int[] coords = new int[3];
-        coords[0] = config.getInt(path + ".location.x");
-        coords[1] = config.getInt(path + ".location.y");
-        coords[2] = config.getInt(path + ".location.z");
-        return coords;
+        return null;
     }
 
     /**
-     * Creates an instance of executor.
+     * Returns executor from registry by specified id
+     * if it exists, otherwise will return null.
      *
-     * @param config script file.
-     * @param path   path of executor.
-     * @return instance of executor, or null.
+     * @param id id to get executor.
+     * @return executor - if exists, or null - not exists.
      */
-    private Executor createExecutor(@NotNull YamlConfiguration config, @NotNull String path) {
-        Executor executor = null;
-        try {
-            int[] coords = getCoords(config, path);
-            ExecutorType type = ExecutorType.valueOf(config.getString(path + ".type"));
-            if (type == ExecutorType.CYCLE) {
-                String name = config.getString(path + ".name");
-                int time = config.getInt(path + ".time");
-                /*
-                 * We will not create cycle without name,
-                 * because it can't be called in code.
-                 */
-                if (time < 5 || time > 3600) {
-                    time = 20;
-                }
-                if (name != null) {
-                    executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class, String.class, int.class)
-                            .newInstance(planet, coords[0], coords[1], coords[2], name, time);
-                }
-            } else if (type == ExecutorType.FUNCTION || type == ExecutorType.METHOD) {
-                String name = config.getString(path + ".name");
-                /*
-                 * We will not create function or method without name,
-                 * because it can't be called in code.
-                 */
-                if (name != null) {
-                    executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class, String.class)
-                            .newInstance(planet, coords[0], coords[1], coords[2], name);
-                }
-            } else {
-                executor = type.getExecutorClass().getConstructor(Planet.class, int.class, int.class, int.class, ExecutorType.class)
-                        .newInstance(planet, coords[0], coords[1], coords[2], type);
+    public @Nullable Executor getById(@NotNull String id) {
+        for (Executor eventValue : executors) {
+            if (eventValue.getID().equals(id)) {
+                return eventValue;
             }
-            if (executor == null) return null;
-            List<Action> allActionsList = createActionList(executor, path + ".actions", config);
-            if (!allActionsList.isEmpty()) {
-                executor.setActions(allActionsList);
-            }
-            boolean debug = config.getBoolean(path + ".debug", false);
-            if (debug) {
-                executor.setDebug(debug);
-            }
-        } catch (Exception ignored) {
         }
-        return executor;
+        return null;
     }
 
     /**
-     * Creates a list of actions for executor.
+     * Returns executor from registry by specified block
+     * if it exists, otherwise will return null.
      *
-     * @param executor executor that will store actions.
-     * @param path     path of actions inside executor.
-     * @param config   script file.
-     * @return list of actions, or empty list.
+     * @param block block to get executor.
+     * @return executor - if exists, or null - not exists.
      */
-    private @NotNull List<Action> createActionList(@NotNull Executor executor,
-                                                   @NotNull String path,
-                                                   @NotNull YamlConfiguration config) {
-        List<Action> actionList = new ArrayList<>();
-        ConfigurationSection actions = config.getConfigurationSection(path);
-        if (actions != null) {
-            Set<String> actionsBlocks = actions.getKeys(false);
-            for (String actionBlock : actionsBlocks) {
-                String actionPath = path + "." + actionBlock;
-                Action action = createAction(executor, actionPath, config);
-                if (action != null) {
-                    actionList.add(action);
-                }
+    public @Nullable Executor getByBlock(@NotNull Block block) {
+        if (block.getType() == Material.LAPIS_BLOCK) {
+            return new Function();
+        } else if (block.getType() == Material.EMERALD_BLOCK) {
+            return new Method();
+        } else if (block.getType() == Material.OXIDIZED_COPPER) {
+            return new Cycle();
+        }
+        Block signBlock = block.getRelative(BlockFace.SOUTH);
+        if (signBlock.getType().toString().contains("WALL_SIGN")) {
+            Sign sign = (Sign) signBlock.getState();
+            if (sign.getSide(Side.FRONT).lines().size() >= 3) {
+                Component signText = sign.getSide(Side.FRONT).line(2);
+                String text = ((TextComponent) signText).content().toLowerCase();
+                return getById(text);
             }
         }
-        return actionList;
+        return null;
     }
 
-    /**
-     * Creates an instance of action from script.
-     *
-     * @param executor executor that stores action.
-     * @param path     path of action inside executor.
-     * @param config   script file.
-     * @return instance of action, or null.
-     */
-    private @Nullable Action createAction(@NotNull Executor executor,
-                                          @NotNull String path,
-                                          @NotNull YamlConfiguration config) {
 
-        String type = config.getString(path + ".type");
-        if (type == null) return null;
-
-        try {
-            ActionType actionType = ActionType.valueOf(type);
-            Arguments args = new Arguments(executor.getPlanet());
-            Target target = Target.DEFAULT;
-            String targetString = config.getString(path + ".target");
-            if (targetString != null && !targetString.isEmpty()) {
-                target = Target.valueOf(targetString);
-            }
-            ConfigurationSection section = config.getConfigurationSection(path + ".arguments");
-            if (section != null) {
-                args.load(section);
-            }
-            if (actionType == ActionType.LAUNCH_FUNCTION || actionType == ActionType.LAUNCH_METHOD) {
-                if (config.getString(path + ".name") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT, config.getString(path + ".name", " "));
-                }
-            } else if (actionType == ActionType.SELECTION_SET || actionType == ActionType.SELECTION_ADD || actionType == ActionType.SELECTION_REMOVE) {
-                if (config.getConfigurationSection(path + ".condition") != null) {
-                    boolean isOpposed = config.getBoolean(path + ".condition.opposed", false);
-                    ActionCategory conditionCategory = ActionCategory.valueOf(config.getString(path + ".condition.category"));
-                    ActionType conditionType = ActionType.valueOf(config.getString(path + ".condition.type"));
-                    return actionType.getActionClass().getConstructor(Executor.class, int.class, Arguments.class, ActionCategory.class, ActionType.class, boolean.class).newInstance(executor, config.getInt(path + ".location.x"), args, conditionCategory, conditionType, isOpposed);
-                } else if (config.getString(path + ".target") != null) {
-                    if (targetString != null && !targetString.isEmpty()) {
-                        target = Target.valueOf(targetString);
-                    }
-                    return actionType.getActionClass().getConstructor(Executor.class, int.class, Arguments.class, Target.class).newInstance(executor, config.getInt(path + ".location.x"), args, target);
-                }
-                if (config.getString(path + ".condition.type") != null) {
-                    args.setArgumentValue("name", ValueType.TEXT, config.getString(path + ".name", ""));
-                }
-            }
-            if (actionType.getCategory().isMultiAction()) {
-                if (actionType.getCategory().isCondition()) {
-                    boolean isOpposed = config.getBoolean(path + ".opposed", false);
-                    return actionType.getActionClass()
-                            .getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class, List.class, boolean.class)
-                            .newInstance(executor, target, config.getInt(path + ".location.x"),
-                                    args, createActionList(executor, path + ".actions", config),
-                                    createActionList(executor, path + ".else", config), isOpposed);
-                } else if (actionType == ActionType.REPEAT_WHILE || actionType == ActionType.REPEAT_WHILE_NOT) {
-                    if (config.getConfigurationSection(path + ".condition") != null) {
-                        ActionType conditionType = ActionType.valueOf(config.getString(path + ".condition.type"));
-                        return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class,
-                                Arguments.class, List.class, ActionType.class).newInstance(executor,
-                                target, config.getInt(path + ".location.x"),
-                                args, createActionList(executor, path + ".actions", config), conditionType);
-                    }
-                } else {
-                    return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class, List.class)
-                            .newInstance(executor, target, config.getInt(path + ".location.x"),
-                                    args, createActionList(executor, path + ".actions", config));
-                }
-            }
-            return actionType.getActionClass().getConstructor(Executor.class, Target.class, int.class, Arguments.class).newInstance(executor, target, config.getInt(path + ".location.x"), args);
-        } catch (Exception error) {
-            sendDebugError("Can't create an action", error);
-            return null;
-        }
-    }
-
-    /**
-     * Stops code in planet by setting its mode to Build
-     * and sends log in console. Doesn't call quit events.
-     *
-     * @param reason reason of stopping the code.
-     */
-    public void stopCode(@NotNull String reason) {
-        if (planet.getMode() == Planet.Mode.BUILD) return;
-        OpenCreative.getPlugin().getLogger().info("Planet code has been stopped in " + planet.getId() + " because of " + reason + ".");
-        planet.setMode(Planet.Mode.BUILD, true);
-    }
 
 }

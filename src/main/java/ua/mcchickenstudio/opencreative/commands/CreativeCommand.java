@@ -20,21 +20,24 @@ package ua.mcchickenstudio.opencreative.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.modules.Module;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiment;
 import ua.mcchickenstudio.opencreative.commands.experiments.Experiments;
+import ua.mcchickenstudio.opencreative.indev.Wander;
 import ua.mcchickenstudio.opencreative.menus.CreativeMenu;
 import ua.mcchickenstudio.opencreative.menus.world.WorldModerationMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -56,7 +59,6 @@ import java.util.*;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.loadLocales;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.setPlanetConfigParameter;
-import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
@@ -73,813 +75,770 @@ public class CreativeCommand extends CommandHandler {
 
     @Override
     public void onExecute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length > 0) {
-            Player player = null;
-            if (sender instanceof Player) {
-                player = (Player) sender;
-                if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+        if (args.length == 0) {
+            sender.sendMessage(getCopyrightMessage());
+            if (sender instanceof Player player) {
+                Sounds.OPENCREATIVE.play(player);
+                new CreativeMenu().open(player);
             }
-            switch (args[0].toLowerCase()) {
-                case "reload" -> {
-                    if (!sender.hasPermission("opencreative.reload")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    sender.sendMessage(getLocaleMessage("creative.reloading"));
-                    if (player != null) {
-                        Sounds.RELOADING.play(player);
-                    }
-                    OpenCreative.getPlugin().reloadConfig();
-                    OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
-                    loadLocales();
-                    sender.sendMessage(getLocaleMessage("creative.reloaded"));
-                    if (player != null) {
-                        Sounds.RELOADED.play(player);
-                    }
+            return;
+        }
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+            if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
+        }
+        switch (args[0].toLowerCase()) {
+            case "reload" -> {
+                if (!sender.hasPermission("opencreative.reload")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
                 }
-                case "updatelocale" -> {
-                    if (!sender.hasPermission("opencreative.updatelocale")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (player != null) {
-                        Sounds.RELOADING.play(player);
-                    }
-                    int added = MessageUtils.addMissingMessageLines();
-                    if (added == -1) {
-                        sender.sendMessage(getLocaleMessage("creative.locale.cant-update"));
-                    } else if (added == 0) {
-                        sender.sendMessage(getLocaleMessage("creative.locale.not-updated"));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("creative.locale.updated")
-                                .replace("%amount%", String.valueOf(added)));
-                    }
-                    if (player != null) {
-                        Sounds.RELOADED.play(player);
-                    }
+                sender.sendMessage(getLocaleMessage("creative.reloading"));
+                if (player != null) {
+                    Sounds.RELOADING.play(player);
                 }
-                case "resetlocale" -> {
-                    if (!sender.hasPermission("opencreative.resetlocale")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    sender.sendMessage(getLocaleMessage("creative.locale.resetting"));
-                    if (player != null) {
-                        Sounds.RELOADING.play(player);
-                    }
-                    FileUtils.resetLocales();
-                    sender.sendMessage(getLocaleMessage("creative.locale.reset"));
-                    if (player != null) {
-                        Sounds.RELOADED.play(player);
-                    }
+                OpenCreative.getPlugin().reloadConfig();
+                OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
+                loadLocales();
+                sender.sendMessage(getLocaleMessage("creative.reloaded"));
+                if (player != null) {
+                    Sounds.RELOADED.play(player);
                 }
-                case "info" -> {
-                    if (!sender.hasPermission("opencreative.info")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(args[1]);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    long now = System.currentTimeMillis();
-                    sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
-                            .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%", getElapsedTime(now, planet.getCreationTime()))
-                            .replace("%activity-time%", getElapsedTime(now, planet.getLastActivityTime())).replace("%online%", String.valueOf(planet.getOnline()))
-                            .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
-                            .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+            }
+            case "updatelocale" -> {
+                if (!sender.hasPermission("opencreative.updatelocale")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
                 }
-                case "groups" -> handleGroupsCommand(sender, args);
-                case "register" -> {
-                    if (!sender.hasPermission("opencreative.world.register")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    int id;
-                    try {
-                        id = Integer.parseInt(args[1]);
-                    } catch (Exception ignored) {
-                        sender.sendMessage(getLocaleMessage("world.not-numeric-id"));
-                        return;
-                    }
-                    File planetFolder = new File(FileUtils.getPlanetsStorageFolder(), "planet" + id);
-                    if (!planetFolder.exists() || !planetFolder.isDirectory()) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", args[1])
-                                .replace("%path%", planetFolder.getPath()));
-                        return;
-                    }
-                    if (OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]) != null) {
-                        sender.sendMessage(getLocaleMessage("world.already-registered").replace("%id%", args[1]));
-                        return;
-                    }
-                    Planet newPlanet = new Planet(id);
-                    OpenCreative.getPlanetsManager().registerPlanet(newPlanet);
-                    sender.sendMessage(getLocaleMessage("world.registered").replace("%id%", args[1]));
+                if (player != null) {
+                    Sounds.RELOADING.play(player);
                 }
-                case "unregister" -> {
-                    if (!sender.hasPermission("opencreative.world.unregister")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String id = args[1];
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", args[1])
-                                .replace("%path%", "/join " + id));
-                        return;
-                    }
-                    OpenCreative.getPlanetsManager().unregisterPlanet(planet);
-                    sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%", args[1]));
+                int added = MessageUtils.addMissingMessageLines();
+                if (added == -1) {
+                    sender.sendMessage(getLocaleMessage("creative.locale.cant-update"));
+                } else if (added == 0) {
+                    sender.sendMessage(getLocaleMessage("creative.locale.not-updated"));
+                } else {
+                    sender.sendMessage(getLocaleMessage("creative.locale.updated")
+                            .replace("%amount%", String.valueOf(added)));
                 }
-                case "updateicons" -> {
-                    if (!sender.hasPermission("opencreative.update-icons")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
-                        planet.getInformation().updateIconAsync();
-                    }
-                    for (Module module : OpenCreative.getModuleManager().getModules()) {
-                        module.getInformation().updateIconAsync();
-                    }
-                    sender.sendMessage(getLocaleMessage("creative.updated-icons"));
+                if (player != null) {
+                    Sounds.RELOADED.play(player);
                 }
-                case "updateworld" -> {
-                    if (!sender.hasPermission("opencreative.world.update")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String id = args[1];
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", id)
-                                .replace("%path%", "/join " + id));
-                        return;
-                    }
+            }
+            case "resetlocale" -> {
+                if (!sender.hasPermission("opencreative.resetlocale")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                sender.sendMessage(getLocaleMessage("creative.locale.resetting"));
+                if (player != null) {
+                    Sounds.RELOADING.play(player);
+                }
+                FileUtils.resetLocales();
+                sender.sendMessage(getLocaleMessage("creative.locale.reset"));
+                if (player != null) {
+                    Sounds.RELOADED.play(player);
+                }
+            }
+            case "info" -> {
+                if (!sender.hasPermission("opencreative.info")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(args[1]);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("no-planet-found"));
+                    return;
+                }
+                long now = System.currentTimeMillis();
+                sender.sendMessage(getLocaleMessage("world.info").replace("%name%", planet.getInformation().getDisplayName())
+                        .replace("%id%", String.valueOf(planet.getId())).replace("%creation-time%", getElapsedTime(now, planet.getCreationTime()))
+                        .replace("%activity-time%", getElapsedTime(now, planet.getLastActivityTime())).replace("%online%", String.valueOf(planet.getOnline()))
+                        .replace("%builders%", planet.getWorldPlayers().getBuilders()).replace("%coders%", planet.getWorldPlayers().getDevelopers()).replace("%owner%", planet.getOwner())
+                        .replace("%sharing%", planet.getSharing().getName()).replace("%mode%", planet.getMode().getName()).replace("%description%", planet.getInformation().getDescription()));
+            }
+            case "groups" -> handleGroupsCommand(sender, args);
+            case "register" -> {
+                if (!sender.hasPermission("opencreative.world.register")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                int id;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch (Exception ignored) {
+                    sender.sendMessage(getLocaleMessage("world.not-numeric-id"));
+                    return;
+                }
+                File planetFolder = new File(FileUtils.getPlanetsStorageFolder(), "planet" + id);
+                if (!planetFolder.exists() || !planetFolder.isDirectory()) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", args[1])
+                            .replace("%path%", planetFolder.getPath()));
+                    return;
+                }
+                if (OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]) != null) {
+                    sender.sendMessage(getLocaleMessage("world.already-registered").replace("%id%", args[1]));
+                    return;
+                }
+                Planet newPlanet = new Planet(id);
+                OpenCreative.getPlanetsManager().registerPlanet(newPlanet);
+                sender.sendMessage(getLocaleMessage("world.registered").replace("%id%", args[1]));
+            }
+            case "unregister" -> {
+                if (!sender.hasPermission("opencreative.world.unregister")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String id = args[1];
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", args[1])
+                            .replace("%path%", "/join " + id));
+                    return;
+                }
+                OpenCreative.getPlanetsManager().unregisterPlanet(planet);
+                sender.sendMessage(getLocaleMessage("world.unregistered").replace("%id%", args[1]));
+            }
+            case "updateicons" -> {
+                if (!sender.hasPermission("opencreative.update-icons")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                for (Planet planet : OpenCreative.getPlanetsManager().getPlanets()) {
+                    planet.getInformation().updateIconAsync();
+                }
+                for (Module module : OpenCreative.getModuleManager().getModules()) {
+                    module.getInformation().updateIconAsync();
+                }
+                sender.sendMessage(getLocaleMessage("creative.updated-icons"));
+            }
+            case "updateworld" -> {
+                if (!sender.hasPermission("opencreative.world.update")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String id = args[1];
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", id)
+                            .replace("%path%", "/join " + id));
+                    return;
+                }
+                planet.loadInfo();
+                planet.getInformation().loadInformation();
+                planet.getInformation().updateIconAsync();
+                sender.sendMessage(getLocaleMessage("world.updated-info").replace("%id%", args[1]));
+            }
+            case "setowner" -> {
+                if (!sender.hasPermission("opencreative.world.set-owner")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String id = args[1];
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", args[1])
+                            .replace("%path%", "/join " + id));
+                    return;
+                }
+                String ownerNameOrUUID = args[2];
+                OfflinePlayer newOwner;
+                UUID uuid = getUUIDFromText(ownerNameOrUUID);
+                if (uuid != null) {
+                    newOwner = Bukkit.getOfflinePlayer(uuid);
+                } else {
+                    newOwner = Bukkit.getOfflinePlayer(ownerNameOrUUID);
+                }
+                if (planet.isOwner(newOwner.getName())) {
+                    sender.sendMessage(getPlayerLocaleMessage("world.already-owner", newOwner)
+                            .replace("%id%", id)
+                            .replace("%uuid%", newOwner.getUniqueId().toString()));
+                    Sounds.PLAYER_FAIL.play(sender);
+                } else {
+                    planet.setOwner(newOwner.getName());
                     planet.loadInfo();
                     planet.getInformation().loadInformation();
-                    planet.getInformation().updateIconAsync();
-                    sender.sendMessage(getLocaleMessage("world.updated-info").replace("%id%", args[1]));
+                    sender.sendMessage(getPlayerLocaleMessage("world.set-owner", newOwner)
+                            .replace("%id%", id)
+                            .replace("%uuid%", newOwner.getUniqueId().toString()));
                 }
-                case "setowner" -> {
-                    if (!sender.hasPermission("opencreative.world.set-owner")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 3) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String id = args[1];
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", args[1])
-                                .replace("%path%", "/join " + id));
-                        return;
-                    }
-                    String ownerNameOrUUID = args[2];
-                    OfflinePlayer newOwner;
-                    UUID uuid = getUUIDFromText(ownerNameOrUUID);
-                    if (uuid != null) {
-                        newOwner = Bukkit.getOfflinePlayer(uuid);
-                    } else {
-                        newOwner = Bukkit.getOfflinePlayer(ownerNameOrUUID);
-                    }
-                    if (planet.isOwner(newOwner.getName())) {
-                        sender.sendMessage(getPlayerLocaleMessage("world.already-owner", newOwner)
-                                .replace("%id%", id)
-                                .replace("%uuid%", newOwner.getUniqueId().toString()));
-                        Sounds.PLAYER_FAIL.play(sender);
-                    } else {
-                        planet.setOwner(newOwner.getName());
-                        planet.loadInfo();
-                        planet.getInformation().loadInformation();
-                        sender.sendMessage(getPlayerLocaleMessage("world.set-owner", newOwner)
-                                .replace("%id%", id)
-                                .replace("%uuid%", newOwner.getUniqueId().toString()));
-                    }
+            }
+            case "clearplayer" -> {
+                if (!sender.hasPermission("opencreative.clear-player")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
                 }
-                case "setsize" -> {
-                    if (!sender.hasPermission("opencreative.world.set-size")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 3) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String id = args[1];
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", args[1])
-                                .replace("%path%", "/join " + id));
-                        return;
-                    }
-                    String sizeString = args[2];
-                    int size;
-                    try {
-                        size = Integer.parseInt(sizeString);
-                    } catch (NumberFormatException ignored) {
-                        sender.sendMessage(getLocaleMessage("world.bad-size")
-                                .replace("%size%", sizeString)
-                                .replace("%id%", id));
-                        Sounds.PLAYER_FAIL.play(sender);
-                        return;
-                    }
-                    if (size < 0) {
-                        sender.sendMessage(getLocaleMessage("world.bad-size")
-                                .replace("%size%", sizeString)
-                                .replace("%id%", id));
-                        Sounds.PLAYER_FAIL.play(sender);
-                        return;
-                    }
-                    if (size == 0) {
-                        planet.getTerritory().resetWorldSize();
-                        sender.sendMessage(getLocaleMessage("world.reset-size")
-                                .replace("%size%", sizeString)
-                                .replace("%id%", id));
-                        return;
-                    }
-                    if (planet.getTerritory().getWorldSize() == size) {
-                        sender.sendMessage(getLocaleMessage("world.same-size")
-                                .replace("%size%", sizeString)
-                                .replace("%id%", id));
-                        Sounds.PLAYER_FAIL.play(sender);
-                        return;
-                    }
-                    planet.getTerritory().setWorldSize(size, true);
-                    sender.sendMessage(getLocaleMessage("world.set-size")
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String name = args[1];
+                Player foundPlayer = Bukkit.getPlayer(name);
+                if (foundPlayer == null) {
+                    sender.sendMessage(getLocaleMessage("offline-player"));
+                    return;
+                }
+                Wander wander = OpenCreative.getWander(foundPlayer);
+                wander.setConnectingToPlanet(false);
+            }
+            case "setsize" -> {
+                if (!sender.hasPermission("opencreative.world.set-size")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String id = args[1];
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", args[1])
+                            .replace("%path%", "/join " + id));
+                    return;
+                }
+                String sizeString = args[2];
+                int size;
+                try {
+                    size = Integer.parseInt(sizeString);
+                } catch (NumberFormatException ignored) {
+                    sender.sendMessage(getLocaleMessage("world.bad-size")
                             .replace("%size%", sizeString)
                             .replace("%id%", id));
+                    Sounds.PLAYER_FAIL.play(sender);
+                    return;
                 }
-                case "recommend" -> {
-                    if (!sender.hasPermission("opencreative.world.recommend")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String id = args[1];
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", args[1])
-                                .replace("%path%", "/join " + id));
-                        return;
-                    }
-                    if (OpenCreative.getSettings().addRecommendedWorld(planet.getId())) {
-                        planet.loadInfo();
-                        planet.getInformation().loadInformation();
-                        sender.sendMessage(getLocaleMessage("world.recommended")
-                                .replace("%id%", id));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("world.already-recommended")
-                                .replace("%id%", id));
-                        Sounds.PLAYER_FAIL.play(sender);
-                    }
+                if (size < 0) {
+                    sender.sendMessage(getLocaleMessage("world.bad-size")
+                            .replace("%size%", sizeString)
+                            .replace("%id%", id));
+                    Sounds.PLAYER_FAIL.play(sender);
+                    return;
                 }
-                case "editbook" -> {
-                    if (player == null) {
-                        sender.sendMessage(getLocaleMessage("only-players"));
-                        return;
-                    }
-                    if (!sender.hasPermission("opencreative.locale.editbook")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String path = switch (args[1].toLowerCase()) {
-                        case "lobby", "changelogs", "updates", "changelog" -> "items.lobby.changelogs";
-                        case "coding-book", "codingbook", "devbook", "dev", "coding" -> "items.developer.coding-book";
-                        default -> "";
-                    };
-                    if (path.isEmpty()) {
-                        return;
-                    }
-                    ItemStack currentItem = player.getInventory().getItemInMainHand();
-                    if (currentItem.getItemMeta() instanceof BookMeta book) {
-                        MessageUtils.setMessage(path + ".pages", book.getPages());
-                        player.getInventory().setItemInMainHand(null);
-                    } else {
-                        currentItem = createItem(Material.WRITABLE_BOOK, 1, path);
-                        if (currentItem.getItemMeta() instanceof BookMeta book) {
-                            book.pages(getBookPages(player, path + ".pages"));
-                            currentItem.setItemMeta(book);
-                        }
-                        player.getInventory().setItemInMainHand(currentItem);
-                    }
+                if (size == 0) {
+                    planet.getTerritory().resetWorldSize();
+                    sender.sendMessage(getLocaleMessage("world.reset-size")
+                            .replace("%size%", sizeString)
+                            .replace("%id%", id));
+                    return;
                 }
-                case "ignoremessage" -> {
-                    if (!sender.hasPermission("opencreative.resetlocale.add-ignored")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String path = args[1];
+                if (planet.getTerritory().getWorldSize() == size) {
+                    sender.sendMessage(getLocaleMessage("world.same-size")
+                            .replace("%size%", sizeString)
+                            .replace("%id%", id));
+                    Sounds.PLAYER_FAIL.play(sender);
+                    return;
+                }
+                planet.getTerritory().setWorldSize(size, true);
+                sender.sendMessage(getLocaleMessage("world.set-size")
+                        .replace("%size%", sizeString)
+                        .replace("%id%", id));
+            }
+            case "recommend" -> {
+                if (!sender.hasPermission("opencreative.world.recommend")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String id = args[1];
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", args[1])
+                            .replace("%path%", "/join " + id));
+                    return;
+                }
+                if (OpenCreative.getSettings().addRecommendedWorld(planet.getId())) {
+                    planet.loadInfo();
+                    planet.getInformation().loadInformation();
+                    sender.sendMessage(getLocaleMessage("world.recommended")
+                            .replace("%id%", id));
+                } else {
+                    sender.sendMessage(getLocaleMessage("world.already-recommended")
+                            .replace("%id%", id));
+                    Sounds.PLAYER_FAIL.play(sender);
+                }
+            }
+            case "ignoremessage" -> {
+                if (!sender.hasPermission("opencreative.resetlocale.add-ignored")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String path = args[1];
+                if (!MessageUtils.messageExists(path)) {
+                    sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
+                            .replace("%path%", path));
+                    return;
+                }
+                if (OpenCreative.getSettings().addMessageIgnoringReset(path)) {
+                    sender.sendMessage(getLocaleMessage("creative.locale.ignored-message")
+                            .replace("%path%", path));
+                } else {
+                    sender.sendMessage(getLocaleMessage("creative.locale.already-ignored-message")
+                            .replace("%path%", path));
+                    Sounds.PLAYER_FAIL.play(sender);
+                }
+            }
+            case "unignoremessage" -> {
+                if (!sender.hasPermission("opencreative.resetlocale.remove-ignored")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String path = args[1];
+                if (OpenCreative.getSettings().removeMessageIgnoringReset(path)) {
+                    sender.sendMessage(getLocaleMessage("creative.locale.unignored-message")
+                            .replace("%path%", path));
+                } else {
                     if (!MessageUtils.messageExists(path)) {
                         sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
                                 .replace("%path%", path));
-                        return;
-                    }
-                    if (OpenCreative.getSettings().addMessageIgnoringReset(path)) {
-                        sender.sendMessage(getLocaleMessage("creative.locale.ignored-message")
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.locale.already-unignored-message")
                                 .replace("%path%", path));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("creative.locale.already-ignored-message")
-                                .replace("%path%", path));
-                        Sounds.PLAYER_FAIL.play(sender);
                     }
+                    Sounds.PLAYER_FAIL.play(sender);
                 }
-                case "unignoremessage" -> {
-                    if (!sender.hasPermission("opencreative.resetlocale.remove-ignored")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String path = args[1];
-                    if (OpenCreative.getSettings().removeMessageIgnoringReset(path)) {
-                        sender.sendMessage(getLocaleMessage("creative.locale.unignored-message")
-                                .replace("%path%", path));
-                    } else {
-                        if (!MessageUtils.messageExists(path)) {
-                            sender.sendMessage(getLocaleMessage("creative.locale.unknown-message")
-                                    .replace("%path%", path));
-                        } else {
-                            sender.sendMessage(getLocaleMessage("creative.locale.already-unignored-message")
-                                    .replace("%path%", path));
-                        }
-                        Sounds.PLAYER_FAIL.play(sender);
-                    }
+            }
+            case "setmessage" -> {
+                if (!sender.hasPermission("opencreative.set-message")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
                 }
-                case "setmessage" -> {
-                    if (!sender.hasPermission("opencreative.set-message")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 3) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String path = args[1];
-                    String newContent = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-                    MessageUtils.setMessage(path, newContent);
-                    printMessage(sender, path);
+                if (args.length < 3) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
                 }
-                case "unrecommend" -> {
-                    if (!sender.hasPermission("opencreative.world.unrecommend")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String id = args[1];
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
-                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                String path = args[1];
+                String newContent = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                MessageUtils.setMessage(path, newContent);
+                printMessage(sender, path);
+            }
+            case "unrecommend" -> {
+                if (!sender.hasPermission("opencreative.world.unrecommend")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String id = args[1];
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetById(id);
+                if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(id);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("world.not-found")
+                            .replace("%id%", args[1])
+                            .replace("%path%", "/join " + id));
+                    return;
+                }
+                if (OpenCreative.getSettings().removeRecommendedWorld(planet.getId())) {
+                    planet.loadInfo();
+                    planet.getInformation().loadInformation();
+                    sender.sendMessage(getLocaleMessage("world.unrecommended")
+                            .replace("%id%", id));
+                } else {
+                    sender.sendMessage(getLocaleMessage("world.already-unrecommended")
+                            .replace("%id%", id));
+                    Sounds.PLAYER_FAIL.play(sender);
+                }
+            }
+            case "delete" -> {
+                if (!sender.hasPermission("opencreative.delete")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("no-planet-found"));
+                    return;
+                }
+                if (OpenCreative.getPlanetsManager().deletePlanet(planet)) {
+                    Sounds.WORLD_DELETION.play(sender);
+                    sender.sendMessage(getLocaleMessage("deleting-world.message"));
+                }
+            }
+            case "moderate", "moderation" -> {
+                if (player == null) return;
+                if (!sender.hasPermission("opencreative.moderation.menus")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                Planet planet;
+                if (args.length == 1) {
+                    planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
                     if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("world.not-found")
-                                .replace("%id%", args[1])
-                                .replace("%path%", "/join " + id));
-                        return;
-                    }
-                    if (OpenCreative.getSettings().removeRecommendedWorld(planet.getId())) {
-                        planet.loadInfo();
-                        planet.getInformation().loadInformation();
-                        sender.sendMessage(getLocaleMessage("world.unrecommended")
-                                .replace("%id%", id));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("world.already-unrecommended")
-                                .replace("%id%", id));
-                        Sounds.PLAYER_FAIL.play(sender);
-                    }
-                }
-                case "delete" -> {
-                    if (!sender.hasPermission("opencreative.delete")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1]);
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    if (OpenCreative.getPlanetsManager().deletePlanet(planet)) {
-                        Sounds.WORLD_DELETION.play(sender);
-                        sender.sendMessage(getLocaleMessage("deleting-world.message"));
-                    }
+                } else {
+                    planet = OpenCreative.getPlanetsManager().getPlanetById(args[1]);
+                    if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(args[1]);
                 }
-                case "moderate", "moderation" -> {
-                    if (player == null) return;
-                    if (!sender.hasPermission("opencreative.moderation.menus")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    Planet planet;
-                    if (args.length == 1) {
-                        planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
-                        if (planet == null) {
-                            sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return;
-                        }
-                    } else {
-                        planet = OpenCreative.getPlanetsManager().getPlanetById(args[1]);
-                        if (planet == null) planet = OpenCreative.getPlanetsManager().getPlanetByCustomID(args[1]);
-                    }
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    new WorldModerationMenu(planet).open(player);
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("no-planet-found"));
+                    return;
                 }
-                case "load" -> {
-                    if (!sender.hasPermission("opencreative.world.load")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev", ""));
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    if (!planet.isLoaded()) {
-                        planet.getTerritory().load();
-                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
-                    } else if (args[1].contains("dev") && !planet.getDevPlanet().isLoaded()) {
-                        planet.getDevPlanet().loadDevPlanetWorld();
-                        sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%", args[1]));
-                    }
+                new WorldModerationMenu(planet).open(player);
+            }
+            case "load" -> {
+                if (!sender.hasPermission("opencreative.world.load")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
                 }
-                case "dev" -> {
-                    if (!sender.hasPermission("opencreative.world.dev.visit")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev", ""));
-                    if (planet == null) {
-                        sender.sendMessage(getLocaleMessage("no-planet-found"));
-                        return;
-                    }
-                    if (planet.getDevPlanet().isLoaded()) {
-                        sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%", args[1]));
-                        return;
-                    }
-                    if (!planet.isLoaded()) {
-                        planet.getTerritory().load();
-                    }
-                    planet.connectToDevPlanet(player);
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev", ""));
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("no-planet-found"));
+                    return;
+                }
+                if (!planet.isLoaded()) {
+                    planet.getTerritory().load();
                     sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
+                } else if (args[1].contains("dev") && !planet.getDevPlanet().isLoaded()) {
+                    planet.getDevPlanet().loadDevPlanetWorld();
+                    sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
+                } else {
+                    sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%", args[1]));
                 }
-                case "creative-chat", "chat" -> {
-                    if (!sender.hasPermission("opencreative.creative-chat")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
+            }
+            case "dev" -> {
+                if (!sender.hasPermission("opencreative.world.dev.visit")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorldName("./planets/planet" + args[1].replace("dev", ""));
+                if (planet == null) {
+                    sender.sendMessage(getLocaleMessage("no-planet-found"));
+                    return;
+                }
+                if (planet.getDevPlanet().isLoaded()) {
+                    sender.sendMessage(getLocaleMessage("world.already-loaded").replace("%id%", args[1]));
+                    return;
+                }
+                if (!planet.isLoaded()) {
+                    planet.getTerritory().load();
+                }
+                planet.connectToDevPlanet(player);
+                sender.sendMessage(getLocaleMessage("world.loaded").replace("%id%", args[1]));
+            }
+            case "creative-chat", "chat" -> {
+                if (!sender.hasPermission("opencreative.creative-chat")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if ("disable".equalsIgnoreCase(args[1])) {
+                    OpenCreative.getSettings().setCreativeChatEnabled(false);
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled").replace("%player%", sender.getName()));
                     }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    if ("disable".equalsIgnoreCase(args[1])) {
-                        OpenCreative.getSettings().setCreativeChatEnabled(false);
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.disabled").replace("%player%", sender.getName()));
-                        }
-                    } else if ("enable".equalsIgnoreCase(args[1])) {
-                        OpenCreative.getSettings().setCreativeChatEnabled(true);
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled").replace("%player%", sender.getName()));
-                        }
-                    }
-                    if ("clear".equalsIgnoreCase(args[1])) {
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            onlinePlayer.sendMessage("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n ");
-                            onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%", sender.getName()));
-                        }
+                } else if ("enable".equalsIgnoreCase(args[1])) {
+                    OpenCreative.getSettings().setCreativeChatEnabled(true);
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.enabled").replace("%player%", sender.getName()));
                     }
                 }
-                case "debug" -> {
-                    if (!sender.hasPermission("opencreative.debug")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
-                        OpenCreative.getSettings().setDebug(false);
-                        sender.sendMessage(getLocaleMessage("creative.debug.disabled").replace("%player%", sender.getName()));
-                    } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
-                        OpenCreative.getSettings().setDebug(true);
-                        sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%", sender.getName()));
+                if ("clear".equalsIgnoreCase(args[1])) {
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.sendMessage("\n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n ");
+                        onlinePlayer.sendMessage(getLocaleMessage("creative.creative-chat.cleared").replace("%player%", sender.getName()));
                     }
                 }
-                case "all", "created" -> {
-                    if (!sender.hasPermission("opencreative.list.all")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    int amount = OpenCreative.getPlanetsManager().getPlanets().size();
-                    amount += OpenCreative.getPlanetsManager().getCorruptedPlanets().size();
-                    sender.sendMessage(getLocaleMessage("creative.all-worlds-amount")
-                            .replace("%amount%", String.valueOf(amount)));
+            }
+            case "debug" -> {
+                if (!sender.hasPermission("opencreative.debug")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
                 }
-                case "spy" -> {
-                    if (!sender.hasPermission("opencreative.spy")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
+                    OpenCreative.getSettings().setDebug(false);
+                    sender.sendMessage(getLocaleMessage("creative.debug.disabled").replace("%player%", sender.getName()));
+                } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
+                    OpenCreative.getSettings().setDebug(true);
+                    sender.sendMessage(getLocaleMessage("creative.debug.enabled").replace("%player%", sender.getName()));
+                }
+            }
+            case "all", "created" -> {
+                if (!sender.hasPermission("opencreative.list.all")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                int amount = OpenCreative.getPlanetsManager().getPlanets().size();
+                amount += OpenCreative.getPlanetsManager().getCorruptedPlanets().size();
+                sender.sendMessage(getLocaleMessage("creative.all-worlds-amount")
+                        .replace("%amount%", String.valueOf(amount)));
+            }
+            case "spy" -> {
+                if (!sender.hasPermission("opencreative.spy")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (player == null) {
+                    sender.sendMessage(getLocaleMessage("only-players"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
+                    if (PlayerUtils.disableSpying(player)) {
+                        sender.sendMessage(getLocaleMessage("creative.spy.disabled"));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.spy.already-disabled"));
                     }
+                } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
+                    if (PlayerUtils.enableSpying(player)) {
+                        sender.sendMessage(getLocaleMessage("creative.spy.enabled"));
+                    } else {
+                        sender.sendMessage(getLocaleMessage("creative.spy.already-enabled"));
+                    }
+                }
+            }
+            case "locale", "lang", "language" -> {
+                if (!sender.hasPermission("opencreative.locale")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if (localizationFileExists(args[1])) {
+                    OpenCreative.getPlugin().getConfig().set("messages.locale", args[1]);
+                    OpenCreative.getPlugin().saveConfig();
+                    loadLocalizationFile();
+                    sender.sendMessage(getLocaleMessage("creative.locale.changed"));
+                } else {
+                    sender.sendMessage(getLocaleMessage("creative.locale.not-found"));
+                }
+            }
+            case "sounds", "soundtheme", "soundstheme" -> {
+                if (!sender.hasPermission("opencreative.sounds.theme")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if (OpenCreative.getSettings().setSoundsTheme(args[1])) {
+                    sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%", args[1]));
+                    if (player != null) {
+                        Sounds.LOBBY.play(player);
+                    }
+                } else {
+                    sender.sendMessage(getLocaleMessage("creative.sounds.not-found").replace("%theme%", args[1]));
+                }
+            }
+            case "sound", "playsound" -> {
+                if (!sender.hasPermission("opencreative.sounds.play")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                try {
+                    Sounds sound = Sounds.valueOf(args[1].toUpperCase());
+                    sound.play(sender);
+                } catch (Exception ignored) {
+                }
+            }
+            case "firework", "fireworks" -> {
+                if (!sender.hasPermission("opencreative.fireworks")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                int times = 3;
+                try {
+                    times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
+                } catch (Exception ignored) {
+                }
+                int seconds = 5;
+                if (args.length >= 3) {
+                    try {
+                        seconds = Math.clamp(Integer.parseInt(args[2]), 1, 10);
+                    } catch (Exception ignored) {
+                    }
+                }
+                sender.sendMessage(getLocaleMessage("creative.fireworks")
+                        .replace("%amount%", String.valueOf(times))
+                        .replace("%cooldown%", String.valueOf(seconds)));
+                WorldUtils.summonFireworks(times, seconds * 20);
+            }
+            case "setspawn" -> {
+                if (!sender.hasPermission("opencreative.set-spawn")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length == 1) {
                     if (player == null) {
-                        sender.sendMessage(getLocaleMessage("only-players"));
-                        return;
-                    }
-                    if (args.length < 2) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    if ("disable".equalsIgnoreCase(args[1]) || "off".equalsIgnoreCase(args[1])) {
-                        if (PlayerUtils.disableSpying(player)) {
-                            sender.sendMessage(getLocaleMessage("creative.spy.disabled"));
-                        } else {
-                            sender.sendMessage(getLocaleMessage("creative.spy.already-disabled"));
-                        }
-                    } else if ("enable".equalsIgnoreCase(args[1]) || "on".equalsIgnoreCase(args[1])) {
-                        if (PlayerUtils.enableSpying(player)) {
-                            sender.sendMessage(getLocaleMessage("creative.spy.enabled"));
-                        } else {
-                            sender.sendMessage(getLocaleMessage("creative.spy.already-enabled"));
-                        }
-                    }
-                }
-                case "locale", "lang", "language" -> {
-                    if (!sender.hasPermission("opencreative.locale")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
+                    if (isPlanet(player.getWorld())) {
+                        sender.sendMessage(getLocaleMessage("only-in-lobby"));
                         return;
                     }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
+                    Location location = roundLocation(player.getLocation());
+                    OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
+                    if (!player.getWorld().equals(getLobbyWorld())) {
+                        OpenCreative.getPlugin().getConfig().set("lobby.world", player.getWorld().getName());
                     }
-                    if (localizationFileExists(args[1])) {
-                        OpenCreative.getPlugin().getConfig().set("messages.locale", args[1]);
-                        OpenCreative.getPlugin().saveConfig();
-                        loadLocalizationFile();
-                        sender.sendMessage(getLocaleMessage("creative.locale.changed"));
-                    } else {
-                        sender.sendMessage(getLocaleMessage("creative.locale.not-found"));
-                    }
-                }
-                case "sounds", "soundtheme", "soundstheme" -> {
-                    if (!sender.hasPermission("opencreative.sounds.theme")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    if (OpenCreative.getSettings().setSoundsTheme(args[1])) {
-                        sender.sendMessage(getLocaleMessage("creative.sounds.set").replace("%theme%", args[1]));
-                        if (player != null) {
-                            Sounds.LOBBY.play(player);
-                        }
-                    } else {
-                        sender.sendMessage(getLocaleMessage("creative.sounds.not-found").replace("%theme%", args[1]));
-                    }
-                }
-                case "sound", "playsound" -> {
-                    if (!sender.hasPermission("opencreative.sounds.play")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    try {
-                        Sounds sound = Sounds.valueOf(args[1].toUpperCase());
-                        sound.play(sender);
-                    } catch (Exception ignored) {
-                    }
-                }
-                case "firework", "fireworks" -> {
-                    if (!sender.hasPermission("opencreative.fireworks")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length == 1) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    int times = 3;
-                    try {
-                        times = Math.clamp(Integer.parseInt(args[1]), 1, 10);
-                    } catch (Exception ignored) {
-                    }
-                    int seconds = 5;
-                    if (args.length >= 3) {
-                        try {
-                            seconds = Math.clamp(Integer.parseInt(args[2]), 1, 10);
-                        } catch (Exception ignored) {
-                        }
-                    }
-                    sender.sendMessage(getLocaleMessage("creative.fireworks")
-                            .replace("%amount%", String.valueOf(times))
-                            .replace("%cooldown%", String.valueOf(seconds)));
-                    WorldUtils.summonFireworks(times, seconds * 20);
-                }
-                case "setspawn" -> {
-                    if (!sender.hasPermission("opencreative.set-spawn")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length == 1) {
-                        if (player == null) {
-                            sender.sendMessage(getLocaleMessage("too-few-args"));
-                            return;
-                        }
-                        if (isPlanet(player.getWorld())) {
-                            sender.sendMessage(getLocaleMessage("only-in-lobby"));
-                            return;
-                        }
-                        Location location = roundLocation(player.getLocation());
-                        OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
-                        if (!player.getWorld().equals(getLobbyWorld())) {
-                            OpenCreative.getPlugin().getConfig().set("lobby.world", player.getWorld().getName());
-                        }
-                        sender.sendMessage(getLocaleMessage("creative.set-spawn")
-                                .replace("%x%", String.valueOf(location.getX()))
-                                .replace("%y%", String.valueOf(location.getY()))
-                                .replace("%z%", String.valueOf(location.getZ()))
-                                .replace("%yaw%", String.valueOf(location.getYaw()))
-                                .replace("%pitch%", String.valueOf(location.getPitch())));
-                        OpenCreative.getPlugin().saveConfig();
-                        OpenCreative.getPlugin().reloadConfig();
-                        return;
-                    } else if (args.length < 4) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    // /oc setspawn x y z
-                    Location location = getLobbyLocation();
-                    double x = fromTextToCoordinate(args[1], location.getX());
-                    double y = fromTextToCoordinate(args[2], location.getY());
-                    double z = fromTextToCoordinate(args[3], location.getZ());
-                    float yaw = location.getYaw();
-                    float pitch = location.getPitch();
-                    if (args.length >= 6) {
-                        try {
-                            yaw = (float) fromTextToCoordinate(args[4], location.getYaw());
-                        } catch (NumberFormatException ignored) {
-                        }
-                        try {
-                            pitch = (float) fromTextToCoordinate(args[5], location.getPitch());
-                        } catch (NumberFormatException ignored) {
-                        }
-                    }
-                    location.set(x, y, z);
-                    location.setYaw(yaw);
-                    location.setPitch(pitch);
-                    roundLocation(location);
                     sender.sendMessage(getLocaleMessage("creative.set-spawn")
                             .replace("%x%", String.valueOf(location.getX()))
                             .replace("%y%", String.valueOf(location.getY()))
                             .replace("%z%", String.valueOf(location.getZ()))
                             .replace("%yaw%", String.valueOf(location.getYaw()))
                             .replace("%pitch%", String.valueOf(location.getPitch())));
-                    OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
                     OpenCreative.getPlugin().saveConfig();
                     OpenCreative.getPlugin().reloadConfig();
+                    return;
+                } else if (args.length < 4) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
                 }
-                case "items" -> {
-                    if (player == null) {
-                        sender.sendMessage(getLocaleMessage("only-players"));
-                        return;
+                // /oc setspawn x y z
+                Location location = getLobbyLocation();
+                double x = fromTextToCoordinate(args[1], location.getX());
+                double y = fromTextToCoordinate(args[2], location.getY());
+                double z = fromTextToCoordinate(args[3], location.getZ());
+                float yaw = location.getYaw();
+                float pitch = location.getPitch();
+                if (args.length >= 6) {
+                    try {
+                        yaw = (float) fromTextToCoordinate(args[4], location.getYaw());
+                    } catch (NumberFormatException ignored) {
                     }
-                    if (!sender.hasPermission("opencreative.items.get-kit")
-                            && !sender.hasPermission("opencreative.items.set")
-                            && !sender.hasPermission("opencreative.items.get-slot")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
+                    try {
+                        pitch = (float) fromTextToCoordinate(args[5], location.getPitch());
+                    } catch (NumberFormatException ignored) {
                     }
-                    if (args.length < 3) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    // /oc items set lobby 1
-                    // /oc items get lobby
-                    // /oc items reset lobby
-                    //      0     1   2    3
-                    String groupId = args[2];
-                    ItemsGroup group = ItemsGroup.getById(groupId.toUpperCase().replace("-", "_"));
-                    if (group == null) {
-                        sender.sendMessage(getLocaleMessage("creative.items.wrong-kit")
-                                .replace("%kit%", groupId));
-                        Sounds.PLAYER_FAIL.play(player);
-                        return;
-                    }
-                    if (args[1].equalsIgnoreCase("get")) {
-                        if (args.length == 3) {
-                            // /oc items get lobby
-                            if (!sender.hasPermission("opencreative.items.get-kit")) {
-                                sender.sendMessage(getLocaleMessage("no-perms"));
-                                return;
-                            }
-                            sender.sendMessage(getLocaleMessage("creative.items.received-kit")
-                                    .replace("%kit%", groupId));
-                            player.getInventory().clear();
-                            group.setItems(player);
-                        } else {
-                            // /oc items get lobby slot
-                            if (!sender.hasPermission("opencreative.items.get-slot")) {
-                                sender.sendMessage(getLocaleMessage("no-perms"));
-                                return;
-                            }
-                            int slot = 1;
-                            try {
-                                slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
-                            } catch (Exception ignored) {
-                            }
-                            if (group.giveItem(player, slot)) {
-                                sender.sendMessage(getLocaleMessage("creative.items.received-from-kit")
-                                        .replace("%kit%", groupId)
-                                        .replace("%slot%", String.valueOf(slot)));
-                            } else {
-                                sender.sendMessage(getLocaleMessage("creative.items.empty-slot")
-                                        .replace("%kit%", groupId)
-                                        .replace("%slot%", String.valueOf(slot)));
-                                Sounds.PLAYER_FAIL.play(player);
-                            }
-                        }
-                    }
-                    if (args[1].equalsIgnoreCase("reset")) {
-                        if (!sender.hasPermission("opencreative.items.reset")) {
+                }
+                location.set(x, y, z);
+                location.setYaw(yaw);
+                location.setPitch(pitch);
+                roundLocation(location);
+                sender.sendMessage(getLocaleMessage("creative.set-spawn")
+                        .replace("%x%", String.valueOf(location.getX()))
+                        .replace("%y%", String.valueOf(location.getY()))
+                        .replace("%z%", String.valueOf(location.getZ()))
+                        .replace("%yaw%", String.valueOf(location.getYaw()))
+                        .replace("%pitch%", String.valueOf(location.getPitch())));
+                OpenCreative.getPlugin().getConfig().set("lobby.spawn", fromLocationToMap(location));
+                OpenCreative.getPlugin().saveConfig();
+                OpenCreative.getPlugin().reloadConfig();
+            }
+            case "items" -> {
+                if (player == null) {
+                    sender.sendMessage(getLocaleMessage("only-players"));
+                    return;
+                }
+                if (!sender.hasPermission("opencreative.items.get-kit")
+                        && !sender.hasPermission("opencreative.items.set")
+                        && !sender.hasPermission("opencreative.items.get-slot")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                // /oc items set lobby 1
+                // /oc items get lobby
+                // /oc items reset lobby
+                //      0     1   2    3
+                String groupId = args[2];
+                ItemsGroup group = ItemsGroup.getById(groupId.toUpperCase().replace("-", "_"));
+                if (group == null) {
+                    sender.sendMessage(getLocaleMessage("creative.items.wrong-kit")
+                            .replace("%kit%", groupId));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                if (args[1].equalsIgnoreCase("get")) {
+                    if (args.length == 3) {
+                        // /oc items get lobby
+                        if (!sender.hasPermission("opencreative.items.get-kit")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
                             return;
                         }
-                        OpenCreative.getSettings().resetItemsGroup(group);
-                        sender.sendMessage(getLocaleMessage("creative.items.reset-kit")
+                        sender.sendMessage(getLocaleMessage("creative.items.received-kit")
                                 .replace("%kit%", groupId));
-                    } else if (args[1].equalsIgnoreCase("set")) {
-                        if (!sender.hasPermission("opencreative.items.set")) {
+                        player.getInventory().clear();
+                        group.setItems(player);
+                    } else {
+                        // /oc items get lobby slot
+                        if (!sender.hasPermission("opencreative.items.get-slot")) {
                             sender.sendMessage(getLocaleMessage("no-perms"));
-                            return;
-                        }
-                        if (args.length == 3) {
-                            sender.sendMessage(getLocaleMessage("too-few-args"));
                             return;
                         }
                         int slot = 1;
@@ -887,245 +846,274 @@ public class CreativeCommand extends CommandHandler {
                             slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
                         } catch (Exception ignored) {
                         }
-                        if (args.length == 4) {
-                            sender.sendMessage(getLocaleMessage("creative.items.changed")
+                        if (group.giveItem(player, slot)) {
+                            sender.sendMessage(getLocaleMessage("creative.items.received-from-kit")
                                     .replace("%kit%", groupId)
                                     .replace("%slot%", String.valueOf(slot)));
-                            OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
                         } else {
-                            Items item = Items.getById(args[4]);
-                            if (item == null) {
-                                sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
-                                        .replace("%preset%", args[4]));
-                                Sounds.PLAYER_FAIL.play(player);
-                                return;
-                            }
-                            sender.sendMessage(getLocaleMessage("creative.items.changed")
+                            sender.sendMessage(getLocaleMessage("creative.items.empty-slot")
                                     .replace("%kit%", groupId)
                                     .replace("%slot%", String.valueOf(slot)));
-                            OpenCreative.getSettings().setCustomItem(group, slot, item);
+                            Sounds.PLAYER_FAIL.play(player);
                         }
                     }
                 }
-                case "item" -> {
-                    if (player == null) {
-                        sender.sendMessage(getLocaleMessage("only-players"));
-                        return;
-                    }
-                    if (!sender.hasPermission("opencreative.items.get")) {
+                if (args[1].equalsIgnoreCase("reset")) {
+                    if (!sender.hasPermission("opencreative.items.reset")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
-                    if (args.length == 1) {
+                    OpenCreative.getSettings().resetItemsGroup(group);
+                    sender.sendMessage(getLocaleMessage("creative.items.reset-kit")
+                            .replace("%kit%", groupId));
+                } else if (args[1].equalsIgnoreCase("set")) {
+                    if (!sender.hasPermission("opencreative.items.set")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    if (args.length == 3) {
                         sender.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    String itemId = args[1].toUpperCase().replace("-", "_");
-                    Items item = Items.getById(itemId);
-                    if (item == null) {
-                        sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
-                                .replace("%preset%", args[1]));
-                        Sounds.PLAYER_FAIL.play(player);
-                        return;
+                    int slot = 1;
+                    try {
+                        slot = Math.clamp(Integer.parseInt(args[3]), 1, 36);
+                    } catch (Exception ignored) {
                     }
-                    sender.sendMessage(getLocaleMessage("creative.items.given")
-                            .replace("%item%", itemId.toLowerCase()));
-                    player.getInventory().addItem(item.get(player));
+                    if (args.length == 4) {
+                        sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                .replace("%kit%", groupId)
+                                .replace("%slot%", String.valueOf(slot)));
+                        OpenCreative.getSettings().setCustomItem(group, slot, player.getInventory().getItemInMainHand());
+                    } else {
+                        Items item = Items.getById(args[4]);
+                        if (item == null) {
+                            sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
+                                    .replace("%preset%", args[4]));
+                            Sounds.PLAYER_FAIL.play(player);
+                            return;
+                        }
+                        sender.sendMessage(getLocaleMessage("creative.items.changed")
+                                .replace("%kit%", groupId)
+                                .replace("%slot%", String.valueOf(slot)));
+                        OpenCreative.getSettings().setCustomItem(group, slot, item);
+                    }
                 }
-                case "kick-all" -> {
-                    if (!sender.hasPermission("opencreative.kick-all")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 3) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    String nickname = args[2];
-                    if ("starts".equalsIgnoreCase(args[1])) {
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            if (onlinePlayer.getName().toLowerCase().startsWith(nickname.toLowerCase())) {
-                                if (!onlinePlayer.equals(player)) {
-                                    onlinePlayer.kick();
-                                }
-                            }
-                        }
-                    } else if ("ends".equalsIgnoreCase(args[1])) {
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            if (onlinePlayer.getName().toLowerCase().endsWith(nickname.toLowerCase())) {
-                                if (!onlinePlayer.equals(player)) {
-                                    onlinePlayer.kick();
-                                }
-                            }
-                        }
-                    } else if ("contains".equalsIgnoreCase(args[1])) {
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            if (onlinePlayer.getName().toLowerCase().contains(nickname.toLowerCase())) {
-                                if (!onlinePlayer.equals(player)) {
-                                    onlinePlayer.kick();
-                                }
-                            }
-                        }
-                    } else if ("ignore".equalsIgnoreCase(args[1])) {
-                        List<String> nicknames = new ArrayList<>(List.of(args)).subList(1, args.length);
-                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            boolean ignore = false;
-                            for (String nick : nicknames) {
-                                if (nick.equalsIgnoreCase(onlinePlayer.getName()) || onlinePlayer.getName().equalsIgnoreCase(sender.getName())) {
-                                    ignore = true;
-                                }
-                            }
-                            if (!ignore) {
+            }
+            case "item" -> {
+                if (player == null) {
+                    sender.sendMessage(getLocaleMessage("only-players"));
+                    return;
+                }
+                if (!sender.hasPermission("opencreative.items.get")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length == 1) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String itemId = args[1].toUpperCase().replace("-", "_");
+                Items item = Items.getById(itemId);
+                if (item == null) {
+                    sender.sendMessage(getLocaleMessage("creative.items.wrong-preset")
+                            .replace("%preset%", args[1]));
+                    Sounds.PLAYER_FAIL.play(player);
+                    return;
+                }
+                sender.sendMessage(getLocaleMessage("creative.items.given")
+                        .replace("%item%", itemId.toLowerCase()));
+                player.getInventory().addItem(item.get(player));
+            }
+            case "kick-all" -> {
+                if (!sender.hasPermission("opencreative.kick-all")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                String nickname = args[2];
+                if ("starts".equalsIgnoreCase(args[1])) {
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        if (onlinePlayer.getName().toLowerCase().startsWith(nickname.toLowerCase())) {
+                            if (!onlinePlayer.equals(player)) {
                                 onlinePlayer.kick();
                             }
                         }
                     }
-                }
-                case "maintenance" -> handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0, args.length));
-                case "unload" -> handleUnloadCommand(sender, args);
-                case "update", "updates", "checkupdate" -> handleUpdateCommand(sender);
-                case "list" -> {
-                    if (args.length == 1) {
-                        if (!sender.hasPermission("opencreative.list.loaded")) {
-                            sender.sendMessage(getLocaleMessage("no-perms"));
-                            return;
-                        }
-                        List<World> worlds = Bukkit.getWorlds().stream()
-                                .filter(WorldUtils::isPlanet).toList();
-                        if (worlds.isEmpty()) {
-                            sender.sendMessage(getLocaleMessage("creative.loaded-worlds.no-worlds"));
-                            return;
-                        }
-                        int devCount = 0;
-                        for (World world : worlds) {
-                            Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
-                            if (planet == null) continue;
-                            PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
-                            long now = System.currentTimeMillis();
-                            if (isDevPlanet(world)) {
-                                devCount++;
-                                sender.sendMessage(getLocaleMessage("creative.loaded-worlds.world-dev")
-                                        .replace("%id%", String.valueOf(planet.getId())));
-                            } else {
-                                sender.sendMessage(getLocaleMessage("creative.loaded-worlds.world")
-                                        .replace("%id%", String.valueOf(planet.getId()))
-                                        .replace("%name%", substring(serializer.serialize(planet.getInformation().displayName()), 25))
-                                        .replace("%online%", String.valueOf(planet.getOnline()))
-                                        .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
+                } else if ("ends".equalsIgnoreCase(args[1])) {
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        if (onlinePlayer.getName().toLowerCase().endsWith(nickname.toLowerCase())) {
+                            if (!onlinePlayer.equals(player)) {
+                                onlinePlayer.kick();
                             }
                         }
-                        sender.sendMessage(getLocaleMessage("creative.loaded-worlds.list")
-                                .replace("%amount%", String.valueOf(worlds.size()))
-                                .replace("%build%", String.valueOf(worlds.size() - devCount))
-                                .replace("%dev%", String.valueOf(devCount)));
-                    } else {
-                        if (!sender.hasPermission("opencreative.list.players")) {
-                            sender.sendMessage(getLocaleMessage("no-perms"));
-                            return;
+                    }
+                } else if ("contains".equalsIgnoreCase(args[1])) {
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        if (onlinePlayer.getName().toLowerCase().contains(nickname.toLowerCase())) {
+                            if (!onlinePlayer.equals(player)) {
+                                onlinePlayer.kick();
+                            }
                         }
-                        String nickname = args[1];
-                        Set<Planet> planets = OpenCreative.getPlanetsManager().getPlanetsByOwner(nickname);
-                        if (planets.isEmpty()) {
-                            sender.sendMessage(getLocaleMessage("creative.player-worlds.no-worlds")
-                                    .replace("%player%", nickname));
-                            return;
+                    }
+                } else if ("ignore".equalsIgnoreCase(args[1])) {
+                    List<String> nicknames = new ArrayList<>(List.of(args)).subList(1, args.length);
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        boolean ignore = false;
+                        for (String nick : nicknames) {
+                            if (nick.equalsIgnoreCase(onlinePlayer.getName()) || onlinePlayer.getName().equalsIgnoreCase(sender.getName())) {
+                                ignore = true;
+                            }
                         }
-                        for (Planet planet : planets) {
-                            PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
-                            long now = System.currentTimeMillis();
-                            sender.sendMessage(getLocaleMessage("creative.player-worlds.world")
+                        if (!ignore) {
+                            onlinePlayer.kick();
+                        }
+                    }
+                }
+            }
+            case "maintenance" -> handleMaintenanceCommand(sender, Arrays.copyOfRange(args, 0, args.length));
+            case "unload" -> handleUnloadCommand(sender, args);
+            case "update", "updates", "checkupdate" -> handleUpdateCommand(sender);
+            case "list" -> {
+                if (args.length == 1) {
+                    if (!sender.hasPermission("opencreative.list.loaded")) {
+                        sender.sendMessage(getLocaleMessage("no-perms"));
+                        return;
+                    }
+                    List<World> worlds = Bukkit.getWorlds().stream()
+                            .filter(WorldUtils::isPlanet).toList();
+                    if (worlds.isEmpty()) {
+                        sender.sendMessage(getLocaleMessage("creative.loaded-worlds.no-worlds"));
+                        return;
+                    }
+                    int devCount = 0;
+                    for (World world : worlds) {
+                        Planet planet = OpenCreative.getPlanetsManager().getPlanetByWorld(world);
+                        if (planet == null) continue;
+                        PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
+                        long now = System.currentTimeMillis();
+                        if (isDevPlanet(world)) {
+                            devCount++;
+                            sender.sendMessage(getLocaleMessage("creative.loaded-worlds.world-dev")
+                                    .replace("%id%", String.valueOf(planet.getId())));
+                        } else {
+                            sender.sendMessage(getLocaleMessage("creative.loaded-worlds.world")
                                     .replace("%id%", String.valueOf(planet.getId()))
                                     .replace("%name%", substring(serializer.serialize(planet.getInformation().displayName()), 25))
                                     .replace("%online%", String.valueOf(planet.getOnline()))
                                     .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
                         }
-                        sender.sendMessage(getLocaleMessage("creative.player-worlds.list")
-                                .replace("%player%", nickname)
-                                .replace("%amount%", String.valueOf(planets.size())));
                     }
-                }
-                case "deprecated" -> handleDeprecatedCommand(sender, args);
-                case "corrupted" -> handleCorruptedCommand(sender, args);
-                case "print" -> {
-                    if (!sender.hasPermission("opencreative.print")) {
+                    sender.sendMessage(getLocaleMessage("creative.loaded-worlds.list")
+                            .replace("%amount%", String.valueOf(worlds.size()))
+                            .replace("%build%", String.valueOf(worlds.size() - devCount))
+                            .replace("%dev%", String.valueOf(devCount)));
+                } else {
+                    if (!sender.hasPermission("opencreative.list.players")) {
                         sender.sendMessage(getLocaleMessage("no-perms"));
                         return;
                     }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
+                    String nickname = args[1];
+                    Set<Planet> planets = OpenCreative.getPlanetsManager().getPlanetsByOwner(nickname);
+                    if (planets.isEmpty()) {
+                        sender.sendMessage(getLocaleMessage("creative.player-worlds.no-worlds")
+                                .replace("%player%", nickname));
                         return;
                     }
-                    printMessage(sender, args[1]);
-                }
-                case "minimsg" -> {
-                    if (!sender.hasPermission("opencreative.print.minimessage")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
+                    for (Planet planet : planets) {
+                        PlainTextComponentSerializer serializer = PlainTextComponentSerializer.plainText();
+                        long now = System.currentTimeMillis();
+                        sender.sendMessage(getLocaleMessage("creative.player-worlds.world")
+                                .replace("%id%", String.valueOf(planet.getId()))
+                                .replace("%name%", substring(serializer.serialize(planet.getInformation().displayName()), 25))
+                                .replace("%online%", String.valueOf(planet.getOnline()))
+                                .replace("%creation-time%", getElapsedTime(now, planet.getCreationTime())));
                     }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize(
-                            String.join(" ", Arrays.copyOfRange(args, 1, args.length))));
-                }
-                case "minimsg2" -> {
-                    if (!sender.hasPermission("opencreative.print.minimessage")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage(getLocaleMessage("too-few-args"));
-                        return;
-                    }
-                    if (player == null) {
-                        sender.sendMessage(getLocaleMessage("only-players"));
-                        return;
-                    }
-                    String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                    sender.sendMessage(toComponent(message));
-                    sender.sendActionBar(Component.text("Original: " + message));
-
-                }
-                case "stability" -> {
-                    if (!sender.hasPermission("opencreative.stability")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    sender.sendMessage(getLocaleMessage("creative.stability.actionbar")
-                            .replace("%memory%", OpenCreative.getStability().getMemoryState().getLocalized())
-                            .replace("%storage%", OpenCreative.getStability().getStorageState().getLocalized())
-                            .replace("%tps%", OpenCreative.getStability().getTicksState().getLocalized())
-                            .replace("%database%", OpenCreative.getStability().getDatabaseState().getLocalized())
-                    );
-                }
-                case "experiments" -> handleExperimentsCommand(sender, args);
-                case "uuid", "getuuid" -> {
-                    if (!sender.hasPermission("opencreative.getuuid")) {
-                        sender.sendMessage(getLocaleMessage("no-perms"));
-                        return;
-                    }
-                    String text = sender.getName();
-                    if (args.length >= 2) {
-                        text = args[1];
-                    }
-                    String uuid = Bukkit.getOfflinePlayer(text).getUniqueId().toString();
-                    sender.sendMessage(Component.text(uuid).clickEvent(ClickEvent.suggestCommand(uuid)));
-                }
-                case "template" -> handleTemplateCommand(sender, args);
-                default -> {
-                    sender.sendMessage(getCopyrightMessage());
-                    if (player != null) {
-                        Sounds.OPENCREATIVE.play(player);
-                        new CreativeMenu().open(player);
-                    }
+                    sender.sendMessage(getLocaleMessage("creative.player-worlds.list")
+                            .replace("%player%", nickname)
+                            .replace("%amount%", String.valueOf(planets.size())));
                 }
             }
-        } else {
-            sender.sendMessage(getCopyrightMessage());
-            if (sender instanceof Player player) {
-                Sounds.OPENCREATIVE.play(player);
-                new CreativeMenu().open(player);
+            case "deprecated" -> handleDeprecatedCommand(sender, args);
+            case "corrupted" -> handleCorruptedCommand(sender, args);
+            case "print" -> {
+                if (!sender.hasPermission("opencreative.print")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                printMessage(sender, args[1]);
+            }
+            case "minimsg" -> {
+                if (!sender.hasPermission("opencreative.print.minimessage")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                        String.join(" ", Arrays.copyOfRange(args, 1, args.length))));
+            }
+            case "minimsg2" -> {
+                if (!sender.hasPermission("opencreative.print.minimessage")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(getLocaleMessage("too-few-args"));
+                    return;
+                }
+                if (player == null) {
+                    sender.sendMessage(getLocaleMessage("only-players"));
+                    return;
+                }
+                String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                sender.sendMessage(toComponent(message));
+                sender.sendActionBar(Component.text("Original: " + message));
+
+            }
+            case "stability" -> {
+                if (!sender.hasPermission("opencreative.stability")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                sender.sendMessage(getLocaleMessage("creative.stability.actionbar")
+                        .replace("%memory%", OpenCreative.getStability().getMemoryState().getLocalized())
+                        .replace("%storage%", OpenCreative.getStability().getStorageState().getLocalized())
+                        .replace("%tps%", OpenCreative.getStability().getTicksState().getLocalized())
+                        .replace("%database%", OpenCreative.getStability().getDatabaseState().getLocalized())
+                );
+            }
+            case "experiments" -> handleExperimentsCommand(sender, args);
+            case "uuid", "getuuid" -> {
+                if (!sender.hasPermission("opencreative.getuuid")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                String text = sender.getName();
+                if (args.length >= 2) {
+                    text = args[1];
+                }
+                String uuid = Bukkit.getOfflinePlayer(text).getUniqueId().toString();
+                sender.sendMessage(Component.text(text + "'s UUID: ")
+                        .append(Component.text(uuid).color(NamedTextColor.GREEN))
+                        .clickEvent(ClickEvent.suggestCommand(uuid)));
+            }
+            case "template" -> handleTemplateCommand(sender, args);
+            default -> {
+                sender.sendMessage(getCopyrightMessage());
+                if (player != null) {
+                    Sounds.OPENCREATIVE.play(player);
+                    new CreativeMenu().open(player);
+                }
             }
         }
     }
@@ -1135,6 +1123,8 @@ public class CreativeCommand extends CommandHandler {
                 .replace("%version%", OpenCreative.getVersion())
                 .replace("%codename%", OpenCreative.getCodename()));
     }
+
+    private BukkitRunnable maintenanceRunnable;
 
     public void handleMaintenanceCommand(@NotNull CommandSender sender, String[] args) {
         if (!sender.hasPermission("opencreative.maintenance")) {
@@ -1159,7 +1149,10 @@ public class CreativeCommand extends CommandHandler {
                 onlinePlayer.sendMessage(getLocaleMessage("creative.maintenance.starting-notification").replace("%time%", String.valueOf(seconds)));
             }
             int time = seconds;
-            new BukkitRunnable() {
+            if (maintenanceRunnable != null) {
+                maintenanceRunnable.cancel();
+            }
+            maintenanceRunnable = new BukkitRunnable() {
                 int seconds = time;
 
                 @Override
@@ -1176,12 +1169,18 @@ public class CreativeCommand extends CommandHandler {
                         }
                         seconds--;
                     } else {
+                        maintenanceRunnable = null;
                         OpenCreative.getSettings().setMaintenance(true);
                         cancel();
                     }
                 }
-            }.runTaskTimer(OpenCreative.getPlugin(), 0L, 20L);
+            };
+            maintenanceRunnable.runTaskTimer(OpenCreative.getPlugin(), 0L, 20L);
         } else if ("end".equalsIgnoreCase(args[1])) {
+            if (maintenanceRunnable != null) {
+                maintenanceRunnable.cancel();
+                maintenanceRunnable = null;
+            }
             OpenCreative.getSettings().setMaintenance(false);
         }
     }
@@ -1636,6 +1635,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("unload");
             tabCompleter.add("resetlocale");
             tabCompleter.add("updatelocale");
+            tabCompleter.add("chat");
             tabCompleter.add("creative-chat");
             tabCompleter.add("kick-all");
             tabCompleter.add("list");
@@ -1643,6 +1643,7 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("corrupted");
             tabCompleter.add("sound");
             tabCompleter.add("sounds");
+            tabCompleter.add("item");
             tabCompleter.add("items");
             tabCompleter.add("register");
             tabCompleter.add("unregister");
@@ -1659,6 +1660,15 @@ public class CreativeCommand extends CommandHandler {
             tabCompleter.add("updateicons");
             tabCompleter.add("fireworks");
             tabCompleter.add("groups");
+            tabCompleter.add("setmessage");
+            tabCompleter.add("dev");
+            tabCompleter.add("all");
+            tabCompleter.add("created");
+            tabCompleter.add("fireworks");
+            tabCompleter.add("print");
+            tabCompleter.add("uuid");
+            tabCompleter.add("getuuid");
+            tabCompleter.add("template");
         } else if (args.length == 2) {
             if ("maintenance".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("start");
@@ -1668,7 +1678,7 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("ends");
                 tabCompleter.add("contains");
                 tabCompleter.add("ignore");
-            } else if ("creative-chat".equalsIgnoreCase(args[0])) {
+            } else if ("creative-chat".equalsIgnoreCase(args[0]) || "chat".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
                 tabCompleter.add("clear");
@@ -1676,9 +1686,6 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("get");
                 tabCompleter.add("set");
                 tabCompleter.add("reset");
-            } else if ("editbook".equalsIgnoreCase(args[0])) {
-                tabCompleter.add("changelogs");
-                tabCompleter.add("coding");
             } else if ("debug".equalsIgnoreCase(args[0]) || "spy".equalsIgnoreCase(args[0])) {
                 tabCompleter.add("enable");
                 tabCompleter.add("disable");
@@ -1687,7 +1694,7 @@ public class CreativeCommand extends CommandHandler {
                 tabCompleter.add("edit");
                 tabCompleter.add("info");
             } else if (List.of("load", "unload", "moderate", "moderation",
-                            "updateworld", "unregister", "delete", "setowner", "setsize")
+                            "updateworld", "unregister", "delete", "setowner", "setsize", "dev")
                     .contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(OpenCreative.getPlanetsManager().getPlanets()
                         .stream().map(planet -> String.valueOf(planet.getId()))

@@ -202,7 +202,7 @@ messages:
 
   branding: "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f" # Prefix, that will be used in many messages.
-  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team, onn512, pawsashatoy, LWJENNI, HACKERPRO17\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
 
   cc-prefix: "&6 Creative Chat &8| &7" # Creative Chat is global chat, accessed by ! in the beginning of message, or with /cc.
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders and MiniMessage here
@@ -212,6 +212,7 @@ messages:
   notify-no-players-around: true # Will send notification to player, when he texts in local chat in world without other players
   cancel-chat-on-confirmation: false # If true, will hide player's message, when he searches world by input; changes
                                      #  world's or module's name, description; enters nickname or id for transferring ownership.
+  handle-world-chat: true # If true, plugin will handle player messages like chat-managers, you may need turn off if installed one of them.
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: false # Will send not found message in console
@@ -298,6 +299,18 @@ item-fixer:
   persistent-data-max-size: 2048 # Maximum size of persistent data container
   entities-max-amount: 3 # Maximum amount of entities, that blocks (beehives) can hold.
   clear-command-blocks-data: true # Removes commands inside command block items
+
+world-fixer:
+  #
+  # We want to prevent players from hurting
+  # server with some bad scenarios. These scenarios
+  # will lead to changing world's behavior.
+  #
+  vehicle-collisions:
+    enabled: true # If true, will destroy minecarts with too many collisions.
+    max-collisions: 100 # Maximum amount of collisions in the last 0.5 seconds.
+  bad-entities-in-air:
+    enabled: true # If true, will destroy armor stands, vehicles and projectiles, when they're flying next to each other.
 
 commands:
   #

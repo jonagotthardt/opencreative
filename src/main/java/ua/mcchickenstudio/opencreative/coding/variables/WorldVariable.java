@@ -154,4 +154,9 @@ public final class WorldVariable {
         }
         return size;
     }
+
+    @Override
+    public String toString() {
+        return name + " - " + varType.name() + ": " + valueType.name() + " " + value;
+    }
 }

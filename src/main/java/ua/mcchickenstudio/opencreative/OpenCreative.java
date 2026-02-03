@@ -51,6 +51,7 @@ import ua.mcchickenstudio.opencreative.managers.economy.*;
 import ua.mcchickenstudio.opencreative.managers.hints.*;
 import ua.mcchickenstudio.opencreative.managers.modules.*;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.*;
 import ua.mcchickenstudio.opencreative.managers.stability.*;
 import ua.mcchickenstudio.opencreative.managers.updater.*;
@@ -173,7 +174,9 @@ public final class OpenCreative extends JavaPlugin {
 
         long loadedTime = System.currentTimeMillis() - startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            teleportToLobby(player);
+            if (WorldUtils.isPlanet(player.getWorld())) {
+                teleportToLobby(player);
+            }
             getServer().sendActionBar(
                     MiniMessage.miniMessage().deserialize(
                             "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
@@ -211,7 +214,9 @@ public final class OpenCreative extends JavaPlugin {
                         MiniMessage.miniMessage().deserialize(
                                 " \n<white> Shutting down Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white>, please wait...\n "
                         ));
-                teleportToLobby(player);
+                if (WorldUtils.isPlanet(player.getWorld())) {
+                    teleportToLobby(player);
+                }
             }
             FileUtils.unloadPlanets();
         } catch (Exception error) {

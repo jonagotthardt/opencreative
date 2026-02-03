@@ -42,7 +42,7 @@ public final class LaunchCyclesAction extends ControlAction {
         for (String name : list) {
             boolean found = false;
             for (Cycle cycle : getPlanet().getTerritory().getScript().getExecutors().getCyclesList()) {
-                if (cycle.getName().equalsIgnoreCase(name)) {
+                if (cycle.getCallName().equalsIgnoreCase(name)) {
                     found = true;
                     cycle.run(getEvent());
                 }

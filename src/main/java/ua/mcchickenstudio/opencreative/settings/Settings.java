@@ -68,6 +68,7 @@ public final class Settings {
     private final CodingSettings codingSettings;
     private final EconomySettings economySettings;
     private final ItemFixerSettings itemFixerSettings;
+    private final WorldFixerSettings worldFixerSettings;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
     private final Set<String> messagesIgnoringReset = new HashSet<>();
@@ -81,6 +82,7 @@ public final class Settings {
     private boolean consoleWarnings = true;
     private boolean notifyNoPlayersAround = true;
     private boolean cancelChatOnConfirmation = false;
+    private boolean handleWorldChat = true;
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -92,6 +94,7 @@ public final class Settings {
         codingSettings = new CodingSettings();
         economySettings = new EconomySettings();
         itemFixerSettings = new ItemFixerSettings();
+        worldFixerSettings = new WorldFixerSettings();
     }
 
     /**
@@ -117,6 +120,7 @@ public final class Settings {
         consoleNotFoundMessage = config.getBoolean("messages.not-found", false);
         consoleWarnings = config.getBoolean("messages.warnings", true);
         cancelChatOnConfirmation = config.getBoolean("messages.cancel-chat-on-confirmation", false);
+        handleWorldChat = config.getBoolean("messages.handle-world-chat", true);
 
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
         notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
@@ -124,6 +128,7 @@ public final class Settings {
         lobbySettings.load();
         requirements.load();
         itemFixerSettings.load();
+        worldFixerSettings.load();
         economySettings.load();
         groups.load();
         commands.load();
@@ -606,6 +611,15 @@ public final class Settings {
     }
 
     /**
+     * Returns settings of world fixer.
+     *
+     * @return world fixer settings.
+     */
+    public @NotNull WorldFixerSettings getWorldFixerSettings() {
+        return worldFixerSettings;
+    }
+
+    /**
      * Returns settings of coding mode.
      *
      * @return coding settings.
@@ -685,6 +699,16 @@ public final class Settings {
      */
     public boolean shouldCancelChatOnConfirmation() {
         return cancelChatOnConfirmation;
+    }
+
+    /**
+     * Checks whether world chat and messages starting with ! will be
+     * handled by OpenCreative+.
+     *
+     * @return true - will be handled, false - ignored, other plugins will be responsible.
+     */
+    public boolean shouldHandleWorldChat() {
+        return handleWorldChat;
     }
 
     /**

@@ -455,7 +455,9 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
-                    list.add((ItemStack) itemArg.getValue(action));
+                    if (itemArg.getValue(action) instanceof ItemStack item) {
+                        list.add(item);
+                    }
                 }
             } catch (ClassCastException e) {
                 return list;

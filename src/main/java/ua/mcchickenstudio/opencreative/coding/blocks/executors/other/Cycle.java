@@ -24,7 +24,6 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugExecutor;
@@ -36,12 +35,15 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugEx
  */
 public final class Cycle extends NameableExecutor {
 
-    private final int repeatTime;
+    private int repeatTime;
     private boolean enabled = false;
     private BukkitRunnable runnable = null;
 
-    public Cycle(Planet planet, int x, int y, int z, @NotNull String name, int repeatTime) {
-        super(planet, x, y, z, name);
+    public Cycle() {
+        super("cycle", ExecutorCategory.CYCLE);
+    }
+
+    public void setRepeatTime(int repeatTime) {
         this.repeatTime = repeatTime;
     }
 
@@ -75,12 +77,18 @@ public final class Cycle extends NameableExecutor {
     }
 
     @Override
-    public @NotNull ExecutorType getExecutorType() {
-        return ExecutorType.CYCLE;
+    public @NotNull String getName() {
+        return "Cycle";
     }
 
     @Override
-    public @NotNull ExecutorCategory getExecutorCategory() {
-        return ExecutorCategory.CYCLE;
+    public @NotNull String getExtensionId() {
+        return "default";
     }
+
+    @Override
+    public @NotNull String getDescription() {
+        return "Repeats executing actions with specified period";
+    }
+
 }

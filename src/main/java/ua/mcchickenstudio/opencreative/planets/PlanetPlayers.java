@@ -403,8 +403,10 @@ public class PlanetPlayers {
     public void kickPlayer(Player player) {
         Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet.equals(playerPlanet) && !player.hasPermission("opencreative.world.kick.bypass")) {
+            removePassengers(player);
             teleportToLobby(player);
-            player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%", player.getName()));
+            player.sendMessage(getLocaleMessage("world.players.kick.player")
+                    .replace("%player%", player.getName()));
             Sounds.WORLD_KICKED.play(player);
         }
     }

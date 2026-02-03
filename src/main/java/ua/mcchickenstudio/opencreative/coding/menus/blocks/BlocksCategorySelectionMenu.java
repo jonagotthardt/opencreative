@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.menus.BlockMenu;
 
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
@@ -49,7 +49,7 @@ public final class BlocksCategorySelectionMenu extends MenusCategorySelectionMen
                                        @NotNull ExecutorCategory category) {
         super(player, category.getItem(),
                 category.getStainedPane(),
-                ExecutorType.getMenusCategories(category),
+                Executors.getInstance().getCategories(category),
                 ChatColor.stripColor(getLocaleMessage("blocks." + category.name().toLowerCase())),
                 "events", category);
         this.location = location;
