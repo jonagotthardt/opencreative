@@ -81,6 +81,7 @@ public final class Settings {
     private boolean consoleWarnings = true;
     private boolean notifyNoPlayersAround = true;
     private boolean cancelChatOnConfirmation = false;
+    private boolean handleWorldChat = true;
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -117,6 +118,7 @@ public final class Settings {
         consoleNotFoundMessage = config.getBoolean("messages.not-found", false);
         consoleWarnings = config.getBoolean("messages.warnings", true);
         cancelChatOnConfirmation = config.getBoolean("messages.cancel-chat-on-confirmation", false);
+        handleWorldChat = config.getBoolean("messages.handle-world-chat", true);
 
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
         notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
@@ -685,6 +687,10 @@ public final class Settings {
      */
     public boolean shouldCancelChatOnConfirmation() {
         return cancelChatOnConfirmation;
+    }
+
+    public boolean shouldHandleWorldChat() {
+        return handleWorldChat;
     }
 
     /**

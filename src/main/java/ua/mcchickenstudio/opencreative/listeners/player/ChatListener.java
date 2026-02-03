@@ -143,17 +143,20 @@ public final class ChatListener implements Listener {
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
         try {
             Player player = event.getPlayer();
-            if (message.startsWith("!")) {
-                if (event.isCancelled()) return;
-                String creativeChatCommand;
-                if (message.equals("!")) {
-                    creativeChatCommand = "cc";
-                } else {
-                    creativeChatCommand = "cc " + message.replaceFirst("!", "");
+            boolean shouldHandleWorldChat = OpenCreative.getSettings().shouldHandleWorldChat();
+            if (shouldHandleWorldChat) {
+                if (message.startsWith("!")) {
+                    if (event.isCancelled()) return;
+                    String creativeChatCommand;
+                    if (message.equals("!")) {
+                        creativeChatCommand = "cc";
+                    } else {
+                        creativeChatCommand = "cc " + message.replaceFirst("!", "");
+                    }
+                    Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> player.performCommand(creativeChatCommand));
+                    event.setCancelled(true);
+                    return;
                 }
-                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> player.performCommand(creativeChatCommand));
-                event.setCancelled(true);
-                return;
             }
             checkDevItems(player, message, event);
             checkConfirmation(player, message, event);
@@ -173,54 +176,56 @@ public final class ChatListener implements Listener {
 
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             WorldChatEvent creativeEvent = new WorldChatEvent(player, message, formatted, player.getWorld(), planet);
-            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
-                creativeEvent.callEvent();
-                if (creativeEvent.isCancelled()) return;
-                Component finalMessage = creativeEvent.getFormattedMessage();
-                if (planet != null) {
-                    DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
-                    if (devPlanet != null) {
-                        // If player in dev world
-                        for (Player p : devPlanet.getWorld().getPlayers()) {
-                            p.sendMessage(finalMessage);
-                        }
-                        for (Player p : planet.getTerritory().getWorld().getPlayers()) {
-                            if (planet.getWorldPlayers().canDevelop(p)) {
+            if (shouldHandleWorldChat) {
+                Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                    creativeEvent.callEvent();
+                    if (creativeEvent.isCancelled()) return;
+                    Component finalMessage = creativeEvent.getFormattedMessage();
+                    if (planet != null) {
+                        DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
+                        if (devPlanet != null) {
+                            // If player in dev world
+                            for (Player p : devPlanet.getWorld().getPlayers()) {
                                 p.sendMessage(finalMessage);
                             }
+                            for (Player p : planet.getTerritory().getWorld().getPlayers()) {
+                                if (planet.getWorldPlayers().canDevelop(p)) {
+                                    p.sendMessage(finalMessage);
+                                }
+                            }
+                            sendLocalChatForSpying(player, message, planet);
+                            OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] " + player.getName() + ": " + message);
+                        } else {
+                            // If player in build world
+                            ChatEvent chatEvent = new ChatEvent(event.getPlayer(), message);
+                            chatEvent.callEvent();
+                            if (chatEvent.isCancelled()) {
+                                event.setCancelled(true);
+                                return;
+                            }
+                            if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode() && OpenCreative.getSettings().shouldNotifyAboutNoPlayersAround()) {
+                                player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
+                                        .clickEvent(ClickEvent.suggestCommand("!" + message)));
+                            }
+                            for (Player p : planet.getPlayers()) {
+                                p.sendMessage(finalMessage);
+                            }
+                            sendLocalChatForSpying(player, message, planet);
+                            OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
                         }
-                        sendLocalChatForSpying(player, message, planet);
-                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "dev] " + player.getName() + ": " + message);
                     } else {
-                        // If player in build world
-                        ChatEvent chatEvent = new ChatEvent(event.getPlayer(), message);
-                        chatEvent.callEvent();
-                        if (chatEvent.isCancelled()) {
-                            event.setCancelled(true);
-                            return;
-                        }
-                        if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode() && OpenCreative.getSettings().shouldNotifyAboutNoPlayersAround()) {
+                        if (player.getWorld().getPlayers().size() == 1 && OpenCreative.getSettings().shouldNotifyAboutNoPlayersAround()) {
                             player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
                                     .clickEvent(ClickEvent.suggestCommand("!" + message)));
                         }
-                        for (Player p : planet.getPlayers()) {
+                        for (Player p : player.getWorld().getPlayers()) {
                             p.sendMessage(finalMessage);
                         }
                         sendLocalChatForSpying(player, message, planet);
-                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
+                        OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + player.getWorld().getName() + "] " + player.getName() + ": " + message);
                     }
-                } else {
-                    if (player.getWorld().getPlayers().size() == 1 && OpenCreative.getSettings().shouldNotifyAboutNoPlayersAround()) {
-                        player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
-                                .clickEvent(ClickEvent.suggestCommand("!" + message)));
-                    }
-                    for (Player p : player.getWorld().getPlayers()) {
-                        p.sendMessage(finalMessage);
-                    }
-                    sendLocalChatForSpying(player, message, planet);
-                    OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + player.getWorld().getName() + "] " + player.getName() + ": " + message);
-                }
-            }, 1L);
+                }, 1L);
+            }
         } catch (Exception error) {
             event.setCancelled(true);
             sendPlayerErrorMessage(event.getPlayer(), "Can't handle chat message: " + message, error);
