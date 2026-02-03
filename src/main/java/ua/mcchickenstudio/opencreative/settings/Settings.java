@@ -68,6 +68,7 @@ public final class Settings {
     private final CodingSettings codingSettings;
     private final EconomySettings economySettings;
     private final ItemFixerSettings itemFixerSettings;
+    private final WorldFixerSettings worldFixerSettings;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
     private final Set<String> messagesIgnoringReset = new HashSet<>();
@@ -93,6 +94,7 @@ public final class Settings {
         codingSettings = new CodingSettings();
         economySettings = new EconomySettings();
         itemFixerSettings = new ItemFixerSettings();
+        worldFixerSettings = new WorldFixerSettings();
     }
 
     /**
@@ -126,6 +128,7 @@ public final class Settings {
         lobbySettings.load();
         requirements.load();
         itemFixerSettings.load();
+        worldFixerSettings.load();
         economySettings.load();
         groups.load();
         commands.load();
@@ -605,6 +608,15 @@ public final class Settings {
      */
     public @NotNull ItemFixerSettings getItemFixerSettings() {
         return itemFixerSettings;
+    }
+
+    /**
+     * Returns settings of world fixer.
+     *
+     * @return world fixer settings.
+     */
+    public @NotNull WorldFixerSettings getWorldFixerSettings() {
+        return worldFixerSettings;
     }
 
     /**

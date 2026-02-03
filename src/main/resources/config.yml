@@ -300,6 +300,18 @@ item-fixer:
   entities-max-amount: 3 # Maximum amount of entities, that blocks (beehives) can hold.
   clear-command-blocks-data: true # Removes commands inside command block items
 
+world-fixer:
+  #
+  # We want to prevent players from hurting
+  # server with some bad scenarios. These scenarios
+  # will lead to changing world's behavior.
+  #
+  vehicle-collisions:
+    enabled: true # If true, will destroy minecarts with too many collisions.
+    max-collisions: 100 # Maximum amount of collisions in the last 0.5 seconds.
+  bad-entities-in-air:
+    enabled: true # If true, will destroy armor stands, vehicles and projectiles, when they're flying next to each other.
+
 commands:
   #
   # These commands will be executed on
