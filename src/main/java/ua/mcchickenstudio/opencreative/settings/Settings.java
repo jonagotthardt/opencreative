@@ -689,6 +689,12 @@ public final class Settings {
         return cancelChatOnConfirmation;
     }
 
+    /**
+     * Checks whether world chat and messages starting with ! will be
+     * handled by OpenCreative+.
+     *
+     * @return true - will be handled, false - ignored, other plugins will be responsible.
+     */
     public boolean shouldHandleWorldChat() {
         return handleWorldChat;
     }
