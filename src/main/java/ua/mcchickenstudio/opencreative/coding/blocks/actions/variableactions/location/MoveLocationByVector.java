@@ -25,6 +25,7 @@ public class MoveLocationByVector extends VariableAction {
         if (vec.length() != 0) {
             vec.normalize().multiply(len);
         }
+
         setVarValue(link, loc.add(vec));
     }
 
