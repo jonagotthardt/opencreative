@@ -38,14 +38,14 @@ import java.util.Map;
 public final class CreativeListener implements Listener {
 
     @EventHandler
-    public void onEvent(PlayerLobbyEvent event) {
+    public void onLobbyTeleport(PlayerLobbyEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("%player%", event.getPlayer().getName());
         OpenCreative.getSettings().getCommands().execute(event.getPlayer(), "onLobby", placeholders);
     }
 
     @EventHandler
-    public void onEvent(CreativeChatEvent event) {
+    public void onCreativeChat(CreativeChatEvent event) {
         if (!(event.getSender() instanceof Player player)) return;
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("%player%", event.getSender().getName());
@@ -55,7 +55,7 @@ public final class CreativeListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(WorldChatEvent event) {
+    public void onWorldChat(WorldChatEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("%player%", event.getPlayer().getName());
         placeholders.put("%world%", event.getPlayer().getWorld().getName());
@@ -65,7 +65,7 @@ public final class CreativeListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(PlanetConnectPlayerEvent event) {
+    public void onPlanetConnect(PlanetConnectPlayerEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("%player%", event.getPlayer().getName());
         placeholders.put("%planet%", event.getPlanet().getId());
@@ -73,7 +73,7 @@ public final class CreativeListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(PlanetDisconnectPlayerEvent event) {
+    public void onPlanetDisconnect(PlanetDisconnectPlayerEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("%player%", event.getPlayer().getName());
         placeholders.put("%planet%", event.getPlanet().getId());
@@ -81,7 +81,7 @@ public final class CreativeListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(PlanetCreationEvent event) {
+    public void onPlanetCreation(PlanetCreationEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         placeholders.put("%planet%", event.getPlanet().getId());
         placeholders.put("%player%", event.getPlayer().getName());
@@ -93,7 +93,7 @@ public final class CreativeListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(MaintenanceStartEvent event) {
+    public void onMaintenanceStart(MaintenanceStartEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         if (event.getSender() instanceof Player player) {
             placeholders.put("%player%", player.getName());
@@ -107,7 +107,7 @@ public final class CreativeListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(MaintenanceEndEvent event) {
+    public void onMaintenanceEnd(MaintenanceEndEvent event) {
         Map<String, Object> placeholders = new HashMap<>();
         if (event.getSender() instanceof Player player) {
             placeholders.put("%player%", player.getName());
