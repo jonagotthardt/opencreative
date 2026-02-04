@@ -535,7 +535,7 @@ public final class FileUtils {
                     planet.getTerritory().unload();
                 } else if (planet.getDevPlanet().isLoaded()) {
                     OpenCreative.getPlugin().getLogger().info("Unloading planet dev " + planet.getId() + "...");
-                    planet.getDevPlanet().unload();
+                    planet.getDevPlanet().unload(false);
                 }
             }
             OpenCreative.getPlanetsManager().getPlanets().clear();

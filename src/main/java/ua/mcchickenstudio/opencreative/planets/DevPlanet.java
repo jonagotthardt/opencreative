@@ -178,8 +178,10 @@ public class DevPlanet {
     /**
      * Unloads developer's world and teleports
      * all players in it to lobby.
+     *
+     * @param asyncSave true - will save world later, false - immediately.
      */
-    public void unload() {
+    public void unload(boolean asyncSave) {
         if (!isLoaded()) return;
 
         long startTime = System.currentTimeMillis();
@@ -188,7 +190,20 @@ public class DevPlanet {
             teleportToLobby(player);
         }
 
-        Bukkit.unloadWorld(getWorldName(), true);
+        World world = getWorld();
+        if (world != null) {
+            if (asyncSave) {
+                for (Chunk chunk : world.getLoadedChunks()) {
+                    chunk.unload(true);
+                }
+                getWorld().save();
+                Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                    Bukkit.unloadWorld(getWorldName(), false);
+                }, 40);
+            } else {
+                Bukkit.unloadWorld(getWorldName(), true);
+            }
+        }
 
         long endTime = System.currentTimeMillis();
         OpenCreative.getPlugin().getLogger().info("Dev planet world " + planet.getId() + " unloaded in " + (endTime - startTime) + " ms");

@@ -212,7 +212,7 @@ public class Planet {
      *
      * @return sharing mode.
      */
-    public Sharing getSharing() {
+    public @NotNull Sharing getSharing() {
         return sharing;
     }
 
@@ -224,7 +224,7 @@ public class Planet {
      *
      * @param sharing sharing mode.
      */
-    public void setSharing(Sharing sharing) {
+    public void setSharing(@NotNull Sharing sharing) {
         if (this.sharing == sharing) return;
         this.sharing = sharing;
         setPlanetConfigParameter(this, "sharing", sharing.name());
@@ -702,6 +702,10 @@ public class Planet {
         Wander wander = OpenCreative.getWander(player);
         if (wander.isConnectingToPlanet()) {
             player.sendMessage(getLocaleMessage("world.connecting.busy"));
+            return;
+        }
+        if (territory.isBusy()) {
+            player.sendMessage(getLocaleMessage("world.connecting.unloading"));
             return;
         }
         new QuitEvent(player).callEvent();

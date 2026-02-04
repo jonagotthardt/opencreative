@@ -538,6 +538,7 @@ world:
     subtitle: "&fPlease wait..."
     owner-help: "%prefix%Welcome back to &6your world&f! Use the compass to manage your world, or use the command &6/world&f."
     busy: "%prefix%&cYou're already connecting to the world, please wait..."
+    unloading: "%prefix%&cThis world is being unloaded, please try again later... :("
   play-mode:
     name: "&3Play"
     message:

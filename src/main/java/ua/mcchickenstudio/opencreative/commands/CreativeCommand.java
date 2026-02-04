@@ -1376,7 +1376,7 @@ public class CreativeCommand extends CommandHandler {
                 if (planet.isLoaded()) {
                     planet.getTerritory().unload();
                 } else if (planet.getDevPlanet().isLoaded()) {
-                    planet.getDevPlanet().unload();
+                    planet.getDevPlanet().unload(false);
                 }
             }
             OpenCreative.getPlugin().getLogger().info("All worlds were unloaded by " + sender.getName());
@@ -1391,7 +1391,7 @@ public class CreativeCommand extends CommandHandler {
             planet.getTerritory().unload();
             sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%", args[1]));
         } else if (args[1].contains("dev") && planet.getDevPlanet().isLoaded()) {
-            planet.getDevPlanet().unload();
+            planet.getDevPlanet().unload(false);
             sender.sendMessage(getLocaleMessage("world.unloaded").replace("%id%", args[1]));
         } else {
             sender.sendMessage(getLocaleMessage("world.already-unloaded").replace("%id%", args[1]));

@@ -32,7 +32,6 @@ import ua.mcchickenstudio.opencreative.coding.CodeScript;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
-import ua.mcchickenstudio.opencreative.indev.blocks.CodingScript;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -70,6 +69,7 @@ public class PlanetTerritory {
     private World.Environment environment;
     private String biome;
     private boolean autoSave = true;
+    private boolean busy = false;
 
     public PlanetTerritory(@NotNull Planet planet) {
         this.planet = planet;
@@ -120,8 +120,7 @@ public class PlanetTerritory {
         if (config.getString("environment") != null) {
             try {
                 environment = World.Environment.valueOf(config.getString("environment"));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         worldSize = config.getInt("size", OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize());
         autoSave = config.getBoolean("autosave", true);
@@ -208,7 +207,7 @@ public class PlanetTerritory {
         long startTime = System.currentTimeMillis();
         if (!planet.isLoaded()) {
             if (planet.getDevPlanet().isLoaded()) {
-                planet.getDevPlanet().unload();
+                planet.getDevPlanet().unload(asyncSaveData);
                 long endTime = System.currentTimeMillis();
                 OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded only dev in " + (endTime - startTime) + " ms");
             }
@@ -234,9 +233,24 @@ public class PlanetTerritory {
         for (Player player : planet.getPlayers()) {
             teleportToLobby(player);
         }
-        Bukkit.unloadWorld(planet.getWorldName(), autoSave);
+        if (world != null) {
+            if (asyncSaveData) {
+                for (Chunk chunk : world.getLoadedChunks()) {
+                    chunk.unload(autoSave);
+                }
+                world.save();
+                busy = true;
+                Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                    Bukkit.unloadWorld(planet.getWorldName(), false);
+                    busy = false;
+                }, 60);
+            } else {
+                Bukkit.unloadWorld(planet.getWorldName(), autoSave);
+            }
+        }
+
         if (planet.getDevPlanet().isLoaded()) {
-            planet.getDevPlanet().unload();
+            planet.getDevPlanet().unload(asyncSaveData);
         }
         new PlanetUnloadEvent(planet).callEvent();
 
@@ -501,8 +515,23 @@ public class PlanetTerritory {
         FileUtils.setPlanetConfigParameter(planet, "spawn", configLocation);
     }
 
+    /**
+     * Checks whether world should save territory changes.
+     *
+     * @return true - will be saved, false - not.
+     */
     public boolean isAutoSave() {
         return autoSave;
+    }
+
+    /**
+     * Checks whether world is busy for deleting or unloading,
+     * so players shouldn't be able to join it.
+     *
+     * @return true - is busy, false - not.
+     */
+    public boolean isBusy() {
+        return busy;
     }
 
     /**

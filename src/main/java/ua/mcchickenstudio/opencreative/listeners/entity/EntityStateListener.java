@@ -21,8 +21,10 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -50,7 +52,24 @@ import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isOpenCreativeWorld;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
+
 public final class EntityStateListener implements Listener {
+
+    @EventHandler
+    public void onEntityTeleport(EntityTeleportEvent event) {
+        /*
+         * Fixes teleporting parrot from other world.
+         */
+        if (event.getEntity().getType() != EntityType.PARROT) return;
+        Location to = event.getTo();
+        if (to == null) return;
+        World from = event.getFrom().getWorld();
+        if (isOpenCreativeWorld(from) && isOpenCreativeWorld(to.getWorld())) {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
