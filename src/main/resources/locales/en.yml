@@ -11059,6 +11059,33 @@ items:
           map:
             name: "&eDictionary"
     conditions:
+      if-world-entity-exists:
+        name: "&dEntity exists"
+        lore:
+          - "&7Checks whether a mob exists"
+          - "&7with the specified name or UUID."
+          - " "
+          - "&fIn the chest:"
+          - "&6 Texts &7- Mob name or UUID"
+          - "&3 Parameter &7- All or any of them"
+          - " "
+          - "&eClick to set the condition."
+        arguments:
+          all:
+            name: "&3Execute for all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all mobs exist, or when"
+              - "&7any of them exists."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Any"
+              true: "Require all"
       if-world-is-player-in:
         name: "&6Player is in world"
         lore:
@@ -12986,6 +13013,16 @@ items:
             choices:
               false: "Consider item durability"
               true: "Ignore item durability"
+      if-player-is-inventory-own:
+        name: "&3If clicked own inventory"
+        lore:
+          - "&7Checks whether player"
+          - "&7clicked an item in own inventory."
+          - ""
+          - "&7Works with: &6Item Click"
+          - "&7and &eItem Drag&7."
+          - " "
+          - "&eClick to set the condition."
       if-player-item-equals:
         name: "&6Item equals"
         lore:
@@ -18569,6 +18606,7 @@ blocks:
   if_player_name_equals: "Name equals"
   if_player_message_equals: "Message equals"
   if_player_is_near_location: "Near location"
+  if_player_is_inventory_own: "Own Inventory"
   if_player_item_equals: "Item equals"
   if_player_inventory_full: "Inventory full"
   if_player_inventory_name_equals: "Inventory name equals"
@@ -18645,6 +18683,7 @@ blocks:
   if_world_block_is_preferred_tool: "Preferred Tool"
   if_world_block_is_valid_tool: "Tool Mineable"
   if_world_is_player_in: "Player Online"
+  if_world_entity_exists: "Entity Exists"
 
   if_entity_name_equals: "Name equals"
   if_entity_is_player: "Is Player"

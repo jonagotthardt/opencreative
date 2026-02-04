@@ -11245,6 +11245,33 @@ items:
             choices:
               false: "При любом"
               true: "Требовать все"
+      if-world-entity-exists:
+        name: "&dСущность существует"
+        lore:
+          - "&7Проверит существует ли моб"
+          - "&7с указанным именем или UUID."
+          - " "
+          - "&fВ сундуке:"
+          - "&6 Тексты &7- Имя или UUID моба"
+          - "&3 Параметр &7- Все или один из них"
+          - " "
+          - "&eНажми, чтобы установить условие."
+        arguments:
+          all:
+            name: "&3Выполнять при всех или любом"
+            lore:
+              - "&7Выполнять условие только когда"
+              - "&7все мобы существуют, или при"
+              - "&7существовании любого из них."
+              - ""
+              - "&eНажми, чтобы изменить."
+              - ""
+              - "&fВарианты:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "При любом"
+              true: "Требовать все"
       if-world-is-player-in:
         name: "&6Игрок находится в мире"
         lore:
@@ -13168,6 +13195,16 @@ items:
             choices:
               false: "Учитывать прочность"
               true: "Игнорировать прочность"
+      if-player-is-inventory-own:
+        name: "&3Если кликнул свой инвентарь"
+        lore:
+          - "&7Проверяет кликнул ли игрок"
+          - "&7предмет в своём инвентаре."
+          - ""
+          - "&7Работает с: &6Кликнул по предмету"
+          - "&7и &eПеретащил предмет&7."
+          - " "
+          - "&eНажми, чтобы установить условие."
       if-player-item-equals:
         name: "&6Предмет равен"
         lore:
@@ -18829,6 +18866,7 @@ blocks:
   if_player_name_equals: "Никнейм равен"
   if_player_message_equals: "Сообщен. равен"
   if_player_is_near_location: "Возле локации"
+  if_player_is_inventory_own: "Свой инвентарь"
   if_player_item_equals: "Предмет равен"
   if_player_inventory_full: "Заполнен инвент."
   if_player_inventory_name_equals: "Назв. инвентаря"
@@ -18886,6 +18924,7 @@ blocks:
   if_var_location_in_area: "В регионе"
 
   if_world_is_player_in: "Игрок в мире"
+  if_world_entity_exists: "Моб существует"
   if_world_cycle_is_running: "Цикл работает"
   if_world_is_in_debug_mode: "Режим отладки"
   if_world_is_public: "Публичный вход"
