@@ -58,6 +58,7 @@ public class SpawnCommand extends CommandHandler {
                 return;
             }
             new QuitEvent(player).callEvent();
+            removePassengers(player);
             teleportToLobby(player);
             return;
         }

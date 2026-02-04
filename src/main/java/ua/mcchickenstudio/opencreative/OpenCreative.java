@@ -51,6 +51,7 @@ import ua.mcchickenstudio.opencreative.managers.economy.*;
 import ua.mcchickenstudio.opencreative.managers.hints.*;
 import ua.mcchickenstudio.opencreative.managers.modules.*;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.*;
 import ua.mcchickenstudio.opencreative.managers.stability.*;
@@ -71,6 +72,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.parseException;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
@@ -176,6 +178,13 @@ public final class OpenCreative extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (WorldUtils.isPlanet(player.getWorld())) {
                 teleportToLobby(player);
+            } else if (isEntityInLobby(player)) {
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
+                Sounds.LOBBY.play(player);
+                player.clearTitle();
+                player.sendMessage(
+                        MiniMessage.miniMessage().deserialize("\n <white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + " <white>is loaded <green>:) \n ")
+                );
             }
             getServer().sendActionBar(
                     MiniMessage.miniMessage().deserialize(

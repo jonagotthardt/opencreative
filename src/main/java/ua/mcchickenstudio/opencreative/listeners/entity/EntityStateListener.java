@@ -21,12 +21,7 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +30,6 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
@@ -52,24 +46,7 @@ import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 
 import java.util.List;
 
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isOpenCreativeWorld;
-import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
-
 public final class EntityStateListener implements Listener {
-
-    @EventHandler
-    public void onEntityTeleport(EntityTeleportEvent event) {
-        /*
-         * Fixes teleporting parrot from other world.
-         */
-        if (event.getEntity().getType() != EntityType.PARROT) return;
-        Location to = event.getTo();
-        if (to == null) return;
-        World from = event.getFrom().getWorld();
-        if (isOpenCreativeWorld(from) && isOpenCreativeWorld(to.getWorld())) {
-            event.setCancelled(true);
-        }
-    }
 
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
@@ -127,9 +104,9 @@ public final class EntityStateListener implements Listener {
                     }
                 } else {
                     first.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
-                            firstCollisions+1));
+                            firstCollisions + 1));
                     second.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
-                            secondCollisions+1));
+                            secondCollisions + 1));
                 }
             } else {
                 first.setMetadata("oc_vehicle_last_collision", new FixedMetadataValue(OpenCreative.getPlugin(),

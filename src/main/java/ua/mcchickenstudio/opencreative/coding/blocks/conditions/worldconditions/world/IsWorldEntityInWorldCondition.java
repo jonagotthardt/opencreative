@@ -39,6 +39,7 @@ public final class IsWorldEntityInWorldCondition extends WorldCondition {
     public boolean check() {
         List<String> entities = getArguments().getTextList("entities", this);
         boolean allElements = getArguments().getBoolean("all", true, this);
+        boolean exists = false;
         for (String requiredEntity : entities) {
             Entity entity = getEntityByNameOrUUID(requiredEntity);
             if (entity == null) {
@@ -47,9 +48,11 @@ public final class IsWorldEntityInWorldCondition extends WorldCondition {
                 }
             } else if (!allElements) {
                 return true;
+            } else {
+                exists = true;
             }
         }
-        return false;
+        return exists;
     }
 
     @Override
