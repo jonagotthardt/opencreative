@@ -151,12 +151,28 @@ public abstract class Action implements CodingBlock {
     protected Set<Entity> getEntitiesByNameOrUUID(String text) {
         Set<Entity> entities = new HashSet<>();
         if (getWorld() == null) return entities;
-        for (Entity entity : executor.getPlanet().getTerritory().getWorld().getEntities()) {
+        for (Entity entity : getWorld().getEntities()) {
             if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().toString().equalsIgnoreCase(text)) {
                 entities.add(entity);
             }
         }
         return entities;
+    }
+
+    /**
+     * Returns an entity whose name or UUID is equal to specified text.
+     *
+     * @param text Text to compare world's entities names and UUIDs.
+     * @return Entity, or null.
+     */
+    protected @Nullable Entity getEntityByNameOrUUID(String text) {
+        if (getWorld() == null) return null;
+        for (Entity entity : getWorld().getEntities()) {
+            if (entity.getName().equalsIgnoreCase(text) || entity.getUniqueId().toString().equalsIgnoreCase(text)) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     protected Set<Player> getPlayersByNameOrUUID(String text) {

@@ -178,6 +178,14 @@ public class DevPlanet {
     /**
      * Unloads developer's world and teleports
      * all players in it to lobby.
+     */
+    public void unload() {
+        unload(OpenCreative.getPlugin().isEnabled());
+    }
+
+    /**
+     * Unloads developer's world and teleports
+     * all players in it to lobby.
      *
      * @param asyncSave true - will save world later, false - immediately.
      */

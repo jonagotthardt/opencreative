@@ -11052,6 +11052,33 @@ items:
           - " "
           - "&eНатисни, щоб встановити дію."
     conditions:
+      if-world-is-entity-in:
+        name: "&dСутність існує"
+        lore:
+          - "&7Перевіряє, чи існує моб"
+          - "&7із вказаним імʼям або UUID."
+          - " "
+          - "&fУ скрині:"
+          - "&6 Тексти &7- Імʼя або UUID моба"
+          - "&3 Параметр &7- Усі або будь-який з них"
+          - " "
+          - "&eНатисни, щоб встановити умову."
+        arguments:
+          all:
+            name: "&3Виконувати для всіх або будь-якого"
+            lore:
+              - "&7Виконувати умову лише коли"
+              - "&7усі моби існують, або при"
+              - "&7існуванні будь-якого з них."
+              - ""
+              - "&eНатисни, щоб змінити."
+              - ""
+              - "&fВаріанти:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Будь-який"
+              true: "Вимагати всі"
       if-world-is-player-in:
         name: "&6Гравець знаходиться у світі"
         lore:
@@ -13004,6 +13031,16 @@ items:
             choices:
               false: "Враховувати міцність"
               true: "Ігнорувати міцність"
+      if-player-is-inventory-own:
+        name: "&3Якщо клікнув власний інвентар"
+        lore:
+          - "&7Перевіряє, чи гравець"
+          - "&7клікнув предмет у своєму інвентарі."
+          - ""
+          - "&7Працює з: &6Клік по предмету"
+          - "&7та &eПеретягування предмета&7."
+          - " "
+          - "&eНатисни, щоб встановити умову."
       if-player-item-equals:
         name: "&6Предмет дорівнює"
         lore:
@@ -18615,6 +18652,7 @@ blocks:
   if_player_name_equals: "Нікнейм дорівнює"
   if_player_message_equals: "Повідомл. дорівнює"
   if_player_is_near_location: "Біля локації"
+  if_player_is_inventory_own: "Свій інвентар"
   if_player_item_equals: "Предмет дорівнює"
   if_player_inventory_full: "Заповнений інвент."
   if_player_inventory_name_equals: "Назва інвентаря"
@@ -18679,6 +18717,7 @@ blocks:
   if_world_is_clear_weather: "Погода чиста"
   if_world_block_type_equals: "Тип блока"
   if_world_is_player_in: "Гравець у світі"
+  if_world_entity_exists: "Моб існує"
   if_world_block_is_empty: "Блок порожній"
   if_world_block_is_powered: "Блок заживлений"
   if_world_block_is_solid: "Блок твердий"

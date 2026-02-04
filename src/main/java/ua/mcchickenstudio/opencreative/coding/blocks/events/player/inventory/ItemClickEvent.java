@@ -23,12 +23,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.ItemEvent;
 import ua.mcchickenstudio.opencreative.coding.blocks.events.WorldEvent;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.ClickedInventoryEvent;
 
-public final class ItemClickEvent extends WorldEvent implements Cancellable, ItemEvent {
+public final class ItemClickEvent extends WorldEvent implements Cancellable, ItemEvent, ClickedInventoryEvent {
 
     private final InventoryClickEvent event;
     private final ItemStack item;
@@ -44,6 +47,11 @@ public final class ItemClickEvent extends WorldEvent implements Cancellable, Ite
         this.cursor = event.getCursor();
         this.click = event.getClick();
         this.slot = event.getSlot();
+    }
+
+    @Override
+    public @Nullable Inventory getClickedInventory() {
+        return event.getClickedInventory();
     }
 
     @Override
