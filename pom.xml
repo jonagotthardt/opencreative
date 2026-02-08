@@ -7,7 +7,7 @@
 
     <groupId>mcchickenstudio</groupId>
     <artifactId>opencreative</artifactId>
-    <version>6.0.0-build-${CI_PIPELINE_IID}</version>
+    <version>6.0.0</version>
     <!-- For Beta versions: semver-build-${CI_PIPELINE_IID} -->
     <packaging>jar</packaging>
     <name>opencreative</name>
@@ -120,12 +120,12 @@
         <repository>
             <id>gitlab-maven</id>
             <!--suppress UnresolvedMavenProperty -->
-            <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
+            <url>${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/maven</url>
         </repository>
         <snapshotRepository>
             <id>gitlab-maven</id>
             <!--suppress UnresolvedMavenProperty -->
-            <url>https://gitlab.com/api/v4/projects/${PROJECT_ID}/packages/maven</url>
+            <url>${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/maven</url>
         </snapshotRepository>
     </distributionManagement>
 

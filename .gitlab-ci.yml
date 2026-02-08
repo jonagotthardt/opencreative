@@ -19,6 +19,7 @@ stages:
 deploy_job:
   stage: deploy
   script:
+    - mvn versions:set -DnewVersion=6.0.0-build-${CI_PIPELINE_IID}
     - mvn deploy -s settings.xml
   only:
     refs:
