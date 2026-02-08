@@ -9067,7 +9067,7 @@ items:
           - "&7Allows shifting locations in"
           - "&7different directions using a vector."
           - " "
-          - "&fIn the GUI:"
+          - "&fIn the chest:"
           - "&e Variable &7- To save to"
           - "&f Location &7- To shift"
           - "&b Vector &7- Vector"
@@ -14857,6 +14857,30 @@ menus:
             - "&f Examples:"
             - "&a  20&7, &a19 &7- Server is stable"
             - "&a  &7Below &a19 &7- Server is lagging"
+            - ""
+            - "&eClick to set."
+        world_targets_count:
+          name: "&eSelection Size"
+          lore:
+            - "&7Type: &aNumber"
+            - ""
+            - "&7 Returns the size of the selection"
+            - ""
+            - "&eClick to set."
+        world_targets_name:
+          name: "&3Name in Selection"
+          lore:
+            - "&7Type: &eList"
+            - ""
+            - "&7 Returns a list of names from the selection"
+            - ""
+            - "&eClick to set."
+        world_targets_uuid:
+          name: "&3UUID in Selection"
+          lore:
+            - "&7Type: &eList"
+            - ""
+            - "&7 Returns a list of UUIDs from the selection"
             - ""
             - "&eClick to set."
         world-size:
