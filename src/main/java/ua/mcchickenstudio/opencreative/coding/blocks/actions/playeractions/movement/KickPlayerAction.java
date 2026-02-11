@@ -27,6 +27,8 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.playeractions.Playe
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
+
 public final class KickPlayerAction extends PlayerAction {
     public KickPlayerAction(Executor executor, Target target, int x, Arguments args) {
         super(executor, target, x, args);
@@ -38,6 +40,8 @@ public final class KickPlayerAction extends PlayerAction {
         if (planet == null) return;
         if (!planet.isOwner(player)) {
             planet.getWorldPlayers().kickPlayer(player);
+        } else {
+            player.sendMessage(getPlayerLocaleMessage("world.players.kick.owner", player));
         }
     }
 

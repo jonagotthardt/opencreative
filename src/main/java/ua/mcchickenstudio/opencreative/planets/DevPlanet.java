@@ -242,14 +242,7 @@ public class DevPlanet {
      * @return true - exists, false - not created yet.
      */
     public boolean exists() {
-        boolean exists = false;
-        for (File folder : getWorldsFolders()) {
-            if (folder.getName().equalsIgnoreCase("planet" + planet.getId() + "dev")) {
-                exists = true;
-                break;
-            }
-        }
-        return exists;
+        return getDevPlanetFolder(this).exists() && getDevPlanetFolder(this).isDirectory();
     }
 
     /**

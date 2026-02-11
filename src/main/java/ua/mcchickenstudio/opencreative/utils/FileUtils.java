@@ -312,7 +312,7 @@ public final class FileUtils {
      * Returns development planet's folder. It contains world's map.
      **/
     public static File getDevPlanetFolder(DevPlanet devPlanet) {
-        return new File(devPlanet.getWorldName() + File.separator);
+        return new File(getDevPlanetFolderPath(devPlanet));
     }
 
     /**
@@ -842,6 +842,16 @@ public final class FileUtils {
      */
     public static String getPlanetFolderPath(Planet planet) {
         return getPlanetsStorageFolder().getPath() + File.separator + "planet" + planet.getId() + File.separator;
+    }
+
+    /**
+     * Returns file path of dev planet's world folder.
+     *
+     * @param devPlanet planet to get folder.
+     * @return dev planet's folder path.
+     */
+    public static String getDevPlanetFolderPath(DevPlanet devPlanet) {
+        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + devPlanet.getPlanet().getId() + "dev" + File.separator;
     }
 
     /**
