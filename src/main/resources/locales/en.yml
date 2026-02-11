@@ -687,10 +687,13 @@ world:
     not-found: "%prefix%&cCan't find registered coding platforms generator with ID: %id%."
   script-size-limit: "Code won't be started, because script file is too big (%amount%/%limit% MB). Please try to reduce code amount or coding items in containers (/dev)."
   downloader:
+    archive: "Archive of world %id%"
+    build-folder: "Map world of %id%"
+    dev-folder: "Coding world of %id%"
     unavailable: "%prefix%&cWorld downloading is currently disabled.. :("
     size-limit: "%prefix%&cThe world is too large, we cannot deliver its files to you.. :("
     uploading: "%prefix%&fSaving the world into an archive, please wait..."
-    uploaded: "%prefix%&fYou &6can download the world&f by following the link:\n&6&n%site%&r\n \n&fThe link will be available only for a few minutes!"
+    uploaded: "%prefix%&fYou &6can download the world&f by following the link:\n&6 &n%link%&r\n \n&fThe link will be available only for a few minutes!"
     failed: "%prefix%&cFailed to save the world into an archive, please try again later.. :("
     timeout: "%prefix%&cThe world download time has expired, the link is no longer working."
 creative-chat:

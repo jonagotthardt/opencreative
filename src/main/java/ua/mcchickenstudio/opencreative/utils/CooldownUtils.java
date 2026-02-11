@@ -40,6 +40,7 @@ public final class CooldownUtils {
     private static final HashMap<UUID, Long> worldChatCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> modulesManipulationsCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> blocksDuplicationCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> worldDownloadCooldown = new HashMap<>();
 
     /**
      * Returns cooldown timestamp for player, or 0 - if they don't have cooldown.
@@ -162,6 +163,7 @@ public final class CooldownUtils {
         worldChatCooldown.remove(player.getUniqueId());
         modulesManipulationsCooldown.remove(player.getUniqueId());
         blocksDuplicationCooldown.remove(player.getUniqueId());
+        worldDownloadCooldown.remove(player.getUniqueId());
     }
 
     private static HashMap<UUID, Long> getCooldownMap(@NotNull CooldownType type) {
@@ -172,6 +174,7 @@ public final class CooldownUtils {
             case WORLD_CHAT -> worldChatCooldown;
             case MODULE_MANIPULATION -> modulesManipulationsCooldown;
             case BLOCKS_DUPLICATION -> blocksDuplicationCooldown;
+            case WORLD_DOWNLOAD -> worldDownloadCooldown;
         };
     }
 
@@ -183,6 +186,7 @@ public final class CooldownUtils {
             case WORLD_CHAT -> group.getChatCooldown();
             case MODULE_MANIPULATION -> group.getModuleManipulationCooldown();
             case BLOCKS_DUPLICATION -> group.getBlocksDuplicationCooldown();
+            case WORLD_DOWNLOAD -> group.getWorldDownloadCooldown();
         };
     }
 
@@ -213,6 +217,10 @@ public final class CooldownUtils {
         /**
          * Cooldown of duplicating coding blocks with manipulator.
          */
-        BLOCKS_DUPLICATION
+        BLOCKS_DUPLICATION,
+        /**
+         * Cooldown of downloading world with /world download.
+         */
+        WORLD_DOWNLOAD
     }
 }

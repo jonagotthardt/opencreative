@@ -49,6 +49,7 @@ public class Group {
     private final int advertisementCooldown;
     private final int modulesUsageCooldown;
     private final int blocksDuplicationCooldown;
+    private final int worldDownloadCooldown;
 
     private final double likeReward;
     private final double advertisementPrice;
@@ -91,6 +92,7 @@ public class Group {
         creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat", 5);
         modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage", 7);
         blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage", 7);
+        worldDownloadCooldown  = config.getInt(path + "cooldowns.world-download", 120);
         chatCooldown = config.getInt(path + "cooldowns.world-chat", 2);
 
         /*
@@ -184,6 +186,16 @@ public class Group {
      */
     public int getGenericCommandCooldown() {
         return genericCommandCooldown;
+    }
+
+    /**
+     * Returns how much time needs to pass to download world
+     * with /world download.
+     *
+     * @return cooldown of world downloading.
+     */
+    public int getWorldDownloadCooldown() {
+        return worldDownloadCooldown;
     }
 
     /**

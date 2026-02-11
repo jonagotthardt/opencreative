@@ -18,9 +18,13 @@
 
 package ua.mcchickenstudio.opencreative.settings;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+
+import java.net.InetAddress;
 
 /**
  * <h1>WebSettings</h1>
@@ -28,8 +32,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
  */
 public final class WebSettings {
 
-    private String displayLink = "localhost:8080";
-    private int port = 8080;
+    private String displayLink = "";
+    private int port = 22912;
 
     /**
      * Loads settings of web from configuration.
@@ -41,8 +45,8 @@ public final class WebSettings {
             section = config.createSection("web");
         }
 
-        displayLink = section.getString("display-link", "localhost:8080");
-        port = section.getInt("port", 8080);
+        displayLink = section.getString("display-link", "");
+        port = section.getInt("port", 22912);
     }
 
     /**
@@ -51,9 +55,20 @@ public final class WebSettings {
      * <p>
      * Example: yourserver.net
      *
-     * @return display link
+     * @return display link.
      */
-    public String getDisplayLink() {
+    public @NotNull String getDisplayLink() {
+        if (displayLink.isEmpty()) {
+            String ip = Bukkit.getServer().getIp();
+            if (ip.isEmpty()) {
+                try {
+                    return InetAddress.getLocalHost().getHostAddress() + ":" + port;
+                } catch (Exception ignored) {
+                    return "localhost:" + port;
+                }
+            }
+            return ip + ":" + port;
+        }
         return displayLink;
     }
 
@@ -61,7 +76,7 @@ public final class WebSettings {
      * Returns a port, that will be used
      * for opening a site.
      *
-     * @return port
+     * @return port.
      */
     public int getPort() {
         return port;

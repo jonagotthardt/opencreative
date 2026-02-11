@@ -128,6 +128,9 @@ public enum Sounds {
     WORLD_TELEPORT_TO_ENTITY("entity.illusioner.mirror_move", 0.8f),
     WORLD_TELEPORT_ENTITY_TO_ME("entity.illusioner.cast_spell", 0.8f),
 
+    WORLD_DOWNLOADER_UPLOADING("block.trial_spawner.about_to_spawn_item", 0.6f),
+    WORLD_DOWNLOADER_UPLOADED("block.vault.open_shutter", 0.1f),
+
     DEV_CONNECTED("block.beacon.activate", 2),
     DEV_NOT_ALLOWED("block.amethyst_block.break", 1.2f),
     DEV_OPEN_CHEST("block.ender_chest.open", 0.6f),

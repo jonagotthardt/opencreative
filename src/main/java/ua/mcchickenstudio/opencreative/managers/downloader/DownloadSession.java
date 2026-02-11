@@ -20,6 +20,7 @@ package ua.mcchickenstudio.opencreative.managers.downloader;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.io.File;
 import java.security.SecureRandom;
@@ -32,6 +33,7 @@ import java.util.Base64;
 public final class DownloadSession {
 
     private final int planetID;
+    private final String player;
     private final String secretToken;
     private final long creationTime;
     private File archive;
@@ -42,10 +44,11 @@ public final class DownloadSession {
      *
      * @param planetID id of planet, that was requested to create an archive.
      */
-    public DownloadSession(int planetID) {
+    public DownloadSession(int planetID, @NotNull String playerName) {
         this.creationTime = System.currentTimeMillis();
         this.planetID = planetID;
-        byte[] key = new byte[32];
+        this.player = playerName;
+        byte[] key = new byte[10];
         new SecureRandom().nextBytes(key);
         this.secretToken = Base64.getUrlEncoder().withoutPadding().encodeToString(key);
     }
@@ -57,7 +60,16 @@ public final class DownloadSession {
      * @return true - should be removed, false - not yet.
      */
     public boolean isExpired() {
-        return System.currentTimeMillis() - creationTime > 30_000;
+        return System.currentTimeMillis() - creationTime > OpenCreative.getSettings().getDownloaderSettings().getMaxStoringTime() * 1000L;
+    }
+
+    /**
+     * Returns player name, who wants to download a world.
+     *
+     * @return name of player.
+     */
+    public @NotNull String getPlayer() {
+        return player;
     }
 
     /**

@@ -47,6 +47,7 @@ import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.*;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.disguises.DisguiseManager;
+import ua.mcchickenstudio.opencreative.managers.downloader.*;
 import ua.mcchickenstudio.opencreative.managers.economy.*;
 import ua.mcchickenstudio.opencreative.managers.hints.*;
 import ua.mcchickenstudio.opencreative.managers.modules.*;
@@ -97,6 +98,7 @@ public final class OpenCreative extends JavaPlugin {
     private DisguiseManager disguiser;
     private BlocksManager blocks;
     private HintManager hints;
+    private DownloadManager downloader;
     private DevPlatformer devPlatformer;
     private CodingPrompter prompter;
 
@@ -155,6 +157,7 @@ public final class OpenCreative extends JavaPlugin {
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
         if (prompter == null) prompter = new DisabledCodingPrompter();
         if (watchdog == null) watchdog = new DisabledWatchdog();
+        if (downloader == null) downloader = new DisabledDownloader();
         if (economy == null) economy = new DisabledEconomy();
 
         PlayerUtils.loadPermissions();
@@ -162,6 +165,7 @@ public final class OpenCreative extends JavaPlugin {
         PhysService.run();
         FileUtils.loadModules();
         watchdog.init();
+        downloader.init();
 
         updater = new HangarUpdater();
         updater.init();
@@ -228,6 +232,7 @@ public final class OpenCreative extends JavaPlugin {
                 }
             }
             FileUtils.unloadPlanets();
+            downloader.shutdown();
         } catch (Exception error) {
             OpenCreative.getPlugin().getLogger().severe("Failed to unload OpenCreative+ :(" + parseException(error, false));
         }
@@ -496,6 +501,31 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static DevPlatformer getDevPlatformer() {
         return getPlugin().devPlatformer;
+    }
+
+    /**
+     * Sets custom download manager.
+     *
+     * @param downloadManager download manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setDownloadManager(@NotNull DownloadManager downloadManager) {
+        if (!(downloadManager instanceof DisabledDownloader || downloadManager instanceof Downloader)) {
+            getPlugin().getLogger().info("Now using download manager: " + downloadManager.getName());
+        }
+        getPlugin().downloader = downloadManager;
+    }
+
+    /**
+     * Gets download manager, that
+     * uploads world acrhive and allows
+     * players to download it.
+     *
+     * @return download manager.
+     */
+    @SuppressWarnings("unused")
+    public static DownloadManager getDownloadManager() {
+        return getPlugin().downloader;
     }
 
     /**
