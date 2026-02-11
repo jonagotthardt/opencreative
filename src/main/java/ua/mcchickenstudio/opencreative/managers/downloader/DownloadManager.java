@@ -38,16 +38,17 @@ public interface DownloadManager extends Manager {
      * then generates unique token and returns link to download world.
      * @param planet planet, that was requested to download.
      * @param player player, who requested.
-     * @return string of link, or null.
+     * @return string of link.
      */
     @NotNull CompletableFuture<String> uploadPlanet(@NotNull Planet planet, @NotNull Player player);
 
     /**
      * Compresses planet folders to one archive.
      * @param planet planet to compress folders.
+     * @param session download session.
      * @return compressed archive.
      */
-    @NotNull File compressPlanetToArchive(@NotNull Planet planet);
+    @NotNull File compressPlanetToArchive(@NotNull Planet planet, @NotNull DownloadSession session);
 
     /**
      * Removes saved archives of planet, because it was unloaded.
@@ -59,5 +60,10 @@ public interface DownloadManager extends Manager {
      * Clears all archives from temporary folder.
      */
     void clearAllArchives();
+
+    /**
+     * Shutdowns web world downloader server.
+     */
+    void shutdown();
 
 }

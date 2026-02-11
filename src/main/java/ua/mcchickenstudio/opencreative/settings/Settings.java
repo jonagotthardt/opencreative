@@ -63,12 +63,14 @@ public final class Settings {
 
     private final Groups groups;
     private final Commands commands;
+    private final WebSettings webSettings;
     private final Requirements requirements;
     private final LobbySettings lobbySettings;
     private final CodingSettings codingSettings;
     private final EconomySettings economySettings;
     private final ItemFixerSettings itemFixerSettings;
     private final WorldFixerSettings worldFixerSettings;
+    private final DownloaderSettings downloaderSettings;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
     private final Set<String> messagesIgnoringReset = new HashSet<>();
@@ -90,11 +92,13 @@ public final class Settings {
         groups = new Groups();
         commands = new Commands();
         requirements = new Requirements();
+        webSettings = new WebSettings();
         lobbySettings = new LobbySettings();
         codingSettings = new CodingSettings();
         economySettings = new EconomySettings();
         itemFixerSettings = new ItemFixerSettings();
         worldFixerSettings = new WorldFixerSettings();
+        downloaderSettings = new DownloaderSettings();
     }
 
     /**
@@ -130,6 +134,8 @@ public final class Settings {
         itemFixerSettings.load();
         worldFixerSettings.load();
         economySettings.load();
+        webSettings.load();
+        downloaderSettings.load();
         groups.load();
         commands.load();
 
@@ -644,6 +650,24 @@ public final class Settings {
      */
     public @NotNull LobbySettings getLobbySettings() {
         return lobbySettings;
+    }
+
+    /**
+     * Returns settings of web services.
+     *
+     * @return web settings.
+     */
+    public @NotNull WebSettings getWebSettings() {
+        return webSettings;
+    }
+
+    /**
+     * Returns settings of world downloader.
+     *
+     * @return world downloader settings.
+     */
+    public @NotNull DownloaderSettings getDownloaderSettings() {
+        return downloaderSettings;
     }
 
     /**

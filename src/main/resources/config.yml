@@ -371,6 +371,7 @@ groups:
       world-chat: 2 # chat in the world
       module-usage: 7 # creating, pasting modules
       duplication-usage: 7 # duplicating blocks with manipulator
+      world-download: 120 # downloading world with /world download
     creating-world:
       limit: 2
     creating-module:
@@ -447,6 +448,7 @@ groups:
       world-chat: 1
       module-usage: 7
       duplication-usage: 7
+      world-download: 120
     creating-world:
       limit: 4
     creating-module:
@@ -710,6 +712,32 @@ items:
     32: "launch-function-action"
     36: "arrow-not"
 
+web:
+  #
+  # Web services can provide additional features,
+  # like API for getting worlds and players info,
+  # or downloading a world archive.
+  #
+  port: 22912
+  display-link: "" # URL, that will be displayed in messages to player.
+                   # Example: "yourserver.com"
+                   # If empty, will be numeric IP of server and ":port" in the ending.
+  downloader:
+    #
+    # Downloader allows player to download archive
+    # of world, that contains build and coding world,
+    # with command /world download.
+    #
+    # When player types that command, it will copy world's
+    # folders and compress them into one archive, that will be
+    # stored in /plugins/OpenCreative/temp/ folder.
+    # Then, it sends a link to player, and if player opens the site,
+    # player will download archive, and then it will be removed.
+    # Otherwise, after period of storing time it will be removed.
+    #
+    enabled: false
+    max-size: 30 # Maximum size of world in MB.
+    storing-time: 60 # How many seconds archive will be stored before deleting.
 experiments:
   #
   # Experiments are unstable experimental features,

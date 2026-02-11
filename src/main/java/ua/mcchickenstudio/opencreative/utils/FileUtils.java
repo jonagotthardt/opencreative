@@ -835,6 +835,15 @@ public final class FileUtils {
     }
 
     /**
+     * Returns temporary folder, that stores temporary files.
+     *
+     * @return temporary folder.
+     */
+    public static File getTempFolder() {
+        return new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "temp" +  File.separator);
+    }
+
+    /**
      * Returns file path of planet's world folder.
      *
      * @param planet planet to get folder.
