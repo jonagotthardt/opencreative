@@ -14867,28 +14867,46 @@ menus:
             - "&a  &7Below &a19 &7- Server is lagging"
             - ""
             - "&eClick to set."
-        world_targets_count:
-          name: "&eSelection Size"
+        targets_count:
+          name: "&dSelection Size"
           lore:
             - "&7Type: &aNumber"
             - ""
-            - "&7 Returns the size of the selection"
+            - "&7 Returns the total number of"
+            - "&7 selected entities from the"
+            - "&7 &dSelection&7 target."
+            - ""
+            - "&f Examples:"
+            - "&a  0 &7- No entities selected"
+            - "&a  1 &7- 1 entity selected"
             - ""
             - "&eClick to set."
-        world_targets_name:
-          name: "&3Name in Selection"
+        targets_names:
+          name: "&5Names of Selected Targets"
           lore:
             - "&7Type: &eList"
             - ""
-            - "&7 Returns a list of names from the selection"
+            - "&7 Returns a list of text values"
+            - "&7 containing the names of selected"
+            - "&7 entities from &dSelection&7 target."
+            - ""
+            - "&f Examples:"
+            - "&e  [&6Notch&e, &6Chicken&e, &6Pig&e]"
+            - "&e  [] &7- No entities selected"
             - ""
             - "&eClick to set."
-        world_targets_uuid:
-          name: "&3UUID in Selection"
+        targets_uuids:
+          name: "&5UUIDs of Selected Targets"
           lore:
             - "&7Type: &eList"
             - ""
-            - "&7 Returns a list of UUIDs from the selection"
+            - "&7 Returns a list of text values"
+            - "&7 containing the UUIDs of selected"
+            - "&7 entities from &dSelection&7 target."
+            - ""
+            - "&f Examples:"
+            - "&e  [&67cdd1aa2-f00...&e, &6ce9f18920-a3b...&e]"
+            - "&e  [] &7- No entities selected"
             - ""
             - "&eClick to set."
         world-size:
