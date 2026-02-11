@@ -160,7 +160,7 @@ public final class EventValues {
         registerEventValue(new MenuItemsValue(), new HotBarItemsValue(), new PlayerMainHandValue(),
                 new PlayerChatVisibilityValue(), new PlayerClientViewDistanceValue());
         registerEventValue(new ServerTicksPerSecondValue(), new WorldSizeValue(), new WorldGameTimeValue(),
-                new WorldMoonPhaseValue());
+                new WorldMoonPhaseValue(), new WorldTargetsUUID(), new WorldTargetsCount(), new WorldTargetsName());
     }
 
     /**
