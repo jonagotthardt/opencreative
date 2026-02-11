@@ -164,6 +164,9 @@ lobby:
   reset-view-distance: true # View and simulation distances will be reset on server join, world change.
                             # If it makes "almost all chunks not visible", set to false.
                             # If false, will disable "Set View Distance" and "Set Simulation Distance" player actions.
+  reset-resource-pack: true # Resource pack will be reset on server join, world change.
+                            # If you have some resource pack changer plugin and this breaks it, set to false.
+                            # If false, will disable "Set Resource Pack" player action.
   teleport-on-join: true # Will teleport player to lobby on join
   #spawn: # You can set spawn location with /oc setspawn command.
   #  x: 1

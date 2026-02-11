@@ -183,7 +183,7 @@ public final class PlayerUtils {
      * @param player player to reset resource pack.
      */
     public static void resetResourcePack(Player player) {
-        if (HookUtils.isPluginEnabled("ItemsAdder")) {
+        if (!OpenCreative.getSettings().getLobbySettings().shouldResetResourcePack()) {
             return;
         }
         ResourcePack serverPack = Bukkit.getServerResourcePack();

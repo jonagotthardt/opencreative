@@ -1131,7 +1131,7 @@ public enum ActionType implements CodingBlockType {
     @Override
     public boolean isDisabled() {
         if (this == PLAYER_SET_RESOURCE_PACK || this == IF_PLAYER_HAS_RESOURCE_PACK) {
-            if (HookUtils.isPluginEnabled("ItemsAdder")) {
+            if (!OpenCreative.getSettings().getLobbySettings().shouldResetResourcePack()) {
                 return true;
             }
         }

@@ -50,9 +50,7 @@ public final class SetResourcePackAction extends PlayerAction {
     @Override
     public void executePlayer(@NotNull Player player) {
 
-        if (HookUtils.isPluginEnabled("ItemsAdder")) {
-            // ItemsAdder doesn't give details about its resource pack,
-            // so we have the only way: disable this action :(
+        if (!OpenCreative.getSettings().getLobbySettings().shouldResetResourcePack()) {
             return;
         }
 

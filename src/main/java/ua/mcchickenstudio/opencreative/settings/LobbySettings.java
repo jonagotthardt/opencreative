@@ -21,6 +21,7 @@ package ua.mcchickenstudio.opencreative.settings;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 
@@ -40,6 +41,7 @@ public final class LobbySettings {
     private boolean disallowWorldEdit = true;
     private boolean disableExplosions = true;
     private boolean resetViewDistance = true;
+    private boolean resetResourcePack = true;
     private boolean teleportOnJoin = true;
 
     /**
@@ -62,7 +64,11 @@ public final class LobbySettings {
         disallowPlacingBlocks = section.getBoolean("disallow-placing-blocks", true);
         disallowDestroyingBlocks = section.getBoolean("disallow-destroying-blocks", true);
         resetViewDistance = section.getBoolean("reset-view-distance", true);
+        resetResourcePack = section.getBoolean("reset-resource-pack", true);
         teleportOnJoin = section.getBoolean("teleport-on-join", true);
+        if (HookUtils.isPluginEnabled("ItemsAdder")) {
+            resetResourcePack = false;
+        }
     }
 
     /**
@@ -145,6 +151,18 @@ public final class LobbySettings {
      */
     public boolean shouldResetViewDistance() {
         return resetViewDistance;
+    }
+
+    /**
+     * Checks whether resource pack will be reset
+     * on entering lobby or changing worlds.
+     *
+     * @return true - reset resource pack,
+     * false - don't reset, but disable
+     * "Set Resource Pack" player action.
+     */
+    public boolean shouldResetResourcePack() {
+        return resetResourcePack;
     }
 
     /**
