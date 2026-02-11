@@ -242,7 +242,8 @@ public class DevPlanet {
      * @return true - exists, false - not created yet.
      */
     public boolean exists() {
-        return getDevPlanetFolder(this).exists() && getDevPlanetFolder(this).isDirectory();
+        File folder = getDevPlanetFolder(this);
+        return folder.exists() && folder.isDirectory();
     }
 
     /**
