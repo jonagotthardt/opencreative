@@ -987,6 +987,11 @@ public enum ActionType implements CodingBlockType {
     IF_ENTITY_IS_ON_GROUND(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityOnGround.class, Material.GRASS_BLOCK),
     IF_ENTITY_IS_INSIDE_VEHICLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInsideVehicle.class, Material.MINECART),
     IF_ENTITY_HAS_NO_PHYSICS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, HasEntityNoPhysics.class, Material.DAMAGED_ANVIL),
+    IF_ENTITY_CONTAINS_LOCATION(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityContainsLocation.class, Material.OAK_BUTTON, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_ENTITY_OVERLAPS_BLOCK(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityCollidesBlock.class, Material.OAK_SLAB, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("ignore-size", false, Material.SMOOTH_STONE_SLAB, Material.STONE), new ParameterSlot("all")),
+    IF_ENTITY_CONTAINS_BLOCK(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityContainsBlock.class, Material.OAK_WOOD, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("ignore-size", false, Material.SMOOTH_STONE_SLAB, Material.STONE), new ParameterSlot("all")),
+    IF_ENTITY_IS_INSIDE_IN_BLOCK(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityBlockContains.class, Material.GRAVEL, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("ignore-size", false, Material.SMOOTH_STONE_SLAB, Material.STONE), new ParameterSlot("all")),
+
     IF_ENTITY_IS_INVULNERABLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInvulnerable.class, Material.TOTEM_OF_UNDYING);
 
     private final Class<? extends Action> actionClass;

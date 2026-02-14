@@ -11144,6 +11144,173 @@ items:
               all: "In any world"
               build: "Only in the build world"
               dev: "Only in the coding world"
+      if-entity-contains-location:
+        name: "&6Contains location point"
+        lore:
+          - "&7Checks whether the location"
+          - "&7point is inside the hitbox."
+          - " "
+          - "&fIn chest:"
+          - "&f Locations &7- Locations"
+          - "&7 to compare"
+          - "&3 Parameter &7- All or any"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Execute for all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all locations are inside"
+              - "&7the mob, or any of them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "For any"
+              true: "Require all"
+      if-entity-overlaps-block:
+        name: "&eOverlaps the block"
+        lore:
+          - "&7Checks whether the mob hitbox"
+          - "&7intersects the block hitbox."
+          - " "
+          - "&fIn chest:"
+          - "&f Locations &7- Locations"
+          - "&7 to compare"
+          - "&3 Parameter &7- Ignore"
+          - "&7 the block's own size"
+          - "&3 Parameter &7- All or any"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Execute for all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all blocks intersect"
+              - "&7with the mob, or any of them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "For any"
+              true: "Require all"
+          ignore-size:
+            name: "&eIgnore block size"
+            lore:
+              - "&7If yes is selected, the block"
+              - "&7hitbox will be a 1x1x1 cube,"
+              - "&7instead of the placed"
+              - "&7block's actual size."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, use block size"
+              true: "Yes, ignore"
+      if-entity-contains-block:
+        name: "&aContains block inside"
+        lore:
+          - "&7Checks whether the large mob"
+          - "&7hitbox contains the block"
+          - "&7from the location."
+          - " "
+          - "&fIn chest:"
+          - "&f Locations &7- Locations"
+          - "&7 to compare"
+          - "&3 Parameter &7- Ignore"
+          - "&7 the block's own size"
+          - "&3 Parameter &7- All or any"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Execute for all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7all blocks are inside the mob,"
+              - "&7or any of them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "For any"
+              true: "Require all"
+          ignore-size:
+            name: "&eIgnore block size"
+            lore:
+              - "&7If yes is selected, the block"
+              - "&7hitbox will be a 1x1x1 cube,"
+              - "&7instead of the placed"
+              - "&7block's actual size."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, use block size"
+              true: "Yes, ignore"
+      if-entity-is-inside-block:
+        name: "&6Block contains mob"
+        lore:
+          - "&7Checks whether the block"
+          - "&7hitbox contains the small"
+          - "&7mob hitbox."
+          - " "
+          - "&fIn chest:"
+          - "&f Locations &7- Locations"
+          - "&7 to compare"
+          - "&3 Parameter &7- Ignore"
+          - "&7 the block's own size"
+          - " "
+          - "&eClick to set condition."
+        arguments:
+          all:
+            name: "&3Execute for all or any"
+            lore:
+              - "&7Execute the condition only when"
+              - "&7the mob hitbox is inside all"
+              - "&7blocks, or any of them."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "For any"
+              true: "Require all"
+          ignore-size:
+            name: "&eIgnore block size"
+            lore:
+              - "&7If yes is selected, the block"
+              - "&7hitbox will be a 1x1x1 cube,"
+              - "&7instead of the placed"
+              - "&7block's actual size."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "No, use block size"
+              true: "Yes, ignore"
       if-entity-uuid-equals:
         name: "&aEntity UUID matches"
         lore:
@@ -14870,7 +15037,7 @@ menus:
             - "&a  &7Below &a19 &7- Server is lagging"
             - ""
             - "&eClick to set."
-        targets_count:
+        targets-count:
           name: "&dSelection Size"
           lore:
             - "&7Type: &aNumber"
@@ -14884,7 +15051,7 @@ menus:
             - "&a  1 &7- 1 entity selected"
             - ""
             - "&eClick to set."
-        targets_names:
+        targets-names:
           name: "&5Names of Selected Targets"
           lore:
             - "&7Type: &eList"
@@ -14898,7 +15065,7 @@ menus:
             - "&e  [] &7- No entities selected"
             - ""
             - "&eClick to set."
-        targets_uuids:
+        targets-uuids:
           name: "&5UUIDs of Selected Targets"
           lore:
             - "&7Type: &eList"
@@ -18761,6 +18928,10 @@ blocks:
   if_entity_is_inside_vehicle: "Inside Vehicle"
   if_entity_has_no_physics: "No Physics"
   if_entity_is_invulnerable: "Invulnerable"
+  if_entity_contains_location: "Contains location"
+  if_entity_contains_block: "Contains block"
+  if_entity_overlaps_block: "Overlaps block"
+  if_entity_is_inside_block: "Inside block"
   if_entity_uuid_equals: "UUID Equals"
   if_entity_in_area: "In Region"
   if_var_equals: "&bEquals value"
