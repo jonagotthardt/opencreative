@@ -64,7 +64,7 @@ public final class IsEntityBlockContains extends EntityCondition {
 
     @Override
     public @NotNull ActionType getActionType() {
-        return ActionType.IF_ENTITY_IS_INSIDE_IN_BLOCK;
+        return ActionType.IF_ENTITY_IS_INSIDE_BLOCK;
     }
 
 }

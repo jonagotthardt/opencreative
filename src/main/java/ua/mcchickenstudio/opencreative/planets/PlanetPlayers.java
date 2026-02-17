@@ -76,6 +76,7 @@ public class PlanetPlayers {
         planet.getDevPlanet().getLastLocations().remove(player);
         planet.getDevPlanet().clearMarkedExecutors(player);
         planet.getLimits().clearPlayerLimits(player);
+        planet.getTerritory().getRecipes().clearForPlayer(player);
     }
 
     public PlanetPlayer getPlanetPlayer(Player player) {

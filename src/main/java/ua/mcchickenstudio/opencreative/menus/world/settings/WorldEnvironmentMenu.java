@@ -89,6 +89,8 @@ public final class WorldEnvironmentMenu extends AbstractMenu implements WorldMen
         replacePlaceholderInLore(info, "%scoreboards-limit%", devPlanet.getPlanet().getLimits().getScoreboardsLimit());
         replacePlaceholderInLore(info, "%bossbars%", devPlanet.getPlanet().getTerritory().getBossBars().size());
         replacePlaceholderInLore(info, "%bossbars-limit%", devPlanet.getPlanet().getLimits().getBossBarsLimit());
+        replacePlaceholderInLore(info, "%recipes%", devPlanet.getPlanet().getTerritory().getRecipes().getAmount());
+        replacePlaceholderInLore(info, "%recipes-limit%", devPlanet.getPlanet().getLimits().getRecipesLimit());
         replacePlaceholderInLore(info, "%variables%", devPlanet.getPlanet().getVariables().getTotalVariablesAmount());
         replacePlaceholderInLore(info, "%variables-limit%", devPlanet.getPlanet().getLimits().getVariablesAmountLimit());
         replacePlaceholderInLore(info, "%executor-calls-limit%", devPlanet.getPlanet().getLimits().getCodeOperationsLimit());

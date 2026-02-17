@@ -58,6 +58,7 @@ public class PlanetTerritory {
     private final Planet planet;
     private final PlanetFlags flags;
     private final PlanetScoreboards scoreboards;
+    private final PlanetRecipes recipes;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
     private final Set<BukkitRunnable> runningBukkitRunnables = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -76,6 +77,7 @@ public class PlanetTerritory {
         flags = new PlanetFlags(planet);
         scoreboards = new PlanetScoreboards(planet);
         script = new CodeScript(planet);
+        recipes = new PlanetRecipes(planet);
         loadInformation();
     }
 
@@ -161,6 +163,7 @@ public class PlanetTerritory {
         world.setAutoSave(autoSave);
         setGameRuleIfExists("spawn_chunk_radius", 1);
         world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
+        world.setGameRule(GameRule.DO_LIMITED_CRAFTING, true);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
                 world.getEnderDragonBattle().setPreviouslyKilled(true);
@@ -272,6 +275,7 @@ public class PlanetTerritory {
     public void clearData() {
         stopBukkitRunnables();
         bossBars.clear();
+        recipes.clear();
         scoreboards.clear();
         flags.clear();
         script.getExecutors().clear();
@@ -481,6 +485,15 @@ public class PlanetTerritory {
      */
     public @NotNull PlanetScoreboards getScoreboards() {
         return scoreboards;
+    }
+
+    /**
+     * Returns recipes of planet.
+     *
+     * @return planet's recipes.
+     */
+    public @NotNull PlanetRecipes getRecipes() {
+        return recipes;
     }
 
     /**

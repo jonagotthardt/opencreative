@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
@@ -728,6 +729,7 @@ public class Planet {
         player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
             handleConnectionProcess(player, wasLoaded, hidePlayer, success);
         }).exceptionally(error -> {
+            player.clearTitle();
             sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
                     (error.getMessage() == null ? "." : ": " + error.getMessage()));
             wander.setConnectingToPlanet(false);
@@ -826,7 +828,14 @@ public class Planet {
                 territory.unload();
                 return;
             }
-            sendPlayerErrorMessage(player, "Can't join planet. World is unloaded.");
+            if (isLoaded()) {
+                sendPlayerErrorMessage(player,
+                        "Failed to teleport to the world! World is loaded, chunk is " +
+                                (territory.getSpawnLocation().getChunk().isLoaded() ? "loaded." : "unloaded."));
+            } else {
+                sendPlayerErrorMessage(player, "Failed to teleport to the world! World is unloaded.");
+            }
+            player.clearTitle();
             OpenCreative.getWander(player).setConnectingToPlanet(false);
         }
     }

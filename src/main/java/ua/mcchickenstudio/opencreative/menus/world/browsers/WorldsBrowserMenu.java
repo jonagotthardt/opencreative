@@ -39,6 +39,7 @@ import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 
 /**
  * This class represents a menu, that displays specified list of worlds.
@@ -167,6 +168,11 @@ public class WorldsBrowserMenu extends ListBrowserMenu<Planet> {
 
     protected void onPlanetClick(Player player, Planet planet) {
         player.closeInventory();
+        if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
+            player.sendMessage(getPlayerLocaleMessage("same-world", player));
+            Sounds.PLAYER_FAIL.play(player);
+            return;
+        }
         planet.connectPlayer(player);
     }
 
