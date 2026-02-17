@@ -25,8 +25,9 @@ public enum LimitType {
 
     ENTITIES("entities-amount", 50, 50),
     CODE_OPERATIONS("executor-calls", 100, 100),
-    SCOREBOARDS("scoreboards-amount", 50, 3),
-    BOSSBARS("bossbars-amount", 10, 3),
+    SCOREBOARDS("scoreboards-amount", 10, 1),
+    BOSSBARS("bossbars-amount", 10, 1),
+    RECIPES("recipes-amount", 10, 0),
     REDSTONE_OPERATIONS("redstone-changes", 100, 20),
     OPENING_INVENTORIES("opening-inventories", 5),
     SENDING_WEB_REQUESTS("sending-web-requests", 5),

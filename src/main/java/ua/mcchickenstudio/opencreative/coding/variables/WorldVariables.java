@@ -213,14 +213,16 @@ public final class WorldVariables {
      * @param action action.
      */
     public void removeVariable(VariableLink link, Action action) {
+        String name = link.getName();
+        if (action != null) name = parseEntity(link.getName(), action.getHandler(), action);
         switch (link.getVariableType()) {
-            case SAVED -> savedVariables.remove(link.getName());
+            case SAVED -> savedVariables.remove(name);
             case LOCAL -> {
                 if (action == null) return;
-                localVariables.remove(new LocalKey(link.getName(),
+                localVariables.remove(new LocalKey(name,
                         action.getHandler().getMainActionHandler().getUniqueId()));
             }
-            default -> globalVariables.remove(link.getName());
+            default -> globalVariables.remove(name);
         }
     }
 

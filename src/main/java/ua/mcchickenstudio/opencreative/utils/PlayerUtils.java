@@ -23,10 +23,7 @@ import net.kyori.adventure.resource.ResourcePackRequest;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
@@ -85,6 +82,11 @@ public final class PlayerUtils {
         }
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
+        }
+        for (NamespacedKey recipe : new ArrayList<>(player.getDiscoveredRecipes())) {
+            if (recipe.getKey().startsWith("oc_recipe_")) {
+                player.undiscoverRecipe(recipe);
+            }
         }
         resetAttributes(player);
         player.resetPlayerTime();
@@ -255,6 +257,7 @@ public final class PlayerUtils {
      */
     public static Location getLobbyLocation() {
         World world = getLobbyWorld();
+        world.setGameRule(GameRule.DO_LIMITED_CRAFTING, true);
         ConfigurationSection data = OpenCreative.getPlugin().getConfig().getConfigurationSection("lobby.spawn");
         if (data == null) {
             return world.getSpawnLocation();

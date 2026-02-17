@@ -223,6 +223,7 @@ public class DevPlanet {
      */
     public void setupWorld() {
         this.getWorld().setSpawnLocation(2, 1, 2);
+        this.getWorld().setGameRule(GameRule.DO_LIMITED_CRAFTING, true);
         this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         this.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);

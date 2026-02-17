@@ -398,8 +398,9 @@ groups:
         opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
         sending-web-requests: 5 # limit for sending web requests per 5 seconds for preventing attacks
         variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
-        scoreboards-amount: 50 # limit for amount of all scoreboards
-        bossbars-amount: 10 # limit for amount of all bossbars
+        scoreboards-amount: 5 # limit for amount of all scoreboards
+        bossbars-amount: 5 # limit for amount of all bossbars
+        recipes-amount: 10 # limit for amount of all custom crafting and cooking recipes
         coding-platforms: 4 # limit for coding platforms
         changing-list-elements: 50 # limit of changing elements in lists and maps per second
         changing-targets: 200 # limit of changing targets (setting, adding, removing) with Selection Action
@@ -421,11 +422,11 @@ groups:
         modifying-blocks: 0
         redstone-changes: 20
         variables-amount: 50
-        scoreboards-amount: 3
+        scoreboards-amount: 1
         repeats-amount: 10
         changing-list-elements: 10
         changing-targets: 100
-        bossbars-amount: 3
+        bossbars-amount: 1
         physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
         - "headdb.open"
@@ -471,7 +472,8 @@ groups:
         opening-inventories: 5
         sending-web-requests: 5
         variables-amount: 500
-        scoreboards-amount: 50
+        recipes-amount: 10
+        scoreboards-amount: 10
         bossbars-amount: 10
         coding-platforms: 4
         repeats-amount: 100
@@ -494,8 +496,8 @@ groups:
         changing-list-elements: 10
         changing-targets: 100
         variables-amount: 50
-        scoreboards-amount: 10
-        bossbars-amount: 10
+        scoreboards-amount: 1
+        bossbars-amount: 1
         physical-objects: 5
       build-permissions:
         - "headdb.open"

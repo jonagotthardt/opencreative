@@ -141,6 +141,9 @@ public enum ActionType implements CodingBlockType {
     PLAYER_SET_SLOT(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetSlotAction.class, Material.SLIME_BALL, new ArgumentSlot("slot", ValueType.NUMBER)),
     PLAYER_SET_HOTBAR(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetHotBarAction.class, Material.BIRCH_CHEST_BOAT, new ArgumentSlot("items", ValueType.ITEM, (byte) 9, true), new ParameterSlot("replace-with-air")),
     PLAYER_SET_ITEM_COOLDOWN(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, SetItemCooldownAction.class, Material.CLOCK, new ArgumentSlot("item", ValueType.ITEM), new ArgumentSlot("cooldown", ValueType.NUMBER)),
+    PLAYER_DISCOVER_RECIPE(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, DiscoverRecipeAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("recipes", ValueType.TEXT, (byte) 18)),
+    PLAYER_UNDISCOVER_RECIPE(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, UndiscoverRecipeAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("recipes", ValueType.TEXT, (byte) 18)),
+
     PLAYER_APPLY_MENDING(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, ApplyMendingAction.class, Material.ENCHANTED_BOOK, new ArgumentSlot("amount", ValueType.NUMBER)),
     //PLAYER_DAMAGE_ITEM(                 ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, null, Material.NETHERITE_SCRAP,  new ArgumentSlot("item",VariableType.ITEM),new ArgumentSlot("damage",VariableType.NUMBER)),
     PLAYER_OPEN_SIGN(ActionCategory.PLAYER_ACTION, MenusCategory.INVENTORY, OpenSignAction.class, Material.OAK_SIGN, new ArgumentSlot("location", ValueType.LOCATION), new ParameterSlot("side", Arrays.asList("front", "back"), Material.OAK_SIGN, Material.WARPED_SIGN)),
@@ -317,6 +320,9 @@ public enum ActionType implements CodingBlockType {
     WORLD_SWITCH_TO_BUILD_MODE(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SwitchToBuildModeAction.class, Material.BRICKS),
     WORLD_TRANSFER_VARIABLE(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, TransferVariableAction.class, Material.CALIBRATED_SCULK_SENSOR, new ArgumentSlot("world", ValueType.TEXT), new ArgumentSlot("key", ValueType.TEXT), new ArgumentSlot("value", ValueType.ANY)),
     WORLD_SEND_WEB_REQUEST(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SendWebRequestAction.class, Material.BEACON, new ArgumentSlot("url", ValueType.TEXT), new ArgumentSlot("body", ValueType.TEXT), new ParameterSlot("request", List.of("get", "post"), Material.BOOK, Material.FEATHER), new ParameterSlot("media", List.of("text", "json"), Material.CHISELED_BOOKSHELF, Material.BOOKSHELF)),
+    WORLD_ADD_CRAFTING_RECIPE(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, AddCraftingRecipeAction.class, Material.CRAFTING_TABLE, new ArgumentSlot("items", ValueType.ITEM, (byte) 9, true), new ArgumentSlot("result", ValueType.ITEM), new ArgumentSlot("name", ValueType.TEXT), new ParameterSlot("ignore-shape"), new ParameterSlot("ignore-data"), new ParameterSlot("category", List.of("misc", "building", "equipment", "redstone"), Material.APPLE, Material.BRICKS, Material.IRON_AXE, Material.REDSTONE)),
+    WORLD_REMOVE_RECIPE(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, RemoveRecipeAction.class, Material.KNOWLEDGE_BOOK, new ArgumentSlot("recipes", ValueType.TEXT, (byte) 18)),
+
     WORLD_SET_TIME(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetTimeAction.class, Material.CLOCK, new ArgumentSlot("time", ValueType.NUMBER)),
     WORLD_SET_WEATHER(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWeatherAction.class, Material.WATER_BUCKET, new ParameterSlot("weather", Arrays.asList("clean", "storm", "thunder"), Material.SUNFLOWER, Material.WATER_BUCKET, Material.TRIDENT), new ArgumentSlot("duration", ValueType.NUMBER)),
     WORLD_SET_WORLD_BORDER(ActionCategory.WORLD_ACTION, MenusCategory.WORLD, SetWorldBorderAction.class, Material.END_CRYSTAL, new ArgumentSlot("radius", ValueType.NUMBER), new ArgumentSlot("time", ValueType.NUMBER), new ArgumentSlot("damage", ValueType.NUMBER), new ArgumentSlot("warning-distance", ValueType.NUMBER), new ArgumentSlot("warning-time", ValueType.NUMBER), new ArgumentSlot("safe-distance", ValueType.NUMBER)),
@@ -987,6 +993,11 @@ public enum ActionType implements CodingBlockType {
     IF_ENTITY_IS_ON_GROUND(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityOnGround.class, Material.GRASS_BLOCK),
     IF_ENTITY_IS_INSIDE_VEHICLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInsideVehicle.class, Material.MINECART),
     IF_ENTITY_HAS_NO_PHYSICS(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, HasEntityNoPhysics.class, Material.DAMAGED_ANVIL),
+    IF_ENTITY_CONTAINS_LOCATION(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityContainsLocation.class, Material.OAK_BUTTON, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("all")),
+    IF_ENTITY_OVERLAPS_BLOCK(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityCollidesBlock.class, Material.OAK_SLAB, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("ignore-size", false, Material.SMOOTH_STONE_SLAB, Material.STONE), new ParameterSlot("all")),
+    IF_ENTITY_CONTAINS_BLOCK(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityContainsBlock.class, Material.OAK_WOOD, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("ignore-size", false, Material.SMOOTH_STONE_SLAB, Material.STONE), new ParameterSlot("all")),
+    IF_ENTITY_IS_INSIDE_BLOCK(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityBlockContains.class, Material.GRAVEL, new ArgumentSlot("locations", ValueType.LOCATION, (byte) 18), new ParameterSlot("ignore-size", false, Material.SMOOTH_STONE_SLAB, Material.STONE), new ParameterSlot("all")),
+
     IF_ENTITY_IS_INVULNERABLE(ActionCategory.ENTITY_CONDITION, MenusCategory.ENTITY_INTERACTION, IsEntityInvulnerable.class, Material.TOTEM_OF_UNDYING);
 
     private final Class<? extends Action> actionClass;

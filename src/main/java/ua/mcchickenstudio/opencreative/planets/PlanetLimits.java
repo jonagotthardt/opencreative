@@ -183,6 +183,15 @@ public class PlanetLimits {
     }
 
     /**
+     * Returns maximum recipes amount in the planet.
+     *
+     * @return limit of recipes.
+     */
+    public int getRecipesLimit() {
+        return planet.getGroup().getLimit(LimitType.RECIPES).calculateLimit(planet.getPlayers().size());
+    }
+
+    /**
      * Returns maximum scoreboards amount in the planet.
      *
      * @return limit of scoreboards.

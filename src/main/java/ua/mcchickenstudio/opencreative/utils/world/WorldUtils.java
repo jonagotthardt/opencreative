@@ -25,6 +25,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.PlayerUtils;
 
 import java.io.File;
@@ -288,17 +289,9 @@ public final class WorldUtils {
         int newWorldID = OpenCreative.getPlugin().getConfig().getInt("last-world-id", 1);
         while (true) {
             newWorldID++;
-            boolean exists = false;
-            for (File folder : getWorldsFolders()) {
-                if (folder.getName().equalsIgnoreCase("planet" + newWorldID)) {
-                    exists = true;
-                    break;
-                } else if (folder.getName().equalsIgnoreCase("planet" + newWorldID + "dev")) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
+            File planetFolder = new File(FileUtils.getPlanetFolderPath(newWorldID));
+            File devPlanetFolder = new File(FileUtils.getDevPlanetFolderPath(newWorldID));
+            if (!planetFolder.exists() && !devPlanetFolder.exists()) {
                 OpenCreative.getPlugin().getConfig().set("last-world-id", newWorldID);
                 OpenCreative.getPlugin().saveConfig();
                 return newWorldID;
