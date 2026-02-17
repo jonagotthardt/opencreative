@@ -218,7 +218,11 @@ public final class PlayerUtils {
                 player.spigot().respawn();
             }
         }
-        player.teleport(location);
+
+        if (!player.teleport(location)) {
+            return;
+        }
+
         clearPlayer(player);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
