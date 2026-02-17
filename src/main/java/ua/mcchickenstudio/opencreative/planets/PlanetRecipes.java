@@ -102,11 +102,11 @@ public class PlanetRecipes {
      * Removes all recipes and destroys them.
      */
     public void clear() {
-        for (Player player : planet.getPlayers()) {
-            player.undiscoverRecipes(recipes);
-        }
         for (NamespacedKey recipe : recipes) {
             Bukkit.removeRecipe(recipe);
+        }
+        for (Player player : planet.getPlayers()) {
+            player.undiscoverRecipes(recipes);
         }
         recipes.clear();
     }

@@ -275,7 +275,6 @@ public class PlanetTerritory {
     public void clearData() {
         stopBukkitRunnables();
         bossBars.clear();
-        recipes.clear();
         scoreboards.clear();
         flags.clear();
         script.getExecutors().clear();
@@ -285,6 +284,7 @@ public class PlanetTerritory {
         script.unload();
         spawnLocation = null;
         clearOnceMessages(planet);
+        Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), recipes::clear);
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
