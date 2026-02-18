@@ -31,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
@@ -858,13 +859,20 @@ public class Planet {
     public void connectToDevPlanet(Player player, boolean hidePlayer) {
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.connecting.title")), toComponent(getLocaleMessage("world.dev-mode.connecting.subtitle")),
-                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
+                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(30), Duration.ofSeconds(10))
         ));
-        getDevPlanet().loadDevPlanetWorld();
+        if (!devPlanet.isLoaded()) {
+            getDevPlanet().loadDevPlanetWorld();
+        }
         getDevPlanet().getWorld().getSpawnLocation().getChunk().load(true);
         Location lastLocation = this.getDevPlanet().getLastLocations().get(player);
         if (!this.getDevPlanet().isLoaded()) {
             return;
+        }
+        if (lastLocation != null) {
+            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                translateSigns(player, 10);
+            }, 5L);
         }
         if (lastLocation == null || !devPlanet.isSaveLocation()) {
             lastLocation = getDevPlanet().getWorld().getSpawnLocation();
@@ -918,7 +926,6 @@ public class Planet {
                         player.getInventory().addItem(item);
                     }
                 }
-                translateSigns(player, 10);
             }
         });
     }

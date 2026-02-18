@@ -808,7 +808,7 @@ public final class InteractListener implements Listener {
                         public void run() {
                             translateSigns(player, 10);
                         }
-                    }.runTaskLater(OpenCreative.getPlugin(), 10L);
+                    }.runTaskLater(OpenCreative.getPlugin(), 5L);
                 });
             }
         }

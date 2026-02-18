@@ -284,7 +284,7 @@ public class PlanetTerritory {
         script.unload();
         spawnLocation = null;
         clearOnceMessages(planet);
-        Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), recipes::clear);
+        recipes.clear();
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {

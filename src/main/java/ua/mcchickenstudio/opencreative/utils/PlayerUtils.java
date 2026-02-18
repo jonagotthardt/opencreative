@@ -501,6 +501,7 @@ public final class PlayerUtils {
     public static void translateSigns(Player player, int radius) {
         if (radius <= 0) return;
         if (radius > 50) radius = 50;
+        if (!player.isConnected()) return;
         int minX = player.getLocation().getBlockX() - radius;
         int maxX = player.getLocation().getBlockX() + radius;
         int minZ = player.getLocation().getBlockZ() - radius;

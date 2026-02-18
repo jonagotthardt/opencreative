@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,6 +51,9 @@ public class PlanetRecipes {
      */
     public void addRecipe(@NotNull NamespacedKey key, @NotNull Recipe recipe) {
         if (recipes.contains(key)) {
+            return;
+        }
+        if (Bukkit.getRecipe(key) != null) {
             removeRecipe(key);
         }
         recipes.add(key);
@@ -102,13 +106,19 @@ public class PlanetRecipes {
      * Removes all recipes and destroys them.
      */
     public void clear() {
-        for (NamespacedKey recipe : recipes) {
-            Bukkit.removeRecipe(recipe);
+        if (OpenCreative.getPlugin().isEnabled()) {
+            Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
+                for (NamespacedKey recipe : recipes) {
+                    Bukkit.removeRecipe(recipe);
+                }
+                for (Player player : planet.getPlayers()) {
+                    player.undiscoverRecipes(recipes);
+                }
+                recipes.clear();
+            });
+        } else {
+            recipes.clear();
         }
-        for (Player player : planet.getPlayers()) {
-            player.undiscoverRecipes(recipes);
-        }
-        recipes.clear();
     }
 
     /**

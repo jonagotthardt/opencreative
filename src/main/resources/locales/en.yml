@@ -430,6 +430,9 @@ coding-warning:
   scoreboards-limit:
     text: "&7Maximum number of scoreboards reached &6%count%&7/%limit% &3[?]"
     hover: "&fIf there are personal scoreboards for players in the world, they should be removed when a player leaves the world."
+  recipes-limit:
+    text: "&7Maximum number of item recipes reached &6%count%&7/%limit% &3[?]"
+    hover: "&fYou need to reduce the number of created recipes or remove unnecessary ones."
 lobby:
   title: "%branding%"
   subtitle: "&fLet's &acreate&f in your worlds!"
@@ -3601,6 +3604,291 @@ items:
           - "&6 Texts &7- Recipe identifiers"
           - " "
           - "&eClick to set action."
+      world-add-furnace-recipe:
+        name: "&7Create Furnace Recipe"
+        lore:
+          - "&7This will create a recipe that"
+          - "&7allows you to smelt an item"
+          - "&7in a furnace and obtain another item."
+          - ""
+          - "&7For the player to be able to smelt the item"
+          - "&7after creation, use the action"
+          - "&aUnlock Item Recipe&7."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Required item"
+          - "&c Item &7- Result"
+          - "&6 Text &7- Recipe identifier"
+          - "&a Number &7- Cooking time"
+          - "&a Number &7- Experience amount"
+          - "&3 Parameter &7- Category"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          name:
+            name: "&6Recipe Identifier"
+            lore:
+              - "&7Place a book here that"
+              - "&7will be used as the recipe name."
+              - ""
+              - "&7Must contain &c&nonly English&7"
+              - "&7characters and underscores."
+              - ""
+              - "&7Default: "
+              - "&6 custom"
+          items:
+            name: "&6Required Item"
+            lore:
+              - "&7Place here the item that"
+              - "&7must be put into the top"
+              - "&7slot of the furnace for smelting."
+          result:
+            name: "&6Smelting Result"
+            lore:
+              - "&7Place here the item that"
+              - "&7will be obtained after smelting"
+              - "&7the required item."
+          time:
+            name: "&aCooking Time"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of time"
+              - "&7required for cooking"
+              - "&7and giving the item."
+              - ""
+              - "&7Default: &a200"
+              - "&a(in ticks)"
+          experience:
+            name: "&aExperience Amount"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of experience"
+              - "&7to give to the player after"
+              - "&7cooking."
+              - ""
+              - "&7Default: &a0"
+        arguments:
+          category:
+            name: "&cItem Category"
+            lore:
+              - "&7The recipe book has categories"
+              - "&7that recipes are sorted by."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+              - "%3%"
+            choices:
+              misc: "Miscellaneous"
+              building: "Building Blocks"
+              food: "Food"
+      world-add-blast-furnace-recipe:
+        name: "&3Create Blast Furnace Recipe"
+        lore:
+          - "&7This will create a recipe that"
+          - "&7allows you to smelt an item"
+          - "&7in a blast furnace and obtain"
+          - "&7another item."
+          - ""
+          - "&7For the player to be able to smelt the item"
+          - "&7after creation, use the action"
+          - "&aUnlock Item Recipe&7."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Required item"
+          - "&c Item &7- Result"
+          - "&6 Text &7- Recipe identifier"
+          - "&a Number &7- Cooking time"
+          - "&a Number &7- Experience amount"
+          - "&3 Parameter &7- Category"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          name:
+            name: "&6Recipe Identifier"
+            lore:
+              - "&7Place a book here that"
+              - "&7will be used as the recipe name."
+              - ""
+              - "&7Must contain &c&nonly English&7"
+              - "&7characters and underscores."
+              - ""
+              - "&7Default: "
+              - "&6 custom"
+          items:
+            name: "&6Required Item"
+            lore:
+              - "&7Place here the item that"
+              - "&7must be put into the top"
+              - "&7slot of the blast furnace for smelting."
+          result:
+            name: "&6Smelting Result"
+            lore:
+              - "&7Place here the item that"
+              - "&7will be obtained after smelting"
+              - "&7the required item."
+          time:
+            name: "&aCooking Time"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of time"
+              - "&7required for cooking"
+              - "&7and giving the item."
+              - ""
+              - "&7Default: &a100"
+              - "&a(in ticks)"
+          experience:
+            name: "&aExperience Amount"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of experience"
+              - "&7to give to the player after"
+              - "&7cooking."
+              - ""
+              - "&7Default: &a0"
+        arguments:
+          category:
+            name: "&cItem Category"
+            lore:
+              - "&7The recipe book has categories"
+              - "&7that recipes are sorted by."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              misc: "Miscellaneous"
+              building: "Building Blocks"
+      world-add-smoker-recipe:
+        name: "&6Create Smoker Recipe"
+        lore:
+          - "&7This will create a recipe that"
+          - "&7allows you to smelt an item"
+          - "&7in a smoker and obtain another"
+          - "&7item."
+          - ""
+          - "&7For the player to be able to smelt the item"
+          - "&7after creation, use the action"
+          - "&aUnlock Item Recipe&7."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Required item"
+          - "&c Item &7- Result"
+          - "&6 Text &7- Recipe identifier"
+          - "&a Number &7- Cooking time"
+          - "&a Number &7- Experience amount"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          name:
+            name: "&6Recipe Identifier"
+            lore:
+              - "&7Place a book here that"
+              - "&7will be used as the recipe name."
+              - ""
+              - "&7Must contain &c&nonly English&7"
+              - "&7characters and underscores."
+              - ""
+              - "&7Default: "
+              - "&6 custom"
+          items:
+            name: "&6Required Item"
+            lore:
+              - "&7Place here the item that"
+              - "&7must be put into the top"
+              - "&7slot of the smoker for smelting."
+          result:
+            name: "&6Smelting Result"
+            lore:
+              - "&7Place here the item that"
+              - "&7will be obtained after smelting"
+              - "&7the required item."
+          time:
+            name: "&aCooking Time"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of time"
+              - "&7required for cooking"
+              - "&7and giving the item."
+              - ""
+              - "&7Default: &a100"
+              - "&a(in ticks)"
+          experience:
+            name: "&aExperience Amount"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of experience"
+              - "&7to give to the player after"
+              - "&7cooking."
+              - ""
+              - "&7Default: &a0"
+      world-add-campfire-recipe:
+        name: "&eCreate Campfire Recipe"
+        lore:
+          - "&7This will create a recipe that"
+          - "&7allows you to cook an item"
+          - "&7on a campfire and obtain another"
+          - "&7item."
+          - ""
+          - "&7For the player to be able to cook the item"
+          - "&7after creation, use the action"
+          - "&aUnlock Item Recipe&7."
+          - " "
+          - "&fIn the chest:"
+          - "&c Item &7- Required item"
+          - "&c Item &7- Result"
+          - "&6 Text &7- Recipe identifier"
+          - "&a Number &7- Cooking time"
+          - "&a Number &7- Experience amount"
+          - " "
+          - "&eClick to set the action."
+        placeholders:
+          name:
+            name: "&6Recipe Identifier"
+            lore:
+              - "&7Place a book here that"
+              - "&7will be used as the recipe name."
+              - ""
+              - "&7Must contain &c&nonly English&7"
+              - "&7characters and underscores."
+              - ""
+              - "&7Default: "
+              - "&6 custom"
+          items:
+            name: "&6Required Item"
+            lore:
+              - "&7Place here the item that"
+              - "&7must be placed on the campfire"
+              - "&7for cooking."
+          result:
+            name: "&6Cooking Result"
+            lore:
+              - "&7Place here the item that"
+              - "&7will drop after cooking"
+              - "&7the required item."
+          time:
+            name: "&aCooking Time"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of time"
+              - "&7required for cooking"
+              - "&7and giving the item."
+              - ""
+              - "&7Default: &a600"
+              - "&a(in ticks)"
+          experience:
+            name: "&aExperience Amount"
+            lore:
+              - "&7Place slime here that"
+              - "&7will represent the amount of experience"
+              - "&7to give to the player after"
+              - "&7cooking."
+              - ""
+              - "&7Default: &a0"
       world-add-crafting-recipe:
         name: "&aCreate item recipe"
         lore:
@@ -18945,6 +19233,11 @@ blocks:
   world_spawn_falling_block: "Falling Block"
   world_spawn_eye_of_ender: "Eye of Ender"
   world_add_crafting_recipe: "Craft Recipe"
+  world_add_furnace_recipe: "Furnace Recipe"
+  world_add_blast_furnace_recipe: "Blasting Recipe"
+  world_add_smoker_recipe: "Smoker Recipe"
+  world_add_campfire_recipe: "Campfire Recipe"
+  world_remove_recipe: "Remove Recipe"
   #
   if_player_stands_on_block: "Is standing on block"
   if_player_looks_at_block: "Looking at block"
