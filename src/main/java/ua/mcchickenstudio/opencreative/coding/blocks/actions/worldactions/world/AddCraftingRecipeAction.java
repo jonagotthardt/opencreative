@@ -44,16 +44,24 @@ public final class AddCraftingRecipeAction extends WorldAction {
     @Override
     protected void execute() {
 
-        int total = getPlanet().getTerritory().getRecipes().getAmount();
-        if (total > getPlanet().getLimits().getRecipesLimit()) {
-            sendPlanetLimitWarningMessage(this, "recipes", total, getPlanet().getLimits().getVariablesAmountLimit());
+        if (!getArguments().pathExists("result")) {
             return;
         }
 
         List<ItemStack> items = getArguments().getItemList("items", this);
+        if (items.isEmpty()) {
+            return;
+        }
+
+        int total = getPlanet().getTerritory().getRecipes().getAmount();
+        if (total > getPlanet().getLimits().getRecipesLimit()) {
+            sendPlanetLimitWarningMessage(this, "recipes", total, getPlanet().getLimits().getRecipesLimit());
+            return;
+        }
+
         ItemStack result = getArguments().getItem("result", new ItemStack(Material.APPLE), this);
         boolean ignoreShape = getArguments().getBoolean("ignore-shape", false, this);
-        String name = getArguments().getText("name", "recipe", this);
+        String name = getArguments().getText("name", "custom", this);
         String categoryString = getArguments().getText("category", "misc", this);
         boolean ignoreData = getArguments().getBoolean("ignore-data", false, this);
 

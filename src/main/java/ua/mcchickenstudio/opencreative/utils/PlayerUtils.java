@@ -218,7 +218,11 @@ public final class PlayerUtils {
                 player.spigot().respawn();
             }
         }
-        player.teleport(location);
+
+        if (!player.teleport(location)) {
+            return;
+        }
+
         clearPlayer(player);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
@@ -501,6 +505,7 @@ public final class PlayerUtils {
     public static void translateSigns(Player player, int radius) {
         if (radius <= 0) return;
         if (radius > 50) radius = 50;
+        if (!player.isConnected()) return;
         int minX = player.getLocation().getBlockX() - radius;
         int maxX = player.getLocation().getBlockX() + radius;
         int minZ = player.getLocation().getBlockZ() - radius;
