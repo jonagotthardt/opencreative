@@ -53,6 +53,7 @@ public abstract class RepeatAction extends MultiAction {
         this.entity = entity;
         if (mustStop || !checkCanContinue()) {
             getHandler().executeNextAction();
+            mustStop = false;
             return;
         }
         ActionsHandler handler = new ActionsHandler(this);
