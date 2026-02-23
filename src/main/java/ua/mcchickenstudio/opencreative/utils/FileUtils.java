@@ -460,7 +460,9 @@ public final class FileUtils {
         int count = 0;
         if (serverDirectoryFiles != null) {
             for (File file : serverDirectoryFiles) {
-                if (convertOldPlanetFolder(file)) count++;
+                if (isOpenCreativeWorldFolder(file) && convertOldPlanetFolder(file)) {
+                    count++;
+                }
             }
         }
         File unloadedWorldsFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
@@ -479,6 +481,21 @@ public final class FileUtils {
         if (count > 0) {
             OpenCreative.getPlugin().getLogger().info("Converted " + count + " old worlds!");
         }
+    }
+
+    /**
+     * Checks whether specified folder has similar OpenCreative+ files.
+     *
+     * @param folder folder to check.
+     * @return true - it's OpenCreative+ folder, false - not.
+     */
+    public static boolean isOpenCreativeWorldFolder(@NotNull File folder) {
+        File settings = new File(folder, "settings.yml");
+        if (settings.exists()) return true;
+        File codeScript = new File(folder, "codeScript.yml");
+        if (codeScript.exists()) return true;
+        File variables = new File(folder, "variables.json");
+        return variables.exists();
     }
 
     /**
