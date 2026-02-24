@@ -75,7 +75,7 @@ public class GiveCommand extends CommandHandler {
                 try {
                     ItemStack item = getItem(args[0], 1);
                     player.getInventory().addItem(item);
-                    player.sendMessage(getLocaleMessage("commands.give.received-from-kit")
+                    player.sendMessage(getLocaleMessage("commands.give.given")
                             .replace("%material%", item.getType().name().toLowerCase())
                             .replace("%amount%", "1"));
                 } catch (IllegalArgumentException error) {
