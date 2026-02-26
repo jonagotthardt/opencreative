@@ -238,6 +238,13 @@ coding:
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
     # To test them, use /world platformer [ID].
+  platforms-spacing:
+    vertical: 5 # Y-distance between platforms for vertical generator.
+    legacy: 10 # Y-distance between platforms for legacy generator.
+    horizontal: 102 # X/Z-distance between platforms for horizontal generator.
+  platforms-vertical-notch:
+    enabled: false # Cuts a side strip in vertical platforms for easier flying between floors.
+    width: 3 # Width of cut strip from platform edge on X axis.
   cancel-chat-on-value-set: false # Cancels sending message to local chat, when player sets new value of text, number, vector,
                                   # variable, potion, color while holding item in hand.
   ignore-actions-if-entity-not-in-world: false # If true, will cancel any action (player, entity, variable, world, control...)
