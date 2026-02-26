@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +148,8 @@ public final class LegacyPlatformer extends DevPlatformer implements HasVisibleB
     }
 
     public @NotNull Location getPlatformBeginLocation(@NotNull DevPlatform platform) {
-        return new Location(platform.getWorld(), 0, (platform.getZ() - 1) * 10, 0);
+        int step = OpenCreative.getSettings().getCodingSettings().getLegacyPlatformStep();
+        return new Location(platform.getWorld(), 0, (platform.getZ() - 1) * step, 0);
     }
 
 

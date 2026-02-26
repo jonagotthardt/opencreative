@@ -46,6 +46,11 @@ public final class CodingSettings {
     private boolean enabled = true;
     private boolean cancelChatOnValueSet = false;
     private boolean legacySelectionMenu = false;
+    private int verticalPlatformStep = 5;
+    private int legacyPlatformStep = 10;
+    private int horizontalPlatformStep = 102;
+    private boolean verticalPlatformNotchEnabled = false;
+    private int verticalPlatformNotchWidth = 3;
     private boolean ignoreActionsIfEntityNotInWorld = false;
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
@@ -67,6 +72,11 @@ public final class CodingSettings {
         legacySelectionMenu = section.getBoolean("old-selection-menu", false);
         cancelChatOnValueSet = section.getBoolean("cancel-chat-on-value-set", false);
         ignoreActionsIfEntityNotInWorld = section.getBoolean("ignore-actions-if-entity-not-in-world", false);
+        verticalPlatformStep = Math.max(1, section.getInt("platforms-spacing.vertical", 5));
+        legacyPlatformStep = Math.max(1, section.getInt("platforms-spacing.legacy", 10));
+        horizontalPlatformStep = Math.max(101, section.getInt("platforms-spacing.horizontal", 102));
+        verticalPlatformNotchEnabled = section.getBoolean("platforms-vertical-notch.enabled", false);
+        verticalPlatformNotchWidth = Math.max(1, section.getInt("platforms-vertical-notch.width", 3));
 
         loadDisabledBlocks(section);
         setupPromptHandler(section);
@@ -254,5 +264,50 @@ public final class CodingSettings {
      */
     public boolean isIgnoreActionsIfEntityNotInWorld() {
         return ignoreActionsIfEntityNotInWorld;
+    }
+
+    /**
+     * Returns Y-distance between generated vertical platforms.
+     *
+     * @return spacing in blocks.
+     */
+    public int getVerticalPlatformStep() {
+        return verticalPlatformStep;
+    }
+
+    /**
+     * Returns Y-distance between generated legacy platforms.
+     *
+     * @return spacing in blocks.
+     */
+    public int getLegacyPlatformStep() {
+        return legacyPlatformStep;
+    }
+
+    /**
+     * Returns X/Z-distance between generated horizontal platforms.
+     *
+     * @return spacing in blocks.
+     */
+    public int getHorizontalPlatformStep() {
+        return horizontalPlatformStep;
+    }
+
+    /**
+     * Checks whether vertical platform generator should cut a side notch.
+     *
+     * @return true - carve notch, false - keep full floor.
+     */
+    public boolean isVerticalPlatformNotchEnabled() {
+        return verticalPlatformNotchEnabled;
+    }
+
+    /**
+     * Returns notch width for vertical platform generator.
+     *
+     * @return width in blocks from platform edge.
+     */
+    public int getVerticalPlatformNotchWidth() {
+        return verticalPlatformNotchWidth;
     }
 }

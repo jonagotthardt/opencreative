@@ -213,7 +213,7 @@ public final class PlaceBlockListener implements Listener {
         if (devPlanet != null) {
 
             Block block = event.getBlock();
-            Block blockAgainst = event.getBlockAgainst();
+            Block supportBlock = block.getRelative(BlockFace.DOWN);
 
             DevPlatform platform = devPlanet.getPlatformInLocation(event.getBlock().getLocation());
             if (platform == null || block.getY() < 1) {
@@ -221,8 +221,8 @@ public final class PlaceBlockListener implements Listener {
                 Sounds.DEV_NOT_ALLOWED.play(player);
                 return;
             }
-            if (blockAgainst.getType() == platform.getFloorMaterial()) {
-                if (block.getType() == Material.PISTON && ((blockAgainst.getZ() - devPlanet.getDevPlatformer().getPlatformBeginLocation(platform).getBlockZ()) % 4) == 0 && blockAgainst.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
+            if (supportBlock.getType() == platform.getFloorMaterial()) {
+                if (block.getType() == Material.PISTON && ((supportBlock.getZ() - devPlanet.getDevPlatformer().getPlatformBeginLocation(platform).getBlockZ()) % 4) == 0 && supportBlock.getRelative(BlockFace.WEST).getType() == platform.getActionMaterial()) {
                     Directional directional = (Directional) block.getBlockData();
                     if (directional.getFacing() != BlockFace.EAST && directional.getFacing() != BlockFace.WEST) {
                         directional.setFacing(player.getFacing().getOppositeFace());
@@ -231,12 +231,12 @@ public final class PlaceBlockListener implements Listener {
                         directional.setFacing(block.getRelative(BlockFace.WEST).isEmpty() ? BlockFace.WEST : BlockFace.EAST);
                     }
                     block.setBlockData(directional);
-                } else if ((!(block.getType().name().contains("SIGN") && blockAgainst.getX() >= 4 && (blockAgainst.getX() % 2) == 0)) && (!devPlanet.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
+                } else if ((!(block.getType().name().contains("SIGN") && supportBlock.getX() >= 4 && (supportBlock.getX() % 2) == 0)) && (!devPlanet.getAllowedBlocks().contains(block.getType())) || block.getY() <= 0) {
                     player.sendActionBar(getLocaleMessage("world.dev-mode.cant-place-on-floor"));
                     Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 }
-            } else if (blockAgainst.getType() == platform.getEventMaterial()) {
+            } else if (supportBlock.getType() == platform.getEventMaterial()) {
                 if (devPlanet.getEventsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";
@@ -256,7 +256,7 @@ public final class PlaceBlockListener implements Listener {
                     Sounds.DEV_NOT_ALLOWED.play(player);
                     event.setCancelled(true);
                 }
-            } else if (blockAgainst.getType() == platform.getActionMaterial()) {
+            } else if (supportBlock.getType() == platform.getActionMaterial()) {
                 if (devPlanet.getActionsBlocks().contains(block.getType())) {
                     Material additionalBlockMaterial = Material.REDSTONE_ORE;
                     String signText = "unknown";

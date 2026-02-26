@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +167,8 @@ public final class HorizontalPlatformer extends DevPlatformer {
     }
 
     public @NotNull Location getPlatformBeginLocation(@NotNull DevPlatform platform) {
-        return new Location(platform.getWorld(), (platform.getX() - 1) * 102, 0, (platform.getZ() - 1) * 102);
+        int step = OpenCreative.getSettings().getCodingSettings().getHorizontalPlatformStep();
+        return new Location(platform.getWorld(), (platform.getX() - 1) * step, 0, (platform.getZ() - 1) * step);
     }
 
 
