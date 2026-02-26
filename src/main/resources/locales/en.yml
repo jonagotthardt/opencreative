@@ -5791,6 +5791,22 @@ items:
           - "&3 Parameter &7- Enable or disable"
           - " "
           - "&eClick to set the action."
+        arguments:
+          boolean:
+            name: "&6Fire Mode"
+            lore:
+              - "&7If set to Yes, entity"
+              - "&7will appear burning, but"
+              - "&7won’t take any damage."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fOptions:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Extinguish"
+              true: "Let it burn"
       entity-set-fox-sleeping:
         name: "&6Fox Sleeping State"
         lore:

@@ -85,7 +85,7 @@ public class PlanetTerritory {
      * Resets custom world size to owner's group world size.
      */
     public void resetWorldSize() {
-        int worldSize = OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize();
+        int worldSize = planet.getGroup().getWorldSize();
         FileUtils.removePlanetConfigParameter(planet, "size");
         if (this.worldSize == worldSize) return;
         this.worldSize = worldSize;
@@ -124,7 +124,7 @@ public class PlanetTerritory {
                 environment = World.Environment.valueOf(config.getString("environment"));
             } catch (Exception ignored) {}
         }
-        worldSize = config.getInt("size", OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize());
+        worldSize = config.getInt("size", planet.getGroup().getWorldSize());
         autoSave = config.getBoolean("autosave", true);
         biome = config.getString("biome", "");
         this.generator = config.getString("generator", "");
