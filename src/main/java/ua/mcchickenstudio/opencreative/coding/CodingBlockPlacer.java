@@ -346,7 +346,7 @@ public class CodingBlockPlacer {
                         category.getAdditionalBlock(),
                         wallSign, category.name().toLowerCase());
                 String name = data.getString("name", "");
-                setSignLine(signLocation, 3, name);
+                setSignLine(signLocation, 3, substring(name, 14));
                 if (!target.equals("default")) setSignLine(signLocation, 4, target);
             }
             case SELECTION_ACTION -> {
