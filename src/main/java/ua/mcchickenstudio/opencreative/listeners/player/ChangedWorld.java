@@ -112,7 +112,7 @@ public final class ChangedWorld implements Listener {
                         newPlanet.getTerritory().showBorders(onlinePlayer);
                     }
                 }
-                if (!oldPlanet.getWorldPlayers().canDevelop(player) && oldPlanet.getWorldPlayers().canBuild(player)) {
+                if (!oldPlanet.getWorldPlayers().canDevelop(player) && !oldPlanet.getWorldPlayers().canBuild(player)) {
                     giveVisitorPermissions(player);
                 }
             }
@@ -191,6 +191,11 @@ public final class ChangedWorld implements Listener {
                                 giveBuildPermissions(onlinePlayer);
                             }
                         }
+                    }
+                }
+                if (!isEntityInDevPlanet(player)) {
+                    if (!newPlanet.getWorldPlayers().canDevelop(player) && !newPlanet.getWorldPlayers().canBuild(player)) {
+                        giveVisitorPermissions(player);
                     }
                 }
                 newPlanet.getInformation().updateIconAsync();
