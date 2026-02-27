@@ -193,6 +193,11 @@ public final class ChangedWorld implements Listener {
                         }
                     }
                 }
+                if (!isEntityInDevPlanet(player)) {
+                    if (!newPlanet.getWorldPlayers().canDevelop(player) && newPlanet.getWorldPlayers().canBuild(player)) {
+                        giveVisitorPermissions(player);
+                    }
+                }
                 newPlanet.getInformation().updateIconAsync();
             }
         }
