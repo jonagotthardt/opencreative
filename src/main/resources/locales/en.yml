@@ -14171,8 +14171,8 @@ menus:
           false: "&7Not in whitelist"
           true: "&7Can join &fanytime"
         flight:
-          offline: "&cUnavailable"
-          false: "&cDisabled"
+          offline: "&cCannot fly"
+          false: "&cCannot fly"
           true: "&aCan fly"
       kick-all:
         name: " "

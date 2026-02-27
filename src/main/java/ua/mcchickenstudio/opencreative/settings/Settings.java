@@ -108,6 +108,8 @@ public final class Settings {
      */
     public void load(FileConfiguration config) {
 
+        config.options().copyDefaults(true);
+
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
         messagesIgnoringReset.clear();
