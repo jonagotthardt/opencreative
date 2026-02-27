@@ -41,6 +41,7 @@ public final class CooldownUtils {
     private static final HashMap<UUID, Long> modulesManipulationsCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> blocksDuplicationCooldown = new HashMap<>();
     private static final HashMap<UUID, Long> worldDownloadCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> prompterDownloadCooldown = new HashMap<>();
 
     /**
      * Returns cooldown timestamp for player, or 0 - if they don't have cooldown.
@@ -164,6 +165,7 @@ public final class CooldownUtils {
         modulesManipulationsCooldown.remove(player.getUniqueId());
         blocksDuplicationCooldown.remove(player.getUniqueId());
         worldDownloadCooldown.remove(player.getUniqueId());
+        prompterDownloadCooldown.remove(player.getUniqueId());
     }
 
     private static HashMap<UUID, Long> getCooldownMap(@NotNull CooldownType type) {
@@ -175,6 +177,7 @@ public final class CooldownUtils {
             case MODULE_MANIPULATION -> modulesManipulationsCooldown;
             case BLOCKS_DUPLICATION -> blocksDuplicationCooldown;
             case WORLD_DOWNLOAD -> worldDownloadCooldown;
+            case PROMPTER_REQUEST -> prompterDownloadCooldown;
         };
     }
 
@@ -187,6 +190,7 @@ public final class CooldownUtils {
             case MODULE_MANIPULATION -> group.getModuleManipulationCooldown();
             case BLOCKS_DUPLICATION -> group.getBlocksDuplicationCooldown();
             case WORLD_DOWNLOAD -> group.getWorldDownloadCooldown();
+            case PROMPTER_REQUEST -> group.getPrompterUsageCooldown();
         };
     }
 
@@ -221,6 +225,10 @@ public final class CooldownUtils {
         /**
          * Cooldown of downloading world with /world download.
          */
-        WORLD_DOWNLOAD
+        WORLD_DOWNLOAD,
+        /**
+         * Cooldown of requesting code generation with /env make.
+         */
+        PROMPTER_REQUEST
     }
 }

@@ -107,9 +107,6 @@ public final class Settings {
      * @param config Configuration file.
      */
     public void load(FileConfiguration config) {
-
-        config.options().copyDefaults(true);
-
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
         messagesIgnoringReset.clear();
@@ -271,6 +268,7 @@ public final class Settings {
                 continue;
             }
             if (groupsSection.isString(groupId)) {
+                itemsGroups.put(group, new SettingsItemsGroup());
                 continue;
             }
             ConfigurationSection slots = groupsSection.getConfigurationSection(groupId);
