@@ -208,11 +208,11 @@ public class ActionsHandler {
             } catch (Exception error) {
                 sendErrorMessage(action, error);
                 removeAllActions();
+                executor.getPlanet().getVariables().garbageCollector(getMainActionHandler());
                 if (action.getPlanet().getLimits().isTooManyCodingErrors()) {
                     action.getPlanet().getTerritory().getScript().getExecutors().stopCode("errors limit");
                     sendPlanetCodeCriticalErrorMessage(action.getPlanet(), executor, getLocaleMessage("coding-error.errors-limit", false)
                             .replace("%limit%", String.valueOf(action.getPlanet().getLimits().getCodingErrorsLimit())));
-                    executor.getPlanet().getVariables().garbageCollector(getMainActionHandler());
                     return;
                 }
             }

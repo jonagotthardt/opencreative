@@ -265,6 +265,9 @@ public class CodingBlockPlacer {
             }
         } catch (Exception error) {
             sendDebugError("Cannot place action block.", error);
+            location.getBlock().setType(Material.AIR);
+            location.getBlock().getRelative(BlockFace.EAST).setType(Material.AIR);
+            location.getBlock().getRelative(BlockFace.UP).setType(Material.AIR);
             return false;
         }
         return true;
