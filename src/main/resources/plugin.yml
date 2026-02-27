@@ -70,6 +70,9 @@ commands:
   menu:
     description: 'Opens worlds browser menu.'
     aliases: [меню, games, worlds, ьутг, minigames, g, п]
+  ownworlds:
+    description: 'Opens own worlds browser menu.'
+    aliases: [myworlds, mygames, owngames, ьнцщкдвы, ьнпфьуы, ьнпфьуі, ьнцщкдві, щцтцщкдві, щцтцщкдвы]
   world:
     description: 'Opens world`s settings menu.'
     aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]
