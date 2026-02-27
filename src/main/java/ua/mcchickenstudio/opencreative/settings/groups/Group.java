@@ -50,6 +50,7 @@ public class Group {
     private final int modulesUsageCooldown;
     private final int blocksDuplicationCooldown;
     private final int worldDownloadCooldown;
+    private final int prompterUsageCooldown;
 
     private final double likeReward;
     private final double advertisementPrice;
@@ -93,6 +94,7 @@ public class Group {
         modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage", 7);
         blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage", 7);
         worldDownloadCooldown  = config.getInt(path + "cooldowns.world-download", 120);
+        prompterUsageCooldown  = config.getInt(path + "cooldowns.prompter-usage", 60);
         chatCooldown = config.getInt(path + "cooldowns.world-chat", 2);
 
         /*
@@ -196,6 +198,16 @@ public class Group {
      */
     public int getWorldDownloadCooldown() {
         return worldDownloadCooldown;
+    }
+
+    /**
+     * Returns how much time needs to pass to generate
+     * code /env make.
+     *
+     * @return cooldown of using coding prompter.
+     */
+    public int getPrompterUsageCooldown() {
+        return prompterUsageCooldown;
     }
 
     /**

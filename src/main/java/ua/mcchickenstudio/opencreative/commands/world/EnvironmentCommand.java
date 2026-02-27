@@ -683,7 +683,7 @@ public class EnvironmentCommand extends CommandHandler {
                         player.sendMessage(getLocaleMessage("too-few-args"));
                         return;
                     }
-                    if (!checkAndSetCooldownWithMessage(player, CooldownType.MODULE_MANIPULATION)) return;
+                    if (!checkAndSetCooldownWithMessage(player, CooldownType.PROMPTER_REQUEST)) return;
                     String request = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     sendDebug("[CODING PROMPT] Player " + player.getName() + " requested to create a code: " + request);
                     player.sendMessage(getLocaleMessage("environment.prompter.thinking"));

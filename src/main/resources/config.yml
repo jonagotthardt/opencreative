@@ -382,6 +382,7 @@ groups:
       module-usage: 7 # creating, pasting modules
       duplication-usage: 7 # duplicating blocks with manipulator
       world-download: 120 # downloading world with /world download
+      prompter-usage: 60 # generating code with prompter /env make
     creating-world:
       limit: 2
     creating-module:
@@ -460,6 +461,7 @@ groups:
       module-usage: 7
       duplication-usage: 7
       world-download: 120
+      prompter-usage: 60
     creating-world:
       limit: 4
     creating-module:
