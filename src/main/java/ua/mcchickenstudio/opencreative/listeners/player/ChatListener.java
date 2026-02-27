@@ -158,7 +158,10 @@ public final class ChatListener implements Listener {
             }
             checkDevItems(player, message, event);
             checkConfirmation(player, message, event);
-            if (event.isCancelled()) return;
+            if (event.isCancelled()) {
+                event.viewers().clear();
+                return;
+            }
             event.setCancelled(true);
             if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
                 player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
