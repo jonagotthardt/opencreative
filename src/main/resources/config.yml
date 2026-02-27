@@ -205,7 +205,7 @@ messages:
 
   branding: "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f" # Prefix, that will be used in many messages.
-  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team, onn512, pawsashatoy, LWJENNI, HACKERPRO17\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team, onn512, pawsashatoy, LWJENNI, HACKERPRO17, liventmst\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
 
   cc-prefix: "&6 Creative Chat &8| &7" # Creative Chat is global chat, accessed by ! in the beginning of message, or with /cc.
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders and MiniMessage here

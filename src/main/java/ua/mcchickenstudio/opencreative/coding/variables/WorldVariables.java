@@ -296,7 +296,7 @@ public final class WorldVariables {
         }
         JSONArray jsonArray = new JSONArray();
         try (FileWriter file = new FileWriter(variablesJson.getPath())) {
-            for (WorldVariable worldVariable : savedVariables.values()) {
+            for (WorldVariable worldVariable : new HashSet<>(savedVariables.values())) {
                 JSONObject objItem = new JSONObject();
                 objItem.put("name", worldVariable.getName());
                 objItem.put("type", worldVariable.getType().name());

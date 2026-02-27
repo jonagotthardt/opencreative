@@ -202,7 +202,7 @@ public class Planet {
      *
      * @return group of owner.
      */
-    public Group getGroup() {
+    public @NotNull Group getGroup() {
         return OpenCreative.getSettings().getGroups().getGroup(ownerGroup);
     }
 
