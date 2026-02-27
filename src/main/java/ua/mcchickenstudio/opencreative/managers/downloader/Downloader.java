@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 
 import java.io.*;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -152,15 +153,19 @@ public final class Downloader implements DownloadManager {
 
     @Override
     public void init() {
+        int port = OpenCreative.getSettings().getWebSettings().getPort();
         try {
-            int port = OpenCreative.getSettings().getWebSettings().getPort();
             server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/", this::handle);
             cleanerRunnable.runTaskTimerAsynchronously(OpenCreative.getPlugin(), 20L, 1200L);
             server.start();
             OpenCreative.getPlugin().getLogger().info("Started world downloader web service on port: " + port);
         } catch (Exception error) {
-            sendCriticalErrorMessage("Failed to start world downloader web server.", error);
+            if (error instanceof BindException) {
+                sendCriticalErrorMessage("Something is already using world downloader web server's port " + port + ", so it's failed to start.");
+            } else {
+                sendCriticalErrorMessage("Failed to start world downloader web server.", error);
+            }
         }
     }
 

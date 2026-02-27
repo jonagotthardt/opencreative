@@ -28,6 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -47,6 +48,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.events.world.other.GamePlay
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.PlanetExecutors;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Function;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.other.Method;
+import ua.mcchickenstudio.opencreative.coding.prompters.PrompterBadCodeException;
 import ua.mcchickenstudio.opencreative.coding.prompters.PrompterDownException;
 import ua.mcchickenstudio.opencreative.coding.prompters.PrompterLimitedException;
 import ua.mcchickenstudio.opencreative.coding.prompters.UnauthorizedPrompterException;
@@ -73,8 +75,7 @@ import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.CooldownType;
 import static ua.mcchickenstudio.opencreative.utils.CooldownUtils.checkAndSetCooldownWithMessage;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendDebug;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 /**
@@ -700,7 +701,14 @@ public class EnvironmentCommand extends CommandHandler {
                                         sendDebug("[CODING PROMPT] Responded to " + player.getName() + "'s wish: "
                                                 + request + " in " + (System.currentTimeMillis() - time) + "  ms.");
                                         sendDebug("The response:\n" + response);
-                                        YamlConfiguration config = YamlConfiguration.loadConfiguration(new StringReader(response));
+                                        YamlConfiguration config = new YamlConfiguration();
+                                        try {
+                                            config.load(new StringReader(response));
+                                            sendDebug("[CODING PROMPT] Response:\n" + config.saveToString());
+                                        } catch (Exception error) {
+                                            sendDebugError("Failed to generate a code by " + player.getName() +  ": " + request, error);
+                                            throw new PrompterBadCodeException(error);
+                                        }
                                         ConfigurationSection section = config.getConfigurationSection("code.blocks");
                                         if (section == null) {
                                             section = config.getConfigurationSection("blocks");
@@ -755,6 +763,11 @@ public class EnvironmentCommand extends CommandHandler {
                                                     player.sendMessage(getLocaleMessage("environment.prompter.limited"));
                                             case PrompterDownException ignored ->
                                                     player.sendMessage(getLocaleMessage("environment.prompter.unavailable"));
+                                            case PrompterBadCodeException ignored -> {
+                                                    player.sendMessage(getLocaleComponent("environment.prompter.bad-prompt")
+                                                            .hoverEvent(HoverEvent.showText(Component.text(parseException(ignored, true)))));
+                                                    Sounds.PLAYER_FAIL.play(player);
+                                            }
                                             case HttpTimeoutException ignored ->
                                                     player.sendMessage(getLocaleMessage("environment.prompter.timeout"));
                                             case ConnectException ignored ->

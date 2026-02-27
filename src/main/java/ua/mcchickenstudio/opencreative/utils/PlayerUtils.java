@@ -415,6 +415,20 @@ public final class PlayerUtils {
     }
 
     /**
+     * Sets player's permissions when they enter planet in play or build mode,
+     * but not being as world builder, developer or owner.
+     *
+     * @param player player to give permissions.
+     */
+    public static void giveVisitorPermissions(@NotNull Player player) {
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getVisitorPermissions();
+        for (String permission : perms) {
+            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+        }
+    }
+
+    /**
      * Sets player's permissions when they enter lobby.
      *
      * @param player player to give permissions.

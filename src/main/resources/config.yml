@@ -451,6 +451,9 @@ groups:
         # If you want to deny permission, that player has (maybe he's admin),
         # just add ! at the beginning of permission node.
         # - !nte.default
+      visitor-permissions:     # Permissions will be given when player joins the build world (/play, /build),
+        - "essentials.ptime" # but they're not builder/developer/world owner. If player becomes developer/builder
+                             # visitor permissions will be removed from player.
   premium:
     permission: "opencreative.group.premium"
     cooldowns:
@@ -519,6 +522,8 @@ groups:
       dev-permissions:
         - "headdb.open"
         - "essentials.itemname"
+      visitor-permissions:
+        - "essentials.ptime"
 sounds:
   #
   # This section allows you to set custom

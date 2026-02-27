@@ -60,6 +60,7 @@ public class Group {
     private final Set<String> buildPermissions = new HashSet<>();
     private final Set<String> devPermissions = new HashSet<>();
     private final Set<String> lobbyPermissions = new HashSet<>();
+    private final Set<String> visitorPermissions = new HashSet<>();
 
     private final Map<LimitType, LimitModifier> limits = new HashMap<>();
 
@@ -104,6 +105,7 @@ public class Group {
         buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
         lobbyPermissions.addAll(config.getStringList(path + "lobby-permissions"));
+        visitorPermissions.addAll(config.getStringList(path + "world.visitor-permissions"));
 
         boolean changedConfig = false;
         for (LimitType type : LimitType.values()) {
@@ -236,6 +238,16 @@ public class Group {
      */
     public int getModulesLimit() {
         return modulesLimit;
+    }
+
+    /**
+     * Returns set of permissions, that will be given when player
+     * joins the world, but he's not world's builder/developer/owner.
+     *
+     * @return set of visitor permissions.
+     */
+    public Set<String> getVisitorPermissions() {
+        return visitorPermissions;
     }
 
     /**

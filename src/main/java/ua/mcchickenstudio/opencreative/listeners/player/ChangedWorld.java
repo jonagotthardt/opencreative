@@ -112,6 +112,9 @@ public final class ChangedWorld implements Listener {
                         newPlanet.getTerritory().showBorders(onlinePlayer);
                     }
                 }
+                if (!oldPlanet.getWorldPlayers().canDevelop(player) && oldPlanet.getWorldPlayers().canBuild(player)) {
+                    giveVisitorPermissions(player);
+                }
             }
         } else {
             // Player is in different planets / not in planets
@@ -175,6 +178,8 @@ public final class ChangedWorld implements Listener {
                         for (Player onlinePlayer : newPlanet.getDevPlanet().getWorld().getPlayers()) {
                             if (newPlanet.getWorldPlayers().isNotTrustedDeveloper(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
+                                clearWorldModePermissions(onlinePlayer);
+                                giveDevPermissions(onlinePlayer);
                             }
                         }
                     }
@@ -182,6 +187,7 @@ public final class ChangedWorld implements Listener {
                         for (Player onlinePlayer : newPlanet.getTerritory().getWorld().getPlayers()) {
                             if (newPlanet.getWorldPlayers().isNotTrustedBuilder(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
+                                clearWorldModePermissions(onlinePlayer);
                                 giveBuildPermissions(onlinePlayer);
                             }
                         }
