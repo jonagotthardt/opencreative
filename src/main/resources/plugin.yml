@@ -29,6 +29,7 @@ loadbefore:
   - FastAsyncWorldEdit
   - WorldEdit
   - Essentials
+  - ChatControl
 
 commands:
   creative:
