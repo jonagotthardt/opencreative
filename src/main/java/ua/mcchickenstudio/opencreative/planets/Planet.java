@@ -542,6 +542,7 @@ public class Planet {
                         territory.showBorders(player);
                         if (worldPlayers.canDevelop(player)) {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                            givePlayPermissions(player);
                         } else {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                         }
@@ -747,7 +748,7 @@ public class Planet {
      * @param success    chunks are loaded successfully to teleport or not.
      */
     private void handleConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
-        clearPlayer(player);
+        clearPlayer(player, false);
         if (success) {
             OpenCreative.getWander(player).setConnectingToPlanet(false);
             if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
@@ -755,7 +756,7 @@ public class Planet {
                     onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
                 }
             }
-            clearPlayer(player);
+            clearPlayer(player, false);
             Sounds.WORLD_CONNECTED.play(player);
             mode.onPlayerConnect(player, this);
             getWorldPlayers().getPlanetPlayer(player).load();
@@ -807,11 +808,6 @@ public class Planet {
             if (!wasLoaded) {
                 territory.getScript().loadCode();
                 new GamePlayEvent(this).callEvent();
-            }
-            if (mode == Mode.PLAYING && worldPlayers.canDevelop(player)) {
-                givePlayPermissions(player);
-            } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
-                giveBuildPermissions(player);
             }
             if (!hidePlayer) {
                 new JoinEvent(player).callEvent();
@@ -879,7 +875,7 @@ public class Planet {
         }
         PlayerInventory playerInventory = player.getInventory();
         ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ? playerInventory.getContents() : new ItemStack[]{});
-        clearPlayer(player);
+        clearPlayer(player, false);
         player.teleportAsync(lastLocation).thenAccept(success -> {
             if (success) {
                 player.setAllowFlight(true);
@@ -967,7 +963,6 @@ public class Planet {
                 // Removes build permissions for admins on world join (to prevent accidental griefs)
                 if (planet.getWorldPlayers().canBuild(player) && (!player.hasPermission("opencreative.world.build.others") || planet.isOwner(player))) {
                     player.setGameMode(GameMode.CREATIVE);
-                    giveBuildPermissions(player);
                 }
             }
         };

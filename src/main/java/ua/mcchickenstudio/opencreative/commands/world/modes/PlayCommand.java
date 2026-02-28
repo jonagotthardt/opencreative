@@ -153,17 +153,15 @@ public class PlayCommand extends CommandHandler {
         DevPlanet current = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet != null && !devPlanet.equals(current)) return;
         if (devPlanet == null) {
+            givePlayPermissions(player);
             new QuitEvent(player).callEvent();
         }
-        clearPlayer(player);
+        clearPlayer(player, false);
         player.teleportAsync(planet.getTerritory().getSpawnLocation()).thenAccept(success -> {
             if (success) {
                 planet.getTerritory().showBorders(player);
                 if (planet.isOwner(player)) {
                     ItemsGroup.PLAY_OWNER.setItems(player);
-                }
-                if (planet.getWorldPlayers().canDevelop(player)) {
-                    givePlayPermissions(player);
                 }
                 new JoinEvent(player).callEvent();
             }
