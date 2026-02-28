@@ -74,8 +74,19 @@ public final class PlayerUtils {
      * @param player player to clear.
      */
     public static void clearPlayer(Player player) {
+        clearPlayer(player, true);
+    }
+
+    /**
+     * Clears player from modifications made by world
+     * and resets his states, parameters and attributes.
+     *
+     * @param player player to clear.
+     * @param clearPermissions remove world mode permissions or not.
+     */
+    public static void clearPlayer(Player player, boolean clearPermissions) {
         player.setGameMode(GameMode.ADVENTURE);
-        clearWorldModePermissions(player);
+        if (clearPermissions) clearWorldModePermissions(player);
         player.closeInventory();
         if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory()) {
             player.getInventory().clear();

@@ -111,9 +111,13 @@ public final class ChangedWorld implements Listener {
                     for (Player onlinePlayer : newWorld.getPlayers()) {
                         newPlanet.getTerritory().showBorders(onlinePlayer);
                     }
-                }
-                if (!oldPlanet.getWorldPlayers().canDevelop(player) && !oldPlanet.getWorldPlayers().canBuild(player)) {
-                    giveVisitorPermissions(player);
+                    if (oldPlanet.getMode() == Planet.Mode.PLAYING && oldPlanet.getWorldPlayers().canDevelop(player)) {
+                        givePlayPermissions(player);
+                    } else if (oldPlanet.getMode() == Planet.Mode.BUILD && oldPlanet.getWorldPlayers().canBuild(player)) {
+                        giveBuildPermissions(player);
+                    } else if (!oldPlanet.getWorldPlayers().canDevelop(player) && !oldPlanet.getWorldPlayers().canBuild(player)) {
+                        giveVisitorPermissions(player);
+                    }
                 }
             }
         } else {
@@ -194,7 +198,11 @@ public final class ChangedWorld implements Listener {
                     }
                 }
                 if (!isEntityInDevPlanet(player)) {
-                    if (!newPlanet.getWorldPlayers().canDevelop(player) && !newPlanet.getWorldPlayers().canBuild(player)) {
+                    if (newPlanet.getMode() == Planet.Mode.PLAYING && newPlanet.getWorldPlayers().canDevelop(player)) {
+                        givePlayPermissions(player);
+                    } else if (newPlanet.getMode() == Planet.Mode.BUILD && newPlanet.getWorldPlayers().canBuild(player)) {
+                        giveBuildPermissions(player);
+                    } else if (!newPlanet.getWorldPlayers().canDevelop(player) && !newPlanet.getWorldPlayers().canBuild(player)) {
                         giveVisitorPermissions(player);
                     }
                 }
