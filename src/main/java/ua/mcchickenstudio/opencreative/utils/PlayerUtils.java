@@ -395,7 +395,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getDevPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -408,7 +410,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getPlayPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -421,7 +425,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getBuildPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -435,7 +441,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getVisitorPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -448,7 +456,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getLobbyPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
