@@ -51,6 +51,8 @@ public final class CodingSettings {
     private int horizontalPlatformStep = 102;
     private boolean verticalPlatformNotchEnabled = false;
     private int verticalPlatformNotchWidth = 3;
+    private boolean shiftBreakChainEnabled = true;
+    private boolean shiftBreakChainCompactFull = true;
     private boolean ignoreActionsIfEntityNotInWorld = false;
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
@@ -77,6 +79,8 @@ public final class CodingSettings {
         horizontalPlatformStep = Math.max(101, section.getInt("platforms-spacing.horizontal", 102));
         verticalPlatformNotchEnabled = section.getBoolean("platforms-vertical-notch.enabled", false);
         verticalPlatformNotchWidth = Math.max(1, section.getInt("platforms-vertical-notch.width", 3));
+        shiftBreakChainEnabled = section.getBoolean("shift-break-chain-enabled", true);
+        shiftBreakChainCompactFull = section.getBoolean("shift-break-chain-compact-full", true);
 
         loadDisabledBlocks(section);
         setupPromptHandler(section);
@@ -309,5 +313,23 @@ public final class CodingSettings {
      */
     public int getVerticalPlatformNotchWidth() {
         return verticalPlatformNotchWidth;
+    }
+
+    /**
+     * Checks whether sneaking block-break should remove full multi-action chain.
+     *
+     * @return true - enabled, false - disabled.
+     */
+    public boolean isShiftBreakChainEnabled() {
+        return shiftBreakChainEnabled;
+    }
+
+    /**
+     * Checks whether shift chain removal should compact entire remaining line.
+     *
+     * @return true - compact fully, false - single vanilla move only.
+     */
+    public boolean isShiftBreakChainCompactFull() {
+        return shiftBreakChainCompactFull;
     }
 }

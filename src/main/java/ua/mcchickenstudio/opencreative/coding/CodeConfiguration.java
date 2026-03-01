@@ -66,8 +66,7 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
         int y = block.getY();
         int z = block.getZ();
 
-        String path = "code.blocks.exec_block_" +
-                (notDependsOnHeight ? z : y) + "_" + x;
+        String path = "code.blocks." + getExecutorKey(block);
         set(path + ".category", category.name());
         set(path + ".type", executor.getID().toUpperCase());
 
@@ -176,18 +175,14 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
     }
 
     private String getActionBlockPath(Block executorBlock, boolean notDependsOnHeight, Block actionBlock, List<String> multiActions) {
-        int z = notDependsOnHeight ? actionBlock.getZ() : actionBlock.getY();
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
             conditionsPath
                     .append(condition.endsWith(".else") ? condition.replace(".else", "") : condition)
                     .append(condition.endsWith(".else") ? ".else." : ".actions.");
         }
-        String path = "code.blocks.exec_block_";
-        StringBuilder builder = new StringBuilder(path);
-        builder.append(z);
-        builder.append("_");
-        builder.append(executorBlock.getX());
+        StringBuilder builder = new StringBuilder("code.blocks.");
+        builder.append(getExecutorKey(executorBlock));
         builder.append(".actions.");
         builder.append(conditionsPath);
         ActionCategory category = ActionCategory.getByMaterial(actionBlock.getType());
@@ -201,6 +196,15 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
 
     public int getBlockNumber(Block block) {
         return (block.getX() - 2) / 2;
+    }
+
+    /**
+     * Builds stable unique key for executor block.
+     * We include all 3 coordinates to avoid key collisions on vertical/legacy platforms
+     * where many executors share same X and Y and differ only by Z.
+     */
+    private @NotNull String getExecutorKey(@NotNull Block block) {
+        return "exec_block_" + block.getY() + "_" + block.getX() + "_" + block.getZ();
     }
 
 }
