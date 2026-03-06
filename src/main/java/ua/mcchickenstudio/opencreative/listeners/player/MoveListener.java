@@ -123,7 +123,9 @@ public final class MoveListener implements Listener {
     public void onChunkUnload(PlayerChunkUnloadEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) {
-            new ChunkUnloadEvent(event.getPlayer(), event).callEvent();
+            if (!planet.getTerritory().isBusy()) {
+                new ChunkUnloadEvent(event.getPlayer(), event).callEvent();
+            }
         }
     }
 

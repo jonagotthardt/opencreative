@@ -160,7 +160,9 @@ lobby:
   disallow-damaging-mobs: true     # To bypass with true, add permission: opencreative.lobby.damaging-mobs.bypass
   disallow-world-edit: true        # To bypass with true, add permission: opencreative.lobby.world-edit.bypass
   disable-explosions: true # If true, any explosion in lobby will be cancelled.
-  clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
+  clear-inventory: "all" # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
+                         # "all" - all worlds, "creative" - only planets and lobby, "planets" - only planets, "lobby" - only lobby, "none" - disable.
+  reset-gamemode: "all" # Game mode will be cleared on world change, should be enabled due to security reasons.
   reset-view-distance: true # View and simulation distances will be reset on server join, world change.
                             # If it makes "almost all chunks not visible", set to false.
                             # If false, will disable "Set View Distance" and "Set Simulation Distance" player actions.

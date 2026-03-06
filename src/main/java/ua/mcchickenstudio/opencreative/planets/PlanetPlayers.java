@@ -24,6 +24,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -416,6 +417,7 @@ public class PlanetPlayers {
     public void kickPlayer(Player player) {
         Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet.equals(playerPlanet) && !player.hasPermission("opencreative.world.kick.bypass")) {
+            new QuitEvent(player).callEvent();
             removePassengers(player);
             teleportToLobby(player);
             player.sendMessage(getLocaleMessage("world.players.kick.player")
