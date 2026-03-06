@@ -123,7 +123,7 @@ public final class ChangedWorld implements Listener {
         } else {
             // Player is in different planets / not in planets
             if (!player.hasPermission("opencreative.ignore.world-change-clear")) {
-                clearPlayer(player);
+                clearPlayer(player, true, OpenCreative.getSettings().getLobbySettings().shouldResetGameMode(newWorld));
             }
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);

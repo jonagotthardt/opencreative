@@ -85,10 +85,22 @@ public final class PlayerUtils {
      * @param clearPermissions remove world mode permissions or not.
      */
     public static void clearPlayer(Player player, boolean clearPermissions) {
+        clearPlayer(player, clearPermissions, true);
+    }
+
+    /**
+     * Clears player from modifications made by world
+     * and resets his states, parameters and attributes.
+     *
+     * @param player player to clear.
+     * @param clearPermissions remove world mode permissions or not.
+     * @param resetGameMode set game mode to adventure or not.
+     */
+    public static void clearPlayer(Player player, boolean clearPermissions, boolean resetGameMode) {
         player.setGameMode(GameMode.ADVENTURE);
         if (clearPermissions) clearWorldModePermissions(player);
         player.closeInventory();
-        if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory()) {
+        if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory(player.getWorld())) {
             player.getInventory().clear();
         }
         for (PotionEffect effect : player.getActivePotionEffects()) {
