@@ -43,6 +43,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.player.PlayerLobbyEvent;
 import ua.mcchickenstudio.opencreative.settings.Settings;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -101,21 +102,15 @@ public final class PlayerUtils {
         for (Entity entity : player.getWorld().getEntities()) {
             player.showEntity(OpenCreative.getPlugin(), entity);
         }
-        for (Player p : player.getWorld().getPlayers()) {
-            player.showEntity(OpenCreative.getPlugin(), p);
-        }
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         clearBossBars(player);
         HookUtils.clearPlayerHook(player);
-        player.setGameMode(GameMode.ADVENTURE);
     }
 
     public static void removePassengers(@NotNull Player player) {
         player.releaseLeftShoulderEntity();
         player.releaseRightShoulderEntity();
-        for (Entity passenger : new ArrayList<>(player.getPassengers())) {
-            player.eject();
-        }
+        player.eject();
     }
 
     /**
@@ -207,6 +202,7 @@ public final class PlayerUtils {
      * @param player specified player to teleport.
      **/
     public static void teleportToLobby(Player player) {
+        new QuitEvent(player).callEvent();
         Location location = getLobbyLocation();
         player.eject();
         if (player.isDead()) {

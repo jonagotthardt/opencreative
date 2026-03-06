@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
@@ -87,7 +86,6 @@ public class DevCommand extends CommandHandler {
                         return;
                     }
                 }
-                new QuitEvent(player).callEvent();
                 if (args.length == 3) {
                     try {
                         double x = Double.parseDouble(args[0]);

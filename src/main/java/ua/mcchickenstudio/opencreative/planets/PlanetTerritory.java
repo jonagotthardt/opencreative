@@ -29,10 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodeScript;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetLoadEvent;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetUnloadEvent;
-import ua.mcchickenstudio.opencreative.indev.blocks.CodingScript;
 import ua.mcchickenstudio.opencreative.utils.FileUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
@@ -193,9 +191,7 @@ public class PlanetTerritory {
      */
     public synchronized void unload() {
         if (OpenCreative.getPlugin().isEnabled()) {
-            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
-                handleUnloadProcess(true);
-            }, 5);
+            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> handleUnloadProcess(true), 5);
         } else {
             handleUnloadProcess(false);
         }
@@ -224,15 +220,12 @@ public class PlanetTerritory {
             }
         }
         for (Player player : planet.getPlayers()) {
-            new QuitEvent(player).callEvent();
+            teleportToLobby(player);
         }
         if (asyncSaveData) {
             Bukkit.getScheduler().runTaskAsynchronously(OpenCreative.getPlugin(), this::saveData);
         } else {
             this.saveData();
-        }
-        for (Player player : planet.getPlayers()) {
-            teleportToLobby(player);
         }
         Bukkit.unloadWorld(planet.getWorldName(), autoSave);
         if (planet.getDevPlanet().isLoaded()) {
@@ -447,9 +440,7 @@ public class PlanetTerritory {
         border.setSize(player.getWorld().getWorldBorder().getSize());
         switch (planet.getFlagValue(PlanetFlags.PlanetFlag.WORLD_BORDERS)) {
             case 1 -> border.setSize(border.getSize());
-            case 2 -> {
-                border.setSize(border.getSize() + 0.001, 3600);
-            }
+            case 2 -> border.setSize(border.getSize() + 0.001, 3600);
             case 3 -> {
                 border.setSize(border.getSize() + 0.1);
                 player.setWorldBorder(border);

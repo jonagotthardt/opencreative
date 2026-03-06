@@ -721,9 +721,7 @@ public class Planet {
             OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
         }
         removePassengers(player);
-        player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
-            handleConnectionProcess(player, wasLoaded, hidePlayer, success);
-        }).exceptionally(error -> {
+        player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> handleConnectionProcess(player, wasLoaded, hidePlayer, success)).exceptionally(error -> {
             sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
                     (error.getMessage() == null ? "." : ": " + error.getMessage()));
             wander.setConnectingToPlanet(false);
@@ -833,6 +831,7 @@ public class Planet {
      * @param player player to connect.
      */
     public void connectToDevPlanet(Player player) {
+        new QuitEvent(player).callEvent();
         connectToDevPlanet(player, false);
     }
 
