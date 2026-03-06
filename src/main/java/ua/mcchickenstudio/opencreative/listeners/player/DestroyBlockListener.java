@@ -172,7 +172,9 @@ public final class DestroyBlockListener implements Listener {
         int startX = Math.min(block.getX(), closingBracketX);
         int endX = Math.max(block.getX(), closingBracketX);
 
-        for (int x = startX; x <= endX; x++) {
+        // Remove from right to left on coding-slot grid to avoid nested branch corruption.
+        // Coding blocks are placed on every second X; x+1 is auxiliary bracket slot.
+        for (int x = endX; x >= startX; x -= 2) {
             Block inLine = block.getWorld().getBlockAt(x, y, z);
             if (devPlanet.getAllCodingBlocksForPlacing().contains(inLine.getType())) {
                 platform.destroyCodingBlock(inLine.getLocation(), devPlanet.isDropItems());
