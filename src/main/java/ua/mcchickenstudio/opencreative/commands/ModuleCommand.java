@@ -69,7 +69,7 @@ public class ModuleCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                if (!canUseCommand(sender, player, devPlanet)) {
+                if (canUseCommand(sender, player, devPlanet)) {
                     return;
                 }
                 if (devPlanet == null) return;
@@ -132,7 +132,7 @@ public class ModuleCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                if (!canUseCommand(sender, player, devPlanet)) {
+                if (canUseCommand(sender, player, devPlanet)) {
                     return;
                 }
                 if (devPlanet == null) return;
@@ -160,7 +160,7 @@ public class ModuleCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("too-few-args"));
                     return;
                 }
-                if (!canUseCommand(sender, player, devPlanet)) {
+                if (canUseCommand(sender, player, devPlanet)) {
                     return;
                 }
                 if (devPlanet == null) return;
@@ -190,17 +190,17 @@ public class ModuleCommand extends CommandHandler {
     private boolean canUseCommand(@NotNull CommandSender sender, @Nullable Player player, @Nullable DevPlanet devPlanet) {
         if (player == null) {
             sender.sendMessage(getLocaleMessage("only-players"));
-            return false;
+            return true;
         }
         if (devPlanet == null) {
             player.sendMessage(getLocaleMessage("only-in-dev-world"));
-            return false;
+            return true;
         }
         if (!devPlanet.getPlanet().getWorldPlayers().canDevelop(player)) {
             player.sendMessage(getLocaleMessage("not-developer"));
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

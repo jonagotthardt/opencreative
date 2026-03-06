@@ -417,11 +417,8 @@ public class PlanetPlayers {
     public void kickPlayer(Player player) {
         Planet playerPlanet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         if (planet.equals(playerPlanet) && !player.hasPermission("opencreative.world.kick.bypass")) {
-            new QuitEvent(player).callEvent();
-            removePassengers(player);
-            teleportToLobby(player);
-            player.sendMessage(getLocaleMessage("world.players.kick.player")
-                    .replace("%player%", player.getName()));
+                teleportToLobby(player);
+            player.sendMessage(getLocaleMessage("world.players.kick.player").replace("%player%", player.getName()));
             Sounds.WORLD_KICKED.play(player);
         }
     }

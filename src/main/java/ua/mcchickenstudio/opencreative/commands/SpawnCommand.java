@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.utils.CooldownUtils;
 
 import java.util.List;
@@ -57,8 +56,6 @@ public class SpawnCommand extends CommandHandler {
                 sender.sendMessage(getLocaleMessage("only-players"));
                 return;
             }
-            new QuitEvent(player).callEvent();
-            removePassengers(player);
             teleportToLobby(player);
             return;
         }
@@ -71,8 +68,6 @@ public class SpawnCommand extends CommandHandler {
             sender.sendMessage(getLocaleMessage("not-found-player"));
             return;
         }
-        new QuitEvent(player).callEvent();
-        removePassengers(player);
         teleportToLobby(player);
     }
 

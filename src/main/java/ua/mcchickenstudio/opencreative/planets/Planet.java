@@ -843,6 +843,7 @@ public class Planet {
      * @param player player to connect.
      */
     public void connectToDevPlanet(Player player) {
+        new QuitEvent(player).callEvent();
         connectToDevPlanet(player, false);
     }
 
