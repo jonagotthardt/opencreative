@@ -259,6 +259,8 @@ OpenCreative+ is made by McChicken Studio 2017-2025.
 - onn512
 - pawsashatoy
 - LWJENNI
+- HACKERPRO17
+- liventmst
 
 **Testers:**
 - tokkyo35

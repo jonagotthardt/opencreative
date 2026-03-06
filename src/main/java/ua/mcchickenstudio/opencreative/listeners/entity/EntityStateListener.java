@@ -21,10 +21,7 @@ package ua.mcchickenstudio.opencreative.listeners.entity;
 import com.destroystokyo.paper.event.entity.*;
 import com.destroystokyo.paper.event.entity.WitchReadyPotionEvent;
 import io.papermc.paper.event.entity.*;
-import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +30,6 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +50,7 @@ public final class EntityStateListener implements Listener {
 
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
+        if (!OpenCreative.getSettings().getWorldFixerSettings().shouldFixBadEntitiesInAir()) return;
         Entity entity = event.getEntity();
         if (!isBadEntityForMovement(entity)) return;
         if (!isBadEntityMovementState(entity)) {
@@ -73,11 +70,6 @@ public final class EntityStateListener implements Listener {
         }
     }
 
-    private boolean isOnSlimeBlock(@NotNull Entity entity) {
-        Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
-        return block.getType() == Material.SLIME_BLOCK;
-    }
-
     private boolean isBadEntityForMovement(@NotNull Entity entity) {
         if (entity instanceof Projectile) return true;
         if (entity instanceof ArmorStand) return true;
@@ -93,6 +85,7 @@ public final class EntityStateListener implements Listener {
 
     @EventHandler
     public void onCollision(VehicleEntityCollisionEvent event) {
+        if (!OpenCreative.getSettings().getWorldFixerSettings().shouldFixVehicleCollisions()) return;
         if (event.getEntity() instanceof Minecart first && event.getVehicle() instanceof Minecart second) {
             long firstLastCollision = getMetadata(first, "oc_vehicle_last_collision");
             long secondLastCollision = getMetadata(second, "oc_vehicle_last_collision");
@@ -101,7 +94,7 @@ public final class EntityStateListener implements Listener {
             long collisionsAmount = Math.max(firstCollisions, secondCollisions);
             long lastCollision = Math.max(firstLastCollision, secondLastCollision);
             if (System.currentTimeMillis() - lastCollision < 500) {
-                if (collisionsAmount > 50) {
+                if (collisionsAmount > OpenCreative.getSettings().getWorldFixerSettings().getMaxMinecartCollisionsAmount()) {
                     event.setCancelled(true);
                     first.remove();
                     for (Entity entity : first.getNearbyEntities(20, 20, 20)) {
@@ -111,9 +104,9 @@ public final class EntityStateListener implements Listener {
                     }
                 } else {
                     first.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
-                            firstCollisions+1));
+                            firstCollisions + 1));
                     second.setMetadata("oc_vehicle_collisions", new FixedMetadataValue(OpenCreative.getPlugin(),
-                            secondCollisions+1));
+                            secondCollisions + 1));
                 }
             } else {
                 first.setMetadata("oc_vehicle_last_collision", new FixedMetadataValue(OpenCreative.getPlugin(),

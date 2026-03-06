@@ -19,7 +19,10 @@
 package ua.mcchickenstudio.opencreative.coding.menus.variables;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -36,8 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.createItem;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleItemName;
-import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 
 public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
 
@@ -55,15 +57,17 @@ public final class PotionsMenu extends ListBrowserMenu<PotionEffectType> {
     protected ItemStack getElementIcon(PotionEffectType type) {
         ItemStack itemStack = new ItemStack(potionMaterial, 1);
         PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
-        PotionType potionType = PotionType.getByEffect(type);
-        String name = type.getName().toLowerCase().replace("minecraft:", "");
-        meta.displayName(Component.text(getLocaleItemName("menus.developer.potions-list.potions." + name)));
-        if (potionType != null) {
-            meta.setBasePotionType(potionType);
+        PotionEffectType potionType = Registry.POTION_EFFECT_TYPE.get(type.key());
+        if (potionType == null) return null;
+        String name = type.key().asMinimalString().toLowerCase();
+        if (!messageExists("menus.developer.potions-list.potions." + name)) {
+            meta.displayName(Component.translatable("effect.minecraft." + name)
+                    .color(TextColor.color(type.getColor().asRGB())));
         } else {
-            meta.setBasePotionType(PotionType.WATER);
-            meta.addCustomEffect(new PotionEffect(type, 3600, 0), true);
+            meta.displayName(getLocaleComponent("menus.developer.potions-list.potions." + name, false));
         }
+        meta.setBasePotionType(PotionType.WATER);
+        meta.addCustomEffect(new PotionEffect(potionType, 3600, 0), true);
         meta.setColor(type.getColor());
         itemStack.setItemMeta(meta);
         return itemStack;

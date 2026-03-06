@@ -23,10 +23,7 @@ import net.kyori.adventure.resource.ResourcePackRequest;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
@@ -78,14 +75,42 @@ public final class PlayerUtils {
      * @param player player to clear.
      */
     public static void clearPlayer(Player player) {
+        clearPlayer(player, true);
+    }
+
+    /**
+     * Clears player from modifications made by world
+     * and resets his states, parameters and attributes.
+     *
+     * @param player player to clear.
+     * @param clearPermissions remove world mode permissions or not.
+     */
+    public static void clearPlayer(Player player, boolean clearPermissions) {
+        clearPlayer(player, clearPermissions, true);
+    }
+
+    /**
+     * Clears player from modifications made by world
+     * and resets his states, parameters and attributes.
+     *
+     * @param player player to clear.
+     * @param clearPermissions remove world mode permissions or not.
+     * @param resetGameMode set game mode to adventure or not.
+     */
+    public static void clearPlayer(Player player, boolean clearPermissions, boolean resetGameMode) {
         player.setGameMode(GameMode.ADVENTURE);
-        clearWorldModePermissions(player);
+        if (clearPermissions) clearWorldModePermissions(player);
         player.closeInventory();
-        if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory()) {
+        if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory(player.getWorld())) {
             player.getInventory().clear();
         }
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
+        }
+        for (NamespacedKey recipe : new ArrayList<>(player.getDiscoveredRecipes())) {
+            if (recipe.getKey().startsWith("oc_recipe_")) {
+                player.undiscoverRecipe(recipe);
+            }
         }
         resetAttributes(player);
         player.resetPlayerTime();
@@ -142,6 +167,7 @@ public final class PlayerUtils {
         player.setCollidable(true);
         player.setAI(true);
         player.setNoPhysics(false);
+        player.setVisualFire(false);
         AttributeInstance movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
         if (movementSpeed != null) movementSpeed.setBaseValue(0.1f);
 
@@ -177,7 +203,7 @@ public final class PlayerUtils {
      * @param player player to reset resource pack.
      */
     public static void resetResourcePack(Player player) {
-        if (HookUtils.isPluginEnabled("ItemsAdder")) {
+        if (!OpenCreative.getSettings().getLobbySettings().shouldResetResourcePack()) {
             return;
         }
         ResourcePack serverPack = Bukkit.getServerResourcePack();
@@ -211,7 +237,11 @@ public final class PlayerUtils {
                 player.spigot().respawn();
             }
         }
-        player.teleport(location);
+
+        if (!player.teleport(location)) {
+            return;
+        }
+
         clearPlayer(player);
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
@@ -250,6 +280,7 @@ public final class PlayerUtils {
      */
     public static Location getLobbyLocation() {
         World world = getLobbyWorld();
+        world.setGameRule(GameRule.DO_LIMITED_CRAFTING, true);
         ConfigurationSection data = OpenCreative.getPlugin().getConfig().getConfigurationSection("lobby.spawn");
         if (data == null) {
             return world.getSpawnLocation();
@@ -372,7 +403,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getDevPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -385,7 +418,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getPlayPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -398,7 +433,25 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getBuildPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
+        }
+    }
+
+    /**
+     * Sets player's permissions when they enter planet in play or build mode,
+     * but not being as world builder, developer or owner.
+     *
+     * @param player player to give permissions.
+     */
+    public static void giveVisitorPermissions(@NotNull Player player) {
+        PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
+        Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getVisitorPermissions();
+        for (String permission : perms) {
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -411,7 +464,9 @@ public final class PlayerUtils {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getLobbyPermissions();
         for (String permission : perms) {
-            permissionAttachment.setPermission(permission, !permission.startsWith("!"));
+            boolean negated = permission.startsWith("!");
+            String node = negated ? permission.substring(1) : permission;
+            permissionAttachment.setPermission(node, !negated);
         }
     }
 
@@ -493,6 +548,7 @@ public final class PlayerUtils {
     public static void translateSigns(Player player, int radius) {
         if (radius <= 0) return;
         if (radius > 50) radius = 50;
+        if (!player.isConnected()) return;
         int minX = player.getLocation().getBlockX() - radius;
         int maxX = player.getLocation().getBlockX() + radius;
         int minZ = player.getLocation().getBlockZ() - radius;

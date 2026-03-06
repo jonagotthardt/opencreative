@@ -23,14 +23,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.PlanetExecutors;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.FileUtils.getPlanetScriptFile;
@@ -46,12 +44,12 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public class CodeScript {
 
     private final Planet planet;
-    private final Executors executors;
+    private final PlanetExecutors executors;
     private CodeStorage scriptConfig;
 
     public CodeScript(@NotNull Planet planet) {
         this.planet = planet;
-        this.executors = new Executors(planet);
+        this.executors = new PlanetExecutors(planet);
         this.scriptConfig = new CodeConfiguration();
     }
 
@@ -143,7 +141,7 @@ public class CodeScript {
      *
      * @return executors of script.
      */
-    public @NotNull Executors getExecutors() {
+    public @NotNull PlanetExecutors getExecutors() {
         return executors;
     }
 

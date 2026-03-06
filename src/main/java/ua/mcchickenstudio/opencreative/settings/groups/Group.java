@@ -49,6 +49,8 @@ public class Group {
     private final int advertisementCooldown;
     private final int modulesUsageCooldown;
     private final int blocksDuplicationCooldown;
+    private final int worldDownloadCooldown;
+    private final int prompterUsageCooldown;
 
     private final double likeReward;
     private final double advertisementPrice;
@@ -58,6 +60,7 @@ public class Group {
     private final Set<String> buildPermissions = new HashSet<>();
     private final Set<String> devPermissions = new HashSet<>();
     private final Set<String> lobbyPermissions = new HashSet<>();
+    private final Set<String> visitorPermissions = new HashSet<>();
 
     private final Map<LimitType, LimitModifier> limits = new HashMap<>();
 
@@ -91,6 +94,8 @@ public class Group {
         creativeChatCooldown = config.getInt(path + "cooldowns.creative-chat", 5);
         modulesUsageCooldown = config.getInt(path + "cooldowns.module-usage", 7);
         blocksDuplicationCooldown = config.getInt(path + "cooldowns.duplication-usage", 7);
+        worldDownloadCooldown  = config.getInt(path + "cooldowns.world-download", 120);
+        prompterUsageCooldown  = config.getInt(path + "cooldowns.prompter-usage", 60);
         chatCooldown = config.getInt(path + "cooldowns.world-chat", 2);
 
         /*
@@ -100,6 +105,7 @@ public class Group {
         buildPermissions.addAll(config.getStringList(path + "world.build-permissions"));
         devPermissions.addAll(config.getStringList(path + "world.dev-permissions"));
         lobbyPermissions.addAll(config.getStringList(path + "lobby-permissions"));
+        visitorPermissions.addAll(config.getStringList(path + "world.visitor-permissions"));
 
         boolean changedConfig = false;
         for (LimitType type : LimitType.values()) {
@@ -187,6 +193,26 @@ public class Group {
     }
 
     /**
+     * Returns how much time needs to pass to download world
+     * with /world download.
+     *
+     * @return cooldown of world downloading.
+     */
+    public int getWorldDownloadCooldown() {
+        return worldDownloadCooldown;
+    }
+
+    /**
+     * Returns how much time needs to pass to generate
+     * code /env make.
+     *
+     * @return cooldown of using coding prompter.
+     */
+    public int getPrompterUsageCooldown() {
+        return prompterUsageCooldown;
+    }
+
+    /**
      * Returns size of world, that will be used for setting
      * worlds borders.
      *
@@ -212,6 +238,16 @@ public class Group {
      */
     public int getModulesLimit() {
         return modulesLimit;
+    }
+
+    /**
+     * Returns set of permissions, that will be given when player
+     * joins the world, but he's not world's builder/developer/owner.
+     *
+     * @return set of visitor permissions.
+     */
+    public Set<String> getVisitorPermissions() {
+        return visitorPermissions;
     }
 
     /**

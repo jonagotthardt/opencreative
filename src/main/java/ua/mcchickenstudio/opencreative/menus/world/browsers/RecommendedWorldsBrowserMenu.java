@@ -40,6 +40,7 @@ import java.util.Set;
 
 import static ua.mcchickenstudio.opencreative.utils.ItemUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleMessage;
 
 /**
  * This class represents a menu, that displays recommended worlds
@@ -140,6 +141,11 @@ public class RecommendedWorldsBrowserMenu extends ListBrowserMenu<Planet> {
     }
 
     protected void onPlanetClick(Player player, Planet planet) {
+        if (planet.equals(OpenCreative.getPlanetsManager().getPlanetByPlayer(player))) {
+            player.sendMessage(getPlayerLocaleMessage("same-world", player));
+            Sounds.PLAYER_FAIL.play(player);
+            return;
+        }
         player.closeInventory();
         planet.connectPlayer(player);
     }

@@ -39,6 +39,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import static ua.mcchickenstudio.opencreative.listeners.player.PlaceBlockListener.move;
+import static ua.mcchickenstudio.opencreative.utils.BlockUtils.getClosingBracketX;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getPlayerLocaleComponent;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSign;
@@ -49,6 +50,7 @@ import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.translateBlockSi
  * destroys block or damages block in world.
  */
 public final class DestroyBlockListener implements Listener {
+    private static final int SHIFT_COMPACT_MAX_PASSES = 20;
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
@@ -57,6 +59,7 @@ public final class DestroyBlockListener implements Listener {
         DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (devPlanet != null) {
             Block block = event.getBlock();
+            boolean chainBreak = OpenCreative.getSettings().getCodingSettings().isShiftBreakChainEnabled() && player.isSneaking();
 
             if (player.getInventory().getItemInMainHand().getType() == Material.COMPARATOR) {
                 event.setCancelled(true);
@@ -86,13 +89,26 @@ public final class DestroyBlockListener implements Listener {
             }
 
             if (devPlanet.getAllCodingBlocksForPlacing().contains(block.getType())) {
-                if (ActionCategory.getByMaterial(block.getType()) != null) {
-                    platform.destroyCodingBlock(block.getLocation(), devPlanet.isDropItems());
+                ActionCategory category = ActionCategory.getByMaterial(block.getType());
+                if (category != null) {
+                    boolean usedShiftChainOnMulti = false;
+                    if (chainBreak && category.isMultiAction()) {
+                        usedShiftChainOnMulti = true;
+                        if (!destroyBracketChain(platform, devPlanet, block)) {
+                            platform.destroyCodingBlock(block.getLocation(), devPlanet.isDropItems());
+                        }
+                    } else {
+                        platform.destroyCodingBlock(block.getLocation(), devPlanet.isDropItems());
+                    }
                     devPlanet.setCodeChanged(true);
-                    move(block.getLocation(), BlockFace.WEST);
+                    if (usedShiftChainOnMulti && OpenCreative.getSettings().getCodingSettings().isShiftBreakChainCompactFull()) {
+                        compactCodingLineLeftByVanillaMove(devPlanet, platform, block);
+                    } else {
+                        move(block.getLocation(), BlockFace.WEST);
+                    }
                 } else {
                     if (ExecutorCategory.getByMaterial(block.getType()) != null
-                            && player.isSneaking()) {
+                            && chainBreak) {
                         platform.destroyCodingLine(block.getLocation(), devPlanet.isDropItems());
                         devPlanet.setCodeChanged(true);
                     } else {
@@ -144,6 +160,65 @@ public final class DestroyBlockListener implements Listener {
     public void onStartDamaging(BlockDamageEvent event) {
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(event.getPlayer());
         if (planet != null) new DamageBlockEvent(event.getPlayer(), event).callEvent();
+    }
+
+    private boolean destroyBracketChain(DevPlatform platform, DevPlanet devPlanet, Block block) {
+        int closingBracketX = getClosingBracketX(platform, block);
+        if (closingBracketX < 0) {
+            return false;
+        }
+        int y = block.getY();
+        int z = block.getZ();
+        int startX = Math.min(block.getX(), closingBracketX);
+        int endX = Math.max(block.getX(), closingBracketX);
+
+        // Remove from right to left on coding-slot grid to avoid nested branch corruption.
+        // Coding blocks are placed on every second X; x+1 is auxiliary bracket slot.
+        for (int x = endX; x >= startX; x -= 2) {
+            Block inLine = block.getWorld().getBlockAt(x, y, z);
+            if (devPlanet.getAllCodingBlocksForPlacing().contains(inLine.getType())) {
+                platform.destroyCodingBlock(inLine.getLocation(), devPlanet.isDropItems());
+            }
+        }
+        return true;
+    }
+
+    private void compactCodingLineLeftByVanillaMove(DevPlanet devPlanet, DevPlatform platform, Block startBlock) {
+        int y = startBlock.getY();
+        int z = startBlock.getZ();
+        int beginX = startBlock.getX();
+        int endX = devPlanet.getDevPlatformer().getPlatformEndLocation(platform).getBlockX() - 1;
+        for (int pass = 0; pass < SHIFT_COMPACT_MAX_PASSES; pass++) {
+            int gapX = findGapToCompact(startBlock, y, z, beginX, endX);
+            if (gapX < 0) {
+                break;
+            }
+            Block gapBlock = startBlock.getWorld().getBlockAt(gapX, y, z);
+            if (!move(gapBlock.getLocation(), BlockFace.WEST)) {
+                break;
+            }
+        }
+    }
+
+    private int findGapToCompact(Block startBlock, int y, int z, int beginX, int endX) {
+        for (int x = beginX; x <= endX; x++) {
+            if (startBlock.getWorld().getBlockAt(x, y, z).getType() != Material.AIR) {
+                continue;
+            }
+            if (hasMovableBlockToRight(startBlock, y, z, x, endX)) {
+                return x;
+            }
+        }
+        return -1;
+    }
+
+    private boolean hasMovableBlockToRight(Block startBlock, int y, int z, int gapX, int endX) {
+        for (int x = gapX + 1; x <= endX; x++) {
+            if (startBlock.getWorld().getBlockAt(x, y, z).getType() != Material.AIR) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

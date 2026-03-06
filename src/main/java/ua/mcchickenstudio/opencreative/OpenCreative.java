@@ -47,10 +47,13 @@ import ua.mcchickenstudio.opencreative.listeners.player.*;
 import ua.mcchickenstudio.opencreative.listeners.world.*;
 import ua.mcchickenstudio.opencreative.managers.blocks.BlocksManager;
 import ua.mcchickenstudio.opencreative.managers.disguises.DisguiseManager;
+import ua.mcchickenstudio.opencreative.managers.downloader.*;
 import ua.mcchickenstudio.opencreative.managers.economy.*;
 import ua.mcchickenstudio.opencreative.managers.hints.*;
 import ua.mcchickenstudio.opencreative.managers.modules.*;
 import ua.mcchickenstudio.opencreative.managers.packets.PacketManager;
+import ua.mcchickenstudio.opencreative.settings.Sounds;
+import ua.mcchickenstudio.opencreative.utils.world.WorldUtils;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.*;
 import ua.mcchickenstudio.opencreative.managers.stability.*;
 import ua.mcchickenstudio.opencreative.managers.updater.*;
@@ -70,6 +73,7 @@ import java.util.*;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.parseException;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.isEntityInLobby;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
 
 /**
@@ -94,6 +98,7 @@ public final class OpenCreative extends JavaPlugin {
     private DisguiseManager disguiser;
     private BlocksManager blocks;
     private HintManager hints;
+    private DownloadManager downloader;
     private DevPlatformer devPlatformer;
     private CodingPrompter prompter;
 
@@ -152,6 +157,7 @@ public final class OpenCreative extends JavaPlugin {
         if (devPlatformer == null) devPlatformer = new HorizontalPlatformer();
         if (prompter == null) prompter = new DisabledCodingPrompter();
         if (watchdog == null) watchdog = new DisabledWatchdog();
+        if (downloader == null) downloader = new DisabledDownloader();
         if (economy == null) economy = new DisabledEconomy();
 
         PlayerUtils.loadPermissions();
@@ -159,6 +165,7 @@ public final class OpenCreative extends JavaPlugin {
         PhysService.run();
         FileUtils.loadModules();
         watchdog.init();
+        downloader.init();
 
         updater = new HangarUpdater();
         updater.init();
@@ -173,7 +180,16 @@ public final class OpenCreative extends JavaPlugin {
 
         long loadedTime = System.currentTimeMillis() - startTime;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            teleportToLobby(player);
+            if (WorldUtils.isPlanet(player.getWorld())) {
+                teleportToLobby(player);
+            } else if (isEntityInLobby(player)) {
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
+                Sounds.LOBBY.play(player);
+                player.clearTitle();
+                player.sendMessage(
+                        MiniMessage.miniMessage().deserialize("\n <white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + " <white>is loaded <green>:) \n ")
+                );
+            }
             getServer().sendActionBar(
                     MiniMessage.miniMessage().deserialize(
                             "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white> is loaded for " + loadedTime + " ms."
@@ -211,9 +227,12 @@ public final class OpenCreative extends JavaPlugin {
                         MiniMessage.miniMessage().deserialize(
                                 " \n<white> Shutting down Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+ <gray>" + version + "<white>, please wait...\n "
                         ));
-                teleportToLobby(player);
+                if (WorldUtils.isPlanet(player.getWorld())) {
+                    teleportToLobby(player);
+                }
             }
             FileUtils.unloadPlanets();
+            downloader.shutdown();
         } catch (Exception error) {
             OpenCreative.getPlugin().getLogger().severe("Failed to unload OpenCreative+ :(" + parseException(error, false));
         }
@@ -271,6 +290,7 @@ public final class OpenCreative extends JavaPlugin {
         commands.put("value", ValueCommand.class);
         commands.put("module", ModuleCommand.class);
         commands.put("jointo", JoinToCommand.class);
+        commands.put("ownworlds", OwnMenuCommand.class);
         for (String commandName : commands.keySet()) {
             PluginCommand command = getCommand(commandName);
             if (command != null) {
@@ -302,7 +322,8 @@ public final class OpenCreative extends JavaPlugin {
                 PlaceBlockListener.class, DestroyBlockListener.class, BucketListener.class,
                 ClickListener.class, RedstoneListener.class, BlockChangeListener.class,
                 Menus.class, GameModeListener.class, EntityStateListener.class,
-                CreativeListener.class, PotionListener.class, PlanetListener.class
+                CreativeListener.class, PotionListener.class, PlanetListener.class,
+                CraftListener.class
         };
         for (Class<?> listenerClass : listeners) {
             try {
@@ -482,6 +503,31 @@ public final class OpenCreative extends JavaPlugin {
     @SuppressWarnings("unused")
     public static DevPlatformer getDevPlatformer() {
         return getPlugin().devPlatformer;
+    }
+
+    /**
+     * Sets custom download manager.
+     *
+     * @param downloadManager download manager.
+     */
+    @SuppressWarnings("unused")
+    public static void setDownloadManager(@NotNull DownloadManager downloadManager) {
+        if (!(downloadManager instanceof DisabledDownloader || downloadManager instanceof Downloader)) {
+            getPlugin().getLogger().info("Now using download manager: " + downloadManager.getName());
+        }
+        getPlugin().downloader = downloadManager;
+    }
+
+    /**
+     * Gets download manager, that
+     * uploads world acrhive and allows
+     * players to download it.
+     *
+     * @return download manager.
+     */
+    @SuppressWarnings("unused")
+    public static DownloadManager getDownloadManager() {
+        return getPlugin().downloader;
     }
 
     /**

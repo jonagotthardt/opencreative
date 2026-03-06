@@ -106,7 +106,6 @@ public class BuildCommand extends CommandHandler {
                             player.getInventory().setItem(8, createItem(Material.COMPASS, 1, "items.developer.world-settings"));
                         }
                         planet.getTerritory().showBorders(player);
-                        giveBuildPermissions(player);
                         player.setGameMode(GameMode.CREATIVE);
                     }
                 } else {

@@ -67,7 +67,7 @@ public class ValueCommand extends CommandHandler {
         if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.GENERIC_COMMAND)) return;
         DevPlanet planet = OpenCreative.getPlanetsManager().getDevPlanet(player);
         if (planet == null) {
-            player.sendMessage(getLocaleMessage("only-in-world"));
+            player.sendMessage(getLocaleMessage("only-in-dev-world"));
             return;
         }
         ItemStack itemStack = null;

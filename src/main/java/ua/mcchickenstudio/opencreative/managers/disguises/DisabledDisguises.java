@@ -23,7 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
-public class DisabledDisguises implements DisguiseManager {
+public final class DisabledDisguises implements DisguiseManager {
 
     @Override
     public void disguiseAsPlayer(@NotNull Entity entity, @NotNull String skin, @NotNull String nickname) {}

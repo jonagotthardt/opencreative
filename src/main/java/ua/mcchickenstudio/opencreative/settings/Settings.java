@@ -63,11 +63,14 @@ public final class Settings {
 
     private final Groups groups;
     private final Commands commands;
+    private final WebSettings webSettings;
     private final Requirements requirements;
     private final LobbySettings lobbySettings;
     private final CodingSettings codingSettings;
     private final EconomySettings economySettings;
     private final ItemFixerSettings itemFixerSettings;
+    private final WorldFixerSettings worldFixerSettings;
+    private final DownloaderSettings downloaderSettings;
     private final Set<Integer> recommendedWorldsIDs = new HashSet<>();
     private final Set<String> allowedResourcePackLinks = new HashSet<>();
     private final Set<String> messagesIgnoringReset = new HashSet<>();
@@ -81,6 +84,7 @@ public final class Settings {
     private boolean consoleWarnings = true;
     private boolean notifyNoPlayersAround = true;
     private boolean cancelChatOnConfirmation = false;
+    private boolean handleWorldChat = true;
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -88,10 +92,13 @@ public final class Settings {
         groups = new Groups();
         commands = new Commands();
         requirements = new Requirements();
+        webSettings = new WebSettings();
         lobbySettings = new LobbySettings();
         codingSettings = new CodingSettings();
         economySettings = new EconomySettings();
         itemFixerSettings = new ItemFixerSettings();
+        worldFixerSettings = new WorldFixerSettings();
+        downloaderSettings = new DownloaderSettings();
     }
 
     /**
@@ -100,7 +107,6 @@ public final class Settings {
      * @param config Configuration file.
      */
     public void load(FileConfiguration config) {
-
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
         messagesIgnoringReset.clear();
@@ -117,6 +123,7 @@ public final class Settings {
         consoleNotFoundMessage = config.getBoolean("messages.not-found", false);
         consoleWarnings = config.getBoolean("messages.warnings", true);
         cancelChatOnConfirmation = config.getBoolean("messages.cancel-chat-on-confirmation", false);
+        handleWorldChat = config.getBoolean("messages.handle-world-chat", true);
 
         boolean enabledWatchdog = config.getBoolean("watchdog.enabled", false);
         notifyNoPlayersAround = config.getBoolean("messages.notify-no-players-around", true);
@@ -124,7 +131,10 @@ public final class Settings {
         lobbySettings.load();
         requirements.load();
         itemFixerSettings.load();
+        worldFixerSettings.load();
         economySettings.load();
+        webSettings.load();
+        downloaderSettings.load();
         groups.load();
         commands.load();
 
@@ -258,6 +268,7 @@ public final class Settings {
                 continue;
             }
             if (groupsSection.isString(groupId)) {
+                itemsGroups.put(group, new SettingsItemsGroup());
                 continue;
             }
             ConfigurationSection slots = groupsSection.getConfigurationSection(groupId);
@@ -606,6 +617,15 @@ public final class Settings {
     }
 
     /**
+     * Returns settings of world fixer.
+     *
+     * @return world fixer settings.
+     */
+    public @NotNull WorldFixerSettings getWorldFixerSettings() {
+        return worldFixerSettings;
+    }
+
+    /**
      * Returns settings of coding mode.
      *
      * @return coding settings.
@@ -630,6 +650,24 @@ public final class Settings {
      */
     public @NotNull LobbySettings getLobbySettings() {
         return lobbySettings;
+    }
+
+    /**
+     * Returns settings of web services.
+     *
+     * @return web settings.
+     */
+    public @NotNull WebSettings getWebSettings() {
+        return webSettings;
+    }
+
+    /**
+     * Returns settings of world downloader.
+     *
+     * @return world downloader settings.
+     */
+    public @NotNull DownloaderSettings getDownloaderSettings() {
+        return downloaderSettings;
     }
 
     /**
@@ -685,6 +723,16 @@ public final class Settings {
      */
     public boolean shouldCancelChatOnConfirmation() {
         return cancelChatOnConfirmation;
+    }
+
+    /**
+     * Checks whether world chat and messages starting with ! will be
+     * handled by OpenCreative+.
+     *
+     * @return true - will be handled, false - ignored, other plugins will be responsible.
+     */
+    public boolean shouldHandleWorldChat() {
+        return handleWorldChat;
     }
 
     /**

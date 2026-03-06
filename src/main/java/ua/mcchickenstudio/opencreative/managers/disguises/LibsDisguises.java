@@ -26,7 +26,7 @@ import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
-public class LibsDisguises implements DisguiseManager {
+public final class LibsDisguises implements DisguiseManager {
 
     @Override
     public void disguiseAsPlayer(@NotNull Entity entity, @NotNull String skin, @NotNull String nickname) {

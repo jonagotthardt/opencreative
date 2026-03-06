@@ -23,10 +23,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -41,6 +38,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.utils.BlockUtils;
+import ua.mcchickenstudio.opencreative.utils.DyeColorEnum;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -455,7 +453,9 @@ public class Arguments {
             try {
                 List<Argument> args = (List<Argument>) arg.getValue(action);
                 for (Argument itemArg : args) {
-                    list.add((ItemStack) itemArg.getValue(action));
+                    if (itemArg.getValue(action) instanceof ItemStack item) {
+                        list.add(item);
+                    }
                 }
             } catch (ClassCastException e) {
                 return list;
@@ -716,6 +716,17 @@ public class Arguments {
         } else if (arg.getValue(action) instanceof Color color) {
             value = color;
             sendCodingDebugVariable(planet, path, color);
+        } else if (arg.getValue(action) instanceof ItemStack itemstack) {
+            if (!itemstack.getType().name().endsWith("_DYE"))
+                return value;
+
+            DyeColor dyeColor = DyeColorEnum.byMaterial(itemstack.getType());
+
+            if (dyeColor == null)
+                return value;
+
+            value = dyeColor.getColor();
+            sendCodingDebugVariable(planet, path, value);
         }
         return value;
     }

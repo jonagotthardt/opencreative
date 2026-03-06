@@ -57,6 +57,7 @@ public class PlanetTerritory {
     private final Planet planet;
     private final PlanetFlags flags;
     private final PlanetScoreboards scoreboards;
+    private final PlanetRecipes recipes;
 
     private final Map<String, BossBar> bossBars = new HashMap<>();
     private final Set<BukkitRunnable> runningBukkitRunnables = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -68,12 +69,14 @@ public class PlanetTerritory {
     private World.Environment environment;
     private String biome;
     private boolean autoSave = true;
+    private boolean busy = false;
 
     public PlanetTerritory(@NotNull Planet planet) {
         this.planet = planet;
         flags = new PlanetFlags(planet);
         scoreboards = new PlanetScoreboards(planet);
         script = new CodeScript(planet);
+        recipes = new PlanetRecipes(planet);
         loadInformation();
     }
 
@@ -81,7 +84,7 @@ public class PlanetTerritory {
      * Resets custom world size to owner's group world size.
      */
     public void resetWorldSize() {
-        int worldSize = OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize();
+        int worldSize = planet.getGroup().getWorldSize();
         FileUtils.removePlanetConfigParameter(planet, "size");
         if (this.worldSize == worldSize) return;
         this.worldSize = worldSize;
@@ -118,10 +121,9 @@ public class PlanetTerritory {
         if (config.getString("environment") != null) {
             try {
                 environment = World.Environment.valueOf(config.getString("environment"));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
-        worldSize = config.getInt("size", OpenCreative.getSettings().getGroups().getGroup(planet.getOwnerGroup()).getWorldSize());
+        worldSize = config.getInt("size", planet.getGroup().getWorldSize());
         autoSave = config.getBoolean("autosave", true);
         biome = config.getString("biome", "");
         this.generator = config.getString("generator", "");
@@ -160,6 +162,7 @@ public class PlanetTerritory {
         world.setAutoSave(autoSave);
         setGameRuleIfExists("spawn_chunk_radius", 1);
         world.setGameRule(GameRule.GLOBAL_SOUND_EVENTS, false);
+        world.setGameRule(GameRule.DO_LIMITED_CRAFTING, true);
         if (world.getEnvironment() == World.Environment.THE_END) {
             if (world.getEnderDragonBattle() != null) {
                 world.getEnderDragonBattle().setPreviouslyKilled(true);
@@ -204,7 +207,7 @@ public class PlanetTerritory {
         long startTime = System.currentTimeMillis();
         if (!planet.isLoaded()) {
             if (planet.getDevPlanet().isLoaded()) {
-                planet.getDevPlanet().unload();
+                planet.getDevPlanet().unload(asyncSaveData);
                 long endTime = System.currentTimeMillis();
                 OpenCreative.getPlugin().getLogger().info("Planet " + planet.getId() + " unloaded only dev in " + (endTime - startTime) + " ms");
             }
@@ -227,9 +230,27 @@ public class PlanetTerritory {
         } else {
             this.saveData();
         }
-        Bukkit.unloadWorld(planet.getWorldName(), autoSave);
+        for (Player player : planet.getPlayers()) {
+            teleportToLobby(player);
+        }
+        if (world != null) {
+            if (asyncSaveData) {
+                for (Chunk chunk : world.getLoadedChunks()) {
+                    chunk.unload(autoSave);
+                }
+                world.save();
+                busy = true;
+                Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                    Bukkit.unloadWorld(planet.getWorldName(), false);
+                    busy = false;
+                }, 60);
+            } else {
+                Bukkit.unloadWorld(planet.getWorldName(), autoSave);
+            }
+        }
+
         if (planet.getDevPlanet().isLoaded()) {
-            planet.getDevPlanet().unload();
+            planet.getDevPlanet().unload(asyncSaveData);
         }
         new PlanetUnloadEvent(planet).callEvent();
 
@@ -260,6 +281,7 @@ public class PlanetTerritory {
         script.unload();
         spawnLocation = null;
         clearOnceMessages(planet);
+        recipes.clear();
     }
 
     public void addBukkitRunnable(BukkitRunnable runnable) {
@@ -284,7 +306,7 @@ public class PlanetTerritory {
      * Stops all running bukkit runnables and tasks in world.
      */
     public void stopBukkitRunnables() {
-        for (BukkitRunnable runnable : runningBukkitRunnables) {
+        for (BukkitRunnable runnable : new HashSet<>(runningBukkitRunnables)) {
             try {
                 if (runnable != null && !runnable.isCancelled()) {
                     runnable.cancel();
@@ -461,6 +483,15 @@ public class PlanetTerritory {
     }
 
     /**
+     * Returns recipes of planet.
+     *
+     * @return planet's recipes.
+     */
+    public @NotNull PlanetRecipes getRecipes() {
+        return recipes;
+    }
+
+    /**
      * Returns spawn location, where players should appear
      * after connecting to planet.
      *
@@ -492,8 +523,23 @@ public class PlanetTerritory {
         FileUtils.setPlanetConfigParameter(planet, "spawn", configLocation);
     }
 
+    /**
+     * Checks whether world should save territory changes.
+     *
+     * @return true - will be saved, false - not.
+     */
     public boolean isAutoSave() {
         return autoSave;
+    }
+
+    /**
+     * Checks whether world is busy for deleting or unloading,
+     * so players shouldn't be able to join it.
+     *
+     * @return true - is busy, false - not.
+     */
+    public boolean isBusy() {
+        return busy;
     }
 
     /**

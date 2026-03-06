@@ -70,7 +70,7 @@ public abstract class EventValue implements ExtensionContent {
      *
      * @return icon of event value to display.
      */
-    public ItemStack getDisplayIcon() {
+    public @NotNull ItemStack getDisplayIcon() {
         return displayIcon;
     }
 
@@ -80,7 +80,7 @@ public abstract class EventValue implements ExtensionContent {
      *
      * @return category where event value will be able.
      */
-    public MenusCategory getCategory() {
+    public @NotNull MenusCategory getCategory() {
         return category;
     }
 

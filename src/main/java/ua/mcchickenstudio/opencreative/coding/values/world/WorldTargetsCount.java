@@ -10,13 +10,13 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionsHandler;
 import ua.mcchickenstudio.opencreative.coding.menus.MenusCategory;
 import ua.mcchickenstudio.opencreative.coding.values.NumberEventValue;
 
-public class WorldTargetsCount extends NumberEventValue {
+public final class WorldTargetsCount extends NumberEventValue {
     public WorldTargetsCount() {
-        super("world_targets_count", new ItemStack(Material.ACACIA_BUTTON), MenusCategory.WORLD);
+        super("targets_count", new ItemStack(Material.ACACIA_BUTTON), MenusCategory.WORLD);
     }
 
     @Override
-    public @Nullable Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
+    public @NotNull Number getNumber(@NotNull ActionsHandler handler, @NotNull Action action, @Nullable Entity entity) {
         return handler.getSelectedTargets().size();
     }
 
@@ -27,6 +27,6 @@ public class WorldTargetsCount extends NumberEventValue {
 
     @Override
     public @NotNull String getDescription() {
-        return "Return size targets";
+        return "Return amount of selected targets";
     }
 }

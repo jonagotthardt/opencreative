@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.planets.DevPlanet;
 import ua.mcchickenstudio.opencreative.planets.DevPlatform;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,9 +128,16 @@ public final class VerticalPlatformer extends DevPlatformer {
         int beginZ = begin.getBlockZ();
         int endZ = end.getBlockZ();
         int executorX = beginX + 4;
+        boolean notchEnabled = OpenCreative.getSettings().getCodingSettings().isVerticalPlatformNotchEnabled()
+                && platform.getZ() > 1;
+        int notchMaxX = beginX + OpenCreative.getSettings().getCodingSettings().getVerticalPlatformNotchWidth() - 1;
         for (int x = beginX; x <= endX; x++) {
             for (int z = beginZ; z <= endZ; z++) {
                 Block block = platform.getWorld().getBlockAt(x, height, z);
+                if (notchEnabled && x <= notchMaxX) {
+                    block.setType(Material.AIR);
+                    continue;
+                }
                 if (x == executorX && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
                     block.setType(eventMaterial);
                 } else if (x > executorX && (x - executorX) % 2 == 0 && x < endX - 2 && (z - beginZ) % 4 == 0 && z != beginZ && z != endZ) {
@@ -144,7 +152,8 @@ public final class VerticalPlatformer extends DevPlatformer {
     }
 
     public @NotNull Location getPlatformBeginLocation(@NotNull DevPlatform platform) {
-        return new Location(platform.getWorld(), 0, (platform.getZ() - 1) * 5, 0);
+        int step = OpenCreative.getSettings().getCodingSettings().getVerticalPlatformStep();
+        return new Location(platform.getWorld(), 0, (platform.getZ() - 1) * step, 0);
     }
 
 

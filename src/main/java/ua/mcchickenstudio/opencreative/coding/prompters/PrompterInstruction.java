@@ -22,7 +22,8 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ParameterSlot;
 import ua.mcchickenstudio.opencreative.coding.placeholders.KeyPlaceholder;
@@ -83,8 +84,9 @@ public final class PrompterInstruction {
                 - Maximum 27 arguments per action
                 - To color text use § instead of &
                 - For chat commands use @ instead of /
-                - When value (text) starts with with @ cover it in brackets "", example:
+                - When value (text) starts with with @ or ends with : cover it in brackets "", example:
                   Wrong - value: @chatcommand
+                  Wrong - value: Type in chat:
                   Valid - value: "@chatcommand"
                 - List index starts with 1 instead of 0
                 - Do not write malicious code for crashing, lowering TPS, spawning a lot of mobs
@@ -552,9 +554,9 @@ public final class PrompterInstruction {
 
     private @NotNull String getExecutors() {
         StringJoiner joiner = new StringJoiner(", ");
-        for (ExecutorType type : ExecutorType.values()) {
-            if (type.isDisabled()) continue;
-            joiner.add(type.name());
+        for (Executor executor : Executors.getInstance().getExecutors()) {
+            if (executor.isDisabled()) continue;
+            joiner.add(executor.getID().toUpperCase());
         }
         return joiner.toString();
     }

@@ -19,11 +19,7 @@
 package ua.mcchickenstudio.opencreative.coding.blocks.executors.other;
 
 import org.jetbrains.annotations.NotNull;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
-import ua.mcchickenstudio.opencreative.planets.Planet;
-
 /**
  * <h1>Function</h1>
  * This class represents a function, that executes actions
@@ -31,18 +27,22 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
  */
 public final class Function extends NameableExecutor {
 
-    public Function(Planet planet, int x, int y, int z, @NotNull String name) {
-        super(planet, x, y, z, name);
+    public Function() {
+        super("function", ExecutorCategory.FUNCTION);
     }
 
     @Override
-    public @NotNull ExecutorType getExecutorType() {
-        return ExecutorType.FUNCTION;
+    public @NotNull String getExtensionId() {
+        return "default";
     }
 
     @Override
-    public @NotNull ExecutorCategory getExecutorCategory() {
-        return ExecutorCategory.FUNCTION;
+    public @NotNull String getName() {
+        return "Function";
     }
 
+    @Override
+    public @NotNull String getDescription() {
+        return "Adds actions in place, where it was called";
+    }
 }

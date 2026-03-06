@@ -21,6 +21,11 @@ package ua.mcchickenstudio.opencreative.coding.menus.layouts;
 import org.bukkit.block.Block;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 
+/**
+ * <h1>LayoutMaker</h1>
+ * This class represents a maker for coding container layout.
+ * Sets glasses and argument slots.
+ */
 public final class LayoutMaker extends Layout {
 
     public LayoutMaker(ActionType action, Block chestBlock) {
@@ -28,7 +33,29 @@ public final class LayoutMaker extends Layout {
     }
 
     @Override
-    protected void fillVarsItems() {
+    protected void fillArgumentItems() {
+        if (actionType == ActionType.WORLD_ADD_CRAFTING_RECIPE) {
+            setRows(5);
+            setItem(DECORATION_PANE_ITEM, 0, 4, 5, 6, 7, 8, 15, 33, 36, 40, 41, 42);
+            setGlass(1, 1, 2, 3, 9, 13, 18, 22, 27, 31, 37, 38, 39);
+            setArgSlot(1, 10, 11, 12, 19, 20, 21, 28, 29, 30);
+
+            setArgSlot(2, 23);
+            setGlass(2, 14, 24, 32);
+
+            setGlass(3, 16);
+            setArgSlot(3, 17);
+
+            setGlass(4, 25);
+            setArgSlot(4, 26);
+
+            setGlass(5, 34);
+            setArgSlot(5, 35);
+
+            setGlass(6, 43);
+            setArgSlot(6, 44);
+            return;
+        }
         if (actionType.getArgumentsSlots().length > 0 && actionType.getArgumentsSlots()[0].isList()) {
             switch (actionType.getArgumentsSlots()[0].getListSize()) {
                 case 9: {

@@ -143,7 +143,8 @@ public final class ChatListener implements Listener {
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
         try {
             Player player = event.getPlayer();
-            if (message.startsWith("!")) {
+            boolean shouldHandleWorldChat = OpenCreative.getSettings().shouldHandleWorldChat();
+            if (shouldHandleWorldChat && message.startsWith("!")) {
                 if (event.isCancelled()) return;
                 String creativeChatCommand;
                 if (message.equals("!")) {
@@ -157,7 +158,10 @@ public final class ChatListener implements Listener {
             }
             checkDevItems(player, message, event);
             checkConfirmation(player, message, event);
-            if (event.isCancelled()) return;
+            if (event.isCancelled()) {
+                event.viewers().clear();
+                return;
+            }
             event.setCancelled(true);
             if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
                 player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
@@ -173,6 +177,9 @@ public final class ChatListener implements Listener {
 
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             WorldChatEvent creativeEvent = new WorldChatEvent(player, message, formatted, player.getWorld(), planet);
+            if (!shouldHandleWorldChat) {
+                return;
+            }
             Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;

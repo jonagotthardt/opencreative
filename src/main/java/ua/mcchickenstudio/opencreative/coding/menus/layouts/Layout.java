@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -72,6 +71,9 @@ public abstract class Layout extends AbstractMenu {
         this.requiredSlots = actionType.getArgumentsSlots();
     }
 
+    /**
+     * Fills decoration
+     */
     protected void fillDecorationItems() {
         for (int slot = 0; slot < (getRows() * 9); slot++) {
             setItem(slot, DECORATION_PANE_ITEM);
@@ -81,15 +83,36 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public void fillItems(Player player) {
         fillDecorationItems();
-        fillVarsItems();
+        fillArgumentItems();
     }
 
-    protected abstract void fillVarsItems();
+    /**
+     * Fills menu with argument glasses and values.
+     *
+     * @see #setArgSlot(int, int...)
+     * @see #setGlass(int, int...)
+     * @see #setArgSlotHorizontal(int, int)
+     * @see #setArgSlotVertical(int, int)
+     */
+    protected abstract void fillArgumentItems();
 
-    protected ItemStack getFromContent(int slot) {
-        if (!(containerBlock.getState() instanceof InventoryHolder container)) return ItemStack.empty();
-        if (slot < 0 || slot >= container.getInventory().getContents().length) return ItemStack.empty();
-        return container.getInventory().getContents()[slot];
+    /**
+     * Returns argument value item from coding container.
+     *
+     * @param slot slot of item inside coding container.
+     * @return value item, or empty item.
+     */
+    protected @NotNull ItemStack getArgumentValueFromContainer(int slot) {
+        if (!(containerBlock.getState() instanceof InventoryHolder container)) {
+            // If container is destroyed at the same moment of opening layout menu
+            return ItemStack.empty();
+        }
+        if (slot < 0 || slot >= container.getInventory().getContents().length) {
+            // If slot is illegal
+            return ItemStack.empty();
+        }
+        ItemStack item = container.getInventory().getContents()[slot];
+        return item != null ? item : ItemStack.empty();
     }
 
     @Override
@@ -127,7 +150,8 @@ public abstract class Layout extends AbstractMenu {
     @Override
     public void onOpen(@NotNull InventoryOpenEvent event) {
         viewers.add((Player) event.getPlayer());
-        (containerBlock.getType() == Material.BARREL ? Sounds.DEV_OPEN_BARREL : Sounds.DEV_OPEN_CHEST).play(event.getPlayer());
+        (containerBlock.getType() == Material.BARREL ? Sounds.DEV_OPEN_BARREL : Sounds.DEV_OPEN_CHEST)
+                .play(event.getPlayer());
         for (Player onlinePlayer : event.getPlayer().getWorld().getPlayers()) {
             sendOpenedChestAnimation(onlinePlayer, containerBlock);
         }
@@ -135,7 +159,7 @@ public abstract class Layout extends AbstractMenu {
 
     @Override
     public final void onClose(@NotNull InventoryCloseEvent event) {
-        saveArgumentsItems(event.getInventory());
+        saveArgumentsItems();
         (containerBlock.getType() == Material.BARREL ? Sounds.DEV_CLOSED_BARREL : Sounds.DEV_CLOSED_CHEST).play(event.getPlayer());
         viewers.remove((Player) event.getPlayer());
         if (viewers.isEmpty()) {
@@ -151,8 +175,14 @@ public abstract class Layout extends AbstractMenu {
         }
     }
 
-    private void saveArgumentsItems(Inventory inventory) {
-        if (!(containerBlock.getState() instanceof InventoryHolder container)) return;
+    /**
+     * Saves arguments items into coding container.
+     */
+    private void saveArgumentsItems() {
+        if (!(containerBlock.getState() instanceof InventoryHolder container)) {
+            // If container is destroyed, not saving items.
+            return;
+        }
         int chestSlot = 0;
         for (int argSlot : argsSlots) {
             ItemStack argItem = inventory.getItem(argSlot);
@@ -222,50 +252,69 @@ public abstract class Layout extends AbstractMenu {
         setItem((slot + 9), argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
     }
 
-    protected void setGlass(int argNumber, int slot) {
+    protected void setGlass(int argNumber, int... slots) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
-        setItem(slot, argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()));
+        setItem(argumentSlot.getVarType().getGlassItem(actionType, argumentSlot.getPath()), slots);
     }
 
-    protected void setArgSlot(int argNumber, int slot) {
+    protected void setArgSlot(int argNumber, int... slots) {
         ArgumentSlot argumentSlot = getRequiredSlots()[argNumber - 1];
-        setArgSlot(argumentSlot, slot);
+        setArgSlot(argumentSlot, slots);
     }
 
-    private void setArgSlot(ArgumentSlot argumentSlot, int slot) {
-        ItemStack contentItem = getFromContent(currentSlot++);
-        if (argumentSlot.isParameter()) {
-            Object value = "";
-            if (contentItem != null && contentItem.hasItemMeta()) {
-                String display = ChatColor.stripColor(contentItem.getItemMeta().getDisplayName());
-                if (contentItem.getType() == Material.SLIME_BALL) {
-                    value = Integer.parseInt(display.replace(".0", ""));
-                } else if (contentItem.getType() == Material.CLOCK) {
-                    value = Boolean.parseBoolean(display);
-                } else {
-                    value = display;
+    private void setArgSlot(@NotNull ArgumentSlot argumentSlot, int... slots) {
+        for (int slot : slots) {
+            ItemStack contentItem = getArgumentValueFromContainer(currentSlot++);
+            if (argumentSlot.isParameter()) {
+                Object value = "";
+                if (!contentItem.isEmpty() && contentItem.hasItemMeta()) {
+                    String display = ChatColor.stripColor(contentItem.getItemMeta().getDisplayName());
+                    if (contentItem.getType() == Material.SLIME_BALL) {
+                        value = Integer.parseInt(display.replace(".0", ""));
+                    } else if (contentItem.getType() == Material.CLOCK) {
+                        value = Boolean.parseBoolean(display);
+                    } else {
+                        value = display;
+                    }
                 }
-            }
-            ParameterButton rb = createParamButton((ParameterSlot) argumentSlot, value);
-            if (contentItem != null && getValueType(contentItem) == ValueType.VARIABLE) {
-                setItem(slot, contentItem);
+                ParameterButton rb = createParamButton((ParameterSlot) argumentSlot, value);
+                if (!contentItem.isEmpty() && getValueType(contentItem) == ValueType.VARIABLE) {
+                    setItem(contentItem, slot);
+                } else {
+                    setItem(rb.getItem(), slot);
+                }
+                parameterButtons.add(rb);
             } else {
-                setItem(slot, rb.getItem());
+                setItem(contentItem, slot);
             }
-            parameterButtons.add(rb);
-        } else {
-            setItem(slot, contentItem);
+            argsSlots.add(slot);
         }
-        argsSlots.add(slot);
     }
 
+    /**
+     * Returns list of slots, items from will be saved
+     * into coding container after closing menu.
+     *
+     * @return list of slots with argument items.
+     */
     public List<Integer> getArgsSlots() {
         return argsSlots;
     }
 
-    protected ParameterButton createParamButton(ParameterSlot argumentSlot, Object value) {
-        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions") + "." + actionType.name().toLowerCase().replace("_", "-") + ".arguments." + argumentSlot.getPath();
-        return new ParameterButton(value, argumentSlot.getValues(), argumentSlot.getPath(), "items.developer", path, argumentSlot.getIcons());
+    /**
+     * Creates and returns parameter button.
+     *
+     * @param parameter parameter with info.
+     * @param value current value.
+     * @return parameter button.
+     */
+    protected @NotNull ParameterButton createParamButton(@NotNull ParameterSlot parameter, Object value) {
+        String path = "items.developer." + (actionType.isCondition() ? "conditions" : "actions")
+                + "." + actionType.name().toLowerCase().replace("_", "-")
+                + ".arguments." + parameter.getPath();
+        return new ParameterButton(value, parameter.getValues(),
+                parameter.getPath(), "items.developer", path,
+                parameter.getIcons());
     }
 
     protected int getRow(int slot) {
@@ -279,6 +328,19 @@ public abstract class Layout extends AbstractMenu {
         else return 0;
     }
 
+    /**
+     * Returns list of all slots in row.
+     * <p>
+     * Example:
+     * <pre>
+     * {@code
+     * getRowSlots(1); // [0, 1, 2, 3, 4, 5, 6, 7, 8]
+     * getRowSlots(6); // [45, 46, 47, 48, 49, 50, 51, 52, 53]
+     * }
+     * </pre>
+     * @param row row (1-6)
+     * @return list of slots.
+     */
     protected List<Integer> getRowSlots(int row) {
         int lastSlot = (row * 9 - 1);
         int firstSlot = (lastSlot - 8);
@@ -297,7 +359,15 @@ public abstract class Layout extends AbstractMenu {
         return slots;
     }
 
-    protected List<Integer> getCentredSlots(int count, int row) {
+    /**
+     * Returns list of slots, that will be used to display
+     * a row of items in more beautiful place.
+     *
+     * @param count count of items in row (1-9)
+     * @param row   row (1-6)
+     * @return list of centered slots.
+     */
+    protected @NotNull List<Integer> getCentredSlots(int count, int row) {
         List<Integer> slots = new ArrayList<>();
         switch (count) {
             case 1:
@@ -375,7 +445,13 @@ public abstract class Layout extends AbstractMenu {
         return count;
     }
 
-    public Set<Player> getViewers() {
+    /**
+     * Returns set of players, who have opened this menu.
+     *
+     * @return set of menu viewers.
+     */
+    public @NotNull Set<Player> getViewers() {
         return viewers;
     }
+
 }

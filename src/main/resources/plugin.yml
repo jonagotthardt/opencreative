@@ -12,7 +12,7 @@ description: 'Let players create the worlds'
 build: ${maven.build.timestamp}
 
 authors: [McChicken Studio]
-contributors: [McChicken Team, onn512, pawsashatoy]
+contributors: [McChicken Team, onn512, pawsashatoy, LWJENNI, HACKERPRO17, liventmst]
 prefix: "OC+"
 
 load: POSTWORLD
@@ -29,6 +29,7 @@ loadbefore:
   - FastAsyncWorldEdit
   - WorldEdit
   - Essentials
+  - ChatControl
 
 commands:
   creative:
@@ -70,6 +71,9 @@ commands:
   menu:
     description: 'Opens worlds browser menu.'
     aliases: [меню, games, worlds, ьутг, minigames, g, п]
+  ownworlds:
+    description: 'Opens own worlds browser menu.'
+    aliases: [myworlds, mygames, owngames, ьнцщкдвы, ьнпфьуы, ьнпфьуі, ьнцщкдві, щцтцщкдві, щцтцщкдвы]
   world:
     description: 'Opens world`s settings menu.'
     aliases: [settings, game, іуеештпі, ыуеештпы, setting, цщкдв]

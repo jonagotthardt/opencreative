@@ -57,26 +57,56 @@ import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessag
 public final class WorldVariables {
 
     private final Planet planet;
-    private final Set<WorldVariable> variables = new LinkedHashSet<>();
+
+    private final Map<LocalKey, WorldVariable> localVariables = new LinkedHashMap<>();
+    private final Map<String, WorldVariable> globalVariables = new LinkedHashMap<>();
+    private final Map<String, WorldVariable> savedVariables = new LinkedHashMap<>();
 
     public WorldVariables(Planet planet) {
         this.planet = planet;
     }
 
+    /**
+     * Returns instance of world variable by link.
+     *
+     * @param link link of variable, that contains name and type.
+     * @param action action, that requested variable.
+     * @return world variable, or null - if not found.
+     */
     public @Nullable WorldVariable getVariable(@NotNull VariableLink link, @NotNull Action action) {
         return getVariable(parseEntity(link.getName(), action.getHandler(), action), link.getVariableType(), action.getHandler().getMainActionHandler());
     }
 
+    /**
+     * Returns instance of world variable by name, type and actions handler.
+     *
+     * @param name name of variable.
+     * @param type type of variable (local, global, saved).
+     * @param handler main actions handler, that stores local variable (local requires handler)
+     * @return world variable, or null - if not found.
+     */
     public @Nullable WorldVariable getVariable(@NotNull String name, @NotNull VariableLink.VariableType type, @Nullable ActionsHandler handler) {
-        return variables.stream()
-                .filter(var -> var.getName().equalsIgnoreCase(name))
-                .filter(var -> type == var.getVarType())
-                .filter(var -> type != VariableLink.VariableType.LOCAL || (handler != null && handler.equals(var.getHandler())))
-                .findFirst()
-                .orElse(null);
+        switch (type) {
+            case SAVED -> {
+                return savedVariables.get(name);
+            }
+            case LOCAL -> {
+                if (handler == null) {
+                    return null;
+                }
+                return localVariables.get(new LocalKey(name, handler.getUniqueId()));
+            }
+            default -> {
+                return globalVariables.get(name);
+            }
+        }
     }
 
-    private boolean handleVariableValue(VariableLink link, ValueType type, Object value, ActionsHandler handler, Action action) {
+    private boolean handleVariableValue(@NotNull VariableLink link,
+                                        @NotNull ValueType type,
+                                        @NotNull Object value,
+                                        @Nullable ActionsHandler handler,
+                                        @Nullable Action action) {
         WorldVariable variable = (action != null) ? getVariable(link, action) : getVariable(link.getName(), link.getVariableType(), null);
         String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
 
@@ -93,6 +123,8 @@ public final class WorldVariables {
         if (variable != null) {
             variable.setType(type);
             variable.setValue(value);
+            removeVariable(link, action);
+            addVariable(variable, link.getVariableType());
         } else {
             WorldVariable newVariable = (action != null)
                     ? new WorldVariable(parseEntity(link.getName(), action.getHandler(), action), link.getVariableType(), type, value, handler)
@@ -107,15 +139,34 @@ public final class WorldVariables {
                 new LimitReachedVariablesEvent(planet).callEvent();
                 return false;
             }
-            variables.add(newVariable);
+            removeVariable(link, action);
+            addVariable(newVariable, link.getVariableType());
         }
 
         if (action == null || action.getExecutor().isDebug()) {
-            sendCodingDebugLog(getPlanet(), getLocaleMessage("coding-debug.variable." + (variable == null ? "created" : "set"), false)
+            sendCodingDebugLog(planet, getLocaleMessage("coding-debug.variable." + (variable == null ? "created" : "set"), false)
                     .replace("%variable%", action != null ? parseEntity(link.getName(), action.getHandler(), action) : link.getName())
                     .replace("%value%", valueString));
         }
         return true;
+    }
+
+    /**
+     * Adds variable by instance and type.
+     *
+     * @param variable variable instance.
+     * @param type type of variable.
+     */
+    private void addVariable(@NotNull WorldVariable variable, @NotNull VariableLink.VariableType type) {
+        switch (type) {
+            case SAVED -> savedVariables.put(variable.getName(), variable);
+            case LOCAL -> {
+                if (variable.getHandler() == null) return;
+                localVariables.put(new LocalKey(variable.getName(),
+                        variable.getHandler().getMainActionHandler().getUniqueId()), variable);
+            }
+            default -> globalVariables.put(variable.getName(), variable);
+        }
     }
 
     /**
@@ -162,10 +213,29 @@ public final class WorldVariables {
      * @param action action.
      */
     public void removeVariable(VariableLink link, Action action) {
-        variables.removeIf(var -> var.equals(getVariable(link, action)));
+        String name = link.getName();
+        if (action != null) name = parseEntity(link.getName(), action.getHandler(), action);
+        switch (link.getVariableType()) {
+            case SAVED -> savedVariables.remove(name);
+            case LOCAL -> {
+                if (action == null) return;
+                localVariables.remove(new LocalKey(name,
+                        action.getHandler().getMainActionHandler().getUniqueId()));
+            }
+            default -> globalVariables.remove(name);
+        }
     }
 
-    public Set<WorldVariable> getSet() {
+    /**
+     * Returns set of all current variables in world.
+     *
+     * @return set of all variables.
+     */
+    public @NotNull Set<WorldVariable> getSet() {
+        Set<WorldVariable> variables = new LinkedHashSet<>();
+        variables.addAll(localVariables.values());
+        variables.addAll(globalVariables.values());
+        variables.addAll(savedVariables.values());
         return variables;
     }
 
@@ -173,7 +243,9 @@ public final class WorldVariables {
      * Clears all current variables in world.
      */
     public void clearVariables() {
-        variables.clear();
+        localVariables.clear();
+        globalVariables.clear();
+        savedVariables.clear();
     }
 
     /**
@@ -197,8 +269,9 @@ public final class WorldVariables {
                 ValueType type = ValueType.valueOf((String) jsonObject.get("type"));
                 Object value = jsonObject.get("value");
                 value = deserializeObject(value, type);
-                if (variables.size() < planet.getLimits().getVariablesAmountLimit()) {
-                    variables.add(new WorldVariable(name, VariableLink.VariableType.SAVED, type, value, null));
+                if (getTotalVariablesAmount() < planet.getLimits().getVariablesAmountLimit()) {
+                    WorldVariable newVariable = new WorldVariable(name, VariableLink.VariableType.SAVED, type, value, null);
+                    addVariable(newVariable, VariableLink.VariableType.SAVED);
                 }
             }
         } catch (Exception e) {
@@ -206,7 +279,7 @@ public final class WorldVariables {
         }
 
         long endTime = System.currentTimeMillis();
-        OpenCreative.getPlugin().getLogger().info("Loaded " + variables.size() + " variables for planet " + planet.getId() + " in " + (endTime - startTime) + " ms");
+        OpenCreative.getPlugin().getLogger().info("Loaded " + getTotalVariablesAmount() + " variables for planet " + planet.getId() + " in " + (endTime - startTime) + " ms");
     }
 
     /**
@@ -223,10 +296,7 @@ public final class WorldVariables {
         }
         JSONArray jsonArray = new JSONArray();
         try (FileWriter file = new FileWriter(variablesJson.getPath())) {
-            for (WorldVariable worldVariable : variables) {
-                if (worldVariable.getVarType() != VariableLink.VariableType.SAVED) {
-                    continue;
-                }
+            for (WorldVariable worldVariable : new HashSet<>(savedVariables.values())) {
                 JSONObject objItem = new JSONObject();
                 objItem.put("name", worldVariable.getName());
                 objItem.put("type", worldVariable.getType().name());
@@ -250,171 +320,220 @@ public final class WorldVariables {
         );
     }
 
-    private Object serializeObject(Object value) {
+    /**
+     * Returns saved object value, that can be text, link or map.
+     *
+     * @param value value, that will be saved.
+     * @return value for saving.
+     */
+    private @NotNull Object serializeObject(@Nullable Object value) {
         try {
-            if (value instanceof ItemStack item) {
-                value = ItemUtils.saveItemAsByteArray(item);
-            } else if (value instanceof Location location) {
-                Map<String, Number> locationMap = new HashMap<>();
-                locationMap.put("x", location.getX());
-                locationMap.put("y", location.getY());
-                locationMap.put("z", location.getZ());
-                locationMap.put("yaw", location.getYaw());
-                locationMap.put("pitch", location.getPitch());
-                return locationMap;
-            } else if (value instanceof Vector vector) {
-                Map<String, Number> vectorMap = new HashMap<>();
-                vectorMap.put("x", vector.getX());
-                vectorMap.put("y", vector.getY());
-                vectorMap.put("z", vector.getZ());
-                return vectorMap;
-            } else if (value instanceof List<?> list) {
-                List<Object> newList = new ArrayList<>();
-                for (Object element : list) {
-                    Map<String, Object> parsedElement = new HashMap<>();
-                    ValueType insideType = ValueType.getByObject(element);
-                    if (insideType == null || insideType == ValueType.LIST || insideType == ValueType.MAP) {
-                        insideType = ValueType.TEXT;
-                    }
-                    parsedElement.put("type", insideType.name());
-                    parsedElement.put("value", serializeObject(element));
-                    newList.add(parsedElement);
+            switch (value) {
+                case ItemStack item -> {
+                    return ItemUtils.saveItemAsByteArray(item);
                 }
-                return newList;
-            } else if (value instanceof Map<?, ?> map) {
-                Map<Object, Object> newMap = new HashMap<>();
-                for (Object key : map.keySet()) {
-                    Map<String, Object> newKey = new HashMap<>();
-                    ValueType insideKeyType = ValueType.getByObject(key);
-                    if (insideKeyType == null) insideKeyType = ValueType.TEXT;
-                    newKey.put("type", insideKeyType.name());
-                    newKey.put("value", serializeObject(key));
+                case Location location -> {
+                    Map<String, Number> locationMap = new HashMap<>();
+                    locationMap.put("x", location.getX());
+                    locationMap.put("y", location.getY());
+                    locationMap.put("z", location.getZ());
+                    locationMap.put("yaw", location.getYaw());
+                    locationMap.put("pitch", location.getPitch());
+                    return locationMap;
+                }
+                case Vector vector -> {
+                    Map<String, Number> vectorMap = new HashMap<>();
+                    vectorMap.put("x", vector.getX());
+                    vectorMap.put("y", vector.getY());
+                    vectorMap.put("z", vector.getZ());
+                    return vectorMap;
+                }
+                case Color color -> {
+                    Map<String, Integer> colorMap = new HashMap<>();
+                    colorMap.put("red", color.getRed());
+                    colorMap.put("green", color.getGreen());
+                    colorMap.put("blue", color.getBlue());
+                    return colorMap;
+                }
+                case Particle particle -> {
+                    Map<String, String> particleMap = new HashMap<>();
+                    particleMap.put("type", particle.name());
+                    return particleMap;
+                }
+                case EventValueLink link -> {
+                    Map<String, String> valueMap = new HashMap<>();
+                    valueMap.put("name", link.id());
+                    return valueMap;
+                }
+                case VariableLink link -> {
+                    Map<String, String> variableMap = new HashMap<>();
+                    variableMap.put("name", link.getName());
+                    variableMap.put("type", link.getVariableType().name());
+                    return variableMap;
+                }
+                case String text -> {
+                    return text;
+                }
+                case Number number -> {
+                    return String.valueOf(number);
+                }
+                case Boolean bool -> {
+                    return String.valueOf(bool);
+                }
+                case List<?> list -> {
+                    List<Object> newList = new ArrayList<>();
+                    for (Object element : list) {
+                        Map<String, Object> parsedElement = new HashMap<>();
+                        ValueType insideType = ValueType.getByObject(element);
+                        if (insideType == null || insideType == ValueType.LIST || insideType == ValueType.MAP) {
+                            insideType = ValueType.TEXT;
+                        }
+                        parsedElement.put("type", insideType.name());
+                        parsedElement.put("value", serializeObject(element));
+                        newList.add(parsedElement);
+                    }
+                    return newList;
+                }
+                case Map<?, ?> map -> {
+                    Map<Object, Object> newMap = new HashMap<>();
+                    for (Object key : map.keySet()) {
+                        Map<String, Object> newKey = new HashMap<>();
+                        ValueType insideKeyType = ValueType.getByObject(key);
+                        if (insideKeyType == null) insideKeyType = ValueType.TEXT;
+                        newKey.put("type", insideKeyType.name());
+                        newKey.put("value", serializeObject(key));
 
-                    Map<String, Object> newValue = new HashMap<>();
-                    Object mapValue = map.get(key);
-                    ValueType insideValueType = ValueType.getByObject(mapValue);
-                    if (insideValueType == null || insideValueType == ValueType.MAP) {
-                        insideValueType = ValueType.TEXT;
+                        Map<String, Object> newValue = new HashMap<>();
+                        Object mapValue = map.get(key);
+                        ValueType insideValueType = ValueType.getByObject(mapValue);
+                        if (insideValueType == null || insideValueType == ValueType.MAP) {
+                            insideValueType = ValueType.TEXT;
+                        }
+                        newValue.put("type", insideValueType.name());
+                        newValue.put("value", serializeObject(mapValue));
+                        String serializedKey = new JSONObject(newKey).toString();
+                        newMap.put(serializedKey, newValue);
                     }
-                    newValue.put("type", insideValueType.name());
-                    newValue.put("value", serializeObject(mapValue));
-                    String serializedKey = new JSONObject(newKey).toString();
-                    newMap.put(serializedKey, newValue);
+                    return newMap;
                 }
-                return newMap;
-            } else if (value instanceof Color color) {
-                Map<String, Integer> colorMap = new HashMap<>();
-                colorMap.put("red", color.getRed());
-                colorMap.put("green", color.getGreen());
-                colorMap.put("blue", color.getBlue());
-                return colorMap;
-            } else if (value instanceof Particle particle) {
-                Map<String, String> particleMap = new HashMap<>();
-                particleMap.put("type", particle.name());
-                return particleMap;
-            } else if (value instanceof EventValueLink link) {
-                Map<String, String> valueMap = new HashMap<>();
-                valueMap.put("name", link.id());
-                return valueMap;
-            } else if (value instanceof VariableLink link) {
-                Map<String, String> variableMap = new HashMap<>();
-                variableMap.put("name", link.getName());
-                variableMap.put("type", link.getVariableType().name());
-                return variableMap;
+                case null, default -> {
+                    return "null";
+                }
             }
         } catch (Exception e) {
-            return String.valueOf(value);
+            return "null";
         }
-        return String.valueOf(value);
     }
 
+    /**
+     * Returns loaded object value, that will be used to set saved variable's value.
+     *
+     * @param value value of saved instance (text, list, map).
+     * @param type type of value.
+     * @return loaded object for registering.
+     */
     @SuppressWarnings("unchecked")
-    private Object deserializeObject(Object value, ValueType type) {
+    private @NotNull Object deserializeObject(Object value, ValueType type) {
         try {
-            if (type == ValueType.ITEM) {
-                String itemString = (String) value;
-                if (itemString.contains("{")) {
-                    value = new ItemStack(Material.AIR);
-                } else {
-                    value = ItemUtils.loadItemFromByteArray(itemString);
-                }
-            } else if (type == ValueType.LOCATION) {
-                double x, y, z;
-                float yaw, pitch;
-                Map<?, ?> locationMap = (Map<?, ?>) value;
-                x = (Double) locationMap.get("x");
-                y = (Double) locationMap.get("y");
-                z = (Double) locationMap.get("z");
-                yaw = ((Double) locationMap.get("yaw")).floatValue();
-                pitch = ((Double) locationMap.get("pitch")).floatValue();
-                return new Location(planet.getTerritory().getWorld(), x, y, z, yaw, pitch);
-            } else if (type == ValueType.VECTOR) {
-                double x, y, z;
-                Map<?, ?> vectorMap = (Map<?, ?>) value;
-                x = (Double) vectorMap.get("x");
-                y = (Double) vectorMap.get("y");
-                z = (Double) vectorMap.get("z");
-                return new Vector(x, y, z);
-            } else if (type == ValueType.LIST) {
-                List<Object> newList = new ArrayList<>();
-                List<?> oldList = (List<?>) value;
-                for (Object element : oldList) {
-                    Object newElement = element;
-                    if (newElement instanceof Map<?, ?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
-                        ValueType keyType = ValueType.parseString(insideMap.get("type").toString());
-                        newElement = deserializeObject(insideMap.get("value"), keyType);
+            switch (type) {
+                case ITEM -> {
+                    String itemString = (String) value;
+                    if (itemString.contains("{")) {
+                        return new ItemStack(Material.AIR);
                     } else {
-                        newElement = deserializeObject(newElement, ValueType.getByObject(newElement));
+                        return ItemUtils.loadItemFromByteArray(itemString);
                     }
-                    newList.add(newElement);
                 }
-                return newList;
-            } else if (type == ValueType.MAP) {
-                Map<Object, Object> newMap = new LinkedHashMap<>();
-                Map<?, ?> oldMap = (Map<?, ?>) value;
-                for (Object key : oldMap.keySet()) {
-                    Object newKey = key;
-                    Object newValue = oldMap.get(key);
-                    Map<String, Object> deserializedKey = (Map<String, Object>) new JSONParser().parse((String) newKey);
-                    newKey = deserializeObject(deserializedKey.get("value"), ValueType.parseString(deserializedKey.get("type").toString()));
-                    if (newValue instanceof Map<?, ?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
-                        ValueType keyValueType = ValueType.parseString(insideMap.get("type").toString());
-                        newValue = deserializeObject(insideMap.get("value"), keyValueType);
-                    } else {
-                        newValue = deserializeObject(key, ValueType.getByObject(key));
+                case LOCATION -> {
+                    double x, y, z;
+                    float yaw, pitch;
+                    Map<?, ?> locationMap = (Map<?, ?>) value;
+                    x = (Double) locationMap.get("x");
+                    y = (Double) locationMap.get("y");
+                    z = (Double) locationMap.get("z");
+                    yaw = ((Double) locationMap.get("yaw")).floatValue();
+                    pitch = ((Double) locationMap.get("pitch")).floatValue();
+                    return new Location(planet.getTerritory().getWorld(), x, y, z, yaw, pitch);
+                }
+                case VECTOR -> {
+                    double x, y, z;
+                    Map<?, ?> vectorMap = (Map<?, ?>) value;
+                    x = (Double) vectorMap.get("x");
+                    y = (Double) vectorMap.get("y");
+                    z = (Double) vectorMap.get("z");
+                    return new Vector(x, y, z);
+                }
+                case LIST -> {
+                    List<Object> newList = new ArrayList<>();
+                    List<?> oldList = (List<?>) value;
+                    for (Object element : oldList) {
+                        Object newElement = element;
+                        if (newElement instanceof Map<?, ?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                            ValueType keyType = ValueType.parseString(insideMap.get("type").toString());
+                            newElement = deserializeObject(insideMap.get("value"), keyType);
+                        } else {
+                            newElement = deserializeObject(newElement, ValueType.getByObject(newElement));
+                        }
+                        newList.add(newElement);
                     }
-                    newMap.put(newKey, newValue);
+                    return newList;
                 }
-                return newMap;
-            } else if (type == ValueType.COLOR) {
-                int red, green, blue;
-                Map<?, ?> colorMap = (Map<?, ?>) value;
-                red = (int) colorMap.get("red");
-                green = (int) colorMap.get("green");
-                blue = (int) colorMap.get("blue");
-                return Color.fromRGB(red, green, blue);
-            } else if (type == ValueType.PARTICLE) {
-                Map<?, ?> particleMap = (Map<?, ?>) value;
-                String particleType = (String) particleMap.get("type");
-                return Particle.valueOf(particleType);
-            } else if (type == ValueType.EVENT_VALUE) {
-                Map<?, ?> eventValueMap = (Map<?, ?>) value;
-                String eventValueType = (String) eventValueMap.get("name");
-                Target target = Target.SELECTED;
-                if (eventValueMap.containsKey("target")) {
-                    String targetType = (String) eventValueMap.get("target");
-                    target = Target.getByText(targetType);
+                case MAP -> {
+                    Map<Object, Object> newMap = new LinkedHashMap<>();
+                    Map<?, ?> oldMap = (Map<?, ?>) value;
+                    for (Object key : oldMap.keySet()) {
+                        Object newKey = key;
+                        Object newValue = oldMap.get(key);
+                        Map<String, Object> deserializedKey = (Map<String, Object>) new JSONParser().parse((String) newKey);
+                        newKey = deserializeObject(deserializedKey.get("value"), ValueType.parseString(deserializedKey.get("type").toString()));
+                        if (newValue instanceof Map<?, ?> insideMap && insideMap.containsKey("type") && insideMap.containsKey("value")) {
+                            ValueType keyValueType = ValueType.parseString(insideMap.get("type").toString());
+                            newValue = deserializeObject(insideMap.get("value"), keyValueType);
+                        } else {
+                            newValue = deserializeObject(key, ValueType.getByObject(key));
+                        }
+                        newMap.put(newKey, newValue);
+                    }
+                    return newMap;
                 }
-                return new EventValueLink(eventValueType, target);
-            } else if (type == ValueType.VARIABLE) {
-                Map<?, ?> varMap = (Map<?, ?>) value;
-                String varName = (String) varMap.get("name");
-                return new VariableLink(varName, VariableLink.VariableType.SAVED);
+                case COLOR -> {
+                    int red, green, blue;
+                    Map<?, ?> colorMap = (Map<?, ?>) value;
+                    red = (int) colorMap.get("red");
+                    green = (int) colorMap.get("green");
+                    blue = (int) colorMap.get("blue");
+                    return Color.fromRGB(red, green, blue);
+                }
+                case PARTICLE -> {
+                    Map<?, ?> particleMap = (Map<?, ?>) value;
+                    String particleType = (String) particleMap.get("type");
+                    return Particle.valueOf(particleType);
+                }
+                case EVENT_VALUE -> {
+                    Map<?, ?> eventValueMap = (Map<?, ?>) value;
+                    String eventValueType = (String) eventValueMap.get("name");
+                    Target target = Target.SELECTED;
+                    if (eventValueMap.containsKey("target")) {
+                        String targetType = (String) eventValueMap.get("target");
+                        target = Target.getByText(targetType);
+                    }
+                    return new EventValueLink(eventValueType, target);
+                }
+                case VARIABLE -> {
+                    Map<?, ?> varMap = (Map<?, ?>) value;
+                    String varName = (String) varMap.get("name");
+                    return new VariableLink(varName, VariableLink.VariableType.SAVED);
+                }
+                case NUMBER, TEXT, BOOLEAN -> {
+                    return String.valueOf(value);
+                }
+                default -> {
+                    return "null";
+                }
             }
-        } catch (Exception e) {
-            return String.valueOf(value);
+        } catch (Exception ignored) {
+            return "null";
         }
-        return String.valueOf(value);
     }
 
     /**
@@ -424,14 +543,16 @@ public final class WorldVariables {
      */
     public int getTotalVariablesAmount() {
         int size = 0;
-        for (WorldVariable var : variables) {
+        for (WorldVariable var : localVariables.values()) {
+            size += var.getSize();
+        }
+        for (WorldVariable var : globalVariables.values()) {
+            size += var.getSize();
+        }
+        for (WorldVariable var : savedVariables.values()) {
             size += var.getSize();
         }
         return size;
-    }
-
-    public Planet getPlanet() {
-        return planet;
     }
 
     /**
@@ -440,13 +561,51 @@ public final class WorldVariables {
      * @param actionsHandler handler.
      */
     public void garbageCollector(ActionsHandler actionsHandler) {
-        variables.removeIf(var -> var.getVarType() == VariableLink.VariableType.LOCAL && var.getHandler() != null && var.getHandler().equals(actionsHandler));
+        for (LocalKey localKey : new HashSet<>(localVariables.keySet())) {
+            if (actionsHandler.getUniqueId().equals(localKey.handlerId)) {
+                localVariables.remove(localKey);
+            }
+        }
     }
 
     /**
      * Clears all global variables in world.
      */
     public void clearGlobalVariables() {
-        variables.removeIf(var -> var.getVarType() == VariableLink.VariableType.GLOBAL);
+        globalVariables.clear();
     }
+
+    /**
+     * <h1>LocalKey</h1>
+     * This class represents a key, that stores
+     * name and handler ID of local variable.
+     */
+    static class LocalKey {
+
+        private final String name;
+        private final UUID handlerId;
+
+        public LocalKey(String name, UUID handlerUUID) {
+            this.name = name;
+            this.handlerId = handlerUUID;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof LocalKey key)) return false;
+            return name.equals(key.name) && handlerId.equals(key.handlerId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, handlerId);
+        }
+
+        @Override
+        public String toString() {
+            return "LocalKey{name='" + name + "', handlerId=" + handlerId + '}';
+        }
+    }
+
 }

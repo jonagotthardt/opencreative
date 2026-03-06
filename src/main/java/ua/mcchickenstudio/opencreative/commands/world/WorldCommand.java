@@ -18,17 +18,21 @@
 
 package ua.mcchickenstudio.opencreative.commands.world;
 
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.title.Title;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.commands.CommandHandler;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetSharingChangeEvent;
+import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
+import ua.mcchickenstudio.opencreative.managers.downloader.TooBigWorldException;
 import ua.mcchickenstudio.opencreative.menus.world.settings.EntitiesBrowserMenu;
 import ua.mcchickenstudio.opencreative.menus.world.settings.WorldSettingsMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
@@ -365,6 +369,42 @@ public class WorldCommand extends CommandHandler {
                     planet.getDevPlanet().displayWorldBorders();
                 }
             }
+            case "download" -> {
+                if (!sender.hasPermission("opencreative.world.download")) {
+                    sender.sendMessage(getLocaleMessage("no-perms"));
+                    return;
+                }
+                if (!OpenCreative.getDownloadManager().isEnabled()) {
+                    sender.sendMessage(getLocaleMessage("world.downloader.unavailable"));
+                    return;
+                }
+                if (!planet.isOwner(player)) {
+                    sender.sendMessage(getLocaleMessage("not-owner"));
+                    return;
+                }
+                if (!checkAndSetCooldownWithMessage(player, CooldownUtils.CooldownType.WORLD_DOWNLOAD)) return;
+                Sounds.WORLD_DOWNLOADER_UPLOADING.play(player);
+                sender.sendMessage(getLocaleMessage("world.downloader.uploading"));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        OpenCreative.getDownloadManager().uploadPlanet(planet, player).thenAccept(link -> {
+                            Sounds.WORLD_DOWNLOADER_UPLOADED.play(player);
+                            player.sendMessage(getComponentWithPlaceholders("world.downloader.uploaded",
+                                    player,"link", link)
+                                    .clickEvent(ClickEvent.openUrl(link)));
+                        }).exceptionally(error -> {
+                            Sounds.PLAYER_ERROR.play(player);
+                            if (error.getCause() instanceof TooBigWorldException) {
+                                player.sendMessage(getLocaleMessage("world.downloader.size-limit"));
+                            } else {
+                                player.sendMessage(getLocaleMessage("world.downloader.failed"));
+                            }
+                            return null;
+                        });
+                    }
+                }.runTaskAsynchronously(OpenCreative.getPlugin());
+            }
             case "info" -> sendPlanetInfo(player, planet);
             default -> {
                 if (planet.isOwner(player)) {
@@ -395,6 +435,9 @@ public class WorldCommand extends CommandHandler {
         if (args.length == 1) {
             tabCompleter.addAll(List.of((planet.getSharing() == Planet.Sharing.PUBLIC ? "close" : "open"),
                     "kick", "ban", "unban", "spawn", "setspawn", "whitelist", "unwhitelist"));
+            if (OpenCreative.getDownloadManager().isEnabled()) {
+                tabCompleter.add("download");
+            }
         } else if (args.length == 2) {
             if (List.of("unban", "unblacklist").contains(args[0].toLowerCase())) {
                 tabCompleter.addAll(planet.getWorldPlayers().getBannedPlayers().stream().filter(p -> p.startsWith(args[1])).toList());

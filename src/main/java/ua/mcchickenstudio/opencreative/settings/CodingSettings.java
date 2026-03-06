@@ -23,7 +23,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.prompters.*;
 
 import java.util.ArrayList;
@@ -45,6 +46,13 @@ public final class CodingSettings {
     private boolean enabled = true;
     private boolean cancelChatOnValueSet = false;
     private boolean legacySelectionMenu = false;
+    private int verticalPlatformStep = 5;
+    private int legacyPlatformStep = 10;
+    private int horizontalPlatformStep = 102;
+    private boolean verticalPlatformNotchEnabled = false;
+    private int verticalPlatformNotchWidth = 3;
+    private boolean shiftBreakChainEnabled = true;
+    private boolean shiftBreakChainCompactFull = true;
     private boolean ignoreActionsIfEntityNotInWorld = false;
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
@@ -66,6 +74,13 @@ public final class CodingSettings {
         legacySelectionMenu = section.getBoolean("old-selection-menu", false);
         cancelChatOnValueSet = section.getBoolean("cancel-chat-on-value-set", false);
         ignoreActionsIfEntityNotInWorld = section.getBoolean("ignore-actions-if-entity-not-in-world", false);
+        verticalPlatformStep = Math.max(1, section.getInt("platforms-spacing.vertical", 5));
+        legacyPlatformStep = Math.max(1, section.getInt("platforms-spacing.legacy", 10));
+        horizontalPlatformStep = Math.max(101, section.getInt("platforms-spacing.horizontal", 102));
+        verticalPlatformNotchEnabled = section.getBoolean("platforms-vertical-notch.enabled", false);
+        verticalPlatformNotchWidth = Math.max(1, section.getInt("platforms-vertical-notch.width", 3));
+        shiftBreakChainEnabled = section.getBoolean("shift-break-chain-enabled", true);
+        shiftBreakChainCompactFull = section.getBoolean("shift-break-chain-compact-full", true);
 
         loadDisabledBlocks(section);
         setupPromptHandler(section);
@@ -103,14 +118,14 @@ public final class CodingSettings {
             }
         }
         for (String disabled : config.getStringList("disabled-events")) {
-            try {
-                disabled = disabled.toUpperCase().replace("-", "_");
-                ExecutorType type = ExecutorType.valueOf(disabled);
-                disabledEvents.add(type.name());
-                count++;
-            } catch (Exception ignored) {
+            disabled = disabled.toLowerCase().replace("-", "_");
+            Executor executor = Executors.getInstance().getById(disabled);
+            if (executor == null) {
                 unknownBlocks.add(disabled);
+                continue;
             }
+            disabledEvents.add(executor.getID());
+            count++;
         }
         if (count >= 1) {
             OpenCreative.getPlugin().getLogger().info("Disabled " + count + " coding blocks!");
@@ -172,8 +187,8 @@ public final class CodingSettings {
      * @param event executor to check.
      * @return true - disabled, false - not.
      */
-    public boolean isDisabledEvent(@NotNull ExecutorType event) {
-        return disabledEvents.contains(event.name());
+    public boolean isDisabledEvent(@NotNull Executor event) {
+        return disabledEvents.contains(event.getID());
     }
 
     /**
@@ -253,5 +268,68 @@ public final class CodingSettings {
      */
     public boolean isIgnoreActionsIfEntityNotInWorld() {
         return ignoreActionsIfEntityNotInWorld;
+    }
+
+    /**
+     * Returns Y-distance between generated vertical platforms.
+     *
+     * @return spacing in blocks.
+     */
+    public int getVerticalPlatformStep() {
+        return verticalPlatformStep;
+    }
+
+    /**
+     * Returns Y-distance between generated legacy platforms.
+     *
+     * @return spacing in blocks.
+     */
+    public int getLegacyPlatformStep() {
+        return legacyPlatformStep;
+    }
+
+    /**
+     * Returns X/Z-distance between generated horizontal platforms.
+     *
+     * @return spacing in blocks.
+     */
+    public int getHorizontalPlatformStep() {
+        return horizontalPlatformStep;
+    }
+
+    /**
+     * Checks whether vertical platform generator should cut a side notch.
+     *
+     * @return true - carve notch, false - keep full floor.
+     */
+    public boolean isVerticalPlatformNotchEnabled() {
+        return verticalPlatformNotchEnabled;
+    }
+
+    /**
+     * Returns notch width for vertical platform generator.
+     *
+     * @return width in blocks from platform edge.
+     */
+    public int getVerticalPlatformNotchWidth() {
+        return verticalPlatformNotchWidth;
+    }
+
+    /**
+     * Checks whether sneaking block-break should remove full multi-action chain.
+     *
+     * @return true - enabled, false - disabled.
+     */
+    public boolean isShiftBreakChainEnabled() {
+        return shiftBreakChainEnabled;
+    }
+
+    /**
+     * Checks whether shift chain removal should compact entire remaining line.
+     *
+     * @return true - compact fully, false - single vanilla move only.
+     */
+    public boolean isShiftBreakChainCompactFull() {
+        return shiftBreakChainCompactFull;
     }
 }

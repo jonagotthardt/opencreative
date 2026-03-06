@@ -29,8 +29,8 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 
 import java.io.File;
@@ -59,16 +59,16 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
     }
 
     @Override
-    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category,
-                                  @NotNull ExecutorType type, boolean debug) {
+    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight,
+                                  @NotNull ExecutorCategory category,
+                                  @NotNull Executor executor, boolean debug) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
 
-        String path = "code.blocks.exec_block_" +
-                (notDependsOnHeight ? z : y) + "_" + x;
+        String path = "code.blocks." + getExecutorKey(block);
         set(path + ".category", category.name());
-        set(path + ".type", type.name());
+        set(path + ".type", executor.getID().toUpperCase());
 
         if (debug) {
             set(path + ".debug", true);
@@ -96,12 +96,15 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
     }
 
     @Override
-    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category, @NotNull ExecutorType type) {
-        saveExecutorBlock(block, notDependsOnHeight, category, type, false);
+    public void saveExecutorBlock(@NotNull Block block, boolean notDependsOnHeight, @NotNull ExecutorCategory category, @NotNull Executor executor) {
+        saveExecutorBlock(block, notDependsOnHeight, category, executor, false);
     }
 
     @Override
-    public void saveActionBlock(@NotNull Block executorBlock, boolean notDependsOnHeight, @NotNull List<String> multiActions, @NotNull Block actionBlock, @NotNull ActionCategory category, @NotNull ActionType type, @NotNull Target target) {
+    public void saveActionBlock(@NotNull Block executorBlock, boolean notDependsOnHeight,
+                                @NotNull List<String> multiActions, @NotNull Block actionBlock,
+                                @NotNull ActionCategory category, @NotNull ActionType type,
+                                @NotNull Target target) {
         String path = getActionBlockPath(executorBlock, notDependsOnHeight, actionBlock, multiActions);
 
         set(path + ".category", category.name());
@@ -172,18 +175,14 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
     }
 
     private String getActionBlockPath(Block executorBlock, boolean notDependsOnHeight, Block actionBlock, List<String> multiActions) {
-        int z = notDependsOnHeight ? actionBlock.getZ() : actionBlock.getY();
         StringBuilder conditionsPath = new StringBuilder();
         for (String condition : multiActions) {
             conditionsPath
                     .append(condition.endsWith(".else") ? condition.replace(".else", "") : condition)
                     .append(condition.endsWith(".else") ? ".else." : ".actions.");
         }
-        String path = "code.blocks.exec_block_";
-        StringBuilder builder = new StringBuilder(path);
-        builder.append(z);
-        builder.append("_");
-        builder.append(executorBlock.getX());
+        StringBuilder builder = new StringBuilder("code.blocks.");
+        builder.append(getExecutorKey(executorBlock));
         builder.append(".actions.");
         builder.append(conditionsPath);
         ActionCategory category = ActionCategory.getByMaterial(actionBlock.getType());
@@ -197,6 +196,15 @@ public class CodeConfiguration extends YamlConfiguration implements CodeStorage 
 
     public int getBlockNumber(Block block) {
         return (block.getX() - 2) / 2;
+    }
+
+    /**
+     * Builds stable unique key for executor block.
+     * We include all 3 coordinates to avoid key collisions on vertical/legacy platforms
+     * where many executors share same X and Y and differ only by Z.
+     */
+    private @NotNull String getExecutorKey(@NotNull Block block) {
+        return "exec_block_" + block.getY() + "_" + block.getX() + "_" + block.getZ();
     }
 
 }

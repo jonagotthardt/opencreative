@@ -35,8 +35,9 @@ import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionCategory;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.ActionType;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
-import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorType;
+import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executors;
 import ua.mcchickenstudio.opencreative.coding.menus.layouts.ArgumentSlot;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
 import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
@@ -331,7 +332,7 @@ public class CodingBlockParser {
 
             Block executorBlock = world.getBlockAt(executorX, y, z);
             ExecutorCategory executorCategory = ExecutorCategory.getByMaterial(executorBlock.getType());
-            ExecutorType executorType = ExecutorType.getType(executorBlock);
+            Executor executor = Executors.getInstance().getByBlock(executorBlock);
             boolean debug = executorBlock.getRelative(BlockFace.WEST).getType() == Material.REDSTONE_WALL_TORCH;
 
             /*
@@ -339,13 +340,13 @@ public class CodingBlockParser {
              * then we don't need to save actions inside,
              * because we can't execute them without executor.
              */
-            if (executorCategory == null || executorType == null) {
-                if ((executorCategory == null && isSignEmpty(executorBlock, (byte) 2)) || (executorType == null && isSignEmpty(executorBlock, (byte) 3))) {
+            if (executorCategory == null || executor == null) {
+                if ((executorCategory == null && isSignEmpty(executorBlock, (byte) 2)) || (executor == null && isSignEmpty(executorBlock, (byte) 3))) {
                     unknownBlocks.add(executorBlock);
                 }
                 continue;
             }
-            config.saveExecutorBlock(executorBlock, notDependsOnHeight, executorCategory, executorType, debug);
+            config.saveExecutorBlock(executorBlock, notDependsOnHeight, executorCategory, executor, debug);
 
             // For coding actions
             List<String> multiActions = new ArrayList<>();

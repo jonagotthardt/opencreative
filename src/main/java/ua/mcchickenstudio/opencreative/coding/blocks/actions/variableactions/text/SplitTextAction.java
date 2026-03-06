@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class SplitTextAction extends VariableAction {
     public SplitTextAction(Executor executor, Target target, int x, Arguments args) {
@@ -39,7 +40,7 @@ public final class SplitTextAction extends VariableAction {
         VariableLink link = getArguments().getVariableLink("variable", this);
         String text = getArguments().getText("text", " ", this);
         String splitter = getArguments().getText("splitter", " ", this);
-        setVarValue(link, new ArrayList<>(List.of(text.split(splitter))));
+        setVarValue(link, new ArrayList<>(List.of(text.split(Pattern.quote(splitter)))));
     }
 
     @Override

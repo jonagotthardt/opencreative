@@ -160,10 +160,15 @@ lobby:
   disallow-damaging-mobs: true     # To bypass with true, add permission: opencreative.lobby.damaging-mobs.bypass
   disallow-world-edit: true        # To bypass with true, add permission: opencreative.lobby.world-edit.bypass
   disable-explosions: true # If true, any explosion in lobby will be cancelled.
-  clear-inventory: true # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
+  clear-inventory: "all" # Inventory will be cleared on server join, world change, should be enabled due to security reasons.
+                         # "all" - all worlds, "creative" - only planets and lobby, "planets" - only planets, "lobby" - only lobby, "none" - disable.
+  reset-gamemode: "all" # Game mode will be cleared on world change, should be enabled due to security reasons.
   reset-view-distance: true # View and simulation distances will be reset on server join, world change.
                             # If it makes "almost all chunks not visible", set to false.
                             # If false, will disable "Set View Distance" and "Set Simulation Distance" player actions.
+  reset-resource-pack: true # Resource pack will be reset on server join, world change.
+                            # If you have some resource pack changer plugin and this breaks it, set to false.
+                            # If false, will disable "Set Resource Pack" player action.
   teleport-on-join: true # Will teleport player to lobby on join
   #spawn: # You can set spawn location with /oc setspawn command.
   #  x: 1
@@ -202,7 +207,7 @@ messages:
 
   branding: "<white>Open<gradient:#dbdbdb:#A3E2FF>Creative</gradient><color:#74D3FF>+" # Branding uses minimessage (https://webui.advntr.dev/)
   prefix: "&6 Worlds &8| &f" # Prefix, that will be used in many messages.
-  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
+  version: "&f \n &fPowered by Open&7Creative&b+ &3%version%\n &f%codename% \n \n &fContributors: &7McChicken Team, onn512, pawsashatoy, LWJENNI, HACKERPRO17, liventmst\n &fTranslators: &7initzero, Nagibator6000Lol, DrakesWeb, kogtyv, Senmpai333 \n \n &cMcChicken Studio 2017-2026\n &c"
 
   cc-prefix: "&6 Creative Chat &8| &7" # Creative Chat is global chat, accessed by ! in the beginning of message, or with /cc.
   cc-chat: "%cc-prefix%&7%player%&7: %message%" # You can use PAPI placeholders and MiniMessage here
@@ -212,6 +217,7 @@ messages:
   notify-no-players-around: true # Will send notification to player, when he texts in local chat in world without other players
   cancel-chat-on-confirmation: false # If true, will hide player's message, when he searches world by input; changes
                                      #  world's or module's name, description; enters nickname or id for transferring ownership.
+  handle-world-chat: true # If true, plugin will handle player messages like chat-managers, you may need turn off if installed one of them.
   critical-errors: true # Will send critical errors in console
   warnings: true # Will send warning in console
   not-found: false # Will send not found message in console
@@ -234,6 +240,13 @@ coding:
   platforms-generator: "horizontal" # Default generator for coding platforms, if not exists will use default Horizontal.
     # Available: "horizontal", "vertical", "legacy". Please do not change platforms generator, if there's already existing worlds.
     # To test them, use /world platformer [ID].
+  platforms-spacing:
+    vertical: 5 # Y-distance between platforms for vertical generator.
+    legacy: 10 # Y-distance between platforms for legacy generator.
+    horizontal: 102 # X/Z-distance between platforms for horizontal generator.
+  platforms-vertical-notch:
+    enabled: false # Cuts a side strip in vertical platforms for easier flying between floors.
+    width: 3 # Width of cut strip from platform edge on X axis.
   cancel-chat-on-value-set: false # Cancels sending message to local chat, when player sets new value of text, number, vector,
                                   # variable, potion, color while holding item in hand.
   ignore-actions-if-entity-not-in-world: false # If true, will cancel any action (player, entity, variable, world, control...)
@@ -299,6 +312,18 @@ item-fixer:
   entities-max-amount: 3 # Maximum amount of entities, that blocks (beehives) can hold.
   clear-command-blocks-data: true # Removes commands inside command block items
 
+world-fixer:
+  #
+  # We want to prevent players from hurting
+  # server with some bad scenarios. These scenarios
+  # will lead to changing world's behavior.
+  #
+  vehicle-collisions:
+    enabled: true # If true, will destroy minecarts with too many collisions.
+    max-collisions: 100 # Maximum amount of collisions in the last 0.5 seconds.
+  bad-entities-in-air:
+    enabled: true # If true, will destroy armor stands, vehicles and projectiles, when they're flying next to each other.
+
 commands:
   #
   # These commands will be executed on
@@ -358,6 +383,8 @@ groups:
       world-chat: 2 # chat in the world
       module-usage: 7 # creating, pasting modules
       duplication-usage: 7 # duplicating blocks with manipulator
+      world-download: 120 # downloading world with /world download
+      prompter-usage: 60 # generating code with prompter /env make
     creating-world:
       limit: 2
     creating-module:
@@ -381,8 +408,9 @@ groups:
         opening-inventories: 5 # limit for opening inventories per 5 seconds for preventing anti-exit
         sending-web-requests: 5 # limit for sending web requests per 5 seconds for preventing attacks
         variables-amount: 50 # limit for amount of all variables in world (saved, global, local)
-        scoreboards-amount: 50 # limit for amount of all scoreboards
-        bossbars-amount: 10 # limit for amount of all bossbars
+        scoreboards-amount: 5 # limit for amount of all scoreboards
+        bossbars-amount: 5 # limit for amount of all bossbars
+        recipes-amount: 10 # limit for amount of all custom crafting and cooking recipes
         coding-platforms: 4 # limit for coding platforms
         changing-list-elements: 50 # limit of changing elements in lists and maps per second
         changing-targets: 200 # limit of changing targets (setting, adding, removing) with Selection Action
@@ -404,11 +432,11 @@ groups:
         modifying-blocks: 0
         redstone-changes: 20
         variables-amount: 50
-        scoreboards-amount: 3
+        scoreboards-amount: 1
         repeats-amount: 10
         changing-list-elements: 10
         changing-targets: 100
-        bossbars-amount: 3
+        bossbars-amount: 1
         physical-objects: 5
       build-permissions: # Permissions will be given when player types /build command
         - "headdb.open"
@@ -425,6 +453,9 @@ groups:
         # If you want to deny permission, that player has (maybe he's admin),
         # just add ! at the beginning of permission node.
         # - !nte.default
+      visitor-permissions:     # Permissions will be given when player joins the build world (/play, /build),
+        - "essentials.ptime" # but they're not builder/developer/world owner. If player becomes developer/builder
+                             # visitor permissions will be removed from player.
   premium:
     permission: "opencreative.group.premium"
     cooldowns:
@@ -434,6 +465,8 @@ groups:
       world-chat: 1
       module-usage: 7
       duplication-usage: 7
+      world-download: 120
+      prompter-usage: 60
     creating-world:
       limit: 4
     creating-module:
@@ -453,7 +486,8 @@ groups:
         opening-inventories: 5
         sending-web-requests: 5
         variables-amount: 500
-        scoreboards-amount: 50
+        recipes-amount: 10
+        scoreboards-amount: 10
         bossbars-amount: 10
         coding-platforms: 4
         repeats-amount: 100
@@ -476,8 +510,8 @@ groups:
         changing-list-elements: 10
         changing-targets: 100
         variables-amount: 50
-        scoreboards-amount: 10
-        bossbars-amount: 10
+        scoreboards-amount: 1
+        bossbars-amount: 1
         physical-objects: 5
       build-permissions:
         - "headdb.open"
@@ -490,6 +524,8 @@ groups:
       dev-permissions:
         - "headdb.open"
         - "essentials.itemname"
+      visitor-permissions:
+        - "essentials.ptime"
 sounds:
   #
   # This section allows you to set custom
@@ -697,6 +733,32 @@ items:
     32: "launch-function-action"
     36: "arrow-not"
 
+web:
+  #
+  # Web services can provide additional features,
+  # like API for getting worlds and players info,
+  # or downloading a world archive.
+  #
+  port: 22912
+  display-link: "" # URL, that will be displayed in messages to player.
+                   # Example: "yourserver.com"
+                   # If empty, will be numeric IP of server and ":port" in the ending.
+  downloader:
+    #
+    # Downloader allows player to download archive
+    # of world, that contains build and coding world,
+    # with command /world download.
+    #
+    # When player types that command, it will copy world's
+    # folders and compress them into one archive, that will be
+    # stored in /plugins/OpenCreative/temp/ folder.
+    # Then, it sends a link to player, and if player opens the site,
+    # player will download archive, and then it will be removed.
+    # Otherwise, after period of storing time it will be removed.
+    #
+    enabled: false
+    max-size: 30 # Maximum size of world in MB.
+    storing-time: 60 # How many seconds archive will be stored before deleting.
 experiments:
   #
   # Experiments are unstable experimental features,

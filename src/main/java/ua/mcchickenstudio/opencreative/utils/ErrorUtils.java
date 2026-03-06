@@ -321,11 +321,10 @@ public final class ErrorUtils {
      */
     public static void sendPlanetCodeErrorMessage(Executor executor, Action action, String errorMessage, Exception error) {
         Planet planet = executor.getPlanet();
-        if (planet == null) return;
         for (Player player : planet.getPlayers()) {
             Component message = Component
                     .text(getLocaleMessage("coding-error.message")
-                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%event%", executor.getLocaleName())
                             .replace("%action%", action.getActionType().getLocaleName())
                             .replace("%error%", errorMessage)
                             .replace("%x%", String.valueOf(action.getX()))
@@ -340,11 +339,10 @@ public final class ErrorUtils {
 
     public static void notifyBuildModeByCode(Executor executor, Action action) {
         Planet planet = executor.getPlanet();
-        if (planet == null) return;
         for (Player player : planet.getPlayers()) {
             Component message = getComponentWithPlaceholders("world.build-mode.changed-because-of-code",
                     player,
-                    "event", executor.getExecutorType().getLocaleName(),
+                    "event", executor.getLocaleName(),
                     "action", action.getActionType().getLocaleName(),
                     "x", action.getX(),
                     "y", action.getExecutor().getY(),
@@ -375,7 +373,7 @@ public final class ErrorUtils {
         for (Player player : planet.getPlayers()) {
             player.sendMessage(
                     getLocaleMessage("coding-error.message")
-                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%event%", executor.getLocaleName())
                             .replace("%action%", action.getActionType().toString())
                             .replace("%error%", errorMessage)
                             .replace("%x%", String.valueOf(action.getX()))
@@ -402,7 +400,7 @@ public final class ErrorUtils {
             Sounds.WORLD_CODE_CRITICAL_ERROR.play(player);
             Component message = Component
                     .text(getLocaleMessage("coding-error.message-event-critical")
-                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%event%", executor.getLocaleName())
                             .replace("%error%", errorMessage)
                             .replace("%x%", String.valueOf(executor.getX()))
                             .replace("%y%", String.valueOf(executor.getY()))
@@ -431,7 +429,7 @@ public final class ErrorUtils {
         for (Player player : planet.getPlayers()) {
             Component message = Component
                     .text(getLocaleMessage("coding-error.message-event")
-                            .replace("%event%", executor.getExecutorType().getLocaleName())
+                            .replace("%event%", executor.getLocaleName())
                             .replace("%error%", errorMessage)
                             .replace("%x%", String.valueOf(executor.getX()))
                             .replace("%y%", String.valueOf(executor.getY()))
@@ -677,9 +675,10 @@ public final class ErrorUtils {
     public static void sendCodingDebugExecutor(Executor executor) {
         Planet planet = executor.getPlanet();
         if (!executor.isDebug()) return;
-        if (planet == null || !planet.isDebug()) return;
+        if (!planet.isDebug()) return;
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(getLocaleMessage("coding-debug.executor-message", false).replace("%type%", executor.getExecutorType().getLocaleName()).replace("%x%", String.valueOf(executor.getX())).replace("%y%", String.valueOf(executor.getY())).replace("%z%", String.valueOf(executor.getZ())));
+            player.sendMessage(getLocaleMessage("coding-debug.executor-message", false)
+                    .replace("%type%", executor.getLocaleName()).replace("%x%", String.valueOf(executor.getX())).replace("%y%", String.valueOf(executor.getY())).replace("%z%", String.valueOf(executor.getZ())));
         }
     }
 

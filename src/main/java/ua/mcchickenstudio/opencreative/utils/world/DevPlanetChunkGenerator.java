@@ -18,6 +18,7 @@
 
 package ua.mcchickenstudio.opencreative.utils.world;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +33,13 @@ import java.util.Random;
 public final class DevPlanetChunkGenerator extends ChunkGenerator {
 
     @Override
-    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-        return createChunkData(world);
+    public @NotNull Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        return new Location(world, 2, 1, 2, 0, 0);
+    }
+
+    @Override
+    public boolean canSpawn(@NotNull World world, int x, int z) {
+        return true;
     }
 
 }

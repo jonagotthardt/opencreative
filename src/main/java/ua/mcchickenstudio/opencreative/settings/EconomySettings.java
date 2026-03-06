@@ -25,7 +25,7 @@ import ua.mcchickenstudio.opencreative.managers.economy.DisabledEconomy;
 import ua.mcchickenstudio.opencreative.managers.economy.VaultEconomy;
 import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
-public class EconomySettings {
+public final class EconomySettings {
 
     /**
      * Loads settings of economy from configuration.

@@ -26,10 +26,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
 import ua.mcchickenstudio.opencreative.coding.CodingBlockParser;
@@ -200,7 +202,7 @@ public class Planet {
      *
      * @return group of owner.
      */
-    public Group getGroup() {
+    public @NotNull Group getGroup() {
         return OpenCreative.getSettings().getGroups().getGroup(ownerGroup);
     }
 
@@ -212,7 +214,7 @@ public class Planet {
      *
      * @return sharing mode.
      */
-    public Sharing getSharing() {
+    public @NotNull Sharing getSharing() {
         return sharing;
     }
 
@@ -224,7 +226,7 @@ public class Planet {
      *
      * @param sharing sharing mode.
      */
-    public void setSharing(Sharing sharing) {
+    public void setSharing(@NotNull Sharing sharing) {
         if (this.sharing == sharing) return;
         this.sharing = sharing;
         setPlanetConfigParameter(this, "sharing", sharing.name());
@@ -540,6 +542,7 @@ public class Planet {
                         territory.showBorders(player);
                         if (worldPlayers.canDevelop(player)) {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.owner"));
+                            givePlayPermissions(player);
                         } else {
                             player.sendMessage(getLocaleMessage("world.play-mode.message.players"));
                         }
@@ -704,6 +707,10 @@ public class Planet {
             player.sendMessage(getLocaleMessage("world.connecting.busy"));
             return;
         }
+        if (territory.isBusy()) {
+            player.sendMessage(getLocaleMessage("world.connecting.unloading"));
+            return;
+        }
         new QuitEvent(player).callEvent();
         wander.setConnectingToPlanet(true);
         player.showTitle(Title.title(
@@ -721,7 +728,10 @@ public class Planet {
             OpenCreative.getPlugin().getLogger().info("Planet " + id + " is already loaded, teleporting " + player.getName());
         }
         removePassengers(player);
-        player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> handleConnectionProcess(player, wasLoaded, hidePlayer, success)).exceptionally(error -> {
+        player.teleportAsync(territory.getSpawnLocation()).thenAccept(success -> {
+            handleConnectionProcess(player, wasLoaded, hidePlayer, success);
+        }).exceptionally(error -> {
+            player.clearTitle();
             sendPlayerErrorMessage(player, "Failed to connect to the world " + this.getId() +
                     (error.getMessage() == null ? "." : ": " + error.getMessage()));
             wander.setConnectingToPlanet(false);
@@ -738,7 +748,7 @@ public class Planet {
      * @param success    chunks are loaded successfully to teleport or not.
      */
     private void handleConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
-        clearPlayer(player);
+        clearPlayer(player, false);
         if (success) {
             OpenCreative.getWander(player).setConnectingToPlanet(false);
             if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
@@ -746,7 +756,7 @@ public class Planet {
                     onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
                 }
             }
-            clearPlayer(player);
+            clearPlayer(player, false);
             Sounds.WORLD_CONNECTED.play(player);
             mode.onPlayerConnect(player, this);
             getWorldPlayers().getPlanetPlayer(player).load();
@@ -799,11 +809,6 @@ public class Planet {
                 territory.getScript().loadCode();
                 new GamePlayEvent(this).callEvent();
             }
-            if (mode == Mode.PLAYING && worldPlayers.canDevelop(player)) {
-                givePlayPermissions(player);
-            } else if (mode == Mode.BUILD && worldPlayers.canBuild(player)) {
-                giveBuildPermissions(player);
-            }
             if (!hidePlayer) {
                 new JoinEvent(player).callEvent();
             } else {
@@ -820,7 +825,14 @@ public class Planet {
                 territory.unload();
                 return;
             }
-            sendPlayerErrorMessage(player, "Can't join planet. World is unloaded.");
+            if (isLoaded()) {
+                sendPlayerErrorMessage(player,
+                        "Failed to teleport to the world! World is loaded, chunk is " +
+                                (territory.getSpawnLocation().getChunk().isLoaded() ? "loaded." : "unloaded."));
+            } else {
+                sendPlayerErrorMessage(player, "Failed to teleport to the world! World is unloaded.");
+            }
+            player.clearTitle();
             OpenCreative.getWander(player).setConnectingToPlanet(false);
         }
     }
@@ -844,20 +856,27 @@ public class Planet {
     public void connectToDevPlanet(Player player, boolean hidePlayer) {
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("world.dev-mode.connecting.title")), toComponent(getLocaleMessage("world.dev-mode.connecting.subtitle")),
-                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(9999), Duration.ofSeconds(10))
+                Title.Times.times(Duration.ofSeconds(15), Duration.ofSeconds(30), Duration.ofSeconds(10))
         ));
-        getDevPlanet().loadDevPlanetWorld();
+        if (!devPlanet.isLoaded()) {
+            getDevPlanet().loadDevPlanetWorld();
+        }
         getDevPlanet().getWorld().getSpawnLocation().getChunk().load(true);
         Location lastLocation = this.getDevPlanet().getLastLocations().get(player);
         if (!this.getDevPlanet().isLoaded()) {
             return;
+        }
+        if (lastLocation != null) {
+            Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
+                translateSigns(player, 10);
+            }, 5L);
         }
         if (lastLocation == null || !devPlanet.isSaveLocation()) {
             lastLocation = getDevPlanet().getWorld().getSpawnLocation();
         }
         PlayerInventory playerInventory = player.getInventory();
         ItemStack[] playerInventoryItems = (OpenCreative.getPlanetsManager().getDevPlanet(player) == null ? playerInventory.getContents() : new ItemStack[]{});
-        clearPlayer(player);
+        clearPlayer(player, false);
         player.teleportAsync(lastLocation).thenAccept(success -> {
             if (success) {
                 player.setAllowFlight(true);
@@ -904,7 +923,6 @@ public class Planet {
                         player.getInventory().addItem(item);
                     }
                 }
-                translateSigns(player, 10);
             }
         });
     }
@@ -946,7 +964,6 @@ public class Planet {
                 // Removes build permissions for admins on world join (to prevent accidental griefs)
                 if (planet.getWorldPlayers().canBuild(player) && (!player.hasPermission("opencreative.world.build.others") || planet.isOwner(player))) {
                     player.setGameMode(GameMode.CREATIVE);
-                    giveBuildPermissions(player);
                 }
             }
         };

@@ -18,11 +18,16 @@
 
 package ua.mcchickenstudio.opencreative.settings;
 
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.utils.hooks.HookUtils;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.*;
 
 /**
  * <h1>LobbySettings</h1>
@@ -32,7 +37,9 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalError
  */
 public final class LobbySettings {
 
-    private boolean clearInventory = true;
+    private WorldApply clearInventory = WorldApply.ALL;
+    private WorldApply resetGameMode = WorldApply.ALL;
+
     private boolean disallowPlacingBlocks = true;
     private boolean disallowDestroyingBlocks = true;
     private boolean disallowSpawningMobs = true;
@@ -40,6 +47,7 @@ public final class LobbySettings {
     private boolean disallowWorldEdit = true;
     private boolean disableExplosions = true;
     private boolean resetViewDistance = true;
+    private boolean resetResourcePack = true;
     private boolean teleportOnJoin = true;
 
     /**
@@ -54,7 +62,9 @@ public final class LobbySettings {
             return;
         }
 
-        clearInventory = section.getBoolean("clear-inventory", true);
+        clearInventory = WorldApply.getWorldApply(section.getString("clear-inventory", "all"));
+        resetGameMode = WorldApply.getWorldApply(section.getString("reset-gamemode", "all"));
+
         disableExplosions = section.getBoolean("disable-explosions", true);
         disallowWorldEdit = section.getBoolean("disallow-world-edit", true);
         disallowDamagingMobs = section.getBoolean("disallow-damaging-mobs", true);
@@ -62,17 +72,33 @@ public final class LobbySettings {
         disallowPlacingBlocks = section.getBoolean("disallow-placing-blocks", true);
         disallowDestroyingBlocks = section.getBoolean("disallow-destroying-blocks", true);
         resetViewDistance = section.getBoolean("reset-view-distance", true);
+        resetResourcePack = section.getBoolean("reset-resource-pack", true);
         teleportOnJoin = section.getBoolean("teleport-on-join", true);
+        if (HookUtils.isPluginEnabled("ItemsAdder")) {
+            resetResourcePack = false;
+        }
     }
 
     /**
      * Checks whether player's inventory should be
-     * cleared after joining a lobby.
+     * cleared after teleporting between worlds.
      *
+     * @param world, where player currently is in.
      * @return true - will be cleared, false - not.
      */
-    public boolean shouldClearInventory() {
-        return clearInventory;
+    public boolean shouldClearInventory(@NotNull World world) {
+        return clearInventory.isCompatibleWorld(world);
+    }
+
+    /**
+     * Checks whether player's inventory should be
+     * cleared after teleporting between worlds.
+     *
+     * @param world, where player currently is in.
+     * @return true - will be reset, false - not.
+     */
+    public boolean shouldResetGameMode(@NotNull World world) {
+        return resetGameMode.isCompatibleWorld(world);
     }
 
     /**
@@ -148,6 +174,18 @@ public final class LobbySettings {
     }
 
     /**
+     * Checks whether resource pack will be reset
+     * on entering lobby or changing worlds.
+     *
+     * @return true - reset resource pack,
+     * false - don't reset, but disable
+     * "Set Resource Pack" player action.
+     */
+    public boolean shouldResetResourcePack() {
+        return resetResourcePack;
+    }
+
+    /**
      * Checks whether player will be teleported to lobby
      * when he connects to server.
      *
@@ -155,5 +193,36 @@ public final class LobbySettings {
      */
     public boolean shouldTeleportOnJoin() {
         return teleportOnJoin;
+    }
+
+    public enum WorldApply {
+
+        ALL,
+        CREATIVE,
+        LOBBY,
+        PLANETS,
+        NONE;
+
+        public boolean isCompatibleWorld(@NotNull World world) {
+            return switch (this) {
+                case NONE -> false;
+                case CREATIVE -> isOpenCreativeWorld(world);
+                case LOBBY -> isLobbyWorld(world);
+                case PLANETS -> isPlanet(world);
+                default -> true;
+            };
+        }
+
+        public static @Nullable WorldApply getWorldApply(@NotNull String text) {
+            return switch (text.toLowerCase()) {
+                case "true", "all" -> ALL;
+                case "opencreative", "creative" -> CREATIVE;
+                case "planets", "worlds", "planet", "world" -> PLANETS;
+                case "lobby", "spawn" -> LOBBY;
+                case "false", "none" -> NONE;
+                default -> null;
+            };
+        }
+
     }
 }

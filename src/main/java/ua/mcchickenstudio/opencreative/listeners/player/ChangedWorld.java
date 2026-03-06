@@ -26,9 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import ua.mcchickenstudio.opencreative.OpenCreative;
-import ua.mcchickenstudio.opencreative.coding.modules.ModuleSettingsMenu;
 import ua.mcchickenstudio.opencreative.events.planet.PlanetDisconnectPlayerEvent;
-import ua.mcchickenstudio.opencreative.menus.world.settings.PlayerControlMenu;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetFlags;
 import ua.mcchickenstudio.opencreative.planets.PlanetPlayer;
@@ -44,6 +42,7 @@ import java.util.UUID;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isOpenCreativeWorld;
 
 public final class ChangedWorld implements Listener {
 
@@ -112,12 +111,19 @@ public final class ChangedWorld implements Listener {
                     for (Player onlinePlayer : newWorld.getPlayers()) {
                         newPlanet.getTerritory().showBorders(onlinePlayer);
                     }
+                    if (oldPlanet.getMode() == Planet.Mode.PLAYING && oldPlanet.getWorldPlayers().canDevelop(player)) {
+                        givePlayPermissions(player);
+                    } else if (oldPlanet.getMode() == Planet.Mode.BUILD && oldPlanet.getWorldPlayers().canBuild(player)) {
+                        giveBuildPermissions(player);
+                    } else if (!oldPlanet.getWorldPlayers().canDevelop(player) && !oldPlanet.getWorldPlayers().canBuild(player)) {
+                        giveVisitorPermissions(player);
+                    }
                 }
             }
         } else {
             // Player is in different planets / not in planets
             if (!player.hasPermission("opencreative.ignore.world-change-clear")) {
-                clearPlayer(player);
+                clearPlayer(player, true, OpenCreative.getSettings().getLobbySettings().shouldResetGameMode(newWorld));
             }
             player.setLastDeathLocation(null);
             removePlayerWithLocation(player);
@@ -176,6 +182,8 @@ public final class ChangedWorld implements Listener {
                         for (Player onlinePlayer : newPlanet.getDevPlanet().getWorld().getPlayers()) {
                             if (newPlanet.getWorldPlayers().isNotTrustedDeveloper(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
+                                clearWorldModePermissions(onlinePlayer);
+                                giveDevPermissions(onlinePlayer);
                             }
                         }
                     }
@@ -183,9 +191,19 @@ public final class ChangedWorld implements Listener {
                         for (Player onlinePlayer : newPlanet.getTerritory().getWorld().getPlayers()) {
                             if (newPlanet.getWorldPlayers().isNotTrustedBuilder(onlinePlayer)) {
                                 onlinePlayer.setGameMode(GameMode.CREATIVE);
+                                clearWorldModePermissions(onlinePlayer);
                                 giveBuildPermissions(onlinePlayer);
                             }
                         }
+                    }
+                }
+                if (!isEntityInDevPlanet(player)) {
+                    if (newPlanet.getMode() == Planet.Mode.PLAYING && newPlanet.getWorldPlayers().canDevelop(player)) {
+                        givePlayPermissions(player);
+                    } else if (newPlanet.getMode() == Planet.Mode.BUILD && newPlanet.getWorldPlayers().canBuild(player)) {
+                        giveBuildPermissions(player);
+                    } else if (!newPlanet.getWorldPlayers().canDevelop(player) && !newPlanet.getWorldPlayers().canBuild(player)) {
+                        giveVisitorPermissions(player);
                     }
                 }
                 newPlanet.getInformation().updateIconAsync();

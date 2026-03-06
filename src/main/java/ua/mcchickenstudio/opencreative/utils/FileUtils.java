@@ -305,14 +305,14 @@ public final class FileUtils {
      * @return planet's folder.
      */
     public static File getPlanetFolder(Planet planet) {
-        return new File(getPlanetFolderPath(planet));
+        return new File(getPlanetFolderPath(planet.getId()));
     }
 
     /**
      * Returns development planet's folder. It contains world's map.
      **/
     public static File getDevPlanetFolder(DevPlanet devPlanet) {
-        return new File(devPlanet.getWorldName() + File.separator);
+        return new File(getDevPlanetFolderPath(devPlanet.getPlanet().getId()));
     }
 
     /**
@@ -460,7 +460,9 @@ public final class FileUtils {
         int count = 0;
         if (serverDirectoryFiles != null) {
             for (File file : serverDirectoryFiles) {
-                if (convertOldPlanetFolder(file)) count++;
+                if (isOpenCreativeWorldFolder(file) && convertOldPlanetFolder(file)) {
+                    count++;
+                }
             }
         }
         File unloadedWorldsFolder = new File(serverDirectory + File.separator + "unloadedWorlds" + File.separator);
@@ -479,6 +481,21 @@ public final class FileUtils {
         if (count > 0) {
             OpenCreative.getPlugin().getLogger().info("Converted " + count + " old worlds!");
         }
+    }
+
+    /**
+     * Checks whether specified folder has similar OpenCreative+ files.
+     *
+     * @param folder folder to check.
+     * @return true - it's OpenCreative+ folder, false - not.
+     */
+    public static boolean isOpenCreativeWorldFolder(@NotNull File folder) {
+        File settings = new File(folder, "settings.yml");
+        if (settings.exists()) return true;
+        File codeScript = new File(folder, "codeScript.yml");
+        if (codeScript.exists()) return true;
+        File variables = new File(folder, "variables.json");
+        return variables.exists();
     }
 
     /**
@@ -535,7 +552,7 @@ public final class FileUtils {
                     planet.getTerritory().unload();
                 } else if (planet.getDevPlanet().isLoaded()) {
                     OpenCreative.getPlugin().getLogger().info("Unloading planet dev " + planet.getId() + "...");
-                    planet.getDevPlanet().unload();
+                    planet.getDevPlanet().unload(false);
                 }
             }
             OpenCreative.getPlanetsManager().getPlanets().clear();
@@ -835,13 +852,32 @@ public final class FileUtils {
     }
 
     /**
+     * Returns temporary folder, that stores temporary files.
+     *
+     * @return temporary folder.
+     */
+    public static File getTempFolder() {
+        return new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "temp" +  File.separator);
+    }
+
+    /**
      * Returns file path of planet's world folder.
      *
-     * @param planet planet to get folder.
+     * @param id planet to get folder.
      * @return planet's folder path.
      */
-    public static String getPlanetFolderPath(Planet planet) {
-        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + planet.getId() + File.separator;
+    public static String getPlanetFolderPath(int id) {
+        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + id + File.separator;
+    }
+
+    /**
+     * Returns file path of dev planet's world folder.
+     *
+     * @param id planet to get folder.
+     * @return dev planet's folder path.
+     */
+    public static String getDevPlanetFolderPath(int id) {
+        return getPlanetsStorageFolder().getPath() + File.separator + "planet" + id + "dev" + File.separator;
     }
 
     /**

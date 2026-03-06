@@ -24,6 +24,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ua.mcchickenstudio.opencreative.OpenCreative;
+import ua.mcchickenstudio.opencreative.coding.blocks.events.player.world.QuitEvent;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
 
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class PlanetPlayers {
         planet.getDevPlanet().getLastLocations().remove(player);
         planet.getDevPlanet().clearMarkedExecutors(player);
         planet.getLimits().clearPlayerLimits(player);
+        planet.getTerritory().getRecipes().clearForPlayer(player);
     }
 
     public PlanetPlayer getPlanetPlayer(Player player) {
@@ -243,6 +245,10 @@ public class PlanetPlayers {
             if (planet.equals(playerPlanet)) {
                 if (player.getGameMode() == GameMode.CREATIVE) {
                     player.setGameMode(GameMode.ADVENTURE);
+                    clearWorldModePermissions(player);
+                    if (!canDevelop(player)) {
+                        giveVisitorPermissions(player);
+                    }
                 }
             }
         }
@@ -264,6 +270,10 @@ public class PlanetPlayers {
                 if (isEntityInDevPlanet(player)) {
                     clearPlayer(player);
                     player.teleport(planet.getTerritory().getSpawnLocation());
+                }
+                clearWorldModePermissions(player);
+                if (!canBuild(player)) {
+                    giveVisitorPermissions(player);
                 }
             }
         }
@@ -304,6 +314,8 @@ public class PlanetPlayers {
                     Sounds.WORLD_NOW_DEVELOPER.play(player);
                     if (OpenCreative.getPlanetsManager().getDevPlanet(player) != null) {
                         player.setGameMode(GameMode.CREATIVE);
+                        clearWorldModePermissions(player);
+                        giveDevPermissions(player);
                     }
                 }
             }
@@ -334,6 +346,8 @@ public class PlanetPlayers {
                     Sounds.WORLD_NOW_BUILDER.play(player);
                     if (OpenCreative.getPlanetsManager().getDevPlanet(player) == null) {
                         player.setGameMode(GameMode.CREATIVE);
+                        clearWorldModePermissions(player);
+                        giveBuildPermissions(player);
                     }
                 }
             }
