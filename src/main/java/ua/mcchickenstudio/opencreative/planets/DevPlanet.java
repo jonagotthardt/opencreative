@@ -228,7 +228,6 @@ public class DevPlanet {
         this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         this.getWorld().setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING, false);
         this.getWorld().setGameRule(GameRule.MOB_GRIEFING, false);
         this.getWorld().setGameRule(GameRule.DO_PATROL_SPAWNING, false);
         this.getWorld().setGameRule(GameRule.DO_FIRE_TICK, false);

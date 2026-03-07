@@ -748,7 +748,7 @@ public class Planet {
      * @param success    chunks are loaded successfully to teleport or not.
      */
     private void handleConnectionProcess(@NotNull Player player, boolean wasLoaded, boolean hidePlayer, boolean success) {
-        clearPlayer(player, false);
+        clearPlayer(player, false, OpenCreative.getSettings().getLobbySettings().shouldResetGameMode(player.getWorld()));
         if (success) {
             OpenCreative.getWander(player).setConnectingToPlanet(false);
             if (!hidePlayer && getFlagValue(PlanetFlags.PlanetFlag.JOIN_MESSAGES) == 1) {
@@ -756,7 +756,7 @@ public class Planet {
                     onlinePlayer.sendMessage(MessageUtils.getPlayerLocaleMessage("world.joined", player));
                 }
             }
-            clearPlayer(player, false);
+            clearPlayer(player, false, OpenCreative.getSettings().getLobbySettings().shouldResetGameMode(player.getWorld()));
             Sounds.WORLD_CONNECTED.play(player);
             mode.onPlayerConnect(player, this);
             getWorldPlayers().getPlanetPlayer(player).load();

@@ -97,7 +97,7 @@ public final class PlayerUtils {
      * @param resetGameMode set game mode to adventure or not.
      */
     public static void clearPlayer(Player player, boolean clearPermissions, boolean resetGameMode) {
-        player.setGameMode(GameMode.ADVENTURE);
+        if (resetGameMode) player.setGameMode(GameMode.ADVENTURE);
         if (clearPermissions) clearWorldModePermissions(player);
         player.closeInventory();
         if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory(player.getWorld())) {
@@ -132,7 +132,7 @@ public final class PlayerUtils {
         player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         clearBossBars(player);
         HookUtils.clearPlayerHook(player);
-        player.setGameMode(GameMode.ADVENTURE);
+        if (resetGameMode) player.setGameMode(GameMode.ADVENTURE);
     }
 
     public static void removePassengers(@NotNull Player player) {
@@ -246,7 +246,7 @@ public final class PlayerUtils {
             return;
         }
 
-        clearPlayer(player);
+        clearPlayer(player, true, OpenCreative.getSettings().getLobbySettings().shouldResetGameMode(location.getWorld()));
         player.showTitle(Title.title(
                 toComponent(getLocaleMessage("lobby.title")), toComponent(getLocaleMessage("lobby.subtitle")),
                 Title.Times.times(Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ofSeconds(1))
