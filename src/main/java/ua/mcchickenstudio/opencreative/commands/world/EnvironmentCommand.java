@@ -609,7 +609,7 @@ public class EnvironmentCommand extends CommandHandler {
                         case "function", "func" -> {
                             boolean found = false;
                             for (Function function : planet.getTerritory().getScript().getExecutors().getFunctionsList()) {
-                                if (argument.equalsIgnoreCase(function.getName())) {
+                                if (argument.equalsIgnoreCase(function.getCallName())) {
                                     if (!found) {
                                         /*
                                          * For sending message once and
@@ -627,7 +627,7 @@ public class EnvironmentCommand extends CommandHandler {
                         case "method", "meth" -> {
                             boolean found = false;
                             for (Method method : planet.getTerritory().getScript().getExecutors().getMethodsList()) {
-                                if (argument.equalsIgnoreCase(method.getName())) {
+                                if (argument.equalsIgnoreCase(method.getCallName())) {
                                     if (!found) {
                                         found = true;
                                         sender.sendMessage(getLocaleMessage("environment.execute.method").replace("%method%", argument));
@@ -836,9 +836,9 @@ public class EnvironmentCommand extends CommandHandler {
                 if (List.of("join", "quit", "player_join", "player_quit", "player_play", "play", "player_liked", "liked").contains(args[1].toLowerCase())) {
                     tabCompleter.addAll(planet.getTerritory().getWorld().getPlayers().stream().map(Player::getName).toList());
                 } else if (args[1].equalsIgnoreCase("function")) {
-                    tabCompleter.addAll(planet.getTerritory().getScript().getExecutors().getFunctionsList().stream().map(Function::getName).toList());
+                    tabCompleter.addAll(planet.getTerritory().getScript().getExecutors().getFunctionsList().stream().map(Function::getCallName).toList());
                 } else if (args[1].equalsIgnoreCase("method")) {
-                    tabCompleter.addAll(planet.getTerritory().getScript().getExecutors().getMethodsList().stream().map(Method::getName).toList());
+                    tabCompleter.addAll(planet.getTerritory().getScript().getExecutors().getMethodsList().stream().map(Method::getCallName).toList());
                 }
             }
         }
