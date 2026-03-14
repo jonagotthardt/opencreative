@@ -146,8 +146,12 @@ public class ActionsHandler {
             if (getMainActionHandler() == this) {
                 executor.getPlanet().getVariables().garbageCollector(this);
             }
+            if (action instanceof RepeatAction repeater) {
+                repeater.repeat();
+                return;
+            }
             ActionsHandler parent = getParentActionHandler();
-            if (parent != null && parent != this && !(action instanceof RepeatAction || action instanceof LaunchMethodAction)) {
+            if (parent != null && parent != this && !(action instanceof LaunchMethodAction)) {
                 /*
                  * Executes next action in parent actions handler.
                  */

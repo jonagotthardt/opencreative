@@ -26,10 +26,12 @@ import ua.mcchickenstudio.opencreative.coding.arguments.Arguments;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.*;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.TooManyRepeatsException;
+import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.planets.PlanetRunnable;
 
 import java.util.List;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetCodeErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
@@ -43,6 +45,7 @@ public abstract class RepeatAction extends MultiAction {
 
     private int calls = 0;
     private boolean mustStop = false;
+    private ActionsHandler internalHandler;
 
     public RepeatAction(Executor executor, Target target, int x, Arguments args, List<Action> actions) {
         super(executor, target, x, args, actions);
@@ -56,23 +59,33 @@ public abstract class RepeatAction extends MultiAction {
             mustStop = false;
             return;
         }
-        ActionsHandler handler = new ActionsHandler(this);
-        handler.executeActions(getActions());
+        internalHandler = new ActionsHandler(this);
+        internalHandler.executeActions(getActions());
+    }
+
+    public void repeat() {
         try {
             increaseCalls();
         } catch (TooManyRepeatsException exception) {
+            if (getPlanet().getLimits().isTooManyCodingErrors()) {
+                getPlanet().getTerritory().getScript().getExecutors().stopCode("errors limit");
+                sendPlanetCodeCriticalErrorMessage(getPlanet(), getExecutor(), getLocaleMessage("coding-error.errors-limit", false)
+                        .replace("%limit%", String.valueOf(getPlanet().getLimits().getCodingErrorsLimit())));
+                return;
+            }
             sendPlanetCodeErrorMessage(getExecutor(), this,
                     getLocaleMessage("coding-error.toomanyrepeatsexception"), exception);
             return;
         }
-        if (handler.getWaitDelay() > 0) {
+        if (internalHandler == null) return;
+        if (internalHandler.getWaitDelay() > 0) {
             getPlanet().getTerritory().scheduleRunnable(
                     new PlanetRunnable(getPlanet()) {
                         @Override
                         public void execute() {
                             RepeatAction.this.execute(entity);
                         }
-                    }, handler.getWaitDelay());
+                    }, internalHandler.getWaitDelay());
         } else {
             execute(entity);
         }
