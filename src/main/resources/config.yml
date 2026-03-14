@@ -401,6 +401,7 @@ groups:
         # Limits for a world, that player created.
         #
         executor-calls: 100 # limit of executor calls
+        coding-actions-calls: 500 # limit of actions per 3 seconds.
         entities-amount: 50 # limit for spawned entities in world
         modifying-blocks: 5000 # limit for changing blocks with world actions per second
         redstone-changes: 100 # limit for redstone operations in world
@@ -428,6 +429,7 @@ groups:
         # this will increase or decrease limits values.
         #
         executor-calls: 100
+        coding-actions-calls: 10
         entities-amount: 50
         modifying-blocks: 0
         redstone-changes: 20
@@ -480,6 +482,7 @@ groups:
       coding-prompter: true
       limits:
         executor-calls: 120
+        coding-actions-calls: 500
         entities-amount: 200
         modifying-blocks: 7500
         redstone-changes: 200
@@ -503,6 +506,7 @@ groups:
         script-size: 10
       per-player-limit-modifiers:
         executor-calls: 30
+        coding-actions-calls: 10
         entities-amount: 50
         modifying-blocks: 0
         redstone-changes: 20

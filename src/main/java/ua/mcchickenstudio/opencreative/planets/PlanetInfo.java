@@ -64,6 +64,7 @@ public class PlanetInfo {
     private Category category;
     private ItemStack icon;
     private boolean downloadable;
+    private int online;
 
     public PlanetInfo(Planet planet) {
         this.planet = planet;
@@ -141,6 +142,16 @@ public class PlanetInfo {
                 updateIcon();
             }
         }.runTaskAsynchronously(OpenCreative.getPlugin());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!planet.isLoaded()) {
+                    online = 0;
+                    return;
+                }
+                online = planet.getPlayers().size();
+            }
+        }.runTask(OpenCreative.getPlugin());
     }
 
     /**
@@ -373,6 +384,19 @@ public class PlanetInfo {
     public void setDownloadable(boolean downloadable) {
         this.downloadable = downloadable;
         setPlanetConfigParameter(planet, "downloadable", downloadable);
+    }
+
+    /**
+     * Returns inaccurate amount of players in world, that changes
+     * with entering or leaving the world, doesn't check real amount
+     * of world.
+     * <p>Useful to avoid lags by checking all world players.
+     * @see Planet#getPlayers()
+     *
+     * @return inaccurate amount of players in world.
+     */
+    public int getAsyncOnline() {
+        return online;
     }
 
     /**
