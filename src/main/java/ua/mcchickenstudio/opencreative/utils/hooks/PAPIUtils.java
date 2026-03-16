@@ -50,6 +50,11 @@ public final class PAPIUtils {
 class Placeholder extends PlaceholderExpansion {
 
     @Override
+    public boolean persist() {
+        return true;
+    }
+
+    @Override
     public String onPlaceholderRequest(Player player, @NotNull String identifier) {
         String result = parseSystem(identifier);
         if (!result.isEmpty()) return result;
