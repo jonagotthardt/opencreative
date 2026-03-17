@@ -64,10 +64,14 @@ public final class PlaceBlockListener implements Listener {
             eastBlock.setBlockData(data);
             Block farEastBlock = eastBlock.getRelative(BlockFace.EAST).getRelative(BlockFace.EAST);
             move(eastBlock.getLocation(), BlockFace.EAST);
-            farEastBlock.setType(Material.PISTON);
-            data = (Directional) farEastBlock.getBlockData();
-            data.setFacing(BlockFace.WEST);
-            farEastBlock.setBlockData(data);
+            if (farEastBlock.isEmpty()) {
+                farEastBlock.setType(Material.PISTON);
+                if (farEastBlock.getBlockData() instanceof Directional directional) {
+                    directional.setFacing(BlockFace.WEST);
+                    farEastBlock.setBlockData(directional);
+                }
+            }
+
         }
 
         Block wallSign = block.getRelative(BlockFace.SOUTH);
@@ -122,8 +126,24 @@ public final class PlaceBlockListener implements Listener {
                 if (oldBlock.getType() == Material.AIR) continue;
                 if (!movedBlocks.contains(oldBlock)) {
                     Block newBlock = location.getWorld().getBlockAt((int) x + 2, location.getBlockY(), location.getBlockZ());
+                    if (!newBlock.isEmpty()) {
+                        oldBlock.getRelative(BlockFace.UP).setType(Material.AIR);
+                        oldBlock.getRelative(BlockFace.SOUTH).setType(Material.AIR);
+                        oldBlock.setType(Material.AIR);
+                        continue;
+                    }
                     moveCodingBlock(oldBlock, newBlock);
                     movedBlocks.add(newBlock);
+                }
+            }
+            Location farPiston = end.clone().add(-3, 1, 0);
+            farPiston.setZ(location.getZ());
+            if (farPiston.getBlock().getType() == Material.PISTON) {
+                if (!farPiston.getBlock().getRelative(BlockFace.WEST).isEmpty()) {
+                    if (farPiston.getBlock().getBlockData() instanceof Directional directional) {
+                        directional.setFacing(BlockFace.EAST);
+                        farPiston.getBlock().setBlockData(directional);
+                    }
                 }
             }
         } else if (face == BlockFace.WEST) {
@@ -132,7 +152,7 @@ public final class PlaceBlockListener implements Listener {
              */
             if (location.getX() <= begin.getBlockX() + 5) return false;
             if (!location.getBlock().isEmpty()) return false;
-            //if (!location.getBlock().getRelative(BlockFace.WEST).isEmpty()) return false;
+            if (!location.getBlock().getRelative(BlockFace.EAST).isEmpty()) return false;
             Set<Block> movedBlocks = new HashSet<>();
             for (double x = location.getX() + 1; x < end.getBlockX(); x++) {
                 Block oldBlock = location.getWorld().getBlockAt((int) x, location.getBlockY(), location.getBlockZ());

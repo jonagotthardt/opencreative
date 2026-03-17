@@ -108,7 +108,6 @@ public final class WorldVariables {
                                         @Nullable ActionsHandler handler,
                                         @Nullable Action action) {
         WorldVariable variable = (action != null) ? getVariable(link, action) : getVariable(link.getName(), link.getVariableType(), null);
-        String valueString = value.toString().substring(0, Math.min(20, value.toString().length()));
 
         int total = getTotalVariablesAmount();
         if (total > planet.getLimits().getVariablesAmountLimit()) {
@@ -146,7 +145,7 @@ public final class WorldVariables {
         if (action == null || action.getExecutor().isDebug()) {
             sendCodingDebugLog(planet, getLocaleMessage("coding-debug.variable." + (variable == null ? "created" : "set"), false)
                     .replace("%variable%", action != null ? parseEntity(link.getName(), action.getHandler(), action) : link.getName())
-                    .replace("%value%", valueString));
+                    .replace("%value%", ValueType.getDisplayShortString(value)));
         }
         return true;
     }

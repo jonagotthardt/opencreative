@@ -39,7 +39,7 @@ public final class GameModeListener implements Listener {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             if (planet == null) {
                 // If player is not in planet
-                if (isEntityInLobby(player) && event.getNewGameMode() == GameMode.CREATIVE && !player.hasPermission("opencreative.gamemode.change")) {
+                if (isEntityInLobby(player) && event.getNewGameMode() == GameMode.CREATIVE && !player.hasPermission("opencreative.game-mode.change")) {
                     if (player.isConnected()) {
                         OpenCreative.getPlugin().getLogger().warning("Player " + player.getName() + " tried to get Creative mode in lobby, but he doesn't have permission.");
                     }

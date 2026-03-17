@@ -56,6 +56,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlayerErrorMe
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.*;
 import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isDevPlanet;
+import static ua.mcchickenstudio.opencreative.utils.world.WorldUtils.isPlanet;
 
 /**
  * <h1>PlayerUtils</h1>
@@ -428,6 +429,15 @@ public final class PlayerUtils {
         }
     }
 
+    private static boolean containsWorldEditPermission(@NotNull Set<String> permissions) {
+        for (String permission : permissions) {
+            if (permission.startsWith("worldedit.")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Sets player's permissions when they enter planet in build mode.
      *
@@ -436,6 +446,10 @@ public final class PlayerUtils {
     public static void giveBuildPermissions(@NotNull Player player) {
         PermissionAttachment permissionAttachment = permissionAttachmentMap.get(player.getUniqueId());
         Set<String> perms = OpenCreative.getSettings().getGroups().getGroup(player).getBuildPermissions();
+        World world = player.getWorld();
+        if (isPlanet(world) && containsWorldEditPermission(perms)) {
+            permissionAttachment.setPermission("worldguard.region.bypass." + world.getName(), true);
+        }
         for (String permission : perms) {
             boolean negated = permission.startsWith("!");
             String node = negated ? permission.substring(1) : permission;
@@ -484,7 +498,6 @@ public final class PlayerUtils {
         if (permissionAttachment == null) return;
         Map<String, Boolean> permissions = permissionAttachment.getPermissions();
         Set<Map.Entry<String, Boolean>> permissionsCopy = new HashSet<>(permissions.entrySet());
-
         for (Map.Entry<String, Boolean> entry : permissionsCopy) {
             String key = entry.getKey();
             permissionAttachment.unsetPermission(key);

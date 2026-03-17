@@ -39,8 +39,8 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.util.*;
 
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugAction;
-import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCodingDebugLog;
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
+import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 
 /**
  * <h1>Action</h1>
@@ -92,7 +92,14 @@ public abstract class Action implements CodingBlock {
             execute(null);
             return;
         }
-        for (Entity entity : getTargets()) {
+        List<Entity> targets = getTargets();
+        if (getPlanet().getLimits().isTooManyActionsAtOnce(targets.size())) {
+            getPlanet().getTerritory().getScript().getExecutors().stopCode("actions limit");
+            sendPlanetCodeCriticalErrorMessage(getPlanet(), executor, getLocaleMessage("coding-error.actions-limit", false)
+                    .replace("%limit%", String.valueOf(getPlanet().getLimits().getCodingActionsCallsLimit())));
+            return;
+        }
+        for (Entity entity : targets) {
             if (entity == null) continue;
             if (entity.getWorld().equals(getPlanet().getWorld()) || !OpenCreative.getSettings().getCodingSettings().isIgnoreActionsIfEntityNotInWorld()) {
                 this.entity = entity;

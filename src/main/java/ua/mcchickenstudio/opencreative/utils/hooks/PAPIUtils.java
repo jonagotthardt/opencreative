@@ -50,23 +50,29 @@ public final class PAPIUtils {
 class Placeholder extends PlaceholderExpansion {
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public boolean persist() {
+        return true;
+    }
+
+    @Override
+    public String onPlaceholderRequest(Player player, @NotNull String identifier) {
         String result = parseSystem(identifier);
-        if (result != null) return result;
+        if (!result.isEmpty()) return result;
         if (identifier.startsWith("planet:")) {
             // For other planets: %opencreative_planet:123_online% (planet:123_online)
             String identifierNoPlanet = identifier.replace("planet:", ""); // 123_online
 
             int underscoreIndex = identifierNoPlanet.indexOf('_');
-            if (underscoreIndex == -1) return null;
+            if (underscoreIndex == -1) return "";
             String planetId = identifierNoPlanet.substring(0, underscoreIndex);
 
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByAnyID(planetId);
-            if (planet == null) return null;
+            if (planet == null) return "";
             identifier = identifierNoPlanet.substring(underscoreIndex + 1); // online
             return parsePlanet(planet, identifier);
         }
         // For player's current planet: %opencreative_planet_online% (planet_online)
+        if (player == null) return "";
         Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
         return parsePlayer(player, identifier, planet);
     }
@@ -87,7 +93,7 @@ class Placeholder extends PlaceholderExpansion {
                 return String.valueOf(worlds.size());
             }
             default -> {
-                return null;
+                return "";
             }
         }
     }
@@ -98,7 +104,7 @@ class Placeholder extends PlaceholderExpansion {
                 case "is_in_planet", "has_planet_scoreboard" -> "false";
                 case "own_planets_amount" ->
                         String.valueOf(OpenCreative.getPlanetsManager().getPlanetsByOwner(player).size());
-                default -> null;
+                default -> "";
             };
         }
         switch (identifier) {
@@ -237,24 +243,24 @@ class Placeholder extends PlaceholderExpansion {
         }
         if (identifier.startsWith("limit_")) {
             String limitType = identifier.replace("limit_", "");
-            if (limitType.isEmpty()) return null;
+            if (limitType.isEmpty()) return "";
             try {
                 LimitType type = LimitType.valueOf(limitType.toUpperCase().replace("-", "_"));
                 return String.valueOf(planet.getGroup().getLimit(type).calculateLimit(planet.getPlayers().size()));
             } catch (Exception ignored) {
-                return null;
+                return "";
             }
         } else if (identifier.startsWith("modifier_")) {
             String limitType = identifier.replace("modifier_", "");
-            if (limitType.isEmpty()) return null;
+            if (limitType.isEmpty()) return "";
             try {
                 LimitType type = LimitType.valueOf(limitType.toUpperCase().replace("-", "_"));
                 return String.valueOf(planet.getGroup().getLimit(type).modifier());
             } catch (Exception ignored) {
-                return null;
+                return "";
             }
         }
-        return null;
+        return "";
     }
 
     @Override

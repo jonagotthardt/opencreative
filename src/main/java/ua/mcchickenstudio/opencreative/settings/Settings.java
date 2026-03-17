@@ -85,6 +85,7 @@ public final class Settings {
     private boolean notifyNoPlayersAround = true;
     private boolean cancelChatOnConfirmation = false;
     private boolean handleWorldChat = true;
+    private boolean generateFlatWorldHigher = false;
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
@@ -167,6 +168,7 @@ public final class Settings {
     private void loadWorldGenerators(FileConfiguration config) {
         WorldGenerators instance = WorldGenerators.getInstance();
         instance.clearWorldGenerators();
+        generateFlatWorldHigher = config.getBoolean("generators.generate-flat-higher", false);
         if (config.getBoolean("generators.flat", true)) instance.registerWorldGenerator(new FlatGenerator());
         if (config.getBoolean("generators.empty", true)) instance.registerWorldGenerator(new EmptyGenerator());
         if (config.getBoolean("generators.water", true)) instance.registerWorldGenerator(new OceanGenerator());
@@ -771,6 +773,17 @@ public final class Settings {
      */
     public Set<String> getMessagesIgnoringReset() {
         return messagesIgnoringReset;
+    }
+
+    /**
+     * Checks whether flat world generator should
+     * generate a world starting with Y: 0, instead
+     * of Y: -64.
+     *
+     * @return true - will generate higher (old versions), false - lower (newer).
+     */
+    public boolean shouldGenerateFlatWorldHigher() {
+        return generateFlatWorldHigher;
     }
 
     public enum PlayerListChanger {

@@ -211,12 +211,64 @@ public enum ValueType {
     }
 
     /**
+     * Returns display text of value, that will be used
+     * for displaying for player on debug messages.
+     *
+     * @param value value to get text.
+     * @return short display text of value.
+     */
+    public static @NotNull String getDisplayShortString(@Nullable Object value) {
+        return switch (value) {
+            case null -> "null";
+            case Location location ->
+                    location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getYaw() + " " + location.getPitch();
+            case Vector vector -> vector.getX() + " " + vector.getY() + " " + vector.getZ();
+            case List<?> list -> listToShortText(list);
+            case Map<?, ?> map -> "{size=" + map.size() + "}";
+            default -> {
+                String text = value.toString();
+                yield text.substring(0, Math.min(text.length(), 30));
+            }
+        };
+    }
+
+    /**
+     * Returns short text with list elements, that can be
+     * used for displaying for player.
+     *
+     * @param list list to convert.
+     * @return short text of list.
+     */
+    private static @NotNull String listToShortText(@NotNull List<?> list) {
+        if (list.isEmpty()) return "[]";
+        StringBuilder sb = new StringBuilder("[");
+        int limit = Math.min(list.size(), 3);
+
+        for (int i = 0; i < limit; i++) {
+            Object item = list.get(i);
+
+            if (item instanceof String s) {
+                sb.append(s, 0, Math.min(s.length(), 10));
+            } else {
+                sb.append(item);
+            }
+
+            if (i < limit - 1) sb.append(", ");
+        }
+
+        if (list.size() > 3) sb.append(", ...");
+
+        sb.append("]");
+        return sb.toString();
+    }
+
+    /**
      * Returns material of item, that will be
      * displayed in values menu.
      *
      * @return material of value's item.
      */
-    public Material getMaterial() {
+    public @NotNull Material getMaterial() {
         return material;
     }
 
@@ -225,7 +277,7 @@ public enum ValueType {
      *
      * @return localized name of value type.
      */
-    public String getLocaleName() {
+    public @NotNull String getLocaleName() {
         return getLocaleMessage("environment.values." + name().toLowerCase().replace("_", "-"), false);
     }
 

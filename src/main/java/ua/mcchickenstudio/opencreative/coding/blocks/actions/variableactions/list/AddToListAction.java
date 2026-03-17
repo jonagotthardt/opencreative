@@ -25,6 +25,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.actions.Target;
 import ua.mcchickenstudio.opencreative.coding.blocks.actions.variableactions.VariableAction;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.exceptions.CollectionWithCollectionException;
+import ua.mcchickenstudio.opencreative.coding.exceptions.TooLongTextException;
 import ua.mcchickenstudio.opencreative.coding.variables.VariableLink;
 
 import java.util.ArrayList;
@@ -49,6 +50,11 @@ public final class AddToListAction extends VariableAction {
         for (Object element : elements) {
             if (element instanceof Collection<?> || element instanceof Map<?, ?>) {
                 throw new CollectionWithCollectionException(list.getClass(), element.getClass());
+            }
+            if (element instanceof String text) {
+                if (text.length() > 200) {
+                    throw new TooLongTextException(200);
+                }
             }
             list.add(element);
         }
