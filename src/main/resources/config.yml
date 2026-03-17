@@ -252,6 +252,8 @@ coding:
   ignore-actions-if-entity-not-in-world: false # If true, will cancel any action (player, entity, variable, world, control...)
                                                # if target entity in action is not in world. By default, it's false to make
                                                # possible to execute non-player and non-entity actions, that don't require entity.
+  save-scripts-history: false # Saves copies of codeScript.yml in /plugins/OpenCreative/history/ folder.
+                              # Useful, only if you want to detect which script could cause server lags.
 
   #
   # You can disable some coding blocks,
@@ -444,8 +446,6 @@ groups:
         - "headdb.open"
         - "worldedit.wand"
         - "minecraft.debugstick"
-        # If you want to add WorldEdit permissions please turn off
-        # region-restrictions in WorldEdit/config.yml to make //set working
         #- "worldedit.region.set"
       play-permissions: # Permissions will be given when player types /play command
         - "headdb.open"
@@ -602,6 +602,7 @@ generators:
   empty: true
   survival: true
   large-biomes: false
+  generate-flat-higher: false # Generates flat world starting with Y: 0, instead of Y: -64
   custom-flats: {}
     #desert:
     #  generation: "bedrock,3*sandstone,sand;plains"

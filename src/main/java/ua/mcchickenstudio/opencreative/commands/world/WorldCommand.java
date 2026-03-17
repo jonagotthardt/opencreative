@@ -378,7 +378,7 @@ public class WorldCommand extends CommandHandler {
                     sender.sendMessage(getLocaleMessage("world.downloader.unavailable"));
                     return;
                 }
-                if (!planet.isOwner(player)) {
+                if (!planet.isOwner(player) && !player.hasPermission("opencreative.world.download.others")) {
                     sender.sendMessage(getLocaleMessage("not-owner"));
                     return;
                 }

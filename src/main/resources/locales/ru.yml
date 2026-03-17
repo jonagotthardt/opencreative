@@ -111,6 +111,7 @@ modules:
   fail: "%prefix%&cНе удалось загрузить модуль %moduleName%&c от %moduleOwner%"
   default-name: "&7Модуль %player%"
   default-description: "&7Мой крутой модуль!"
+  info: "%prefix%&fИнформация про модуль: &6%moduleName%\n &f Описание: &6%moduleDescription%&r\n &f Владелец: &6%moduleOwner%\n &f ID: &6%moduleID%\n &f Создан: &6%moduleCreationTime%\n &f Скачиваний: &6%moduleDownloads%\n &f Оценка: &6%moduleReputation%\n &f Доступность: &6%moduleSharing%"
   rating:
     not-installed: "%prefix%&cВы не можете поставить оценку модулю, пока не установите его в мире."
     liked: "%prefix%Вам &6понравился&f этот модуль :)"

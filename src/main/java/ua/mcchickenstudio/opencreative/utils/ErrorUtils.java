@@ -36,6 +36,7 @@ import ua.mcchickenstudio.opencreative.coding.blocks.executors.Executor;
 import ua.mcchickenstudio.opencreative.coding.blocks.executors.ExecutorCategory;
 import ua.mcchickenstudio.opencreative.coding.values.EventValue;
 import ua.mcchickenstudio.opencreative.coding.values.EventValues;
+import ua.mcchickenstudio.opencreative.coding.variables.ValueType;
 import ua.mcchickenstudio.opencreative.indev.messages.PlaceholderReplacer;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.Sounds;
@@ -693,7 +694,7 @@ public final class ErrorUtils {
         if (action.getExecutor() == null) return;
         if (!action.getExecutor().isDebug()) return;
         Planet planet = action.getExecutor().getPlanet();
-        if (planet == null || !planet.isDebug()) return;
+        if (!planet.isDebug()) return;
         List<Argument> arguments = action.getArgumentsList();
         String message = getLocaleMessage("coding-debug.hover." + (action.getActionType().isCondition() ? "condition" : "action"));
         message = message.replace("%category%", action.getActionCategory().getLocaleName());
@@ -706,12 +707,13 @@ public final class ErrorUtils {
             argumentsString.add(getLocaleMessage("coding-debug.hover.argument")
                     .replace("%name%", arg.getPath())
                     .replace("%type%", arg.getType().getLocaleName())
-                    .replace("%value%", arg.getValue(action).toString().substring(0, Math.min(30, arg.getValue(action).toString().length()))));
+                    .replace("%value%", ValueType.getDisplayShortString(arg.getValue(action))));
         }
         message = message.replace("%arguments%", String.join(" \n", argumentsString));
         String actionMessage = getLocaleMessage("coding-debug.action-message", false).replace("%type%", action.getActionType().getLocaleName()).replace("%x%", String.valueOf(action.getX())).replace("%y%", String.valueOf(action.getExecutor().getY())).replace("%z%", String.valueOf(action.getExecutor().getZ()));
         for (Player player : planet.getPlayers()) {
-            player.sendMessage(Component.text(actionMessage).hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(message))));
+            player.sendMessage(Component.text(actionMessage)
+                    .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(Component.text(message))));
         }
     }
 

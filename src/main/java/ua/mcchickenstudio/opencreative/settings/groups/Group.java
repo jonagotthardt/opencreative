@@ -121,7 +121,7 @@ public class Group {
                 OpenCreative.getPlugin().getConfig().set(limitPath, type.getDefaultLimit());
                 changedConfig = true;
             }
-            if (!config.contains(modifierPath)) {
+            if (!config.contains(modifierPath) && type != LimitType.CODING_PLATFORMS) {
                 OpenCreative.getPlugin().getConfig().set(modifierPath, type.getDefaultModifier());
                 changedConfig = true;
             }

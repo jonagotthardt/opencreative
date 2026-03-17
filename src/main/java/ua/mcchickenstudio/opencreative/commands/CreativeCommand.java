@@ -99,8 +99,12 @@ public class CreativeCommand extends CommandHandler {
                     Sounds.RELOADING.play(player);
                 }
                 OpenCreative.getPlugin().reloadConfig();
+                if (OpenCreative.getDownloadManager().isEnabled()) {
+                    OpenCreative.getDownloadManager().shutdown();
+                }
                 OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
                 loadLocales();
+                OpenCreative.getDownloadManager().init();
                 sender.sendMessage(getLocaleMessage("creative.reloaded"));
                 if (player != null) {
                     Sounds.RELOADED.play(player);
@@ -1136,7 +1140,7 @@ public class CreativeCommand extends CommandHandler {
             return;
         }
         if ("start".equalsIgnoreCase(args[1])) {
-            int seconds = 60;
+            int seconds = 5;
             if (args.length > 2) {
                 try {
                     seconds = Integer.parseInt(args[2]);

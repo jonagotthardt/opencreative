@@ -76,6 +76,9 @@ public class Argument {
      * @return parsed text.
      */
     public static @NotNull String parseEntity(String text, ActionsHandler handler, Action action) {
+        if (text.length() > 300) {
+            return text;
+        }
         return Placeholders.getInstance().parsePlaceholders(text, handler, action);
     }
 
