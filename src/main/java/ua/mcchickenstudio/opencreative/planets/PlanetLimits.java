@@ -41,6 +41,8 @@ public class PlanetLimits {
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
     private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
     private final LinkedList<Long> lastCodingErrors = new LinkedList<>();
+    private final LinkedList<Long> lastActionsCalls = new LinkedList<>();
+
     private final Map<UUID, Deque<Long>> lastPlayerMenuOpens = new HashMap<>();
     private final Map<UUID, Deque<Long>> lastPlayerInventoryLoads = new HashMap<>();
 
@@ -61,7 +63,7 @@ public class PlanetLimits {
      * @return limit of variables size.
      */
     public int getVariablesAmountLimit() {
-        return planet.getGroup().getLimit(LimitType.VARIABLES).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.VARIABLES).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -70,7 +72,7 @@ public class PlanetLimits {
      * @return limit of changing blocks.
      */
     public int getModifyingBlocksLimit() {
-        return planet.getGroup().getLimit(LimitType.MODIFYING_BLOCKS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.MODIFYING_BLOCKS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -79,7 +81,7 @@ public class PlanetLimits {
      * @return limit of builders amount.
      */
     public int getBuildersLimit() {
-        return planet.getGroup().getLimit(LimitType.BUILDERS_AMOUNT).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.BUILDERS_AMOUNT).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -88,7 +90,7 @@ public class PlanetLimits {
      * @return limit of developers amount.
      */
     public int getDevelopersLimit() {
-        return planet.getGroup().getLimit(LimitType.DEVELOPERS_AMOUNT).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.DEVELOPERS_AMOUNT).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -97,7 +99,16 @@ public class PlanetLimits {
      * @return limit of banned players amount.
      */
     public int getBlacklistedLimit() {
-        return planet.getGroup().getLimit(LimitType.BLACKLISTED_AMOUNT).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.BLACKLISTED_AMOUNT).calculateLimit(planet.getInformation().getAsyncOnline());
+    }
+
+    /**
+     * Returns maximum actions calls amount per time in the planet.
+     *
+     * @return limit of actions calls amount.
+     */
+    public int getCodingActionsCallsLimit() {
+        return planet.getGroup().getLimit(LimitType.CODING_ACTIONS_CALLS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -106,7 +117,7 @@ public class PlanetLimits {
      * @return limit of whitelisted players amount.
      */
     public int getWhitelistedLimit() {
-        return planet.getGroup().getLimit(LimitType.WHITELISTED_AMOUNT).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.WHITELISTED_AMOUNT).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -115,7 +126,7 @@ public class PlanetLimits {
      * @return limit of redstone operations.
      */
     public int getRedstoneOperationsLimit() {
-        return planet.getGroup().getLimit(LimitType.REDSTONE_OPERATIONS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.REDSTONE_OPERATIONS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -124,7 +135,7 @@ public class PlanetLimits {
      * @return limit of changed targets.
      */
     public int getTargetsChangesLimit() {
-        return planet.getGroup().getLimit(LimitType.TARGETS_CHANGES).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.TARGETS_CHANGES).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -133,7 +144,7 @@ public class PlanetLimits {
      * @return limit of repeats.
      */
     public int getRepeatsAmountLimit() {
-        return planet.getGroup().getLimit(LimitType.REPEATS_AMOUNT).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.REPEATS_AMOUNT).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -142,7 +153,7 @@ public class PlanetLimits {
      * @return limit of executor calls.
      */
     public int getCodeOperationsLimit() {
-        return planet.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.CODE_OPERATIONS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -151,7 +162,7 @@ public class PlanetLimits {
      * @return limit of errors amount.
      */
     public int getCodingErrorsLimit() {
-        return planet.getGroup().getLimit(LimitType.CODING_ERRORS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.CODING_ERRORS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -161,7 +172,7 @@ public class PlanetLimits {
      * @return limit of inventory actions.
      */
     public int getOpeningInventoriesLimit() {
-        return planet.getGroup().getLimit(LimitType.OPENING_INVENTORIES).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.OPENING_INVENTORIES).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -170,7 +181,7 @@ public class PlanetLimits {
      * @return limit of web requests.
      */
     public int getWebRequestsLimit() {
-        return planet.getGroup().getLimit(LimitType.SENDING_WEB_REQUESTS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.SENDING_WEB_REQUESTS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -179,7 +190,7 @@ public class PlanetLimits {
      * @return limit of entities.
      */
     public int getEntitiesLimit() {
-        return planet.getGroup().getLimit(LimitType.ENTITIES).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.ENTITIES).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -188,7 +199,7 @@ public class PlanetLimits {
      * @return limit of recipes.
      */
     public int getRecipesLimit() {
-        return planet.getGroup().getLimit(LimitType.RECIPES).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.RECIPES).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -197,7 +208,7 @@ public class PlanetLimits {
      * @return limit of scoreboards.
      */
     public int getScoreboardsLimit() {
-        return planet.getGroup().getLimit(LimitType.SCOREBOARDS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.SCOREBOARDS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -206,7 +217,7 @@ public class PlanetLimits {
      * @return limit of scoreboards.
      */
     public int getVariableElementsChangesLimit() {
-        return planet.getGroup().getLimit(LimitType.LIST_ELEMENTS_CHANGES).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.LIST_ELEMENTS_CHANGES).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -215,7 +226,7 @@ public class PlanetLimits {
      * @return limit of bossbars.
      */
     public int getBossBarsLimit() {
-        return planet.getGroup().getLimit(LimitType.BOSSBARS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.BOSSBARS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -226,7 +237,7 @@ public class PlanetLimits {
      * @return limit of physical objects.
      */
     public int getPhysicalObjectsLimit() {
-        return planet.getGroup().getLimit(LimitType.PHYSICAL_OBJECTS).calculateLimit(planet.getPlayers().size());
+        return planet.getGroup().getLimit(LimitType.PHYSICAL_OBJECTS).calculateLimit(planet.getInformation().getAsyncOnline());
     }
 
     /**
@@ -453,6 +464,33 @@ public class PlanetLimits {
     }
 
     /**
+     * Checks whether coding encountered too many actions in the last 3 seconds.
+     *
+     * @return true - must stop the code, false - few or no actions.
+     */
+    public boolean isTooManyActionsAtOnce(int count) {
+
+        long now = System.currentTimeMillis();
+
+        // Remove entries older than 3 seconds
+        while (!lastActionsCalls.isEmpty() && (now - lastActionsCalls.peek()) > 3000) {
+            lastActionsCalls.poll();
+        }
+
+        if (lastActionsCalls.size() + count > getCodingActionsCallsLimit()) {
+            return true;
+        }
+
+        if (count < 1) count = 1;
+        for (int i = 0; i < count; i++) {
+            lastActionsCalls.add(now);
+        }
+
+        return false;
+    }
+
+
+    /**
      * Checks whether block cannot be placed, destroyed or modified,
      * because of reaching the limit.
      *
@@ -547,6 +585,7 @@ public class PlanetLimits {
         lastWebRequests.clear();
         lastCodingErrors.clear();
         lastPlayerInventoryLoads.clear();
+        lastActionsCalls.clear();
     }
 
 }

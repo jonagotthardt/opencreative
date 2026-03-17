@@ -24,6 +24,7 @@ import org.bukkit.generator.WorldInfo;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ua.mcchickenstudio.opencreative.OpenCreative;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -76,7 +77,7 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
                 customFlatSurfaceBlock = Material.CRIMSON_NYLIUM;
             }
         }
-        int minHeight = -64;
+        int minHeight = OpenCreative.getSettings().shouldGenerateFlatWorldHigher() ? 0 : -64;
         if (worldInfo.getEnvironment() == World.Environment.NETHER) {
             minHeight = 0;
             customFlatTerrainBlock = Material.NETHERRACK;

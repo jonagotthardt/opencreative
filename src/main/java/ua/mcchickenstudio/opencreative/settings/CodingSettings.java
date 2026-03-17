@@ -54,6 +54,7 @@ public final class CodingSettings {
     private boolean shiftBreakChainEnabled = true;
     private boolean shiftBreakChainCompactFull = true;
     private boolean ignoreActionsIfEntityNotInWorld = false;
+    private boolean saveScriptsHistory = false;
     private int prompterMaxExecutors = 10;
     private int prompterTimeout = 120;
 
@@ -81,6 +82,7 @@ public final class CodingSettings {
         verticalPlatformNotchWidth = Math.max(1, section.getInt("platforms-vertical-notch.width", 3));
         shiftBreakChainEnabled = section.getBoolean("shift-break-chain-enabled", true);
         shiftBreakChainCompactFull = section.getBoolean("shift-break-chain-compact-full", true);
+        saveScriptsHistory = section.getBoolean("save-scripts-history", false);
 
         loadDisabledBlocks(section);
         setupPromptHandler(section);
@@ -331,5 +333,15 @@ public final class CodingSettings {
      */
     public boolean isShiftBreakChainCompactFull() {
         return shiftBreakChainCompactFull;
+    }
+
+    /**
+     * Checks whether codeScript.yml will be copied to
+     * /plugins/OpenCreative/history/ folder.
+     *
+     * @return true - will be copied, false - not.
+     */
+    public boolean shouldSaveScriptsHistory() {
+        return saveScriptsHistory;
     }
 }

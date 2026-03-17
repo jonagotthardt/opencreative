@@ -375,6 +375,7 @@ coding-error:
   indexoutofboundsexception: "Values were expected in the chest, but they are either missing or insufficient. Check the items in the chest for this action!"
   operations-limit: "The code line was called multiple times in a row and reached the limit of %limit% calls. It seems there's a line that calls itself repeatedly. Find it and fix it. This line's execution has been stopped."
   errors-limit: "Coding encountered too many errors in short time, please fix them."
+  actions-limit: "Coding encountered too many actions in short time, please reduce them."
   targets-changes-limit: "Too many entities (%limit%) was added or removed in targets list with Select Target action. Reduce amount of selection or remove the mobs."
   unknown: "Oops... It seems this is an unknown error, details: "
   unknown-block-detected: "&f\n&6 Error &8| &fWhile saving coding blocks, some were found that were removed in updates. Click their sign and remove unnecessary chest contents (SHIFT+Right-click)."

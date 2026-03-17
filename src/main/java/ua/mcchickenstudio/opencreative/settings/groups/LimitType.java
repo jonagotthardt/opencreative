@@ -35,6 +35,7 @@ public enum LimitType {
     VARIABLES("variables-amount", 50, 50),
     CODING_ERRORS("errors-amount", 10),
     CODING_PLATFORMS("coding-platforms", 4),
+    CODING_ACTIONS_CALLS("coding-actions-calls", 400, 0),
     LIST_ELEMENTS_CHANGES("changing-list-elements", 50, 10),
     TARGETS_CHANGES("changing-targets", 500, 100),
     REPEATS_AMOUNT("repeats-amount", 100, 10),

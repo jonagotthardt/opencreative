@@ -28,6 +28,7 @@ import ua.mcchickenstudio.opencreative.planets.Planet;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.*;
@@ -90,6 +91,10 @@ public class CodeScript {
         sendCodingDebugLog(planet, getLocaleMessage("coding-debug.saving-code", false));
         try {
             scriptConfig.saveToFile(getPlanetScriptFile(planet));
+            if (OpenCreative.getSettings().getCodingSettings().shouldSaveScriptsHistory()) {
+                copyToHistoryFolder(time);
+            }
+
             OpenCreative.getPlugin().getLogger().info("Saved code in planet " + planet.getId() + " in " + (System.currentTimeMillis() - time) + " ms.");
             sendCodingDebugLog(planet, getLocaleMessage("coding-debug.saved-code", false)
                     .replace("%time%", String.valueOf(Math.floor((System.currentTimeMillis() - time) / 10.0) / 100.0)));
@@ -125,6 +130,36 @@ public class CodeScript {
     public void unload() {
         scriptConfig = new CodeConfiguration();
         executors.clear();
+    }
+
+    /**
+     * Copies codeScript.yml to /plugins/OpenCreative/history folder.
+     *
+     * @param time timestamp, when script was changed.
+     */
+    public void copyToHistoryFolder(long time) {
+        try {
+            File historyFolder = new File(OpenCreative.getPlugin().getDataFolder().getPath() + File.separator + "history");
+            if (historyFolder.isFile()) {
+                historyFolder.delete();
+            }
+            if (!historyFolder.exists()) {
+                historyFolder.mkdirs();
+            }
+            File dateFolder = new File(historyFolder, new SimpleDateFormat("yyyy-MM-dd").format(time));
+            if (dateFolder.isFile()) {
+                dateFolder.delete();
+            }
+            if (!dateFolder.exists()) {
+                dateFolder.mkdirs();
+            }
+            String date = new SimpleDateFormat("dd-MM-yyyy--HH-mm-ss").format(time);
+            File tempScript = new File(dateFolder.getPath() + File.separator
+                    + "codeScript-" + planet.getOwner() + "-" + planet.getId() + "--" + date + ".yml");
+            FileUtils.copyFile(getPlanetScriptFile(planet), tempScript);
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to copy codeScript.yml from " + planet.getId() + " to history folder.", error);
+        }
     }
 
     /**

@@ -164,6 +164,7 @@ public final class ChatListener implements Listener {
                 return;
             }
             if (getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT) > 0) {
+                event.setCancelled(true);
                 player.sendMessage(getLocaleMessage("world.chat-cooldown").replace("%cooldown%", String.valueOf(getCooldown(player, CooldownUtils.CooldownType.WORLD_CHAT))));
                 return;
             }
@@ -178,6 +179,15 @@ public final class ChatListener implements Listener {
             Planet planet = OpenCreative.getPlanetsManager().getPlanetByPlayer(player);
             WorldChatEvent creativeEvent = new WorldChatEvent(player, message, formatted, player.getWorld(), planet);
 
+            if (!shouldHandleWorldChat) {
+                Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
+                    ChatEvent chatEvent = new ChatEvent(event.getPlayer(), message);
+                    chatEvent.callEvent();
+                });
+                return;
+            }
+            event.setCancelled(true);
+
             Bukkit.getScheduler().runTaskLater(OpenCreative.getPlugin(), () -> {
                 creativeEvent.callEvent();
                 if (creativeEvent.isCancelled()) return;
@@ -185,10 +195,6 @@ public final class ChatListener implements Listener {
                 if (planet != null) {
                     DevPlanet devPlanet = OpenCreative.getPlanetsManager().getDevPlanet(player);
                     if (devPlanet != null) {
-                        if (!shouldHandleWorldChat) {
-                            return;
-                        }
-                        event.setCancelled(true);
                         // If player in dev world
                         for (Player p : devPlanet.getWorld().getPlayers()) {
                             p.sendMessage(finalMessage);
@@ -205,10 +211,6 @@ public final class ChatListener implements Listener {
                         ChatEvent chatEvent = new ChatEvent(event.getPlayer(), message);
                         chatEvent.callEvent();
                         if (chatEvent.isCancelled()) {
-                            event.setCancelled(true);
-                            return;
-                        }
-                        if (!shouldHandleWorldChat) {
                             return;
                         }
                         if (planet.getPlayers().size() == 1 && !chatEvent.isHandledByCode() && OpenCreative.getSettings().shouldNotifyAboutNoPlayersAround()) {
@@ -222,10 +224,6 @@ public final class ChatListener implements Listener {
                         OpenCreative.getPlugin().getLogger().info("[WORLD-CHAT: " + planet.getId() + "] " + player.getName() + ": " + message);
                     }
                 } else {
-                    if (!shouldHandleWorldChat) {
-                        return;
-                    }
-                    event.setCancelled(true);
                     if (player.getWorld().getPlayers().size() == 1 && OpenCreative.getSettings().shouldNotifyAboutNoPlayersAround()) {
                         player.sendMessage(getPlayerLocaleComponent("chat-no-near-players", player)
                                 .clickEvent(ClickEvent.suggestCommand("!" + message)));
