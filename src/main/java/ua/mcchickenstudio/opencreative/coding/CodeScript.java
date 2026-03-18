@@ -47,6 +47,7 @@ public class CodeScript {
     private final Planet planet;
     private final PlanetExecutors executors;
     private CodeStorage scriptConfig;
+    private long lastLaunch;
 
     public CodeScript(@NotNull Planet planet) {
         this.planet = planet;
@@ -75,9 +76,20 @@ public class CodeScript {
             @Override
             public void run() {
                 executors.load(getPlanetScriptFile(planet));
+                lastLaunch = System.currentTimeMillis();
             }
         }.run();
         return true;
+    }
+
+    /**
+     * Returns last code load timestamp,
+     * or 0 - if world is unloaded.
+     *
+     * @return timestamp of last code launch.
+     */
+    public long getLastLaunch() {
+        return lastLaunch;
     }
 
     /**
@@ -110,6 +122,7 @@ public class CodeScript {
      */
     public void clear() {
         executors.clear();
+        lastLaunch = 0;
         ConfigurationSection section = scriptConfig.getSection("code.blocks");
         if (section == null) return;
         scriptConfig.set("old-code.blocks", null);
