@@ -112,7 +112,7 @@ public final class FlatGenerator extends WorldGenerator implements EnvironmentCa
 
     private int getMinHeight(@NotNull World.Environment environment) {
         return switch (environment) {
-            case NORMAL -> -64;
+            case NORMAL -> (OpenCreative.getSettings().shouldGenerateFlatWorldHigher() ? 0 : -64);
             case NETHER, CUSTOM, THE_END -> 0;
         };
     }

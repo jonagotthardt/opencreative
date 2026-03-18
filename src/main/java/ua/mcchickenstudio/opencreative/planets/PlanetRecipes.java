@@ -53,11 +53,14 @@ public class PlanetRecipes {
         if (recipes.contains(key)) {
             return;
         }
+        if (planet.getLimits().isTooManyRecipeOperationsAtOnce()) {
+            throw new RuntimeException("Too many recipe operations at once");
+        }
         if (Bukkit.getRecipe(key) != null) {
             removeRecipe(key);
         }
         recipes.add(key);
-        Bukkit.addRecipe(recipe);
+        Bukkit.addRecipe(recipe, false);
     }
 
     /**
@@ -81,7 +84,7 @@ public class PlanetRecipes {
         for (Player player : planet.getPlayers()) {
             player.undiscoverRecipe(recipe);
         }
-        Bukkit.removeRecipe(recipe);
+        Bukkit.removeRecipe(recipe, false);
     }
 
     /**
@@ -109,7 +112,7 @@ public class PlanetRecipes {
         if (OpenCreative.getPlugin().isEnabled()) {
             Bukkit.getScheduler().runTask(OpenCreative.getPlugin(), () -> {
                 for (NamespacedKey recipe : recipes) {
-                    Bukkit.removeRecipe(recipe);
+                    Bukkit.removeRecipe(recipe, false);
                 }
                 for (Player player : planet.getPlayers()) {
                     player.undiscoverRecipes(recipes);

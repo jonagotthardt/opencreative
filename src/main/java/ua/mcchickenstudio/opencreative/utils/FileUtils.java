@@ -158,21 +158,11 @@ public final class FileUtils {
         String selectedLang = OpenCreative.getPlugin().getConfig().getString("messages.locale", "en");
         File file = new File(folder.getPath() + File.separator + selectedLang + ".yml");
         if (!file.exists()) {
-            setDefaultLocales();
             OpenCreative.getPlugin().getConfig().set("messages.locale", "en");
         }
         MessageUtils.loadLocalizationFile();
         OpenCreative.getPlugin().getLogger().info("Loaded localization file...");
 
-    }
-
-    private static void setDefaultLocales() {
-        try {
-            OpenCreative.getPlugin().saveResource("locales" + File.separator + "ru.yml", false);
-        } catch (IllegalArgumentException error) {
-            sendWarningErrorMessage("Couldn't save default localization file (resource) " + error.getClass().getName() + " " + error.getMessage());
-        }
-        OpenCreative.getPlugin().saveConfig();
     }
 
     /**
@@ -200,7 +190,6 @@ public final class FileUtils {
             file.delete();
         }
 
-        setDefaultLocales();
         MessageUtils.loadLocalizationFile();
         for (Map.Entry<String, Object> entry : oldMessages.entrySet()) {
             MessageUtils.setMessage(entry.getKey(), entry.getValue());

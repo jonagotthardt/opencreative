@@ -737,7 +737,6 @@ items:
     31: "function"
     32: "launch-function-action"
     36: "arrow-not"
-
 web:
   #
   # Web services can provide additional features,
@@ -812,5 +811,5 @@ debug: false
 # to create a new world by adding 1
 # to current value.
 #
-last-world-id: 0 # Not
+last-world-id: 0 # Recommended to not change.
 
