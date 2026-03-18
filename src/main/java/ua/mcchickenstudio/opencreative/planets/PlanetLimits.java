@@ -37,6 +37,7 @@ import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendPlanetLimitWa
 public class PlanetLimits {
 
     private final Planet planet;
+    private final LinkedList<Long> lastRecipeOperations = new LinkedList<>();
     private final LinkedList<Long> lastWebRequests = new LinkedList<>();
     private final LinkedList<Long> lastLightningsStrikes = new LinkedList<>();
     private final LinkedList<Long> lastBeesSpawns = new LinkedList<>();
@@ -489,6 +490,29 @@ public class PlanetLimits {
         return false;
     }
 
+    /**
+     * Checks whether coding encountered too many recipe operations in the last 3 seconds.
+     *
+     * @return true - must throw the error, false - few or no recipe operations.
+     */
+    public boolean isTooManyRecipeOperationsAtOnce() {
+
+        long now = System.currentTimeMillis();
+
+        // Remove entries older than 3 seconds
+        while (!lastRecipeOperations.isEmpty() && (now - lastRecipeOperations.peek()) > 3000) {
+            lastRecipeOperations.poll();
+        }
+
+        long passedTimeAfterLaunch = System.currentTimeMillis() - planet.getTerritory().getScript().getLastLaunch();
+        if (lastRecipeOperations.size() > (passedTimeAfterLaunch > 100 ? 3 : planet.getLimits().getRecipesLimit())) {
+            return true;
+        }
+
+        lastRecipeOperations.add(now);
+        return false;
+    }
+
 
     /**
      * Checks whether block cannot be placed, destroyed or modified,
@@ -586,6 +610,7 @@ public class PlanetLimits {
         lastCodingErrors.clear();
         lastPlayerInventoryLoads.clear();
         lastActionsCalls.clear();
+        lastRecipeOperations.clear();
     }
 
 }

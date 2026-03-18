@@ -98,11 +98,10 @@ public class CreativeCommand extends CommandHandler {
                 if (player != null) {
                     Sounds.RELOADING.play(player);
                 }
-                OpenCreative.getPlugin().reloadConfig();
                 if (OpenCreative.getDownloadManager().isEnabled()) {
                     OpenCreative.getDownloadManager().shutdown();
                 }
-                OpenCreative.getSettings().load(OpenCreative.getPlugin().getConfig());
+                OpenCreative.getSettings().load();
                 loadLocales();
                 OpenCreative.getDownloadManager().init();
                 sender.sendMessage(getLocaleMessage("creative.reloaded"));

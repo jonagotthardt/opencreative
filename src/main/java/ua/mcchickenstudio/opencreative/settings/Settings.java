@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -41,6 +42,7 @@ import ua.mcchickenstudio.opencreative.managers.stability.Watchdog;
 import ua.mcchickenstudio.opencreative.planets.Planet;
 import ua.mcchickenstudio.opencreative.settings.groups.Groups;
 import ua.mcchickenstudio.opencreative.settings.items.*;
+import ua.mcchickenstudio.opencreative.utils.ErrorUtils;
 import ua.mcchickenstudio.opencreative.utils.ItemUtils;
 import ua.mcchickenstudio.opencreative.utils.world.generators.*;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformer;
@@ -48,8 +50,13 @@ import ua.mcchickenstudio.opencreative.utils.world.platforms.DevPlatformers;
 import ua.mcchickenstudio.opencreative.utils.world.platforms.HorizontalPlatformer;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendCriticalErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.ErrorUtils.sendWarningErrorMessage;
 import static ua.mcchickenstudio.opencreative.utils.MessageUtils.getLocaleMessage;
 import static ua.mcchickenstudio.opencreative.utils.PlayerUtils.teleportToLobby;
@@ -104,10 +111,36 @@ public final class Settings {
 
     /**
      * Loads settings values from configuration file.
-     *
-     * @param config Configuration file.
      */
-    public void load(FileConfiguration config) {
+    public void load() {
+        File configFile = new File(OpenCreative.getPlugin().getDataFolder(), "config.yml");
+        FileConfiguration config = new YamlConfiguration();
+        if (!configFile.exists()) {
+            OpenCreative.getPlugin().saveDefaultConfig();
+        }
+        try {
+            config.load(configFile);
+            fillMissingLines(config);
+        } catch (Exception error) {
+            String corruptedName = "config-corrupted-" + new SimpleDateFormat("hh-mm--dd-MM-yyyy")
+                    .format(new Date()) + ".yml";
+            OpenCreative.getPlugin().getLogger().severe(
+                "Oops! Failed to load config.yml" + ErrorUtils.parseException(error, false) +
+                        String.join("\n", "", "",
+                                " ^ ^ ^ ^ ^",
+                                "Seems like config.yml was corrupted, so we renamed it and replaced with default config.",
+                                "For old config, see /plugins/OpenCreative/" + corruptedName,
+                                "Maybe you forgot space, tab, or brackets {} []? See above for details."
+                        ));
+            try {
+                File movedConfig = new File(OpenCreative.getPlugin().getDataFolder(), corruptedName);
+                if (!configFile.renameTo(movedConfig)) {
+                    OpenCreative.getPlugin().getLogger().severe("Failed to rename old config.yml to " + movedConfig.getName());
+                }
+            } catch (Exception ignored) {}
+            OpenCreative.getPlugin().saveDefaultConfig();
+            config = OpenCreative.getPlugin().getConfig();
+        }
         allowedResourcePackLinks.clear();
         recommendedWorldsIDs.clear();
         messagesIgnoringReset.clear();
@@ -163,6 +196,68 @@ public final class Settings {
         checkDebugAnnouncer();
 
         loadItems(config);
+    }
+
+    /**
+     * Checks config for missing lines and compares
+     * it with default config.yml.
+     *
+     * @param config config to check.
+     */
+    private void fillMissingLines(@NotNull FileConfiguration config) {
+        try {
+            InputStream input = OpenCreative.getPlugin().getResource("config.yml");
+            if (input == null) {
+                return;
+            }
+            YamlConfiguration defaultConfig = new YamlConfiguration();
+            defaultConfig.load(new InputStreamReader(input, StandardCharsets.UTF_8));
+            List<String> addedKeys = new ArrayList<>();
+            for (String key : defaultConfig.getKeys(true)) {
+                if (key.equals("version")) continue;
+                if (shouldNotAddDefaultKey(config, key)) continue;
+                if (!config.contains(key, true)) {
+                    config.set(key, defaultConfig.get(key));
+                    addedKeys.add(key);
+                }
+            }
+            if (!addedKeys.isEmpty()) {
+                config.set("version", OpenCreative.getVersion());
+                config.setComments("version", List.of("Last launch: " +
+                        new SimpleDateFormat("HH:mm:ss (dd/MM/yyyy)").format(new Date())));
+                OpenCreative.getPlugin().getLogger().warning("Added " + addedKeys.size() +
+                        " missing lines in config.yml: " + String.join(", ", addedKeys));
+                config.save(new File(OpenCreative.getPlugin().getDataFolder(), "config.yml"));
+                OpenCreative.getPlugin().reloadConfig();
+            }
+        } catch (Exception error) {
+            sendCriticalErrorMessage("Failed to check config.yml", error);
+        }
+    }
+
+    /**
+     * Checks whether specified key should be added to config,
+     * if it's missing in config.
+     *
+     * @param config config, that will be updated.
+     * @param key key to check.
+     * @return true - shouldn't set key, false - will be set.
+     */
+    private boolean shouldNotAddDefaultKey(FileConfiguration config, String key) {
+        // Specified keys are keys from sections, that may contain
+        // custom data by server owners. We will recover sections,
+        // but not keys, if their sections exist.
+        if (key.startsWith("groups.premium") && config.contains("groups", true)) return true;
+        if (key.startsWith("sounds.christmas") && config.contains("sounds", true)) return true;
+        if (key.startsWith("commands.onLobby") && config.contains("commands", true)) return true;
+        if (key.startsWith("items.") && config.contains("items")) {
+            String[] parts = key.split("\\.");
+            // If config has item group section "items.lobby" - ignore.
+            // If config doesn't have item group "items.lobby", it will be added.
+            // If config doesn't have "items" section, it will be added.
+            return parts.length >= 2 && config.contains("items." + parts[1], true);
+        }
+        return false;
     }
 
     private void loadWorldGenerators(FileConfiguration config) {
