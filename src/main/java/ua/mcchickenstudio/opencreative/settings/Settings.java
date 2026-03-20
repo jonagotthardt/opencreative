@@ -93,10 +93,15 @@ public final class Settings {
     private boolean cancelChatOnConfirmation = false;
     private boolean handleWorldChat = true;
     private boolean generateFlatWorldHigher = false;
+    private boolean firstLaunch = false;
     private BukkitRunnable announcer;
     private PlayerListChanger listChanger = PlayerListChanger.FULL;
 
     public Settings() {
+        if (!OpenCreative.getPlugin().getDataFolder().exists()) {
+            firstLaunch = true;
+        }
+        OpenCreative.getPlugin().saveDefaultConfig();
         groups = new Groups();
         commands = new Commands();
         requirements = new Requirements();
@@ -879,6 +884,16 @@ public final class Settings {
      */
     public boolean shouldGenerateFlatWorldHigher() {
         return generateFlatWorldHigher;
+    }
+
+    /**
+     * Checks whether plugin was launched for first
+     * time, without /plugins/OpenCreative folder.
+     *
+     * @return true - first time launched, false - was launched on server before.
+     */
+    public boolean isFirstLaunch() {
+        return firstLaunch;
     }
 
     public enum PlayerListChanger {
