@@ -3323,7 +3323,7 @@ items:
           - " "
           - "&eНатисни, щоб встановити дію."
       entity-clear-disguise:
-        name: "&2Прибрати маскування"
+        name: "&cПрибрати маскування"
         lore:
           - "&7Це прибере маскування з моба."
           - " "
@@ -6581,6 +6581,52 @@ items:
           - "&7відображається цей екран."
           - " "
           - "&eНатисніть, щоб встановити дію."
+      player-set-item-in-slot:
+        name: "&2Set item in slot"
+        lore:
+          - "&7Sets an item into specified"
+          - "&7player inventory slots."
+          - " "
+          - "&fIn chest:"
+          - "&a Numbers &7- Slots"
+          - "&c Item &7- To set"
+          - "&3 Parameter &7- Replace with air or not"
+          - " "
+          - "&eClick to set action."
+        placeholders:
+          slots:
+            name: "&aSlots to place into"
+            lore:
+              - "&7Put slime here that"
+              - "&7represents the slot number"
+              - "&7for setting."
+              - ""
+              - "&a 1-9 &7- Hotbar slots"
+              - "&a 10-18 &7- First inventory row"
+              - "&a 19-27 &7- Second inventory row"
+              - "&a 28-36 &7- Third inventory row"
+              - "&a 37 &7- Boots"
+              - "&a 38 &7- Leggings"
+              - "&a 39 &7- Chestplate"
+              - "&a 40 &7- Helmet"
+              - "&a 41 &7- Off-hand item"
+        arguments:
+          replace-with-air:
+            name: "&fReplace empty slots with air"
+            lore:
+              - "&7If Replace with air is selected and"
+              - "&7the entity has items in unfilled slots"
+              - "&7here, they will"
+              - "&7be replaced with air."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fChoices:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Do not replace"
+              true: "Replace with air"
       player-set-item-cooldown:
         name: "&eПоставити затримку предмета"
         lore:
@@ -18945,6 +18991,7 @@ blocks:
   player_set_compass_target: "Ціль компаса"
   player_set_hotbar: "Хотбар"
   player_set_item_cooldown: "Затримка предм."
+  player_set_item_in_slot: "Предм. у слот"
   player_set_item_in_hand: "Вст. предмет"
   player_open_sign: "Показати таблич."
   player_set_time: "Встановити час"

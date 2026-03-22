@@ -3355,7 +3355,7 @@ items:
           - " "
           - "&eClick to set the action."
       entity-clear-disguise:
-        name: "&2Clear Disguise"
+        name: "&cClear Disguise"
         lore:
           - "&7This will remove the "
           - "&7disguise from the mob."
@@ -3455,6 +3455,52 @@ items:
           - "&c Items &7- Items for inventory."
           - ""
           - "&eClick to set action."
+      player-set-item-in-slot:
+        name: "&2Set item in slot"
+        lore:
+          - "&7Sets an item into specified"
+          - "&7player inventory slots."
+          - " "
+          - "&fIn chest:"
+          - "&a Numbers &7- Slots"
+          - "&c Item &7- To set"
+          - "&3 Parameter &7- Replace with air or not"
+          - " "
+          - "&eClick to set action."
+        placeholders:
+          slots:
+            name: "&aSlots to place into"
+            lore:
+              - "&7Put slime here that"
+              - "&7represents the slot number"
+              - "&7for setting."
+              - ""
+              - "&a 1-9 &7- Hotbar slots"
+              - "&a 10-18 &7- First inventory row"
+              - "&a 19-27 &7- Second inventory row"
+              - "&a 28-36 &7- Third inventory row"
+              - "&a 37 &7- Boots"
+              - "&a 38 &7- Leggings"
+              - "&a 39 &7- Chestplate"
+              - "&a 40 &7- Helmet"
+              - "&a 41 &7- Off-hand item"
+        arguments:
+          replace-with-air:
+            name: "&fReplace empty slots with air"
+            lore:
+              - "&7If Replace with air is selected and"
+              - "&7the entity has items in unfilled slots"
+              - "&7here, they will"
+              - "&7be replaced with air."
+              - ""
+              - "&eClick to change."
+              - ""
+              - "&fChoices:"
+              - "%1%"
+              - "%2%"
+            choices:
+              false: "Do not replace"
+              true: "Replace with air"
       entity-set-item-in-hand:
         name: "&9Set Item in Hand"
         lore:
@@ -18898,6 +18944,7 @@ blocks:
   player_apply_mending: "Apply mending"
   player_set_compass_target: "Set compass target"
   player_set_hotbar: "Set hotbar"
+  player_set_item_in_slot: "Item in slot"
   player_set_item_cooldown: "Item cooldown"
   player_open_sign: "Open sign"
   player_set_time: "Set time"
