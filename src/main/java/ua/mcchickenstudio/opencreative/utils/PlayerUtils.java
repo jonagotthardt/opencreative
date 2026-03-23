@@ -98,7 +98,7 @@ public final class PlayerUtils {
      * @param resetGameMode set game mode to adventure or not.
      */
     public static void clearPlayer(Player player, boolean clearPermissions, boolean resetGameMode) {
-        if (resetGameMode) player.setGameMode(GameMode.ADVENTURE);
+        if (resetGameMode) player.setGameMode(GameMode.SURVIVAl);
         if (clearPermissions) clearWorldModePermissions(player);
         player.closeInventory();
         if (OpenCreative.getSettings().getLobbySettings().shouldClearInventory(player.getWorld())) {
