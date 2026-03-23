@@ -20,7 +20,6 @@ package ua.mcchickenstudio.opencreative.coding.blocks.executors;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ua.mcchickenstudio.opencreative.OpenCreative;
@@ -93,21 +92,16 @@ public class PlanetExecutors {
     }
 
     public static boolean canRunExecutor(@NotNull Planet planet, @NotNull Executor executor) {
-        if (executor.getLastCalls() >= planet.getLimits().getCodeOperationsLimit()) {
+        int depth = StackWalker.getInstance().walk(stream ->
+                (int) stream.limit(101).count()
+        );
+        if (depth > planet.getLimits().getCodeOperationsLimit()) {
             planet.getTerritory().getScript().getExecutors().stopCode("operations limit");
             sendPlanetCodeCriticalErrorMessage(planet, executor, getLocaleMessage("coding-error.operations-limit", false)
                     .replace("%limit%", String.valueOf(planet.getLimits().getCodeOperationsLimit())));
             return false;
-        } else {
-            executor.increaseCall();
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    executor.decreaseCall();
-                }
-            }.runTaskLater(OpenCreative.getPlugin(), 35L);
-            return true;
         }
+        return true;
     }
 
     /**
